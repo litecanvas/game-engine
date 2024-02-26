@@ -19,6 +19,8 @@ npm install @litecanvas/litecanvas
 ## Getting Started
 
 ```js
+import litecanvas from '@litecanvas/litecanvas'
+
 litecanvas({
     // you can setup some configurations here
     // learn more in the cheatsheet
