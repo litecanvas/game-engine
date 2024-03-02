@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas | v0.1.0 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.2.0 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
     const body = g.document.body
@@ -162,7 +162,7 @@ export default function litecanvas(opts = {}) {
             off(
                 body,
                 _touchSupported ? 'mousemove' : 'touchmove',
-                _tappingHandler,
+                _tappingHandler
             )
             _updateTapping(false)
         })
@@ -235,12 +235,8 @@ export default function litecanvas(opts = {}) {
         // By default, any plugins has priority = 10
         _plugins.sort((a, b) => (a.priority ?? 10) - (b.priority ?? 10))
 
-        for (const plugin of _plugins) {
-            const data = plugin(ei, _h)
-            if (!data) continue
-            for (const key in data) {
-                _h.set(key, data[key])
-            }
+        for (const fn of _plugins) {
+            ei.plugin(fn)
         }
     }
 
@@ -307,7 +303,7 @@ export default function litecanvas(opts = {}) {
         } else if (_autoscale) {
             _scale = Math.min(
                 _currentWidth / ei.WIDTH,
-                _currentHeight / ei.HEIGHT,
+                _currentHeight / ei.HEIGHT
             )
             _scale = _pixelart ? Math.floor(_scale) : _scale
             canvas.style.width = ei.WIDTH * _scale + 'px'
@@ -324,7 +320,7 @@ export default function litecanvas(opts = {}) {
         ei.linestyle(
             _styles.lineWidth || _UN,
             _styles.lineJoin || _UN,
-            _styles.lineDash || _UN,
+            _styles.lineDash || _UN
         )
     }
 
@@ -682,6 +678,16 @@ export default function litecanvas(opts = {}) {
     /** UTILS API */
     ei.collision = (x1, y1, w1, h1, x2, y2, w2, h2) => {
         return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
+    }
+
+    /** PLUGINS API */
+    ei.plugin = (fn) => {
+        const pluginData = fn(ei, _h)
+        if ('object' === typeof pluginData) {
+            for (const key in pluginData) {
+                _h.set(key, pluginData[key])
+            }
+        }
     }
 
     // Export to global (window)
