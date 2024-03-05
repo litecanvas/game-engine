@@ -24,8 +24,9 @@ npm install @litecanvas/litecanvas
 import litecanvas from '@litecanvas/litecanvas'
 
 litecanvas({
-    // you can setup some configurations here
+    // you can setup other configurations here
     // learn more in the cheatsheet
+    loop: { init, update, draw }
 })
 
 function init() {
