@@ -364,6 +364,8 @@ export default function litecanvas(opts = {}) {
         'pow',
         'sqrt',
         'sign',
+        'atan2',
+        'hypot',
     ]) {
         ei[m] = g.Math[m]
     }
