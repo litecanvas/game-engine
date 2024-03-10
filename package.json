@@ -1,6 +1,6 @@
 {
     "name": "@litecanvas/litecanvas",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "Lightweight HTML5 canvas engine suitable for small games and animations.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
@@ -9,16 +9,20 @@
         "esbuild": "^0.20.1"
     },
     "homepage": "https://litecanvas.github.io/about.html",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/litecanvas/engine.git"
+    },
     "bugs": {
         "url": "https://github.com/litecanvas/engine/issues"
     },
     "main": "src/index.js",
     "type": "module",
     "scripts": {
-        "prepare": "npm run build && npm run gzip",
+        "prepare": "npm run build && npm run gzip-size",
         "start": "esbuild src/index.js --bundle --watch --outfile=dist/dist.js --servedir=.",
         "build": "esbuild src/index.js --bundle --minify --outfile=dist/dist.js --legal-comments=eof",
-        "gzip": "gzip -c dist/dist.js | wc -c | numfmt --to=iec",
+        "gzip-size": "gzip -c dist/dist.js | wc -c | numfmt --to=iec",
         "format": "npx prettier -w src/*"
     },
     "keywords": [
@@ -31,9 +35,5 @@
     "files": [
         "dist",
         "src"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/litecanvas/engine.git"
-    }
+    ]
 }

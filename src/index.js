@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.3.0 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.4.0 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
     const body = g.document.body
@@ -67,6 +67,8 @@ export default function litecanvas(opts = {}) {
         // helpers
         _EMPTY_ARRAY = [],
         _UN = undefined,
+        _colors = colors,
+        _sounds = sounds,
         _h = {
             set(key, value) {
                 ei[key] = value
@@ -74,7 +76,19 @@ export default function litecanvas(opts = {}) {
                     g[key] = value
                 }
             },
-        }
+            colors(arr) {
+                if (!arr) return _colors
+                _colors = arr
+                _countColors = arr.length
+            },
+            sounds(arr) {
+                if (!arr) return _sounds
+                _sounds = arr
+                _countSounds = arr.length
+            },
+        },
+        _countColors = _colors.length,
+        _countSounds = _sounds.length
 
     function _init() {
         off(g, 'DOMContentLoaded', _init)
@@ -184,7 +198,7 @@ export default function litecanvas(opts = {}) {
 
         // set canvas background color
         if (null != _bg) {
-            ei.CANVAS.style.backgroundColor = colors[_bg % 16]
+            ei.CANVAS.style.backgroundColor = _colors[_bg % _countColors]
         }
 
         _lastFrame = performance.now()
@@ -452,26 +466,26 @@ export default function litecanvas(opts = {}) {
         if (null == color) {
             _ctx.clearRect(0, 0, ei.WIDTH, ei.HEIGHT)
         } else {
-            _ctx.fillStyle = colors[~~color % 16]
+            _ctx.fillStyle = _colors[~~color % _countColors]
             _ctx.beginPath()
             _ctx.fillRect(0, 0, ei.WIDTH, ei.HEIGHT)
         }
     }
 
     ei.rect = (x, y, width, height, color = 0) => {
-        _ctx.strokeStyle = colors[~~color % 16]
+        _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.strokeRect(~~x, ~~y, ~~width, ~~height)
     }
 
     ei.rectfill = (x, y, width, height, color = 0) => {
-        _ctx.fillStyle = colors[~~color % 16]
+        _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.fillRect(~~x, ~~y, ~~width, ~~height)
     }
 
     ei.circ = (x, y, radius, color = 0) => {
-        _ctx.strokeStyle = colors[~~color % 16]
+        _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
         _ctx.closePath()
@@ -479,7 +493,7 @@ export default function litecanvas(opts = {}) {
     }
 
     ei.circfill = (x, y, radius, color = 0) => {
-        _ctx.fillStyle = colors[~~color % 16]
+        _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
         _ctx.closePath()
@@ -487,7 +501,7 @@ export default function litecanvas(opts = {}) {
     }
 
     ei.oval = (x, y, rx, ry, color = 0) => {
-        _ctx.strokeStyle = colors[~~color % 16]
+        _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
         _ctx.closePath()
@@ -495,7 +509,7 @@ export default function litecanvas(opts = {}) {
     }
 
     ei.ovalfill = (x, y, rx, ry, color = 0) => {
-        _ctx.fillStyle = colors[~~color % 16]
+        _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
         _ctx.closePath()
@@ -503,7 +517,7 @@ export default function litecanvas(opts = {}) {
     }
 
     ei.poly = (points, color = 0) => {
-        _ctx.strokeStyle = colors[~~color % 16]
+        _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         const len = points.length
         for (let i = 0; i < len; i += 2) {
@@ -516,7 +530,7 @@ export default function litecanvas(opts = {}) {
     }
 
     ei.polyfill = (points, color = 0) => {
-        _ctx.fillStyle = colors[~~color % 16]
+        _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         const len = points.length
         for (let i = 0; i < len; i += 2) {
@@ -529,7 +543,7 @@ export default function litecanvas(opts = {}) {
     }
 
     ei.line = (x1, y1, x2, y2, color = 0) => {
-        _ctx.strokeStyle = colors[~~color % 16]
+        _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.moveTo(~~x1, ~~y1)
         _ctx.lineTo(~~x2, ~~y2)
@@ -552,7 +566,7 @@ export default function litecanvas(opts = {}) {
     ei.text = (x, y, text, color = 0, size = null, font = 'monospace') => {
         size = size ? size : Math.max(16, ei.HEIGHT / 16)
         _ctx.font = ~~size + 'px ' + font
-        _ctx.fillStyle = colors[~~color % 16]
+        _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.fillText(text, ~~x, ~~y)
     }
 
@@ -608,7 +622,7 @@ export default function litecanvas(opts = {}) {
                         pixels[pixelIndex + 2] = 0
                         pixels[pixelIndex + 3] = 0
                     } else {
-                        c = colors[~~parseInt(color, 16)]
+                        c = _colors[~~parseInt(color, 16)]
                         const r = parseInt(c.slice(1, 3), 16),
                             g = parseInt(c.slice(3, 5), 16),
                             b = parseInt(c.slice(5, 7), 16)
@@ -667,7 +681,7 @@ export default function litecanvas(opts = {}) {
             return
         }
 
-        let z = Array.isArray(sound) ? sound : sounds[~~sound % 16]
+        let z = Array.isArray(sound) ? sound : _sounds[~~sound % _countSounds]
         if (volume !== 1 || pitch !== 0 || randomness != null) {
             z = [...z] // clone the sound to not modify the original
             z[0] = (Number(volume) || 1) * (z[0] || 1)
