@@ -55,9 +55,9 @@ function draw() {
 
 ## Docs
 
-Learn more in the [cheatsheet](https://litecanvas.github.io/about.html).
+Check out our [Cheatsheet](https://github.com/litecanvas/engine/wiki/Cheatsheet).
 
-## Demos
+## Basic Demos
 
 Try some demos in our playground:
 
@@ -71,3 +71,4 @@ Try some demos in our playground:
 -   [floopy](https://github.com/lpagg/floppy): a micro game engine for beginners.
 -   [PICO-8](https://www.lexaloffle.com/pico-8.php): fantasy console for making, sharing and playing tiny games.
 -   [sweetie-16](https://lospec.com/palette-list/sweetie-16): a sweet 16 colors palette.
+-   [js13kGames competition](https://js13kgames.com/)
