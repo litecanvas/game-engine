@@ -71,4 +71,4 @@ Try some demos in our playground:
 -   [floopy](https://github.com/lpagg/floppy): a micro game engine for beginners.
 -   [PICO-8](https://www.lexaloffle.com/pico-8.php): fantasy console for making, sharing and playing tiny games.
 -   [sweetie-16](https://lospec.com/palette-list/sweetie-16): a sweet 16 colors palette.
--   [js13kGames competition](https://js13kgames.com/)
+-   [js13kGames](https://js13kgames.com/): a JavaScript coding competition with size limit set to 13 kilobytes.
