@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.4.0 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.5.0 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
     const body = g.document.body
@@ -513,32 +513,6 @@ export default function litecanvas(opts = {}) {
         _ctx.beginPath()
         _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
         _ctx.closePath()
-        _ctx.fill()
-    }
-
-    ei.poly = (points, color = 0) => {
-        _ctx.strokeStyle = _colors[~~color % _countColors]
-        _ctx.beginPath()
-        const len = points.length
-        for (let i = 0; i < len; i += 2) {
-            0 === i
-                ? _ctx.moveTo(~~points[i], ~~points[i + 1])
-                : _ctx.lineTo(~~points[i], ~~points[i + 1])
-        }
-        // _ctx.lineTo(~~points[0], ~~points[1])
-        _ctx.stroke()
-    }
-
-    ei.polyfill = (points, color = 0) => {
-        _ctx.fillStyle = _colors[~~color % _countColors]
-        _ctx.beginPath()
-        const len = points.length
-        for (let i = 0; i < len; i += 2) {
-            0 === i
-                ? _ctx.moveTo(~~points[i], ~~points[i + 1])
-                : _ctx.lineTo(~~points[i], ~~points[i + 1])
-        }
-        // _ctx.lineTo(points[0], points[1])
         _ctx.fill()
     }
 
