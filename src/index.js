@@ -2,10 +2,11 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.5.0 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.6.0 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
-    const body = g.document.body
+    const doc = g.document
+    const body = doc.body
     const on = (elem, evt, callback) => elem.addEventListener(evt, callback)
     const off = (elem, evt, callback) => elem.removeEventListener(evt, callback)
 
@@ -13,7 +14,7 @@ export default function litecanvas(opts = {}) {
     const ei = {
         WIDTH: opts.width ?? null,
         HEIGHT: opts.height ?? opts.width ?? null,
-        CANVAS: g.document.createElement('canvas'),
+        CANVAS: doc.createElement('canvas'),
         PARENT: opts.parent ?? body,
         TAPPED: false,
         TAPPING: false,
@@ -266,6 +267,9 @@ export default function litecanvas(opts = {}) {
         _h.set('CENTERX', ei.WIDTH / 2)
         _h.set('CENTERY', ei.HEIGHT / 2)
 
+        if ('string' === typeof ei.PARENT) {
+            ei.PARENT = doc.querySelector(ei.PARENT)
+        }
         ei.PARENT.appendChild(canvas)
 
         canvas.ctx = canvas.getContext('2d')
@@ -687,7 +691,7 @@ export default function litecanvas(opts = {}) {
 
     _setupCanvas(ei.CANVAS)
 
-    if ('loading' === g.document.readyState) {
+    if ('loading' === doc.readyState) {
         on(g, 'DOMContentLoaded', _init)
     } else {
         _init()
