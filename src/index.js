@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.6.0 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.6.2 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
     const doc = g.document
