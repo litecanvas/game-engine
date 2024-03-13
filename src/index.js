@@ -651,7 +651,7 @@ export default function litecanvas(opts = {}) {
      * @param {number|null} randomness
      * @returns {AudioBufferSourceNode}
      */
-    ei.sfx = (sound = 0, volume = 1, pitch = 0, randomness = null) => {
+    ei.sfx = (sound = 0, volume = 1, pitch = 0, randomness = 0) => {
         if (
             navigator.userActivation &&
             !navigator.userActivation.hasBeenActive
@@ -660,10 +660,10 @@ export default function litecanvas(opts = {}) {
         }
 
         let z = Array.isArray(sound) ? sound : _sounds[~~sound % _countSounds]
-        if (volume !== 1 || pitch !== 0 || randomness != null) {
+        if (volume !== 1 || pitch !== 0 || randomness != 0) {
             z = [...z] // clone the sound to not modify the original
             z[0] = (Number(volume) || 1) * (z[0] || 1)
-            z[1] = randomness >= 0 ? randomness : undefined
+            z[1] = randomness >= 0 ? randomness : 0
             z[10] = ~~z[10] + ~~pitch
         }
         return zzfx(...z)
