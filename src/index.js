@@ -195,7 +195,7 @@ export default function litecanvas(opts = {}) {
 
         _loadPlugins()
 
-        for (const cb of ei.loop.init) cb()
+        for (let i = 0; i < ei.loop.init.length; ++i) ei.loop.init[i]()
 
         // set canvas background color
         if (null != _bg) {
@@ -221,7 +221,8 @@ export default function litecanvas(opts = {}) {
 
         while (_accumulator >= _delta) {
             // update
-            for (const cb of ei.loop.update) cb(_step)
+            for (let i = 0; i < ei.loop.update.length; ++i)
+                ei.loop.update[i](_step)
             _h.set('ELAPSED', ei.ELAPSED + _step)
             _accumulator -= _delta
             ticks++
@@ -230,7 +231,7 @@ export default function litecanvas(opts = {}) {
 
         if (ticks > 0) {
             // draw
-            for (const cb of ei.loop.draw) cb()
+            for (let i = 0; i < ei.loop.draw.length; ++i) ei.loop.draw[i]()
 
             _draws.count++
             _draws.time += ticks * _step
@@ -249,10 +250,7 @@ export default function litecanvas(opts = {}) {
         // Lower numbers correspond with earlier execution
         // By default, any plugins has priority = 10
         _plugins.sort((a, b) => (a.priority ?? 10) - (b.priority ?? 10))
-
-        for (const fn of _plugins) {
-            ei.plugin(fn)
-        }
+        for (let i = 0; i < _plugins.length; ++i) ei.plugin(_plugins[i])
     }
 
     function _setupCanvas(canvas) {
@@ -370,7 +368,7 @@ export default function litecanvas(opts = {}) {
 
     /** MATH API */
     // import some native Math functions
-    for (const m of [
+    for (const fn of [
         'sin',
         'cos',
         'abs',
@@ -385,7 +383,7 @@ export default function litecanvas(opts = {}) {
         'atan2',
         'hypot',
     ]) {
-        ei[m] = g.Math[m]
+        ei[fn] = g.Math[fn]
     }
 
     /**
@@ -660,10 +658,10 @@ export default function litecanvas(opts = {}) {
         }
 
         let z = Array.isArray(sound) ? sound : _sounds[~~sound % _countSounds]
-        if (volume !== 1 || pitch !== 0 || randomness != 0) {
+        if (volume !== 1 || pitch !== 0 || randomness !== 0) {
             z = [...z] // clone the sound to not modify the original
             z[0] = (Number(volume) || 1) * (z[0] || 1)
-            z[1] = randomness >= 0 ? randomness : 0
+            z[1] = randomness > 0 ? randomness : 0
             z[10] = ~~z[10] + ~~pitch
         }
         return zzfx(...z)
