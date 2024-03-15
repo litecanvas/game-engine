@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.6.2 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.7.0 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
     const doc = g.document
@@ -580,15 +580,18 @@ export default function litecanvas(opts = {}) {
 
         offscreen.width = width
         offscreen.height = height
-        _ctx = offscreen.getContext('2d') // override the context
+        offscreen.ctx = offscreen.getContext('2d')
+        _ctx = offscreen.ctx // override the context
 
         if ('function' === typeof draw) {
-            draw(offscreen, _ctx)
+            draw({ canvas: offscreen, width, height })
         } else if (Array.isArray(draw)) {
+            const cc = _countColors
             const imageData = _ctx.createImageData(width, height),
                 pixels = imageData.data
 
-            let x = (y = 0)
+            let x = 0,
+                y = 0
             for (const str of draw) {
                 for (const color of str.split('')) {
                     let pixelIndex = y * (width * 4) + x * 4
@@ -598,14 +601,11 @@ export default function litecanvas(opts = {}) {
                         pixels[pixelIndex + 2] = 0
                         pixels[pixelIndex + 3] = 0
                     } else {
-                        c = _colors[~~parseInt(color, 16)]
-                        const r = parseInt(c.slice(1, 3), 16),
-                            g = parseInt(c.slice(3, 5), 16),
-                            b = parseInt(c.slice(5, 7), 16)
-
-                        pixels[pixelIndex] = r
-                        pixels[pixelIndex + 1] = g
-                        pixels[pixelIndex + 2] = b
+                        let n = cc > 8 ? ~~parseInt(color, 16) : ~~color
+                        c = _colors[n % cc]
+                        pixels[pixelIndex] = parseInt(c.slice(1, 3), 16) // red
+                        pixels[pixelIndex + 1] = parseInt(c.slice(3, 5), 16) // green
+                        pixels[pixelIndex + 2] = parseInt(c.slice(5, 7), 16) // blue
                         pixels[pixelIndex + 3] = 255 // alpha 100%
                     }
                     x++
