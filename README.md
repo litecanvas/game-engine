@@ -16,7 +16,7 @@ npm start
 -   **Tiny**: only `4KB` gzipped.
 -   **Simple API**: just few functions to draw shapes and some utilities to other things like sounds and math.
 -   **Offline-first**: You can install the [playground](https://litecanvas.js.org/) as webapp and use anywhere at any time.
--   **Predefined color palette**: just use a number (from 0 to 15) to choose a color.
+-   **Predefined colors**: just use a number (from 0 to 7) to choose a color in our 8-color palette.
 -   **Predefined sounds**: packed with 8 sounds created in [ZzFX](https://killedbyapixel.github.io/ZzFX/).
 
 ## Getting Started
