@@ -61,7 +61,7 @@ function update(dt) {
   }
 
   // check ball collision with paddle
-  if (rectcol(ballX, ballY, ballSize, ballSize, padX, padY, padW, padH)) {
+  if (colrect(ballX, ballY, ballSize, ballSize, padX, padY, padW, padH)) {
     dirY = -1
     score += 10
     sfx(0)

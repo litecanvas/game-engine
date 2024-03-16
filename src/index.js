@@ -2,18 +2,21 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.7.0 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.8.0 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
-    const doc = g.document
+    const doc = document
     const body = doc.body
+    const math = Math
+
+    // DOM events helpers
     const on = (elem, evt, callback) => elem.addEventListener(evt, callback)
     const off = (elem, evt, callback) => elem.removeEventListener(evt, callback)
 
     // engine instance
     const ei = {
-        WIDTH: opts.width ?? null,
-        HEIGHT: opts.height ?? opts.width ?? null,
+        WIDTH: opts.width ?? 0,
+        HEIGHT: opts.height ?? opts.width ?? 0,
         CANVAS: doc.createElement('canvas'),
         PARENT: opts.parent ?? body,
         TAPPED: false,
@@ -32,44 +35,45 @@ export default function litecanvas(opts = {}) {
     } // instance properties
 
     let _fps = opts.fps ?? 60,
-        _bg = opts.background ?? 0,
+        _bg = opts.background ?? null,
         _globalize = opts.global ?? true,
         _antialias = opts.antialias ?? true,
-        _pixelart = opts.pixelart ?? false,
+        _pixelart = opts.pixelart,
         _fullscreen = opts.fullscreen ?? true,
         _autoscale = opts.autoscale ?? true,
         _tappingInterval = opts.tappingInterval ?? 100,
-        _loop = opts.loop ?? {},
+        _loop = opts.loop,
         _plugins = opts.plugins ?? [],
-        _touchSupported = 'ontouchstart' in g || g.navigator.maxTouchPoints > 0,
+        _tappingHandler,
+        _hasMouse = matchMedia('(pointer:fine)').matches,
         _tapStart = 0,
         _tapTime = 0,
-        _tappingHandler = null,
         _scale = 1,
         _offset = { top: 0, left: 0 },
-        _currentWidth = null,
-        _currentHeight = null,
+        _currentWidth,
+        _currentHeight,
         /** @var {CanvasRenderingContext2D} _ctx */
-        _ctx = null,
+        _ctx,
         _styles = {},
         // game loop variables
-        _now = null,
+        _now,
         _lastFrame = 0,
-        _dt = 0,
+        _dt,
         _step = 1 / _fps,
         _delta = 1000 / _fps,
         _accumulator = 0,
-        _rafid = 0,
+        _rafid,
         _draws = { count: 0, time: 0 },
-        // math
-        _DEG_TO_RAD = Math.PI / 180,
-        _RAD_TO_DEG = 180 / Math.PI,
-        _TWO_PI = Math.PI * 2,
+        // math constants
+        _DEG_TO_RAD = math.PI / 180,
+        _RAD_TO_DEG = 180 / math.PI,
+        _TWO_PI = math.PI * 2,
         // helpers
         _EMPTY_ARRAY = [],
-        _UN = undefined,
+        _UNDEFINED,
         _colors = colors,
         _sounds = sounds,
+        // functions to be used by plugins
         _h = {
             set(key, value) {
                 ei[key] = value
@@ -94,12 +98,38 @@ export default function litecanvas(opts = {}) {
     function _init() {
         off(g, 'DOMContentLoaded', _init)
 
-        _RATIO = ei.WIDTH / ei.HEIGHT
         _currentWidth = ei.WIDTH
         _currentHeight = ei.HEIGHT
 
-        // detect touch support
-        if (_touchSupported) {
+        if (_hasMouse) {
+            _tappingHandler = (ev) => {
+                _now = performance.now()
+                if (_now - _tapTime > _tappingInterval) {
+                    _tapTime = _now
+                    _updateTapping(true, ev.pageX, ev.pageY)
+                }
+            }
+
+            on(ei.CANVAS, 'mousedown', function (ev) {
+                ev.preventDefault()
+
+                on(body, 'mousemove', _tappingHandler)
+                _updateTapping(true, ev.pageX, ev.pageY)
+                _tapTime = _tapStart = performance.now()
+            })
+
+            on(ei.CANVAS, 'mouseup', function (ev) {
+                ev.preventDefault()
+
+                off(body, 'mousemove', _tappingHandler)
+                _updateTapping(false)
+
+                if (performance.now() - _tapStart <= 150) {
+                    _updateTapped(true, ev.pageX, ev.pageY)
+                }
+            })
+        } else {
+            // touch events will be enabled only if the device not has mouse
             let _touchX = 0
             let _touchY = 0
 
@@ -133,33 +163,6 @@ export default function litecanvas(opts = {}) {
                     _updateTapped(true, _touchX, _touchY)
                 }
             })
-        } else {
-            _tappingHandler = (ev) => {
-                _now = performance.now()
-                if (_now - _tapTime > _tappingInterval) {
-                    _tapTime = _now
-                    _updateTapping(true, ev.pageX, ev.pageY)
-                }
-            }
-
-            on(ei.CANVAS, 'mousedown', function (ev) {
-                ev.preventDefault()
-
-                on(body, 'mousemove', _tappingHandler)
-                _updateTapping(true, ev.pageX, ev.pageY)
-                _tapTime = _tapStart = performance.now()
-            })
-
-            on(ei.CANVAS, 'mouseup', function (ev) {
-                ev.preventDefault()
-
-                off(body, 'mousemove', _tappingHandler)
-                _updateTapping(false)
-
-                if (performance.now() - _tapStart <= 150) {
-                    _updateTapped(true, ev.pageX, ev.pageY)
-                }
-            })
         }
 
         on(g, 'focus', () => {
@@ -188,19 +191,24 @@ export default function litecanvas(opts = {}) {
             on(g, 'resize', _resize)
         }
 
-        if (_loop.init || g.init) ei.loop.init.push(_loop.init || g.init)
-        if (_loop.update || g.update)
-            ei.loop.update.push(_loop.update || g.update)
-        if (_loop.draw || g.draw) ei.loop.draw.push(_loop.draw || g.draw)
-
-        _loadPlugins()
-
-        for (let i = 0; i < ei.loop.init.length; ++i) ei.loop.init[i]()
+        if (_loop) {
+            if (_loop.init) ei.loop.init.push(_loop.init)
+            if (_loop.update) ei.loop.update.push(_loop.update)
+            if (_loop.draw) ei.loop.draw.push(_loop.draw)
+        } else {
+            if (g.init) ei.loop.init.push(g.init)
+            if (g.update) ei.loop.update.push(g.update)
+            if (g.draw) ei.loop.draw.push(g.draw)
+        }
 
         // set canvas background color
         if (null != _bg) {
             ei.CANVAS.style.backgroundColor = _colors[_bg % _countColors]
         }
+
+        _loadPlugins()
+
+        for (let i = 0; i < ei.loop.init.length; ++i) ei.loop.init[i]()
 
         _lastFrame = performance.now()
         _rafid = requestAnimationFrame(_frame)
@@ -308,8 +316,8 @@ export default function litecanvas(opts = {}) {
 
         if (!_autoscale && !_fullscreen) return
 
-        _currentWidth = g.innerWidth
-        _currentHeight = g.innerHeight
+        _currentWidth = innerWidth
+        _currentHeight = innerHeight
 
         if (_fullscreen) {
             canvas.width = _currentWidth
@@ -317,11 +325,11 @@ export default function litecanvas(opts = {}) {
             _h.set('WIDTH', _currentWidth)
             _h.set('HEIGHT', _currentHeight)
         } else if (_autoscale) {
-            _scale = Math.min(
+            _scale = math.min(
                 _currentWidth / ei.WIDTH,
                 _currentHeight / ei.HEIGHT
             )
-            _scale = _pixelart ? Math.floor(_scale) : _scale
+            _scale = _pixelart ? math.floor(_scale) : _scale
             canvas.style.width = ei.WIDTH * _scale + 'px'
             canvas.style.height = ei.HEIGHT * _scale + 'px'
         }
@@ -332,11 +340,14 @@ export default function litecanvas(opts = {}) {
         _offset.top = canvas.offsetTop
         _offset.left = canvas.offsetLeft
 
-        ei.textalign(_styles.textAlign || _UN, _styles.textBaseline || _UN)
+        ei.textalign(
+            _styles.textAlign || _UNDEFINED,
+            _styles.textBaseline || _UNDEFINED
+        )
         ei.linestyle(
-            _styles.lineWidth || _UN,
-            _styles.lineJoin || _UN,
-            _styles.lineDash || _UN
+            _styles.lineWidth || _UNDEFINED,
+            _styles.lineJoin || _UNDEFINED,
+            _styles.lineDash || _UNDEFINED
         )
     }
 
@@ -367,7 +378,6 @@ export default function litecanvas(opts = {}) {
     }
 
     /** MATH API */
-    // import some native Math functions
     for (const fn of [
         'sin',
         'cos',
@@ -383,41 +393,43 @@ export default function litecanvas(opts = {}) {
         'atan2',
         'hypot',
     ]) {
-        ei[fn] = g.Math[fn]
+        // import some native Math functions
+        ei[fn] = math[fn]
     }
 
     /**
      * Calculates a linear (interpolation) value over t.
+     * See: https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
      *
-     * @param {number} a - The first value.
-     * @param {number} b - The second value.
-     * @param {number} t - The percentage between a and b to return, represented as a number between 0 and 1.
-     * @returns {number} The step t% of the way between a and b.
+     * @param {number} start
+     * @param {number} end
+     * @param {number} t - The progress in percentage.
+     * @returns {number} The unterpolated value between `a` and `b`
      */
-    ei.lerp = (a, b, t) => a + (b - a) * t
+    ei.lerp = (start, end, t) => start + t * (end - start)
 
     /**
      * Absolute distance between two numbers
      *
-     * @param {Number} a
-     * @param {Number} b
-     * @returns Number
+     * @param {number} a
+     * @param {number} b
+     * @returns {number}
      */
-    ei.distance = (a, b) => Math.abs(a - b)
+    ei.distance = (a, b) => math.abs(a - b)
 
     /**
      * Convert degrees to radians
      *
-     * @param {Number} degs
-     * @returns Number
+     * @param {number} degs
+     * @returns {number}
      */
     ei.deg2rad = (degs) => degs * _DEG_TO_RAD
 
     /**
      * Convert radians to degrees
      *
-     * @param {Number} rads
-     * @returns Number
+     * @param {number} rads
+     * @returns {number}
      */
     ei.rad2deg = (rads) => rads * _RAD_TO_DEG
 
@@ -430,7 +442,7 @@ export default function litecanvas(opts = {}) {
      * @returns {number}
      */
     ei.clamp = function (value, min, max) {
-        return g.Math.min(Math.max(value, min), max)
+        return math.min(math.max(value, min), max)
     }
 
     /** RNG API */
@@ -441,7 +453,7 @@ export default function litecanvas(opts = {}) {
      * @param {number} max
      * @returns {number}
      */
-    ei.rand = (min = 0, max = 1) => g.Math.random() * (max - min) + min
+    ei.rand = (min = 0, max = 1) => math.random() * (max - min) + min
 
     /**
      * Generates a pseudo-random integer between min (inclusive) and max (inclusive)
@@ -451,21 +463,27 @@ export default function litecanvas(opts = {}) {
      * @returns {number}
      */
     ei.randi = (min = 1, max = 100) =>
-        ei.floor(g.Math.random() * (max - min + 1) + min)
+        ei.floor(ei.rand() * (max - min + 1) + min)
 
     /**
-     * Returns `true` or `false` based on random chance (p)
+     * Returns `true` or `false` based on random percent chance (p)
+     *
+     * @param {number} p
+     * @returns {boolean}
      */
     ei.chance = (p = 0.5) => ei.rand() <= p
 
     /**
-     * Choose a random item from a Array.
+     * Choose a random item from a Array
+     *
+     * @param {Array<T>} arr
+     * @returns {T}
      */
     ei.choose = (arr) => arr[ei.randi(0, arr.length - 1)]
 
     /** BASIC GRAPHICS API */
-    ei.clear = (color = null) => {
-        if (null == color) {
+    ei.clear = (color) => {
+        if (color == null) {
             _ctx.clearRect(0, 0, ei.WIDTH, ei.HEIGHT)
         } else {
             _ctx.fillStyle = _colors[~~color % _countColors]
@@ -540,7 +558,7 @@ export default function litecanvas(opts = {}) {
 
     /** TEXT RENDERING API */
     ei.text = (x, y, text, color = 0, size = null, font = 'monospace') => {
-        size = size ? size : Math.max(16, ei.HEIGHT / 16)
+        size = size ? size : math.max(16, ei.HEIGHT / 16)
         _ctx.font = ~~size + 'px ' + font
         _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.fillText(text, ~~x, ~~y)
@@ -622,6 +640,14 @@ export default function litecanvas(opts = {}) {
     }
 
     /** ADVANCED GRAPHICS API */
+    /**
+     * Update the transform matrix
+     *
+     * @param {number} translateX
+     * @param {number} translateY
+     * @param {number} scale
+     * @param {number} angle in radians
+     */
     ei.transform = (translateX, translateY, scale = 1, angle = 0) => {
         _ctx.setTransform(scale, 0, 0, scale, translateX, translateY)
         _ctx.rotate(angle)
@@ -658,7 +684,7 @@ export default function litecanvas(opts = {}) {
         }
 
         let z = Array.isArray(sound) ? sound : _sounds[~~sound % _countSounds]
-        if (volume !== 1 || pitch !== 0 || randomness !== 0) {
+        if (volume !== 1 || pitch || randomness) {
             z = [...z] // clone the sound to not modify the original
             z[0] = (Number(volume) || 1) * (z[0] || 1)
             z[1] = randomness > 0 ? randomness : 0
@@ -668,9 +694,11 @@ export default function litecanvas(opts = {}) {
     }
 
     /** UTILS API */
-    ei.collision = (x1, y1, w1, h1, x2, y2, w2, h2) => {
-        return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-    }
+    ei.colrect = (x1, y1, w1, h1, x2, y2, w2, h2) =>
+        x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
+
+    ei.colcirc = (x1, y1, r1, x2, y2, r2) =>
+        (x2 - x1) ** 2 + (y2 - y1) ** 2 <= (r1 + r2) ** 2
 
     /** PLUGINS API */
     ei.plugin = (fn) => {
