@@ -11,10 +11,10 @@
     "homepage": "https://litecanvas.github.io/about.html",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/litecanvas/engine.git"
+        "url": "git+https://github.com/litecanvas/game-engine.git"
     },
     "bugs": {
-        "url": "https://github.com/litecanvas/engine/issues"
+        "url": "https://github.com/litecanvas/game-engine/issues"
     },
     "main": "src/index.js",
     "type": "module",

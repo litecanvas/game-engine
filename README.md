@@ -57,7 +57,7 @@ function draw() {
 
 ## Docs
 
-Check out our [Cheatsheet](https://github.com/litecanvas/engine/wiki/Cheatsheet).
+Check out our [Cheatsheet](https://github.com/litecanvas/game-engine/wiki/Cheatsheet).
 
 ## Basic Demos
 
