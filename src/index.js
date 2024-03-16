@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.8.0 by Luiz Bills | https://github.com/litecanvas/engine */
+/*! litecanvas v0.8.1 by Luiz Bills | https://github.com/litecanvas/engine */
 export default function litecanvas(opts = {}) {
     const g = window
     const doc = document
@@ -177,11 +177,7 @@ export default function litecanvas(opts = {}) {
                 cancelAnimationFrame(_rafid)
                 _rafid = 0
             }
-            off(
-                body,
-                _touchSupported ? 'mousemove' : 'touchmove',
-                _tappingHandler
-            )
+            off(body, _hasMouse ? 'mousemove' : 'touchmove', _tappingHandler)
             _updateTapping(false)
         })
 
