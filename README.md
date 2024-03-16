@@ -32,6 +32,7 @@ litecanvas({
 
 function init() {
     // run once before the game starts
+    bg = 0
     color = 3
     posx = CENTERX
     posy = CENTERY
@@ -49,7 +50,7 @@ function update() {
 
 function draw() {
     // use to draw your things
-    clear(0) // clear the screen
+    clear(bg) // clear the screen
     circfill(posx, posy, 50, color) // draw a circle
 }
 ```
