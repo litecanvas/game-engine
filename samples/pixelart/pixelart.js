@@ -6,8 +6,9 @@ litecanvas({
 })
 
 const art = paint(8, 8, [
-  // each number from 0 to F (hexdecimals) is a color
-  // tip: use empty/space character to 100% transparent
+  // each char is a pixel
+  // each number is a color from 0 to 7
+  // tip: use empty character (space) to 100% transparent
   '  0000  ',
   ' 055550 ',
   '05505050',
