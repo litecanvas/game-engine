@@ -1,7 +1,7 @@
 litecanvas({
   width: 320,
   height: 480,
-  antialias: false,
+  // antialias: false,
 })
 
 function init() {
@@ -32,12 +32,13 @@ function update(dt) {
 
   // move the paddle
   if (padX !== destX) {
-    padX = lerp(padX, destX, 0.05)
+    padX = distance(padX, destX) > 0.1 ? lerp(padX, destX, 0.05) : destX
   }
 
   // don't let the paddle leave the screen
   if (padX < 0) padX = 0
-  if (padX + padW > WIDTH) padX = WIDTH - padW
+  else if (padX + padW > WIDTH) padX = WIDTH - padW
+
   if (ballY + ballSize > HEIGHT) {
     ballX = 160
     ballY = 70
@@ -60,7 +61,7 @@ function update(dt) {
   }
 
   // check ball collision with paddle
-  if (collision(ballX, ballY, ballSize, ballSize, padX, padY, padW, padH)) {
+  if (rectcol(ballX, ballY, ballSize, ballSize, padX, padY, padW, padH)) {
     dirY = -1
     score += 10
     sfx(0)
@@ -73,13 +74,19 @@ function draw() {
   if (lifes > 0) {
     rectfill(padX, padY, padW, padH, 3)
     circfill(ballX, ballY, ballSize, 6)
-    text(20, 20, '❤️ ' + lifes, 4, textSize)
-    text(WIDTH - 100, 20, ('' + score).padStart(6, 0), 3, textSize)
-
-    text(WIDTH - 50, HEIGHT - 20, 'FPS:' + (FPS || 0), 5, 12)
+    text(20, 20, '❤️ ' + lifes, 4, textSize, 'Silkscreen')
+    text(
+      WIDTH - 100,
+      20,
+      ('' + score).padStart(6, 0),
+      3,
+      textSize,
+      'Silkscreen'
+    )
+    text(WIDTH - 50, HEIGHT - 20, 'FPS:' + (FPS || 0), 5, 12, 'Silkscreen')
   } else {
     textalign('center', 'middle')
-    text(CENTERX, CENTERY - 25, 'GAME OVER', 3)
-    text(CENTERX, CENTERY + 25, 'score: ' + score, 3)
+    text(CENTERX, CENTERY - 25, 'GAME OVER', 3, 25, 'Silkscreen')
+    text(CENTERX, CENTERY + 25, 'score: ' + score, 3, 20, 'Silkscreen')
   }
 }
