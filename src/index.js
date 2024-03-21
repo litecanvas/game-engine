@@ -669,7 +669,7 @@ export default function litecanvas(opts = {}) {
      * @param {number|Array} sound
      * @param {number} volume
      * @param {number} pitch
-     * @param {number|null} randomness
+     * @param {number} randomness
      * @returns {AudioBufferSourceNode}
      */
     ei.sfx = (sound = 0, volume = 1, pitch = 0, randomness = 0) => {
