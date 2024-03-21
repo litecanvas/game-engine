@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.8.1 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.9.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(opts = {}) {
     const g = window
     const doc = document
@@ -65,8 +65,6 @@ export default function litecanvas(opts = {}) {
         _rafid,
         _draws = { count: 0, time: 0 },
         // math constants
-        _DEG_TO_RAD = math.PI / 180,
-        _RAD_TO_DEG = 180 / math.PI,
         _TWO_PI = math.PI * 2,
         // helpers
         _EMPTY_ARRAY = [],
@@ -96,8 +94,6 @@ export default function litecanvas(opts = {}) {
         _countSounds = _sounds.length
 
     function _init() {
-        off(g, 'DOMContentLoaded', _init)
-
         _currentWidth = ei.WIDTH
         _currentHeight = ei.HEIGHT
 
@@ -204,7 +200,7 @@ export default function litecanvas(opts = {}) {
 
         _loadPlugins()
 
-        for (let i = 0; i < ei.loop.init.length; ++i) ei.loop.init[i]()
+        _callAll(ei.loop.init)
 
         _lastFrame = performance.now()
         _rafid = requestAnimationFrame(_frame)
@@ -225,8 +221,7 @@ export default function litecanvas(opts = {}) {
 
         while (_accumulator >= _delta) {
             // update
-            for (let i = 0; i < ei.loop.update.length; ++i)
-                ei.loop.update[i](_step)
+            _callAll(ei.loop.update, _step)
             _h.set('ELAPSED', ei.ELAPSED + _step)
             _accumulator -= _delta
             ticks++
@@ -235,7 +230,7 @@ export default function litecanvas(opts = {}) {
 
         if (ticks > 0) {
             // draw
-            for (let i = 0; i < ei.loop.draw.length; ++i) ei.loop.draw[i]()
+            _callAll(ei.loop.draw)
 
             _draws.count++
             _draws.time += ticks * _step
@@ -373,6 +368,12 @@ export default function litecanvas(opts = {}) {
         _h.set('TAPY', (y - _offset.top) / _scale)
     }
 
+    function _callAll(fnArray, ...args) {
+        for (let i = 0; i < fnArray.length; ++i) {
+            fnArray[i](...args)
+        }
+    }
+
     /** MATH API */
     for (const fn of [
         'sin',
@@ -394,12 +395,12 @@ export default function litecanvas(opts = {}) {
     }
 
     /**
-     * Calculates a linear (interpolation) value over t.
+     * Calculates a linear (interpolation) value over t%.
      * See: https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
      *
      * @param {number} start
      * @param {number} end
-     * @param {number} t - The progress in percentage.
+     * @param {number} t The progress in percentage.
      * @returns {number} The unterpolated value between `a` and `b`
      */
     ei.lerp = (start, end, t) => start + t * (end - start)
@@ -417,17 +418,17 @@ export default function litecanvas(opts = {}) {
      * Convert degrees to radians
      *
      * @param {number} degs
-     * @returns {number}
+     * @returns {number} the value in radians
      */
-    ei.deg2rad = (degs) => degs * _DEG_TO_RAD
+    ei.deg2rad = (degs) => (math.PI / 180) * degs
 
     /**
      * Convert radians to degrees
      *
      * @param {number} rads
-     * @returns {number}
+     * @returns {number} the value in degrees
      */
-    ei.rad2deg = (rads) => rads * _RAD_TO_DEG
+    ei.rad2deg = (rads) => (180 / math.PI) * rads
 
     /**
      * Force a value within the boundaries by clamping it to the range min, max.
@@ -447,7 +448,7 @@ export default function litecanvas(opts = {}) {
      *
      * @param {number} min
      * @param {number} max
-     * @returns {number}
+     * @returns {number} the random number
      */
     ei.rand = (min = 0, max = 1) => math.random() * (max - min) + min
 
@@ -456,7 +457,7 @@ export default function litecanvas(opts = {}) {
      *
      * @param {number} min
      * @param {number} max
-     * @returns {number}
+     * @returns {number} the random number
      */
     ei.randi = (min = 1, max = 100) =>
         ei.floor(ei.rand() * (max - min + 1) + min)
@@ -478,25 +479,26 @@ export default function litecanvas(opts = {}) {
     ei.choose = (arr) => arr[ei.randi(0, arr.length - 1)]
 
     /** BASIC GRAPHICS API */
+    /**
+     * Clear the game screen
+     *
+     * @param {number|null} color The background color (from 0 to 7) or null
+     */
     ei.clear = (color) => {
         if (color == null) {
             _ctx.clearRect(0, 0, ei.WIDTH, ei.HEIGHT)
         } else {
-            _ctx.fillStyle = _colors[~~color % _countColors]
-            _ctx.beginPath()
-            _ctx.fillRect(0, 0, ei.WIDTH, ei.HEIGHT)
+            ei.rectfill(0, 0, ei.WIDTH, ei.HEIGHT, color)
         }
     }
 
     ei.rect = (x, y, width, height, color = 0) => {
         _ctx.strokeStyle = _colors[~~color % _countColors]
-        _ctx.beginPath()
         _ctx.strokeRect(~~x, ~~y, ~~width, ~~height)
     }
 
     ei.rectfill = (x, y, width, height, color = 0) => {
         _ctx.fillStyle = _colors[~~color % _countColors]
-        _ctx.beginPath()
         _ctx.fillRect(~~x, ~~y, ~~width, ~~height)
     }
 
@@ -589,34 +591,33 @@ export default function litecanvas(opts = {}) {
      * @param {OffscreenCanvas} canvas
      */
     ei.paint = (width, height, draw) => {
-        const offscreen = new OffscreenCanvas(width, height),
+        const offscreenCanvas = new OffscreenCanvas(width, height),
             ctxOriginal = _ctx
 
-        offscreen.width = width
-        offscreen.height = height
-        offscreen.ctx = offscreen.getContext('2d')
-        _ctx = offscreen.ctx // override the context
+        offscreenCanvas.width = width
+        offscreenCanvas.height = height
+        offscreenCanvas.ctx = offscreenCanvas.getContext('2d')
+        _ctx = offscreenCanvas.ctx // override the context
 
         if ('function' === typeof draw) {
-            draw({ canvas: offscreen, width, height })
+            draw(offscreenCanvas)
         } else if (Array.isArray(draw)) {
-            const cc = _countColors
             const imageData = _ctx.createImageData(width, height),
                 pixels = imageData.data
 
             let x = 0,
                 y = 0
+
             for (const str of draw) {
                 for (const color of str.split('')) {
                     let pixelIndex = y * (width * 4) + x * 4
-                    if (' ' === color || '.' === color) {
-                        pixels[pixelIndex] = 0
-                        pixels[pixelIndex + 1] = 0
-                        pixels[pixelIndex + 2] = 0
-                        pixels[pixelIndex + 3] = 0
-                    } else {
-                        let n = cc > 8 ? ~~parseInt(color, 16) : ~~color
-                        c = _colors[n % cc]
+                    if (' ' !== color) {
+                        let n = ~~color
+
+                        // support for 16-color palettes
+                        if (_countColors > 8) n = ~~parseInt(color, 16)
+
+                        const c = _colors[n % _countColors]
                         pixels[pixelIndex] = parseInt(c.slice(1, 3), 16) // red
                         pixels[pixelIndex + 1] = parseInt(c.slice(3, 5), 16) // green
                         pixels[pixelIndex + 2] = parseInt(c.slice(5, 7), 16) // blue
@@ -632,7 +633,7 @@ export default function litecanvas(opts = {}) {
 
         _ctx = ctxOriginal // restore the context
 
-        return offscreen
+        return offscreenCanvas
     }
 
     /** ADVANCED GRAPHICS API */
@@ -690,15 +691,39 @@ export default function litecanvas(opts = {}) {
     }
 
     /** UTILS API */
+    /**
+     * Check a collision between two rectangles
+     *
+     * @param {number} x1 first rectangle position X
+     * @param {number} y1 first rectangle position Y
+     * @param {number} w1 first rectangle width
+     * @param {number} h1 first rectangle height
+     * @param {number} x2 second rectangle position X
+     * @param {number} y2 second rectangle position Y
+     * @param {number} w2 second rectangle width
+     * @param {number} h2 second rectangle height
+     * @returns {boolean}
+     */
     ei.colrect = (x1, y1, w1, h1, x2, y2, w2, h2) =>
         x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
 
+    /**
+     * Check a collision between two circles
+     *
+     * @param {number} x1 first circle position X
+     * @param {number} y1 first circle position Y
+     * @param {number} r1 first circle position radius
+     * @param {number} x2 second circle position X
+     * @param {number} y2 second circle position Y
+     * @param {number} r2 second circle position radius
+     * @returns {boolean}
+     */
     ei.colcirc = (x1, y1, r1, x2, y2, r2) =>
         (x2 - x1) ** 2 + (y2 - y1) ** 2 <= (r1 + r2) ** 2
 
     /** PLUGINS API */
     ei.plugin = (fn) => {
-        const pluginData = fn(ei, _h)
+        const pluginData = 'function' === typeof fn ? fn(ei, _h) : fn
         if ('object' === typeof pluginData) {
             for (const key in pluginData) {
                 _h.set(key, pluginData[key])
