@@ -584,7 +584,7 @@ export default function litecanvas(opts = {}) {
      *
      * @param {number} width
      * @param {number} height
-     * @param {string[] | drawCallback} draw
+     * @param {string[]|drawCallback} draw
      * @returns {OffscreenCanvas}
      *
      * @callback drawCallback
