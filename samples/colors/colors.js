@@ -11,7 +11,7 @@ function init() {
 
 // draw the color palette
 function draw() {
-  clear(0)
+  clear()
   w = WIDTH / 4
   h = HEIGHT / 2
   for (let i = 0; i < 8; i++) {

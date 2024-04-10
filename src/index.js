@@ -3,22 +3,24 @@ import { colors } from './colors'
 import { sounds } from './sounds'
 
 /*! litecanvas v0.9.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
-export default function litecanvas(opts = {}) {
-    const g = window
-    const doc = document
-    const body = doc.body
-    const math = Math
-
-    // DOM events helpers
-    const on = (elem, evt, callback) => elem.addEventListener(evt, callback)
-    const off = (elem, evt, callback) => elem.removeEventListener(evt, callback)
+export default function litecanvas(settings = {}) {
+    // helpers
+    const g = window,
+        doc = document,
+        body = doc.body,
+        math = Math,
+        on = (elem, evt, callback) => elem.addEventListener(evt, callback),
+        off = (elem, evt, callback) => elem.removeEventListener(evt, callback),
+        _TWO_PI = math.PI * 2,
+        _EMPTY_ARRAY = [],
+        _UNDEFINED = void 0
 
     // engine instance
     const ei = {
-        WIDTH: opts.width ?? 0,
-        HEIGHT: opts.height ?? opts.width ?? 0,
+        WIDTH: settings.width ?? 0,
+        HEIGHT: settings.height ?? settings.width ?? 0,
         CANVAS: doc.createElement('canvas'),
-        PARENT: opts.parent ?? body,
+        PARENT: settings.parent ?? body,
         TAPPED: false,
         TAPPING: false,
         TAPX: 0,
@@ -34,16 +36,17 @@ export default function litecanvas(opts = {}) {
         },
     } // instance properties
 
-    let _fps = opts.fps ?? 60,
-        _bg = opts.background ?? null,
-        _globalize = opts.global ?? true,
-        _antialias = opts.antialias ?? true,
-        _pixelart = opts.pixelart,
-        _fullscreen = opts.fullscreen ?? true,
-        _autoscale = opts.autoscale ?? true,
-        _tappingInterval = opts.tappingInterval ?? 100,
-        _loop = opts.loop,
-        _plugins = opts.plugins ?? [],
+    let _fps = settings.fps ?? 60,
+        _bg = settings.background ?? null,
+        _globalize = settings.global ?? true,
+        _antialias = settings.antialias ?? true,
+        _pixelart = settings.pixelart,
+        _fullscreen = settings.fullscreen ?? true,
+        _autoscale = settings.autoscale ?? true,
+        _tappingInterval = settings.tappingInterval ?? 100,
+        _loop = settings.loop,
+        _plugins = settings.plugins ?? [],
+        _tapEvents = settings.tapEvents ?? true,
         _tappingHandler,
         _hasMouse = matchMedia('(pointer:fine)').matches,
         _tapStart = 0,
@@ -64,15 +67,13 @@ export default function litecanvas(opts = {}) {
         _accumulator = 0,
         _rafid,
         _draws = { count: 0, time: 0 },
-        // math constants
-        _TWO_PI = math.PI * 2,
-        // helpers
-        _EMPTY_ARRAY = [],
-        _UNDEFINED,
         _colors = colors,
         _sounds = sounds,
+        _countColors = _colors.length,
+        _countSounds = _sounds.length,
         // functions to be used by plugins
         _h = {
+            settings,
             set(key, value) {
                 ei[key] = value
                 if (_globalize) {
@@ -89,76 +90,76 @@ export default function litecanvas(opts = {}) {
                 _sounds = arr
                 _countSounds = arr.length
             },
-        },
-        _countColors = _colors.length,
-        _countSounds = _sounds.length
+        }
 
     function _init() {
         _currentWidth = ei.WIDTH
         _currentHeight = ei.HEIGHT
 
-        if (_hasMouse) {
-            _tappingHandler = (ev) => {
-                _now = performance.now()
-                if (_now - _tapTime > _tappingInterval) {
-                    _tapTime = _now
+        if (_tapEvents) {
+            if (_hasMouse) {
+                _tappingHandler = (ev) => {
+                    _now = performance.now()
+                    if (_now - _tapTime > _tappingInterval) {
+                        _tapTime = _now
+                        _updateTapping(true, ev.pageX, ev.pageY)
+                    }
+                }
+
+                on(ei.CANVAS, 'mousedown', function (ev) {
+                    ev.preventDefault()
+
+                    on(body, 'mousemove', _tappingHandler)
                     _updateTapping(true, ev.pageX, ev.pageY)
+                    _tapTime = _tapStart = performance.now()
+                })
+
+                on(ei.CANVAS, 'mouseup', function (ev) {
+                    ev.preventDefault()
+
+                    off(body, 'mousemove', _tappingHandler)
+                    _updateTapping(false)
+
+                    if (performance.now() - _tapStart <= 150) {
+                        _updateTapped(true, ev.pageX, ev.pageY)
+                    }
+                })
+            } else {
+                // touch events will be enabled only if the device not has mouse
+                let _touchX = 0
+                let _touchY = 0
+
+                _tappingHandler = (ev) => {
+                    _now = performance.now()
+                    if (_now - _tapTime > _tappingInterval) {
+                        const touch = ev.touches[0]
+                        _updateTapping(true, touch.pageX, touch.pageY)
+                        _tapTime = _now
+                    }
                 }
-            }
 
-            on(ei.CANVAS, 'mousedown', function (ev) {
-                ev.preventDefault()
+                on(ei.CANVAS, 'touchstart', function (ev) {
+                    ev.preventDefault()
 
-                on(body, 'mousemove', _tappingHandler)
-                _updateTapping(true, ev.pageX, ev.pageY)
-                _tapTime = _tapStart = performance.now()
-            })
-
-            on(ei.CANVAS, 'mouseup', function (ev) {
-                ev.preventDefault()
-
-                off(body, 'mousemove', _tappingHandler)
-                _updateTapping(false)
-
-                if (performance.now() - _tapStart <= 150) {
-                    _updateTapped(true, ev.pageX, ev.pageY)
-                }
-            })
-        } else {
-            // touch events will be enabled only if the device not has mouse
-            let _touchX = 0
-            let _touchY = 0
-
-            _tappingHandler = (ev) => {
-                _now = performance.now()
-                if (_now - _tapTime > _tappingInterval) {
                     const touch = ev.touches[0]
+                    _touchX = touch.pageX
+                    _touchY = touch.pageY
+                    on(body, 'touchmove', _tappingHandler)
                     _updateTapping(true, touch.pageX, touch.pageY)
-                    _tapTime = _now
-                }
+                    _tapTime = _tapStart = performance.now()
+                })
+
+                on(ei.CANVAS, 'touchend', function (ev) {
+                    ev.preventDefault()
+
+                    off(body, 'touchmove', _tappingHandler)
+                    _updateTapping(false)
+
+                    if (performance.now() - _tapStart <= 150) {
+                        _updateTapped(true, _touchX, _touchY)
+                    }
+                })
             }
-
-            on(ei.CANVAS, 'touchstart', function (ev) {
-                ev.preventDefault()
-
-                const touch = ev.touches[0]
-                _touchX = touch.pageX
-                _touchY = touch.pageY
-                on(body, 'touchmove', _tappingHandler)
-                _updateTapping(true, touch.pageX, touch.pageY)
-                _tapTime = _tapStart = performance.now()
-            })
-
-            on(ei.CANVAS, 'touchend', function (ev) {
-                ev.preventDefault()
-
-                off(body, 'touchmove', _tappingHandler)
-                _updateTapping(false)
-
-                if (performance.now() - _tapStart <= 150) {
-                    _updateTapped(true, _touchX, _touchY)
-                }
-            })
         }
 
         on(g, 'focus', () => {
@@ -406,15 +407,6 @@ export default function litecanvas(opts = {}) {
     ei.lerp = (start, end, t) => start + t * (end - start)
 
     /**
-     * Absolute distance between two numbers
-     *
-     * @param {number} a
-     * @param {number} b
-     * @returns {number}
-     */
-    ei.distance = (a, b) => math.abs(a - b)
-
-    /**
      * Convert degrees to radians
      *
      * @param {number} degs
@@ -650,16 +642,35 @@ export default function litecanvas(opts = {}) {
         _ctx.rotate(angle)
     }
 
+    /**
+     * Sets the alpha (transparency) value to apply when drawing new shapes and images
+     *
+     *
+     * @param {number} alpha from 0 to 1 (e.g: 0.5 = 50% transparent)
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
+     */
     ei.alpha = (alpha = 1) => {
         _ctx.globalAlpha = alpha
     }
 
+    /**
+     * Sets the type of compositing operation to apply when drawing new shapes
+     *
+     * @param {string} mode
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+     */
     ei.blendmode = (mode = 'source-over') => {
         _ctx.globalCompositeOperation = mode
     }
 
+    /**
+     * saves the current drawing style settings and transformations
+     */
     ei.push = () => _ctx.save()
 
+    /**
+     * restores the drawing style settings and transformations
+     */
     ei.pop = () => _ctx.restore()
 
     /** SOUND API */

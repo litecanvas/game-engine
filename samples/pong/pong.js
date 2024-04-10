@@ -32,7 +32,7 @@ function update(dt) {
 
   // move the paddle
   if (padX !== destX) {
-    padX = distance(padX, destX) > 0.1 ? lerp(padX, destX, 0.05) : destX
+    padX = lerp(padX, destX, 0.05)
   }
 
   // don't let the paddle leave the screen
