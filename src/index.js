@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.10.1 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.11.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const g = window,
@@ -67,6 +67,7 @@ export default function litecanvas(settings = {}) {
         _accumulator = 0,
         _rafid,
         _draws = { count: 0, time: 0 },
+        _font = '',
         _colors = colors,
         _sounds = sounds,
         _countColors = _colors.length,
@@ -274,9 +275,9 @@ export default function litecanvas(settings = {}) {
         _ctx = canvas.ctx
 
         // default text style
-        _ctx.textAlign = 'start'
-        _ctx.textBaseline = 'top'
+        textalign()
 
+        // canvas position
         canvas.style.display = 'block'
 
         if (_fullscreen) {
@@ -547,13 +548,30 @@ export default function litecanvas(settings = {}) {
     }
 
     /** TEXT RENDERING API */
-    ei.text = (x, y, text, color = 0, size = null, font = 'monospace') => {
+    ei.text = (x, y, text, color = 0, size = null, font = null) => {
         size = size ? size : math.max(16, ei.HEIGHT / 16)
-        _ctx.font = ~~size + 'px ' + font
+        _ctx.font = ~~size + 'px ' + (font || _font)
         _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.fillText(text, ~~x, ~~y)
     }
 
+    /**
+     * Set a default font family
+     *
+     * @param {string} fontFamily
+     */
+    ei.textfont = (fontFamily) => {
+        _font = fontFamily
+    }
+
+    /**
+     * Sets the alignment used when drawing texts
+     *
+     * @param {string} align the horizontal alignment. Accepts: "left", "right", "center", "start" or "end"
+     * @param {string} baseline the vertical alignment. Accepts: "top", "middle", "bottom", "hanging" or "ideographic"
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
+     */
     ei.textalign = (align = 'start', baseline = 'top') => {
         _ctx.textAlign = _styles.textAlign = align
         _ctx.textBaseline = _styles.textBaseline = baseline
