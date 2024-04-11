@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.11.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.11.1 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const g = window,
@@ -67,7 +67,7 @@ export default function litecanvas(settings = {}) {
         _accumulator = 0,
         _rafid,
         _draws = { count: 0, time: 0 },
-        _font = '',
+        _font = 'sans-serif',
         _colors = colors,
         _sounds = sounds,
         _countColors = _colors.length,
