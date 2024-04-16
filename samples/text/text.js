@@ -1,8 +1,7 @@
 litecanvas()
 
-let margin = 60
-
 function init() {
+  margin = 60
   textalign('center', 'middle')
 }
 
