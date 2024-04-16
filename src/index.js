@@ -2,25 +2,44 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.11.1 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.12.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
-    const g = window,
-        doc = document,
-        body = doc.body,
+    const root = window,
+        body = document.body,
         math = Math,
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         off = (elem, evt, callback) => elem.removeEventListener(evt, callback),
+        time = () => performance.now(),
         _TWO_PI = math.PI * 2,
         _EMPTY_ARRAY = [],
-        _UNDEFINED = void 0
+        _UNDEFINED = undefined,
+        _NULL = null,
+        defaults = {
+            fps: 60,
+            fullscreen: true,
+            width: _NULL,
+            height: _NULL,
+            autoscale: true,
+            pixelart: false,
+            antialias: true,
+            background: _NULL,
+            canvas: _NULL,
+            global: true,
+            tappingInterval: true,
+            tapEvents: true,
+            loop: _NULL,
+            plugins: [],
+        }
+
+    // setup the settings default values
+    settings = Object.assign({}, defaults, settings)
 
     // engine instance
-    const ei = {
-        WIDTH: settings.width ?? 0,
-        HEIGHT: settings.height ?? settings.width ?? 0,
-        CANVAS: doc.createElement('canvas'),
-        PARENT: settings.parent ?? body,
+    const instance = {
+        WIDTH: settings.width,
+        HEIGHT: settings.height || settings.width,
+        CANVAS: _NULL,
         TAPPED: false,
         TAPPING: false,
         TAPX: 0,
@@ -36,17 +55,16 @@ export default function litecanvas(settings = {}) {
         },
     } // instance properties
 
-    let _fps = settings.fps ?? 60,
-        _bg = settings.background ?? null,
-        _globalize = settings.global ?? true,
-        _antialias = settings.antialias ?? true,
+    let _fps = settings.fps,
+        /** @var {string|HTMLCanvasElement} _canvas */
+        _canvas = settings.canvas || document.createElement('canvas'),
+        _antialias = settings.antialias,
         _pixelart = settings.pixelart,
-        _fullscreen = settings.fullscreen ?? true,
-        _autoscale = settings.autoscale ?? true,
-        _tappingInterval = settings.tappingInterval ?? 100,
+        _fullscreen = settings.fullscreen,
+        _autoscale = settings.autoscale,
+        _tappingInterval = settings.tappingInterval,
         _loop = settings.loop,
-        _plugins = settings.plugins ?? [],
-        _tapEvents = settings.tapEvents ?? true,
+        _plugins = settings.plugins,
         _tappingHandler,
         _hasMouse = matchMedia('(pointer:fine)').matches,
         _tapStart = 0,
@@ -73,14 +91,9 @@ export default function litecanvas(settings = {}) {
         _countColors = _colors.length,
         _countSounds = _sounds.length,
         // functions to be used by plugins
-        _h = {
+        _helpers = {
             settings,
-            set(key, value) {
-                ei[key] = value
-                if (_globalize) {
-                    g[key] = value
-                }
-            },
+            set: _setvar,
             colors(arr) {
                 if (!arr) return _colors
                 _colors = arr
@@ -94,34 +107,34 @@ export default function litecanvas(settings = {}) {
         }
 
     function _init() {
-        _currentWidth = ei.WIDTH
-        _currentHeight = ei.HEIGHT
+        _setupCanvas()
+        _resize()
 
-        if (_tapEvents) {
+        if (settings.tapEvents) {
             if (_hasMouse) {
                 _tappingHandler = (ev) => {
-                    _now = performance.now()
+                    _now = time()
                     if (_now - _tapTime > _tappingInterval) {
                         _tapTime = _now
                         _updateTapping(true, ev.pageX, ev.pageY)
                     }
                 }
 
-                on(ei.CANVAS, 'mousedown', function (ev) {
+                on(instance.CANVAS, 'mousedown', function (ev) {
                     ev.preventDefault()
 
                     on(body, 'mousemove', _tappingHandler)
                     _updateTapping(true, ev.pageX, ev.pageY)
-                    _tapTime = _tapStart = performance.now()
+                    _tapTime = _tapStart = time()
                 })
 
-                on(ei.CANVAS, 'mouseup', function (ev) {
+                on(instance.CANVAS, 'mouseup', function (ev) {
                     ev.preventDefault()
 
                     off(body, 'mousemove', _tappingHandler)
                     _updateTapping(false)
 
-                    if (performance.now() - _tapStart <= 150) {
+                    if (time() - _tapStart <= 150) {
                         _updateTapped(true, ev.pageX, ev.pageY)
                     }
                 })
@@ -131,7 +144,7 @@ export default function litecanvas(settings = {}) {
                 let _touchY = 0
 
                 _tappingHandler = (ev) => {
-                    _now = performance.now()
+                    _now = time()
                     if (_now - _tapTime > _tappingInterval) {
                         const touch = ev.touches[0]
                         _updateTapping(true, touch.pageX, touch.pageY)
@@ -139,7 +152,7 @@ export default function litecanvas(settings = {}) {
                     }
                 }
 
-                on(ei.CANVAS, 'touchstart', function (ev) {
+                on(instance.CANVAS, 'touchstart', function (ev) {
                     ev.preventDefault()
 
                     const touch = ev.touches[0]
@@ -147,30 +160,30 @@ export default function litecanvas(settings = {}) {
                     _touchY = touch.pageY
                     on(body, 'touchmove', _tappingHandler)
                     _updateTapping(true, touch.pageX, touch.pageY)
-                    _tapTime = _tapStart = performance.now()
+                    _tapTime = _tapStart = time()
                 })
 
-                on(ei.CANVAS, 'touchend', function (ev) {
+                on(instance.CANVAS, 'touchend', function (ev) {
                     ev.preventDefault()
 
                     off(body, 'touchmove', _tappingHandler)
                     _updateTapping(false)
 
-                    if (performance.now() - _tapStart <= 150) {
+                    if (time() - _tapStart <= 150) {
                         _updateTapped(true, _touchX, _touchY)
                     }
                 })
             }
         }
 
-        on(g, 'focus', () => {
+        on(root, 'focus', () => {
             if (_rafid === 0) {
-                _lastFrame = performance.now()
+                _lastFrame = time()
                 _rafid = requestAnimationFrame(_frame)
             }
         })
 
-        on(g, 'blur', () => {
+        on(root, 'blur', () => {
             if (_rafid) {
                 cancelAnimationFrame(_rafid)
                 _rafid = 0
@@ -179,39 +192,38 @@ export default function litecanvas(settings = {}) {
             _updateTapping(false)
         })
 
-        _resize()
-
         if (_autoscale || _fullscreen) {
-            on(g, 'resize', _resize)
+            on(root, 'resize', _resize)
         }
 
         if (_loop) {
-            if (_loop.init) ei.loop.init.push(_loop.init)
-            if (_loop.update) ei.loop.update.push(_loop.update)
-            if (_loop.draw) ei.loop.draw.push(_loop.draw)
+            if (_loop.init) instance.loop.init.push(_loop.init)
+            if (_loop.update) instance.loop.update.push(_loop.update)
+            if (_loop.draw) instance.loop.draw.push(_loop.draw)
         } else {
-            if (g.init) ei.loop.init.push(g.init)
-            if (g.update) ei.loop.update.push(g.update)
-            if (g.draw) ei.loop.draw.push(g.draw)
+            if (root.init) instance.loop.init.push(root.init)
+            if (root.update) instance.loop.update.push(root.update)
+            if (root.draw) instance.loop.draw.push(root.draw)
         }
 
         // set canvas background color
-        if (null != _bg) {
-            ei.CANVAS.style.backgroundColor = _colors[_bg % _countColors]
+        if (_NULL != settings.background) {
+            // prettier-ignore
+            instance.CANVAS.style.backgroundColor = _colors[settings.background % _countColors]
         }
 
         _loadPlugins()
 
-        _callAll(ei.loop.init)
+        _callAll(instance.loop.init)
 
-        _lastFrame = performance.now()
+        _lastFrame = time()
         _rafid = requestAnimationFrame(_frame)
     }
 
     function _frame() {
         let ticks = 0
 
-        _now = performance.now()
+        _now = time()
         _dt = _now - _lastFrame
         _lastFrame = _now
         _accumulator += _dt
@@ -223,8 +235,8 @@ export default function litecanvas(settings = {}) {
 
         while (_accumulator >= _delta) {
             // update
-            _callAll(ei.loop.update, _step)
-            _h.set('ELAPSED', ei.ELAPSED + _step)
+            _callAll(instance.loop.update, _step)
+            _setvar('ELAPSED', instance.ELAPSED + _step)
             _accumulator -= _delta
             ticks++
             _resetTap()
@@ -232,12 +244,12 @@ export default function litecanvas(settings = {}) {
 
         if (ticks > 0) {
             // draw
-            _callAll(ei.loop.draw)
+            _callAll(instance.loop.draw)
 
             _draws.count++
             _draws.time += ticks * _step
             if (_draws.time >= 1) {
-                _h.set('FPS', _draws.count)
+                _setvar('FPS', _draws.count)
                 _draws.time -= 1
                 _draws.count = 0
             }
@@ -247,48 +259,41 @@ export default function litecanvas(settings = {}) {
     }
 
     function _loadPlugins() {
-        // Sort the plugins by priority
-        // Lower numbers correspond with earlier execution
-        // By default, any plugins has priority = 10
-        _plugins.sort((a, b) => (a.priority ?? 10) - (b.priority ?? 10))
-        for (let i = 0; i < _plugins.length; ++i) ei.plugin(_plugins[i])
+        for (let i = 0; i < _plugins.length; ++i) {
+            instance.plugin(_plugins[i])
+        }
     }
 
-    function _setupCanvas(canvas) {
-        if (ei.WIDTH > 0 && _fullscreen) {
+    function _setupCanvas() {
+        // prettier-ignore
+        _canvas = 'string' === typeof _canvas ? document.querySelector(_canvas): _canvas
+        _setvar('CANVAS', _canvas)
+
+        if (instance.WIDTH > 0) {
+            // disable fullscreen if a width is specified
             _fullscreen = false
-            ei.HEIGHT = ei.HEIGHT > 0 ? ei.HEIGHT : ei.WIDTH
         }
 
-        canvas.width = ei.WIDTH
-        canvas.height = ei.HEIGHT
+        _canvas.width = instance.WIDTH
+        _canvas.height = instance.HEIGHT || instance.WIDTH
+        _canvas.ctx = _ctx = _canvas.getContext('2d')
 
-        _h.set('CENTERX', ei.WIDTH / 2)
-        _h.set('CENTERY', ei.HEIGHT / 2)
+        _setvar('CENTERX', instance.WIDTH / 2)
+        _setvar('CENTERY', instance.HEIGHT / 2)
 
-        if ('string' === typeof ei.PARENT) {
-            ei.PARENT = doc.querySelector(ei.PARENT)
-        }
-        ei.PARENT.appendChild(canvas)
+        if (!_canvas.parentNode) body.appendChild(_canvas)
 
-        canvas.ctx = canvas.getContext('2d')
-        _ctx = canvas.ctx
-
-        // default text style
-        textalign()
+        const style = _canvas.style
 
         // canvas position
-        canvas.style.display = 'block'
+
+        style.display = 'block'
 
         if (_fullscreen) {
-            canvas.style.position = 'absolute'
-            canvas.style.top =
-                canvas.style.bottom =
-                canvas.style.left =
-                canvas.style.right =
-                    0
+            style.position = 'absolute'
+            style.inset = 0
         } else if (_autoscale) {
-            canvas.style.margin = 'auto'
+            style.margin = 'auto'
         }
 
         if (_pixelart) {
@@ -297,47 +302,45 @@ export default function litecanvas(settings = {}) {
 
         if (!_antialias) {
             _ctx.imageSmoothingEnabled = false
-            canvas.style.imageRendering = 'pixelated'
+            style.imageRendering = 'pixelated'
         }
 
-        _offset.top = canvas.offsetTop
-        _offset.left = canvas.offsetLeft
+        _offset.top = _canvas.offsetTop
+        _offset.left = _canvas.offsetLeft
     }
 
     function _resize() {
-        const canvas = ei.CANVAS
-
         if (!_autoscale && !_fullscreen) return
 
         _currentWidth = innerWidth
         _currentHeight = innerHeight
 
         if (_fullscreen) {
-            canvas.width = _currentWidth
-            canvas.height = _currentHeight
-            _h.set('WIDTH', _currentWidth)
-            _h.set('HEIGHT', _currentHeight)
+            _canvas.width = _currentWidth
+            _canvas.height = _currentHeight
+            _setvar('WIDTH', _currentWidth)
+            _setvar('HEIGHT', _currentHeight)
         } else if (_autoscale) {
             _scale = math.min(
-                _currentWidth / ei.WIDTH,
-                _currentHeight / ei.HEIGHT
+                _currentWidth / instance.WIDTH,
+                _currentHeight / instance.HEIGHT
             )
             _scale = _pixelart ? math.floor(_scale) : _scale
-            canvas.style.width = ei.WIDTH * _scale + 'px'
-            canvas.style.height = ei.HEIGHT * _scale + 'px'
+            _canvas.style.width = instance.WIDTH * _scale + 'px'
+            _canvas.style.height = instance.HEIGHT * _scale + 'px'
         }
 
-        _h.set('CENTERX', ei.WIDTH / 2)
-        _h.set('CENTERY', ei.HEIGHT / 2)
+        _setvar('CENTERX', instance.WIDTH / 2)
+        _setvar('CENTERY', instance.HEIGHT / 2)
 
-        _offset.top = canvas.offsetTop
-        _offset.left = canvas.offsetLeft
+        _offset.top = _canvas.offsetTop
+        _offset.left = _canvas.offsetLeft
 
-        ei.textalign(
+        instance.textalign(
             _styles.textAlign || _UNDEFINED,
             _styles.textBaseline || _UNDEFINED
         )
-        ei.linestyle(
+        instance.linestyle(
             _styles.lineWidth || _UNDEFINED,
             _styles.lineJoin || _UNDEFINED,
             _styles.lineDash || _UNDEFINED
@@ -345,29 +348,31 @@ export default function litecanvas(settings = {}) {
     }
 
     function _makeGlobals() {
-        for (const key in ei) {
-            if (key in g) {
-                console.warn(`${key} already exists in global context`)
-                continue
-            }
-            g[key] = ei[key]
+        if (window.__litecanvas) {
+            throw new Error(
+                'Cannot instantiate litecanvas({ global: true}) globally twice'
+            )
         }
+        for (const key in instance) {
+            root[key] = instance[key]
+        }
+        window.__litecanvas = true
     }
 
     function _resetTap() {
-        _h.set('TAPPED', false)
+        _setvar('TAPPED', false)
     }
 
     function _updateTapped(tapped, x, y) {
-        _h.set('TAPPED', tapped)
-        _h.set('TAPX', (x - _offset.left) / _scale)
-        _h.set('TAPY', (y - _offset.top) / _scale)
+        _setvar('TAPPED', tapped)
+        _setvar('TAPX', (x - _offset.left) / _scale)
+        _setvar('TAPY', (y - _offset.top) / _scale)
     }
 
     function _updateTapping(tapped, x, y) {
-        _h.set('TAPPING', tapped)
-        _h.set('TAPX', (x - _offset.left) / _scale)
-        _h.set('TAPY', (y - _offset.top) / _scale)
+        _setvar('TAPPING', tapped)
+        _setvar('TAPX', (x - _offset.left) / _scale)
+        _setvar('TAPY', (y - _offset.top) / _scale)
     }
 
     function _callAll(fnArray, ...args) {
@@ -376,8 +381,15 @@ export default function litecanvas(settings = {}) {
         }
     }
 
+    function _setvar(key, value) {
+        instance[key] = value
+        if (settings.global) {
+            root[key] = value
+        }
+    }
+
     /** MATH API */
-    for (const fn of [
+    for (const k of [
         'sin',
         'cos',
         'abs',
@@ -391,9 +403,11 @@ export default function litecanvas(settings = {}) {
         'sign',
         'atan2',
         'hypot',
+        'PI',
+        'E',
     ]) {
         // import some native Math functions
-        ei[fn] = math[fn]
+        instance[k] = math[k]
     }
 
     /**
@@ -405,7 +419,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} t The progress in percentage.
      * @returns {number} The unterpolated value between `a` and `b`
      */
-    ei.lerp = (start, end, t) => start + t * (end - start)
+    instance.lerp = (start, end, t) => start + t * (end - start)
 
     /**
      * Convert degrees to radians
@@ -413,7 +427,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} degs
      * @returns {number} the value in radians
      */
-    ei.deg2rad = (degs) => (math.PI / 180) * degs
+    instance.deg2rad = (degs) => (engine.PI / 180) * degs
 
     /**
      * Convert radians to degrees
@@ -421,7 +435,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} rads
      * @returns {number} the value in degrees
      */
-    ei.rad2deg = (rads) => (180 / math.PI) * rads
+    instance.rad2deg = (rads) => (180 / engine.PI) * rads
 
     /**
      * Force a value within the boundaries by clamping it to the range min, max.
@@ -431,7 +445,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} max
      * @returns {number}
      */
-    ei.clamp = function (value, min, max) {
+    instance.clamp = function (value, min, max) {
         return math.min(math.max(value, min), max)
     }
 
@@ -443,7 +457,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} max
      * @returns {number} the random number
      */
-    ei.rand = (min = 0, max = 1) => math.random() * (max - min) + min
+    instance.rand = (min = 0, max = 1) => math.random() * (max - min) + min
 
     /**
      * Generates a pseudo-random integer between min (inclusive) and max (inclusive)
@@ -452,8 +466,8 @@ export default function litecanvas(settings = {}) {
      * @param {number} max
      * @returns {number} the random number
      */
-    ei.randi = (min = 1, max = 100) =>
-        ei.floor(ei.rand() * (max - min + 1) + min)
+    instance.randi = (min = 1, max = 100) =>
+        instance.floor(instance.rand() * (max - min + 1) + min)
 
     /**
      * Returns `true` or `false` based on random percent chance (p)
@@ -461,7 +475,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} p
      * @returns {boolean}
      */
-    ei.chance = (p = 0.5) => ei.rand() <= p
+    instance.chance = (p = 0.5) => instance.rand() <= p
 
     /**
      * Choose a random item from a Array
@@ -469,7 +483,7 @@ export default function litecanvas(settings = {}) {
      * @param {Array<T>} arr
      * @returns {T}
      */
-    ei.choose = (arr) => arr[ei.randi(0, arr.length - 1)]
+    instance.choose = (arr) => arr[instance.randi(0, arr.length - 1)]
 
     /** BASIC GRAPHICS API */
     /**
@@ -477,25 +491,25 @@ export default function litecanvas(settings = {}) {
      *
      * @param {number|null} color The background color (from 0 to 7) or null
      */
-    ei.clear = (color) => {
-        if (color == null) {
-            _ctx.clearRect(0, 0, ei.WIDTH, ei.HEIGHT)
+    instance.clear = instance.cls = (color) => {
+        if (_NULL == color) {
+            _ctx.clearRect(0, 0, instance.WIDTH, instance.HEIGHT)
         } else {
-            ei.rectfill(0, 0, ei.WIDTH, ei.HEIGHT, color)
+            instance.rectfill(0, 0, instance.WIDTH, instance.HEIGHT, color)
         }
     }
 
-    ei.rect = (x, y, width, height, color = 0) => {
+    instance.rect = (x, y, width, height, color = 0) => {
         _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.strokeRect(~~x, ~~y, ~~width, ~~height)
     }
 
-    ei.rectfill = (x, y, width, height, color = 0) => {
+    instance.rectfill = (x, y, width, height, color = 0) => {
         _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.fillRect(~~x, ~~y, ~~width, ~~height)
     }
 
-    ei.circ = (x, y, radius, color = 0) => {
+    instance.circ = (x, y, radius, color = 0) => {
         _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
@@ -503,7 +517,7 @@ export default function litecanvas(settings = {}) {
         _ctx.stroke()
     }
 
-    ei.circfill = (x, y, radius, color = 0) => {
+    instance.circfill = (x, y, radius, color = 0) => {
         _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
@@ -511,7 +525,7 @@ export default function litecanvas(settings = {}) {
         _ctx.fill()
     }
 
-    ei.oval = (x, y, rx, ry, color = 0) => {
+    instance.oval = (x, y, rx, ry, color = 0) => {
         _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
@@ -519,7 +533,7 @@ export default function litecanvas(settings = {}) {
         _ctx.stroke()
     }
 
-    ei.ovalfill = (x, y, rx, ry, color = 0) => {
+    instance.ovalfill = (x, y, rx, ry, color = 0) => {
         _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
@@ -527,7 +541,7 @@ export default function litecanvas(settings = {}) {
         _ctx.fill()
     }
 
-    ei.line = (x1, y1, x2, y2, color = 0) => {
+    instance.line = (x1, y1, x2, y2, color = 0) => {
         _ctx.strokeStyle = _colors[~~color % _countColors]
         _ctx.beginPath()
         _ctx.moveTo(~~x1, ~~y1)
@@ -535,7 +549,7 @@ export default function litecanvas(settings = {}) {
         _ctx.stroke()
     }
 
-    ei.linestyle = (width = 1, join = 'miter', dash = null) => {
+    instance.linestyle = (width = 1, join = 'miter', dash = _NULL) => {
         _ctx.lineWidth = _styles.lineWidth = width
         _ctx.lineJoin = _styles.lineJoin = join
         if (dash) {
@@ -548,8 +562,24 @@ export default function litecanvas(settings = {}) {
     }
 
     /** TEXT RENDERING API */
-    ei.text = (x, y, text, color = 0, size = null, font = null) => {
-        size = size ? size : math.max(16, ei.HEIGHT / 16)
+    /**
+     * Render a text
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {string} text
+     * @param {number} color
+     * @param {number} size
+     * @param {string} font
+     */
+    instance.print = instance.text = (
+        x,
+        y,
+        text,
+        color = 0,
+        size = 20,
+        font = _NULL
+    ) => {
         _ctx.font = ~~size + 'px ' + (font || _font)
         _ctx.fillStyle = _colors[~~color % _countColors]
         _ctx.fillText(text, ~~x, ~~y)
@@ -560,7 +590,7 @@ export default function litecanvas(settings = {}) {
      *
      * @param {string} fontFamily
      */
-    ei.textfont = (fontFamily) => {
+    instance.textfont = (fontFamily) => {
         _font = fontFamily
     }
 
@@ -572,7 +602,7 @@ export default function litecanvas(settings = {}) {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
-    ei.textalign = (align = 'start', baseline = 'top') => {
+    instance.textalign = (align = 'start', baseline = 'top') => {
         _ctx.textAlign = _styles.textAlign = align
         _ctx.textBaseline = _styles.textBaseline = baseline
     }
@@ -585,7 +615,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} y
      * @param {OffscreenCanvas|Image} image
      */
-    ei.image = (x, y, image) => {
+    instance.image = (x, y, image) => {
         _ctx.drawImage(image, ~~x, ~~y)
     }
 
@@ -600,7 +630,7 @@ export default function litecanvas(settings = {}) {
      * @callback drawCallback
      * @param {OffscreenCanvas} canvas
      */
-    ei.paint = (width, height, draw) => {
+    instance.paint = (width, height, draw) => {
         const offscreenCanvas = new OffscreenCanvas(width, height),
             ctxOriginal = _ctx
 
@@ -609,9 +639,7 @@ export default function litecanvas(settings = {}) {
         offscreenCanvas.ctx = offscreenCanvas.getContext('2d')
         _ctx = offscreenCanvas.ctx // override the context
 
-        if ('function' === typeof draw) {
-            draw(offscreenCanvas)
-        } else if (Array.isArray(draw)) {
+        if (Array.isArray(draw)) {
             const imageData = _ctx.createImageData(width, height),
                 pixels = imageData.data
 
@@ -639,6 +667,8 @@ export default function litecanvas(settings = {}) {
                 x = 0
             }
             _ctx.putImageData(imageData, 0, 0)
+        } else {
+            draw(offscreenCanvas)
         }
 
         _ctx = ctxOriginal // restore the context
@@ -655,7 +685,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} scale
      * @param {number} angle in radians
      */
-    ei.transform = (translateX, translateY, scale = 1, angle = 0) => {
+    instance.transform = (translateX, translateY, scale = 1, angle = 0) => {
         _ctx.setTransform(scale, 0, 0, scale, translateX, translateY)
         _ctx.rotate(angle)
     }
@@ -663,11 +693,10 @@ export default function litecanvas(settings = {}) {
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
      *
-     *
      * @param {number} alpha from 0 to 1 (e.g: 0.5 = 50% transparent)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
      */
-    ei.alpha = (alpha = 1) => {
+    instance.alpha = (alpha = 1) => {
         _ctx.globalAlpha = alpha
     }
 
@@ -677,19 +706,19 @@ export default function litecanvas(settings = {}) {
      * @param {string} mode
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
      */
-    ei.blendmode = (mode = 'source-over') => {
+    instance.blendmode = (mode = 'source-over') => {
         _ctx.globalCompositeOperation = mode
     }
 
     /**
      * saves the current drawing style settings and transformations
      */
-    ei.push = () => _ctx.save()
+    instance.push = () => _ctx.save()
 
     /**
      * restores the drawing style settings and transformations
      */
-    ei.pop = () => _ctx.restore()
+    instance.pop = () => _ctx.restore()
 
     /** SOUND API */
     /**
@@ -701,7 +730,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} randomness
      * @returns {AudioBufferSourceNode}
      */
-    ei.sfx = (sound = 0, volume = 1, pitch = 0, randomness = 0) => {
+    instance.sfx = (sound = 0, volume = 1, pitch = 0, randomness = 0) => {
         if (
             navigator.userActivation &&
             !navigator.userActivation.hasBeenActive
@@ -733,7 +762,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} h2 second rectangle height
      * @returns {boolean}
      */
-    ei.colrect = (x1, y1, w1, h1, x2, y2, w2, h2) =>
+    instance.colrect = (x1, y1, w1, h1, x2, y2, w2, h2) =>
         x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
 
     /**
@@ -747,33 +776,41 @@ export default function litecanvas(settings = {}) {
      * @param {number} r2 second circle position radius
      * @returns {boolean}
      */
-    ei.colcirc = (x1, y1, r1, x2, y2, r2) =>
+    instance.colcirc = (x1, y1, r1, x2, y2, r2) =>
         (x2 - x1) ** 2 + (y2 - y1) ** 2 <= (r1 + r2) ** 2
 
     /** PLUGINS API */
-    ei.plugin = (fn) => {
-        const pluginData = 'function' === typeof fn ? fn(ei, _h) : fn
+
+    /**
+     * @callback pluginCallback
+     * @param {object} instance - The litecanvas instance
+     * @param {object} helpers
+     * @returns {object|null}
+     */
+    /**
+     * @param {pluginCallback} callback
+     */
+    instance.plugin = (callback) => {
+        const pluginData = callback(instance, _helpers)
         if ('object' === typeof pluginData) {
             for (const key in pluginData) {
-                _h.set(key, pluginData[key])
+                _setvar(key, pluginData[key])
             }
         }
     }
 
     // Export to global (window)
-    if (_globalize) {
+    if (settings.global) {
         _makeGlobals()
     }
 
-    _setupCanvas(ei.CANVAS)
-
-    if ('loading' === doc.readyState) {
-        on(g, 'DOMContentLoaded', _init)
+    if ('loading' === document.readyState) {
+        on(root, 'DOMContentLoaded', _init)
     } else {
         _init()
     }
 
-    return ei
+    return instance
 }
 
 window.litecanvas = litecanvas

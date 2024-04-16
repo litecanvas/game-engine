@@ -1,7 +1,7 @@
 litecanvas({
   width: 320,
   autoscale: false,
-  parent: '#game',
+  canvas: '#game',
 })
 
 const buttons = document.querySelector('#buttons')
@@ -40,6 +40,6 @@ function draw() {
   clear(index)
   if (index !== null) {
     circfill(CENTERX, CENTERY, 75, 3)
-    text(CENTERX, CENTERY, `sfx(${index})`, 0)
+    text(CENTERX, CENTERY, `sfx(${index});`, 0)
   }
 }
