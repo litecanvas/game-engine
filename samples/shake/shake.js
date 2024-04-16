@@ -9,7 +9,7 @@ const ball = {
 
 const shake = {
   duration: 0,
-  amplitude: 5,
+  amplitude: 10,
   speed: 100,
   x: 0,
   y: 0,
@@ -50,5 +50,5 @@ function draw() {
   clear(0)
   transform(shake.x, shake.y)
   circfill(ball.x, ball.y, ball.radius, ball.color)
-  text(ball.x, ball.y + ball.radius + 40, 'TAP TO SHAKE', 3, 30)
+  text(ball.x, ball.y + ball.radius + 40, 'TAP TO SHAKE', 3)
 }
