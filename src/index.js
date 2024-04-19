@@ -404,7 +404,6 @@ export default function litecanvas(settings = {}) {
         'atan2',
         'hypot',
         'PI',
-        'E',
     ]) {
         // import some native Math functions
         instance[k] = math[k]
