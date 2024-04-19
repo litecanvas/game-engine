@@ -12,6 +12,7 @@ const loop2 = {
 
 const game1 = litecanvas({
   global: false,
+  autoscale: false,
   width: 256,
   loop: loop1,
 })
