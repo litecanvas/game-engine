@@ -265,8 +265,10 @@ export default function litecanvas(settings = {}) {
     }
 
     function _setupCanvas() {
-        // prettier-ignore
-        _canvas = 'string' === typeof _canvas ? document.querySelector(_canvas): _canvas
+        _canvas =
+            'string' === typeof _canvas
+                ? document.querySelector(_canvas)
+                : _canvas
         _setvar('CANVAS', _canvas)
 
         if (instance.WIDTH > 0) {
@@ -323,7 +325,7 @@ export default function litecanvas(settings = {}) {
         } else if (_autoscale) {
             _scale = math.min(
                 _currentWidth / instance.WIDTH,
-                _currentHeight / instance.HEIGHT
+                _currentHeight / instance.HEIGHT,
             )
             _scale = _pixelart ? math.floor(_scale) : _scale
             _canvas.style.width = instance.WIDTH * _scale + 'px'
@@ -338,23 +340,23 @@ export default function litecanvas(settings = {}) {
 
         instance.textalign(
             _styles.textAlign || _UNDEFINED,
-            _styles.textBaseline || _UNDEFINED
+            _styles.textBaseline || _UNDEFINED,
         )
         instance.linestyle(
             _styles.lineWidth || _UNDEFINED,
             _styles.lineJoin || _UNDEFINED,
-            _styles.lineDash || _UNDEFINED
+            _styles.lineDash || _UNDEFINED,
         )
     }
 
     function _makeGlobals() {
         if (window.__litecanvas) {
-            throw new Error(
-                'Cannot instantiate litecanvas({ global: true}) globally twice'
-            )
+            throw new Error('Cannot instantiate litecanvas globally twice')
         }
         for (const key in instance) {
-            root[key] = instance[key]
+            if (instance.hasOwnProperty(key)) {
+                root[key] = instance[key]
+            }
         }
         window.__litecanvas = true
     }
@@ -577,7 +579,7 @@ export default function litecanvas(settings = {}) {
         text,
         color = 0,
         size = 20,
-        font = _NULL
+        font = _NULL,
     ) => {
         _ctx.font = ~~size + 'px ' + (font || _font)
         _ctx.fillStyle = _colors[~~color % _countColors]
