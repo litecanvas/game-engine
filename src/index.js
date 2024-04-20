@@ -285,9 +285,18 @@ export default function litecanvas(settings = {}) {
 
         if (!_canvas.parentNode) body.appendChild(_canvas)
 
+        if (_pixelart) {
+            _antialias = false
+        }
+
+        _ctx.imageSmoothingEnabled = _antialias
+
+        // canvas CSS tweaks
         const style = _canvas.style
 
-        // canvas position
+        if (!_antialias) {
+            style.imageRendering = 'pixelated'
+        }
 
         style.display = 'block'
 
@@ -296,15 +305,6 @@ export default function litecanvas(settings = {}) {
             style.inset = 0
         } else if (_autoscale) {
             style.margin = 'auto'
-        }
-
-        if (_pixelart) {
-            _antialias = false
-        }
-
-        if (!_antialias) {
-            _ctx.imageSmoothingEnabled = false
-            style.imageRendering = 'pixelated'
         }
 
         _offset.top = _canvas.offsetTop
