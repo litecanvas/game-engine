@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.12.1 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.12.2 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const root = window,
@@ -35,7 +35,7 @@ export default function litecanvas(settings = {}) {
     // setup the settings default values
     settings = Object.assign({}, defaults, settings)
 
-    // engine instance
+    // game engine instance
     const instance = {
         WIDTH: settings.width,
         HEIGHT: settings.height || settings.width,
@@ -428,7 +428,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} degs
      * @returns {number} the value in radians
      */
-    instance.deg2rad = (degs) => (engine.PI / 180) * degs
+    instance.deg2rad = (degs) => (instance.PI / 180) * degs
 
     /**
      * Convert radians to degrees
@@ -436,7 +436,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} rads
      * @returns {number} the value in degrees
      */
-    instance.rad2deg = (rads) => (180 / engine.PI) * rads
+    instance.rad2deg = (rads) => (180 / instance.PI) * rads
 
     /**
      * Force a value within the boundaries by clamping it to the range min, max.
