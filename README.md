@@ -6,7 +6,7 @@ Lightweight HTML5 canvas engine suitable for small games and animations for peop
 
 You can try our [online playground](https://litecanvas.github.io) or just installing the [basic template](https://github.com/litecanvas/template):
 
-```
+```sh
 # requires Node.js
 npx tiged litecanvas/template my-game
 cd my-game
