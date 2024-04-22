@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.12.2 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.13.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const root = window,
@@ -467,7 +467,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} max
      * @returns {number} the random number
      */
-    instance.randi = (min = 1, max = 100) =>
+    instance.randi = (min = 0, max = 1) =>
         instance.floor(instance.rand() * (max - min + 1) + min)
 
     /**
