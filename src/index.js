@@ -33,7 +33,7 @@ export default function litecanvas(settings = {}) {
         }
 
     // setup the settings default values
-    settings = Object.assign({}, defaults, settings)
+    settings = Object.assign(defaults, settings)
 
     // game engine instance
     const instance = {
@@ -699,6 +699,12 @@ export default function litecanvas(settings = {}) {
      */
     instance.alpha = (alpha = 1) => {
         _ctx.globalAlpha = alpha
+    }
+
+    instance.clip = (callback) => {
+        _ctx.beginPath()
+        callback(_ctx)
+        _ctx.clip()
     }
 
     /**
