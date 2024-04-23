@@ -69,7 +69,7 @@ function update(dt) {
 }
 
 function draw() {
-  clear(0)
+  cls(0)
 
   if (lifes > 0) {
     rectfill(padX, padY, padW, padH, 3)

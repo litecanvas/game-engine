@@ -47,8 +47,8 @@ function update(dt) {
 }
 
 function draw() {
-  clear(0)
-  transform(shake.x, shake.y)
+  cls(0)
+  translate(shake.x, shake.y)
   circfill(ball.x, ball.y, ball.radius, ball.color)
   text(ball.x, ball.y + ball.radius + 40, 'TAP TO SHAKE', 3)
 }

@@ -40,7 +40,7 @@ function draw() {
   print(0, 0, FPS, 4)
 
   push()
-  transform(WIDTH / 2, HEIGHT / 2)
+  translate(WIDTH / 2, HEIGHT / 2)
   for (let i = 0; i < 4; i++) {
     connect(i, (i + 1) % 4, projected)
     connect(i + 4, ((i + 1) % 4) + 4, projected)

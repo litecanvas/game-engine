@@ -27,7 +27,7 @@ function update(dt) {
 }
 
 function draw() {
-  clear(0)
+  cls(0)
 
   for (const e of entities) {
     e.draw(useImage)

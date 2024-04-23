@@ -18,7 +18,7 @@ function update(dt) {
 }
 
 function draw() {
-  clear(11)
+  cls(11)
 
   for (const obj of objects) {
     push()

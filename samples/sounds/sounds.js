@@ -44,7 +44,7 @@ function update() {
 }
 
 function draw() {
-  clear(index)
+  cls(index)
   if (index !== null) {
     circfill(CENTERX, CENTERY, 75, 3)
     text(CENTERX, CENTERY, `sfx(${index});`, 0)

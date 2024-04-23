@@ -1,12 +1,12 @@
 const loop1 = {
   draw: function () {
-    game1.clear(2)
+    game1.cls(2)
   },
 }
 
 const loop2 = {
   draw: function () {
-    game2.clear(4)
+    game2.cls(4)
   },
 }
 

@@ -25,6 +25,6 @@ function update() {
 
 function draw() {
   if (ELAPSED > 1) return // stop the draw
-  clear(1)
+  cls(1)
   image(0, 0, art)
 }

@@ -6,7 +6,7 @@ function init() {
 }
 
 function draw() {
-  clear(0)
+  cls(0)
 
   // draw next texts using "sans-serif" font
   textfont('sans-serif')

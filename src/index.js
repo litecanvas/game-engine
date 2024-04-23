@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.16.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.17.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const root = window,
@@ -514,22 +514,6 @@ export default function litecanvas(settings = {}) {
         _ctx.fill()
     }
 
-    instance.oval = (x, y, rx, ry, color = 0) => {
-        _ctx.strokeStyle = colors[~~color % colors.length]
-        _ctx.beginPath()
-        _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
-        _ctx.closePath()
-        _ctx.stroke()
-    }
-
-    instance.ovalfill = (x, y, rx, ry, color = 0) => {
-        _ctx.fillStyle = colors[~~color % colors.length]
-        _ctx.beginPath()
-        _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
-        _ctx.closePath()
-        _ctx.fill()
-    }
-
     instance.line = (x1, y1, x2, y2, color = 0) => {
         _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.beginPath()
@@ -639,12 +623,11 @@ export default function litecanvas(settings = {}) {
                 for (const color of str.split('')) {
                     let pixelIndex = y * (width * 4) + x * 4
                     if (' ' !== color && '.' !== color) {
-                        let n = ~~color
-
-                        // support for 16-color palettes
-                        if (colors.length > 8) n = ~~parseInt(color, 16)
-
+                        // support max 16-color palettes
+                        // prettier-ignore
+                        const n = colors.length > 8 ? ~~parseInt(color, 16) : ~~color
                         const c = colors[n % colors.length]
+
                         pixels[pixelIndex] = parseInt(c.slice(1, 3), 16) // red
                         pixels[pixelIndex + 1] = parseInt(c.slice(3, 5), 16) // green
                         pixels[pixelIndex + 2] = parseInt(c.slice(5, 7), 16) // blue
@@ -667,17 +650,42 @@ export default function litecanvas(settings = {}) {
 
     /** ADVANCED GRAPHICS API */
     /**
-     * Update the transform matrix
+     * Adds a translation transformation to the current matrix
      *
-     * @param {number} translateX
-     * @param {number} translateY
-     * @param {number} scale
-     * @param {number} angle in radians
+     * @param {number} x
+     * @param {number} y
      */
-    instance.transform = (translateX, translateY, scale = 1, angle = 0) => {
-        _ctx.setTransform(scale, 0, 0, scale, translateX, translateY)
-        _ctx.rotate(angle)
-    }
+    instance.translate = (x = 0, y = 0) => _ctx.translate(x, y)
+
+    /**
+     * Adds a scaling transformation to the canvas units horizontally and/or vertically.
+     *
+     * @param {number} x
+     * @param {number} y
+     */
+    instance.scale = (x = 1, y = 1) => _ctx.scale(x, y)
+
+    /**
+     * Adds a rotation to the transformation matrix
+     *
+     * @param {number} radians
+     */
+    instance.rotate = (radians = 0) => _ctx.rotate(radians)
+
+    /**
+     * Adds a transformation that skews to the transformation matrix
+     *
+     * @param {number} a
+     * @param {number} b
+     * @param {number} c
+     * @param {number} d
+     * @param {number} e
+     * @param {number} f
+     * @param {boolean} overrides
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
+     */
+    instance.transform = (a, b, c, d, e, f, reset = true) =>
+        _ctx[reset ? 'setTransform' : 'transform'](a, b, c, d, e, f)
 
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
