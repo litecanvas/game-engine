@@ -18,13 +18,20 @@ pitch.onchange = (ev) => {
   document.querySelector('#pitch-value').textContent = ev.target.value
 }
 
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 9; i++) {
   const button = document.createElement('button')
   button.onclick = () => {
     index = i
-    sfx(i, volume.value, pitch.value)
+    if (8 === i) {
+      index = 'custom'
+      // custom zzfx sound produced in https://killedbyapixel.github.io/ZzFX/
+      // prettier-ignore
+      sfx([2.69,,114,,0.23,0,,0.32,,,,,,,,,0.33,0.74,,0.01])
+    } else {
+      sfx(i, volume.value, pitch.value) // for i = 0 ~ 7 use the default sounds
+    }
   }
-  button.textContent = '#' + i
+  button.textContent = '#' + i + (8 === i ? '*' : '')
   buttons.appendChild(button)
 }
 

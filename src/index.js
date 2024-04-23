@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.14.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.15.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const root = window,
@@ -86,24 +86,12 @@ export default function litecanvas(settings = {}) {
         _rafid,
         _draws = { count: 0, time: 0 },
         _font = 'sans-serif',
-        _colors = colors,
-        _sounds = sounds,
-        _countColors = _colors.length,
-        _countSounds = _sounds.length,
-        // functions to be used by plugins
+        // object with helpers to be used by plugins
         _helpers = {
             settings,
             set: _setvar,
-            colors(arr) {
-                if (!arr) return _colors
-                _colors = arr
-                _countColors = arr.length
-            },
-            sounds(arr) {
-                if (!arr) return _sounds
-                _sounds = arr
-                _countSounds = arr.length
-            },
+            colors,
+            sounds,
         }
 
     function _init() {
@@ -206,15 +194,15 @@ export default function litecanvas(settings = {}) {
             if (root.draw) instance.loop.draw.push(root.draw)
         }
 
-        // set canvas background color
-        if (_NULL != settings.background) {
-            // prettier-ignore
-            instance.CANVAS.style.backgroundColor = _colors[settings.background % _countColors]
-        }
-
         _loadPlugins()
 
         _callAll(instance.loop.init)
+
+        // set canvas background color
+        if (_NULL != settings.background) {
+            // prettier-ignore
+            instance.CANVAS.style.backgroundColor = colors[settings.background % colors.length]
+        }
 
         _lastFrame = time()
         _rafid = requestAnimationFrame(_frame)
@@ -501,17 +489,17 @@ export default function litecanvas(settings = {}) {
     }
 
     instance.rect = (x, y, width, height, color = 0) => {
-        _ctx.strokeStyle = _colors[~~color % _countColors]
+        _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.strokeRect(~~x, ~~y, ~~width, ~~height)
     }
 
     instance.rectfill = (x, y, width, height, color = 0) => {
-        _ctx.fillStyle = _colors[~~color % _countColors]
+        _ctx.fillStyle = colors[~~color % colors.length]
         _ctx.fillRect(~~x, ~~y, ~~width, ~~height)
     }
 
     instance.circ = (x, y, radius, color = 0) => {
-        _ctx.strokeStyle = _colors[~~color % _countColors]
+        _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.beginPath()
         _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
         _ctx.closePath()
@@ -519,7 +507,7 @@ export default function litecanvas(settings = {}) {
     }
 
     instance.circfill = (x, y, radius, color = 0) => {
-        _ctx.fillStyle = _colors[~~color % _countColors]
+        _ctx.fillStyle = colors[~~color % colors.length]
         _ctx.beginPath()
         _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
         _ctx.closePath()
@@ -527,7 +515,7 @@ export default function litecanvas(settings = {}) {
     }
 
     instance.oval = (x, y, rx, ry, color = 0) => {
-        _ctx.strokeStyle = _colors[~~color % _countColors]
+        _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.beginPath()
         _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
         _ctx.closePath()
@@ -535,7 +523,7 @@ export default function litecanvas(settings = {}) {
     }
 
     instance.ovalfill = (x, y, rx, ry, color = 0) => {
-        _ctx.fillStyle = _colors[~~color % _countColors]
+        _ctx.fillStyle = colors[~~color % colors.length]
         _ctx.beginPath()
         _ctx.ellipse(~~x + ~~rx, ~~y + ~~ry, ~~rx, ~~ry, 0, 0, _TWO_PI)
         _ctx.closePath()
@@ -543,7 +531,7 @@ export default function litecanvas(settings = {}) {
     }
 
     instance.line = (x1, y1, x2, y2, color = 0) => {
-        _ctx.strokeStyle = _colors[~~color % _countColors]
+        _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.beginPath()
         _ctx.moveTo(~~x1, ~~y1)
         _ctx.lineTo(~~x2, ~~y2)
@@ -582,7 +570,7 @@ export default function litecanvas(settings = {}) {
         font = _NULL,
     ) => {
         _ctx.font = ~~size + 'px ' + (font || _font)
-        _ctx.fillStyle = _colors[~~color % _countColors]
+        _ctx.fillStyle = colors[~~color % colors.length]
         _ctx.fillText(text, ~~x, ~~y)
     }
 
@@ -650,13 +638,13 @@ export default function litecanvas(settings = {}) {
             for (const str of draw) {
                 for (const color of str.split('')) {
                     let pixelIndex = y * (width * 4) + x * 4
-                    if (' ' !== color) {
+                    if (' ' !== color && '.' !== color) {
                         let n = ~~color
 
                         // support for 16-color palettes
-                        if (_countColors > 8) n = ~~parseInt(color, 16)
+                        if (colors.length > 8) n = ~~parseInt(color, 16)
 
-                        const c = _colors[n % _countColors]
+                        const c = colors[n % colors.length]
                         pixels[pixelIndex] = parseInt(c.slice(1, 3), 16) // red
                         pixels[pixelIndex + 1] = parseInt(c.slice(3, 5), 16) // green
                         pixels[pixelIndex + 2] = parseInt(c.slice(5, 7), 16) // blue
@@ -745,7 +733,7 @@ export default function litecanvas(settings = {}) {
             return
         }
 
-        let z = Array.isArray(sound) ? sound : _sounds[~~sound % _countSounds]
+        let z = Array.isArray(sound) ? sound : sounds[~~sound % sounds.length]
         if (volume !== 1 || pitch || randomness) {
             z = [...z] // clone the sound to not modify the original
             z[0] = (Number(volume) || 1) * (z[0] || 1)
