@@ -21,7 +21,7 @@ function update(dt) {
 function draw() {
   cls(0)
   push()
-  clip((ctx) => ctx.arc(x, y, size, 0, PI * 2))
+  clipcirc(x, y, size)
   cls(3)
   for (let i = 0; i < boxes.length; i++) {
     rectfill(boxes[i][0], boxes[i][1], 25, 25, boxes[i][2])

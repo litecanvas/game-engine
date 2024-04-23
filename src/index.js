@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.15.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.16.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const root = window,
@@ -464,7 +464,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} p
      * @returns {boolean}
      */
-    instance.chance = (p = 0.5) => instance.rand() <= p
+    instance.chance = (p = 0.5) => instance.rand() < p
 
     /**
      * Choose a random item from a Array
@@ -689,9 +689,38 @@ export default function litecanvas(settings = {}) {
         _ctx.globalAlpha = alpha
     }
 
-    instance.clip = (callback) => {
+    /**
+     * Create a retangular clipping region.
+     *
+     * Note: Clip paths cannot be reverted directly. You must save your
+     * canvas state using push() before calling cliprect(), and restore it
+     * once you have finished drawing in the clipped area using pop().
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     */
+    instance.cliprect = (x, y, width, height) => {
         _ctx.beginPath()
-        callback(_ctx)
+        _ctx.rect(x, y, width, height)
+        _ctx.clip()
+    }
+
+    /**
+     * Create a circular clipping region.
+     *
+     * Note: Clip paths cannot be reverted directly. You must save your
+     * canvas state using push() before calling clipcirc(), and restore it
+     * once you have finished drawing in the clipped area using pop().
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} radius
+     */
+    instance.clipcirc = (x, y, radius) => {
+        _ctx.beginPath()
+        _ctx.arc(x, y, radius, 0, _TWO_PI)
         _ctx.clip()
     }
 
