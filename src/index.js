@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.17.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.18.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const root = window,
@@ -401,12 +401,12 @@ export default function litecanvas(settings = {}) {
 
     /**
      * Calculates a linear (interpolation) value over t%.
-     * See: https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
      *
      * @param {number} start
      * @param {number} end
      * @param {number} t The progress in percentage.
      * @returns {number} The unterpolated value between `a` and `b`
+     * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
      */
     instance.lerp = (start, end, t) => start + t * (end - start)
 
@@ -440,7 +440,7 @@ export default function litecanvas(settings = {}) {
 
     /** RNG API */
     /**
-     * Generates a pseudo-random float between min (inclusive) and max (exclusive)
+     * Generates a pseudorandom float between min (inclusive) and max (exclusive)
      *
      * @param {number} min
      * @param {number} max
@@ -449,7 +449,7 @@ export default function litecanvas(settings = {}) {
     instance.rand = (min = 0, max = 1) => math.random() * (max - min) + min
 
     /**
-     * Generates a pseudo-random integer between min (inclusive) and max (inclusive)
+     * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
      *
      * @param {number} min
      * @param {number} max
@@ -459,9 +459,9 @@ export default function litecanvas(settings = {}) {
         instance.floor(instance.rand() * (max - min + 1) + min)
 
     /**
-     * Returns `true` or `false` based on random percent chance (p)
+     * Randomly returns `true` or `false`
      *
-     * @param {number} p
+     * @param {number} p chance from 0 to 1 (0 = 0% and 1 = 100%)
      * @returns {boolean}
      */
     instance.chance = (p = 0.5) => instance.rand() < p
@@ -479,6 +479,7 @@ export default function litecanvas(settings = {}) {
      * Clear the game screen
      *
      * @param {number|null} color The background color (from 0 to 7) or null
+     * @alias instance.cls
      */
     instance.clear = instance.cls = (color) => {
         if (_NULL == color) {
@@ -488,16 +489,42 @@ export default function litecanvas(settings = {}) {
         }
     }
 
+    /**
+     * Draw a rectangle outline
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @param {number} color the color index (generally from 0 to 7)
+     */
     instance.rect = (x, y, width, height, color = 0) => {
         _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.strokeRect(~~x, ~~y, ~~width, ~~height)
     }
 
+    /**
+     * Draw a color-filled rectangle
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @param {number} color the color index (generally from 0 to 7)
+     */
     instance.rectfill = (x, y, width, height, color = 0) => {
         _ctx.fillStyle = colors[~~color % colors.length]
         _ctx.fillRect(~~x, ~~y, ~~width, ~~height)
     }
 
+    /**
+     * Draw a circle outline
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} radius
+     * @param {number} color the color index (generally from 0 to 7)
+     */
     instance.circ = (x, y, radius, color = 0) => {
         _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.beginPath()
@@ -506,6 +533,14 @@ export default function litecanvas(settings = {}) {
         _ctx.stroke()
     }
 
+    /**
+     * Draw a color-filled circle
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} radius
+     * @param {number} color the color index (generally from 0 to 7)
+     */
     instance.circfill = (x, y, radius, color = 0) => {
         _ctx.fillStyle = colors[~~color % colors.length]
         _ctx.beginPath()
@@ -514,6 +549,15 @@ export default function litecanvas(settings = {}) {
         _ctx.fill()
     }
 
+    /**
+     * Draw a line
+     *
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} color the color index (generally from 0 to 7)
+     */
     instance.line = (x1, y1, x2, y2, color = 0) => {
         _ctx.strokeStyle = colors[~~color % colors.length]
         _ctx.beginPath()
@@ -522,30 +566,37 @@ export default function litecanvas(settings = {}) {
         _ctx.stroke()
     }
 
+    /**
+     * Helper to modify the lineWidth, lineJoin and lineDash properties of canvas context
+     *
+     * @param {number} width
+     * @param {number} join
+     * @param {array|number} dash
+     */
     instance.linestyle = (width = 1, join = 'miter', dash = _NULL) => {
         _ctx.lineWidth = _styles.lineWidth = width
         _ctx.lineJoin = _styles.lineJoin = join
-        if (dash) {
-            _styles.lineDash = Array.isArray(dash) ? dash : [dash]
-            _ctx.setLineDash(_styles.lineDash)
-        } else {
-            _styles.lineDash = _EMPTY_ARRAY
-            _ctx.setLineDash(_styles.lineDash)
-        }
+        _styles.lineDash = dash
+            ? Array.isArray(dash)
+                ? dash
+                : [dash]
+            : _EMPTY_ARRAY
+        _ctx.setLineDash(_styles.lineDash)
     }
 
     /** TEXT RENDERING API */
     /**
-     * Render a text
+     * Draw text
      *
+     * @alias instance.print
      * @param {number} x
      * @param {number} y
-     * @param {string} text
-     * @param {number} color
-     * @param {number} size
-     * @param {string} font
+     * @param {string} text the text message
+     * @param {number} color the color index (generally from 0 to 7)
+     * @param {number} size the font size
+     * @param {string} font the font family
      */
-    instance.print = instance.text = (
+    instance.text = instance.print = (
         x,
         y,
         text,
@@ -593,15 +644,16 @@ export default function litecanvas(settings = {}) {
     }
 
     /**
+     * @callback drawCallback
+     * @param {OffscreenCanvas} canvas
+     */
+    /**
      * Creates a offscreen canvas to draw on it
      *
      * @param {number} width
      * @param {number} height
      * @param {string[]|drawCallback} draw
      * @returns {OffscreenCanvas}
-     *
-     * @callback drawCallback
-     * @param {OffscreenCanvas} canvas
      */
     instance.paint = (width, height, draw) => {
         const offscreenCanvas = new OffscreenCanvas(width, height),
@@ -609,8 +661,7 @@ export default function litecanvas(settings = {}) {
 
         offscreenCanvas.width = width
         offscreenCanvas.height = height
-        offscreenCanvas.ctx = offscreenCanvas.getContext('2d')
-        _ctx = offscreenCanvas.ctx // override the context
+        offscreenCanvas.ctx = _ctx = offscreenCanvas.getContext('2d')
 
         if (Array.isArray(draw)) {
             const imageData = _ctx.createImageData(width, height),
@@ -650,6 +701,13 @@ export default function litecanvas(settings = {}) {
 
     /** ADVANCED GRAPHICS API */
     /**
+     * Get the canvas context
+     *
+     * @returns {CanvasRenderingContext2D}
+     */
+    instance.ctx = () => _ctx
+
+    /**
      * Adds a translation transformation to the current matrix
      *
      * @param {number} x
@@ -681,16 +739,16 @@ export default function litecanvas(settings = {}) {
      * @param {number} d
      * @param {number} e
      * @param {number} f
-     * @param {boolean} overrides
+     * @param {boolean} resetFirst `false` to use _ctx.transform(); by default use _ctx.setTransform()
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
      */
-    instance.transform = (a, b, c, d, e, f, reset = true) =>
-        _ctx[reset ? 'setTransform' : 'transform'](a, b, c, d, e, f)
+    instance.transform = (a, b, c, d, e, f, resetFirst = true) =>
+        _ctx[resetFirst ? 'setTransform' : 'transform'](a, b, c, d, e, f)
 
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
      *
-     * @param {number} alpha from 0 to 1 (e.g: 0.5 = 50% transparent)
+     * @param {number} alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
      */
     instance.alpha = (alpha = 1) => {
@@ -708,6 +766,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} y
      * @param {number} width
      * @param {number} height
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
      */
     instance.cliprect = (x, y, width, height) => {
         _ctx.beginPath()
@@ -725,6 +784,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} x
      * @param {number} y
      * @param {number} radius
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
      */
     instance.clipcirc = (x, y, radius) => {
         _ctx.beginPath()
@@ -744,23 +804,26 @@ export default function litecanvas(settings = {}) {
 
     /**
      * saves the current drawing style settings and transformations
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
      */
     instance.push = () => _ctx.save()
 
     /**
      * restores the drawing style settings and transformations
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore
      */
     instance.pop = () => _ctx.restore()
 
     /** SOUND API */
     /**
-     * Play a defined sound or a array of params for Zzfx
+     * Play a defined sound or a ZzFX array of params
      *
-     * @param {number|Array} sound
+     * @param {number|Array} sound the sound index (from 0 to 7) or a ZzFX array of params
      * @param {number} volume
      * @param {number} pitch
      * @param {number} randomness
      * @returns {AudioBufferSourceNode}
+     * @see https://github.com/KilledByAPixel/ZzFX
      */
     instance.sfx = (sound = 0, volume = 1, pitch = 0, randomness = 0) => {
         if (
@@ -812,7 +875,6 @@ export default function litecanvas(settings = {}) {
         (x2 - x1) ** 2 + (y2 - y1) ** 2 <= (r1 + r2) ** 2
 
     /** PLUGINS API */
-
     /**
      * @callback pluginCallback
      * @param {object} instance - The litecanvas instance
