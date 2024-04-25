@@ -53,7 +53,7 @@ const shockwave = {
     this.borderWidth -= (this.speed / 8) * dt
   },
   draw() {
-    linestyle(this.borderWidth)
+    linewidth(this.borderWidth)
     circ(this.x, this.y, this.radius, this.color)
   },
   destroy() {

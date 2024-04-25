@@ -1,25 +1,30 @@
 litecanvas()
 
+function resize() {
+  size = WIDTH > HEIGHT ? HEIGHT / 2 : WIDTH / 2
+  linewidth(5)
+  linecap('round')
+}
+
 function init() {
-  size = WIDTH > HEIGHT ? HEIGHT / 4 : WIDTH / 4
+  resize()
   projection = [
     [1, 0, 0],
     [0, 1, 0],
     [0, 0, 1],
   ]
   points = [
-    [-size, -size, -size], // [x, y, z]
-    [size, -size, -size],
-    [size, size, -size],
-    [-size, size, -size],
-    [-size, -size, size],
-    [size, -size, size],
-    [size, size, size],
-    [-size, size, size],
+    [-0.5, -0.5, -0.5], // [x, y, z]
+    [0.5, -0.5, -0.5],
+    [0.5, 0.5, -0.5],
+    [-0.5, 0.5, -0.5],
+    [-0.5, -0.5, 0.5],
+    [0.5, -0.5, 0.5],
+    [0.5, 0.5, 0.5],
+    [-0.5, 0.5, 0.5],
   ]
   projected = []
   angle = 0
-  linestyle(4)
 }
 
 function update(dt) {
@@ -31,6 +36,12 @@ function update(dt) {
     rotated = matmul(rotationY(angle), rotated)
     rotated = matmul(rotationZ(angle), rotated)
     const projected2D = matmul(projection, rotated)
+
+    // scale the cube
+    projected2D[0][0] *= size
+    projected2D[1][0] *= size
+    projected2D[2][0] *= size
+
     projected[i] = projected2D
   }
 }

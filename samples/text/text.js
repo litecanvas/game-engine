@@ -2,11 +2,12 @@ litecanvas()
 
 function init() {
   margin = 60
-  textalign('center', 'middle')
 }
 
 function draw() {
   cls(0)
+
+  textalign('center', 'middle')
 
   // draw next texts using "sans-serif" font
   textfont('sans-serif')

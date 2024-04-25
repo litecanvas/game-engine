@@ -2,7 +2,7 @@ import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
-/*! litecanvas v0.18.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.19.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 export default function litecanvas(settings = {}) {
     // helpers
     const root = window,
@@ -13,7 +13,6 @@ export default function litecanvas(settings = {}) {
         time = () => performance.now(),
         _TWO_PI = math.PI * 2,
         _EMPTY_ARRAY = [],
-        _UNDEFINED = undefined,
         _NULL = null,
         defaults = {
             fps: 60,
@@ -52,11 +51,11 @@ export default function litecanvas(settings = {}) {
             init: [],
             update: [],
             draw: [],
+            resize: [],
         },
     } // instance properties
 
-    let _fps = settings.fps,
-        /** @var {string|HTMLCanvasElement} _canvas */
+    let /** @type {string|HTMLCanvasElement} _canvas */
         _canvas = settings.canvas || document.createElement('canvas'),
         _antialias = settings.antialias,
         _pixelart = settings.pixelart,
@@ -65,28 +64,30 @@ export default function litecanvas(settings = {}) {
         _tappingInterval = settings.tappingInterval,
         _loop = settings.loop,
         _plugins = settings.plugins,
-        _tappingHandler,
+        _bg = settings.background,
         _hasMouse = matchMedia('(pointer:fine)').matches,
+        _tappingHandler,
         _scale = 1,
         _offset = { top: 0, left: 0 },
+        _offsetTop = 0,
+        _offsetLeft = 0,
         _currentWidth,
         _currentHeight,
-        /** @var {CanvasRenderingContext2D} _ctx */
+        /** @type {CanvasRenderingContext2D} _ctx */
         _ctx,
-        _styles = {},
         // game loop variables
         _now,
-        _lastFrame = 0,
+        _lastFrame,
         _dt,
-        _step = 1 / _fps,
-        _delta = 1000 / _fps,
+        _step = 1 / settings.fps,
+        _delta = 1000 / settings.fps,
         _accumulator = 0,
         _rafid,
         _draws = { count: 0, time: 0 },
         _font = 'sans-serif',
         // object with helpers to be used by plugins
         _helpers = {
-            settings,
+            settings: Object.assign({}, settings), // clone
             set: _setvar,
             colors,
             sounds,
@@ -95,6 +96,10 @@ export default function litecanvas(settings = {}) {
     function _init() {
         _setupCanvas()
         _resize()
+
+        if (_autoscale || _fullscreen) {
+            on(root, 'resize', _resize)
+        }
 
         if (settings.tapEvents) {
             const _tappedLimit = 125
@@ -141,7 +146,7 @@ export default function litecanvas(settings = {}) {
         }
 
         on(root, 'focus', () => {
-            if (_rafid === 0) {
+            if (!_rafid) {
                 _lastFrame = time()
                 _rafid = requestAnimationFrame(_frame)
             }
@@ -162,18 +167,12 @@ export default function litecanvas(settings = {}) {
             }
         })
 
-        if (_autoscale || _fullscreen) {
-            on(root, 'resize', _resize)
-        }
-
-        if (_loop) {
-            if (_loop.init) instance.loop.init.push(_loop.init)
-            if (_loop.update) instance.loop.update.push(_loop.update)
-            if (_loop.draw) instance.loop.draw.push(_loop.draw)
-        } else {
-            if (root.init) instance.loop.init.push(root.init)
-            if (root.update) instance.loop.update.push(root.update)
-            if (root.draw) instance.loop.draw.push(root.draw)
+        const source = _loop ? _loop : root
+        if (source) {
+            if (source.init) instance.loop.init.push(source.init)
+            if (source.update) instance.loop.update.push(source.update)
+            if (source.draw) instance.loop.draw.push(source.draw)
+            if (source.resize) instance.loop.resize.push(source.resize)
         }
 
         _loadPlugins()
@@ -181,9 +180,9 @@ export default function litecanvas(settings = {}) {
         _callAll(instance.loop.init)
 
         // set canvas background color
-        if (_NULL != settings.background) {
+        if (_NULL != _bg) {
             // prettier-ignore
-            instance.CANVAS.style.backgroundColor = colors[settings.background % colors.length]
+            instance.CANVAS.style.backgroundColor = colors[_bg % colors.length]
         }
 
         _lastFrame = time()
@@ -199,9 +198,7 @@ export default function litecanvas(settings = {}) {
         _accumulator += _dt
 
         // prevent long updates after lost focus
-        if (_dt > 1000) {
-            _accumulator = _delta
-        }
+        if (_dt > 1000) _accumulator = _delta
 
         while (_accumulator >= _delta) {
             // update
@@ -212,7 +209,7 @@ export default function litecanvas(settings = {}) {
             _resetTap()
         }
 
-        if (ticks > 0) {
+        if (ticks) {
             // draw
             _callAll(instance.loop.draw)
 
@@ -241,10 +238,8 @@ export default function litecanvas(settings = {}) {
                 : _canvas
         _setvar('CANVAS', _canvas)
 
-        if (instance.WIDTH > 0) {
-            // disable fullscreen if a width is specified
-            _fullscreen = false
-        }
+        // disable fullscreen if a width is specified
+        if (instance.WIDTH > 0) _fullscreen = false
 
         _canvas.width = instance.WIDTH
         _canvas.height = instance.HEIGHT || instance.WIDTH
@@ -255,10 +250,7 @@ export default function litecanvas(settings = {}) {
 
         if (!_canvas.parentNode) body.appendChild(_canvas)
 
-        if (_pixelart) {
-            _antialias = false
-        }
-
+        _antialias = !_pixelart
         _ctx.imageSmoothingEnabled = _antialias
 
         // canvas CSS tweaks
@@ -277,8 +269,10 @@ export default function litecanvas(settings = {}) {
             style.margin = 'auto'
         }
 
-        _offset.top = _canvas.offsetTop
-        _offset.left = _canvas.offsetLeft
+        _offsetTop = _canvas.offsetTop
+        _offsetLeft = _canvas.offsetLeft
+
+        instance.textalign()
     }
 
     function _resize() {
@@ -305,22 +299,15 @@ export default function litecanvas(settings = {}) {
         _setvar('CENTERX', instance.WIDTH / 2)
         _setvar('CENTERY', instance.HEIGHT / 2)
 
-        _offset.top = _canvas.offsetTop
-        _offset.left = _canvas.offsetLeft
+        _offsetTop = _canvas.offsetTop
+        _offsetLeft = _canvas.offsetLeft
 
-        instance.textalign(
-            _styles.textAlign || _UNDEFINED,
-            _styles.textBaseline || _UNDEFINED,
-        )
-        instance.linestyle(
-            _styles.lineWidth || _UNDEFINED,
-            _styles.lineJoin || _UNDEFINED,
-            _styles.lineDash || _UNDEFINED,
-        )
+        instance.textalign()
+        _callAll(instance.loop.resize)
     }
 
     function _makeGlobals() {
-        if (window.__litecanvas) {
+        if (root.__litecanvas) {
             throw new Error('Cannot instantiate litecanvas globally twice')
         }
         for (const key in instance) {
@@ -328,7 +315,7 @@ export default function litecanvas(settings = {}) {
                 root[key] = instance[key]
             }
         }
-        window.__litecanvas = true
+        root.__litecanvas = true
     }
 
     function _resetTap() {
@@ -337,14 +324,14 @@ export default function litecanvas(settings = {}) {
 
     function _updateTapped(tapped, x, y) {
         _setvar('TAPPED', tapped)
-        _setvar('TAPX', (x - _offset.left) / _scale)
-        _setvar('TAPY', (y - _offset.top) / _scale)
+        _setvar('TAPX', (x - _offsetLeft) / _scale)
+        _setvar('TAPY', (y - _offsetTop) / _scale)
     }
 
     function _updateTapping(tapped, x, y) {
         _setvar('TAPPING', tapped)
-        _setvar('TAPX', (x - _offset.left) / _scale)
-        _setvar('TAPY', (y - _offset.top) / _scale)
+        _setvar('TAPX', (x - _offsetLeft) / _scale)
+        _setvar('TAPY', (y - _offsetTop) / _scale)
     }
 
     function _callAll(fnArray, ...args) {
@@ -549,21 +536,35 @@ export default function litecanvas(settings = {}) {
     }
 
     /**
-     * Helper to modify the lineWidth, lineJoin and lineDash properties of canvas context
+     * Sets the thickness of lines
      *
-     * @param {number} width
-     * @param {number} join
-     * @param {array|number} dash
+     * @param {number} value
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
      */
-    instance.linestyle = (width = 1, join = 'miter', dash = _NULL) => {
-        _ctx.lineWidth = _styles.lineWidth = width
-        _ctx.lineJoin = _styles.lineJoin = join
-        _styles.lineDash = dash
-            ? Array.isArray(dash)
-                ? dash
-                : [dash]
-            : _EMPTY_ARRAY
-        _ctx.setLineDash(_styles.lineDash)
+    instance.linewidth = (value) => {
+        _ctx.lineWidth = value
+    }
+
+    /**
+     * Sets the line dash pattern used when drawing lines
+     *
+     * @param {number|number[]} value
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
+     */
+    instance.linedash = (value) => {
+        value = value ? value : _EMPTY_ARRAY
+        _ctx.setLineDash(Array.isArray(value) ? value : [value])
+    }
+
+    /**
+     * Determines the shape used to draw the end points of lines
+     * Possible values are: "butt", "round" or "square"
+     *
+     * @param {string} value
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
+     */
+    instance.linecap = (value) => {
+        _ctx.lineCap = value
     }
 
     /** TEXT RENDERING API */
@@ -603,14 +604,14 @@ export default function litecanvas(settings = {}) {
     /**
      * Sets the alignment used when drawing texts
      *
-     * @param {string} align the horizontal alignment. Accepts: "left", "right", "center", "start" or "end"
-     * @param {string} baseline the vertical alignment. Accepts: "top", "middle", "bottom", "hanging" or "ideographic"
+     * @param {string} align the horizontal alignment. Possible values: "left", "right", "center", "start" or "end"
+     * @param {string} baseline the vertical alignment. Possible values: "top", "bottom", "middle", "hanging" or "ideographic"
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
     instance.textalign = (align = 'start', baseline = 'top') => {
-        _ctx.textAlign = _styles.textAlign = align
-        _ctx.textBaseline = _styles.textBaseline = baseline
+        _ctx.textAlign = align
+        _ctx.textBaseline = baseline
     }
 
     /** IMAGE GRAPHICS API */
