@@ -637,6 +637,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} height
      * @param {string[]|drawCallback} draw
      * @returns {OffscreenCanvas}
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
      */
     instance.paint = (width, height, draw) => {
         const offscreenCanvas = new OffscreenCanvas(width, height),
