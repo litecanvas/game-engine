@@ -67,8 +67,6 @@ export default function litecanvas(settings = {}) {
         _plugins = settings.plugins,
         _tappingHandler,
         _hasMouse = matchMedia('(pointer:fine)').matches,
-        _tapStart = 0,
-        _tapTime = 0,
         _scale = 1,
         _offset = { top: 0, left: 0 },
         _currentWidth,
@@ -99,69 +97,47 @@ export default function litecanvas(settings = {}) {
         _resize()
 
         if (settings.tapEvents) {
-            if (_hasMouse) {
-                _tappingHandler = (ev) => {
-                    _now = time()
-                    if (_now - _tapTime > _tappingInterval) {
-                        _tapTime = _now
-                        _updateTapping(true, ev.pageX, ev.pageY)
-                    }
-                }
-
-                on(instance.CANVAS, 'mousedown', function (ev) {
-                    ev.preventDefault()
-
-                    on(body, 'mousemove', _tappingHandler)
-                    _updateTapping(true, ev.pageX, ev.pageY)
-                    _tapTime = _tapStart = time()
-                })
-
-                on(instance.CANVAS, 'mouseup', function (ev) {
-                    ev.preventDefault()
-
-                    off(body, 'mousemove', _tappingHandler)
-                    _updateTapping(false)
-
-                    if (time() - _tapStart <= 150) {
-                        _updateTapped(true, ev.pageX, ev.pageY)
-                    }
-                })
-            } else {
-                // touch events will be enabled only if the device not has mouse
-                let _touchX = 0
-                let _touchY = 0
-
-                _tappingHandler = (ev) => {
-                    _now = time()
-                    if (_now - _tapTime > _tappingInterval) {
-                        const touch = ev.touches[0]
-                        _updateTapping(true, touch.pageX, touch.pageY)
-                        _tapTime = _now
-                    }
-                }
-
-                on(instance.CANVAS, 'touchstart', function (ev) {
-                    ev.preventDefault()
-
-                    const touch = ev.touches[0]
-                    _touchX = touch.pageX
-                    _touchY = touch.pageY
-                    on(body, 'touchmove', _tappingHandler)
-                    _updateTapping(true, touch.pageX, touch.pageY)
-                    _tapTime = _tapStart = time()
-                })
-
-                on(instance.CANVAS, 'touchend', function (ev) {
-                    ev.preventDefault()
-
-                    off(body, 'touchmove', _tappingHandler)
-                    _updateTapping(false)
-
-                    if (time() - _tapStart <= 150) {
-                        _updateTapped(true, _touchX, _touchY)
-                    }
-                })
+            const _tappedLimit = 125
+            const _getXY = (event) =>
+                _hasMouse
+                    ? [event.pageX, event.pageY]
+                    : [event.touches[0].pageX, event.touches[0].pageY]
+            const _events = {
+                tapstart: _hasMouse ? 'mousedown' : 'touchstart',
+                tapend: _hasMouse ? 'mouseup' : 'touchend',
+                tapmove: _hasMouse ? 'mousemove' : 'touchmove',
             }
+            let _tapStartX, _tapStartY, _last, _start
+
+            _tappingHandler = (ev) => {
+                _now = time()
+                if (_now - _last > _tappingInterval) {
+                    const [x, y] = _getXY(ev)
+                    _updateTapping(true, x, y)
+                    _last = _now
+                }
+            }
+
+            on(instance.CANVAS, _events.tapstart, function (ev) {
+                ev.preventDefault()
+
+                on(body, _events.tapmove, _tappingHandler)
+                const [x, y] = ([_tapStartX, _tapStartY] = _getXY(ev))
+                _updateTapping(true, x, y)
+
+                _last = _start = time()
+            })
+
+            on(instance.CANVAS, _events.tapend, function (ev) {
+                ev.preventDefault()
+
+                off(body, _events.tapmove, _tappingHandler)
+                _updateTapping(false)
+
+                if (time() - _start <= _tappedLimit) {
+                    _updateTapped(true, _tapStartX, _tapStartY)
+                }
+            })
         }
 
         on(root, 'focus', () => {
@@ -176,8 +152,14 @@ export default function litecanvas(settings = {}) {
                 cancelAnimationFrame(_rafid)
                 _rafid = 0
             }
-            off(body, _hasMouse ? 'mousemove' : 'touchmove', _tappingHandler)
-            _updateTapping(false)
+            if (settings.tapEvents) {
+                off(
+                    body,
+                    _hasMouse ? 'mousemove' : 'touchmove',
+                    _tappingHandler,
+                )
+                _updateTapping(false)
+            }
         })
 
         if (_autoscale || _fullscreen) {
