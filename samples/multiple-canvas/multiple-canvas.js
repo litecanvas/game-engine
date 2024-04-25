@@ -1,12 +1,12 @@
 const loop1 = {
   draw: function () {
-    game1.cls(2)
+    game1.cls(game1.TAPPING ? 3 : 5)
   },
 }
 
 const loop2 = {
   draw: function () {
-    game2.cls(4)
+    game2.cls(game2.TAPPING ? 3 : 4)
   },
 }
 
