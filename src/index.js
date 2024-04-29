@@ -794,7 +794,7 @@ export default function litecanvas(settings = {}) {
 
         _canvas.width = instance.WIDTH
         _canvas.height = instance.HEIGHT || instance.WIDTH
-        _canvas.ctx = _ctx = _canvas.getContext('2d')
+        _ctx = _canvas.getContext('2d')
 
         _setvar('CENTERX', instance.WIDTH / 2)
         _setvar('CENTERY', instance.HEIGHT / 2)
