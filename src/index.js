@@ -1,4 +1,4 @@
-/*! litecanvas v0.20 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.20.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
