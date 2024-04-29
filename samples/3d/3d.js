@@ -1,13 +1,12 @@
 litecanvas()
 
-function resize() {
+function resized() {
   size = WIDTH > HEIGHT ? HEIGHT / 2 : WIDTH / 2
   linewidth(5)
   linecap('round')
 }
 
 function init() {
-  resize()
   projection = [
     [1, 0, 0],
     [0, 1, 0],

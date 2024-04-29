@@ -1,4 +1,4 @@
-/*! litecanvas v0.20.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.21.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -64,6 +64,7 @@ export default function litecanvas(settings = {}) {
         _rafid,
         _draws = { count: 0, time: 0 },
         _font = 'sans-serif',
+        _preset = {},
         // object with helpers to be used by plugins
         _helpers = {
             settings: Object.assign({}, settings),
@@ -88,7 +89,7 @@ export default function litecanvas(settings = {}) {
             init: [],
             update: [],
             draw: [],
-            resize: [],
+            resized: [],
         },
 
         /**
@@ -344,9 +345,11 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
          */
-        textalign: (align = 'start', baseline = 'top') => {
-            _ctx.textAlign = align
-            _ctx.textBaseline = baseline
+        textalign: (align, baseline) => {
+            _ctx.textAlign = _preset.textalign =
+                align || _preset.textalign || 'start'
+            _ctx.textBaseline = _preset.textbaseline =
+                baseline || _preset.textbaseline || 'top'
         },
 
         /** IMAGE GRAPHICS API */
@@ -646,11 +649,6 @@ export default function litecanvas(settings = {}) {
 
     function _init() {
         _setupCanvas()
-        _resize()
-
-        if (_autoscale || _fullscreen) {
-            on(root, 'resize', _resize)
-        }
 
         if (settings.tapEvents) {
             const _tappedLimit = 125
@@ -723,10 +721,15 @@ export default function litecanvas(settings = {}) {
             if (source.init) instance.loop.init.push(source.init)
             if (source.update) instance.loop.update.push(source.update)
             if (source.draw) instance.loop.draw.push(source.draw)
-            if (source.resize) instance.loop.resize.push(source.resize)
+            if (source.resized) instance.loop.resized.push(source.resized)
         }
 
         _loadPlugins()
+
+        if (_autoscale || _fullscreen) {
+            on(root, 'resize', _resize)
+        }
+        _resize()
 
         _callAll(instance.loop.init)
 
@@ -796,55 +799,42 @@ export default function litecanvas(settings = {}) {
         _canvas.height = instance.HEIGHT || instance.WIDTH
         _ctx = _canvas.getContext('2d')
 
-        _setvar('CENTERX', instance.WIDTH / 2)
-        _setvar('CENTERY', instance.HEIGHT / 2)
-
         if (!_canvas.parentNode) body.appendChild(_canvas)
 
-        _antialias = !_pixelart
-        _ctx.imageSmoothingEnabled = _antialias
+        _ctx.imageSmoothingEnabled = _antialias = !_pixelart
 
         // canvas CSS tweaks
-        const style = _canvas.style
-
         if (!_antialias) {
-            style.imageRendering = 'pixelated'
+            _canvas.style.imageRendering = 'pixelated'
         }
-
-        style.display = 'block'
-
+        _canvas.style.display = 'block'
         if (_fullscreen) {
-            style.position = 'absolute'
-            style.inset = 0
+            _canvas.style.position = 'absolute'
+            _canvas.style.inset = 0
         } else if (_autoscale) {
-            style.margin = 'auto'
+            _canvas.style.margin = 'auto'
         }
-
-        _offsetTop = _canvas.offsetTop
-        _offsetLeft = _canvas.offsetLeft
-
-        instance.textalign()
     }
 
     function _resize() {
-        if (!_autoscale && !_fullscreen) return
+        if (_autoscale || _fullscreen) {
+            _currentWidth = innerWidth
+            _currentHeight = innerHeight
 
-        _currentWidth = innerWidth
-        _currentHeight = innerHeight
-
-        if (_fullscreen) {
-            _canvas.width = _currentWidth
-            _canvas.height = _currentHeight
-            _setvar('WIDTH', _currentWidth)
-            _setvar('HEIGHT', _currentHeight)
-        } else if (_autoscale) {
-            _scale = math.min(
-                _currentWidth / instance.WIDTH,
-                _currentHeight / instance.HEIGHT,
-            )
-            _scale = _pixelart ? math.floor(_scale) : _scale
-            _canvas.style.width = instance.WIDTH * _scale + 'px'
-            _canvas.style.height = instance.HEIGHT * _scale + 'px'
+            if (_fullscreen) {
+                _canvas.width = _currentWidth
+                _canvas.height = _currentHeight
+                _setvar('WIDTH', _currentWidth)
+                _setvar('HEIGHT', _currentHeight)
+            } else if (_autoscale) {
+                _scale = math.min(
+                    _currentWidth / instance.WIDTH,
+                    _currentHeight / instance.HEIGHT,
+                )
+                _scale = _pixelart ? math.floor(_scale) : _scale
+                _canvas.style.width = instance.WIDTH * _scale + 'px'
+                _canvas.style.height = instance.HEIGHT * _scale + 'px'
+            }
         }
 
         _setvar('CENTERX', instance.WIDTH / 2)
@@ -854,7 +844,8 @@ export default function litecanvas(settings = {}) {
         _offsetLeft = _canvas.offsetLeft
 
         instance.textalign()
-        _callAll(instance.loop.resize)
+
+        _callAll(instance.loop.resized)
     }
 
     function _resetTap() {

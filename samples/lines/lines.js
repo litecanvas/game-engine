@@ -29,6 +29,7 @@ function draw() {
 
   linewidth(10)
   linecap('round')
+  linejoin('round')
 
   for (let i = 1; i < points.length; i++) {
     from = from || points[i - 1]
