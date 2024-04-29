@@ -1,4 +1,4 @@
-/*! litecanvas v0.21.0 by Luiz Bills | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.21.1 by Luiz Bills | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -651,7 +651,7 @@ export default function litecanvas(settings = {}) {
         _setupCanvas()
 
         if (settings.tapEvents) {
-            const _tappedLimit = 125
+            const _tappedLimit = 200
             const _getXY = (event) =>
                 _hasMouse
                     ? [event.pageX, event.pageY]
