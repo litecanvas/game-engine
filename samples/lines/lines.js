@@ -11,16 +11,13 @@ litecanvas({
 const lineColor = isDarkMode ? 3 : 0
 
 function init() {
-  resize()
   from = null
   points = []
 }
 
 function update() {
-  dirty = false
   if (TAPPING) {
     points.push([TAPX, TAPY])
-    console.log('tapping')
   } else {
     from = null
     points.length = 0
@@ -30,7 +27,7 @@ function update() {
 function draw() {
   if (points.length < 2) return
 
-  linewidth(20)
+  linewidth(10)
   linecap('round')
 
   for (let i = 1; i < points.length; i++) {
