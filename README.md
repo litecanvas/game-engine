@@ -27,32 +27,32 @@ npm start
 ```js
 import litecanvas from '@litecanvas/litecanvas'
 
+// you can setup other configurations here
+// learn more in the cheatsheet
 litecanvas({
-    // you can setup other configurations here
-    // learn more in the cheatsheet
     loop: { init, update, draw },
 })
 
+// run once before the game starts
 function init() {
-    // run once before the game starts
     bg = 0
     color = 3
     posx = CENTERX
     posy = CENTERY
 }
 
-function update() {
-    // called at 60 fps by default
-    // use to update your things
+// called at 60 fps by default
+// use to update your things
+function update(dt) {
+    // example: tap to change the circle position
     if (TAPPED) {
-        // example: tap to change the position
         posx = TAPX
         posy = TAPY
     }
 }
 
+// use to draw your things
 function draw() {
-    // use to draw your things
     clear(bg) // clear the screen
     circfill(posx, posy, 50, color) // draw a circle
 }
@@ -60,7 +60,7 @@ function draw() {
 
 ## Docs
 
-Check out our [Cheatsheet](https://github.com/litecanvas/game-engine/wiki/Cheatsheet).
+Check out our [Cheatsheet](https://litecanvas.js.org/about.html).
 
 ## Basic Demos
 
