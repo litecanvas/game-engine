@@ -1,42 +1,26 @@
-const isDarkMode =
-  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-
+// base on https://processing.org/examples/continuouslines.html
 litecanvas({
-  fullscreen: true,
-  antialias: false,
-  background: isDarkMode ? 0 : 3,
-  tappingInterval: 10, // default is 100
+  background: 0,
 })
 
-const lineColor = isDarkMode ? 3 : 0
+let prevx, prevy, x, y, dirty
 
-function init() {
-  from = null
-  points = []
-}
-
-function update() {
+function update(dt) {
   if (TAPPING) {
-    points.push([TAPX, TAPY])
+    prevx = x ? x : TAPX
+    prevy = y ? y : TAPY
+    x = TAPX
+    y = TAPY
+    dirty = true
   } else {
-    from = null
-    points.length = 0
+    prevx = prevy = x = y = 0
+    dirty = false
   }
 }
 
 function draw() {
-  if (points.length < 2) return
-
+  if (!dirty) return
   linewidth(10)
   linecap('round')
-  linejoin('round')
-
-  for (let i = 1; i < points.length; i++) {
-    from = from || points[i - 1]
-    const to = points[i]
-    line(from[0], from[1], to[0], to[1], lineColor)
-    from = points[i]
-  }
-
-  points.length = 0
+  line(x, y, prevx, prevy, 3)
 }
