@@ -1,4 +1,4 @@
-//! LITE 8 palette inspered by https://lospec.com/palette-list/sweetie-16
+// palette inspired by https://lospec.com/palette-list/sweetie-16
 export const colors = [
     '#1a1c2c', // 0
     '#29366f', // 1

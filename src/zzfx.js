@@ -1,143 +1,16 @@
-//! ZzFXMicro - Zuper Zmall Zound Zynth - v1.2.1 by Frank Force ~ 880 bytes
+//! ZzFXMicro v1.2.1 | https://github.com/KilledByAPixel/ZzFX
+let zzfxV = 0.3 // volume
+let zzfxX = new AudioContext()
 // prettier-ignore
-export const zzfx = (...z) => zzfxP(zzfxG(...z)) // generate and play sound
-const zzfxV = 0.3 // volume
-const zzfxR = 44100 // sample rate
-const zzfxX = new AudioContext() // audio context
-
-// play samples
-const zzfxP = (...samples) => {
-    // create buffer and source
-    let buffer = zzfxX.createBuffer(samples.length, samples[0].length, zzfxR),
-        source = zzfxX.createBufferSource()
-
-    // copy samples to buffer and play
-    samples.map((d, i) => buffer.getChannelData(i).set(d))
-    source.buffer = buffer
-    source.connect(zzfxX.destination)
-    source.start()
-    return source
-}
-
-// generate samples
-const zzfxG = (
-    // parameters
-    volume = 1,
-    randomness = 0.05,
-    frequency = 220,
-    attack = 0,
-    sustain = 0,
-    release = 0.1,
-    shape = 0,
-    shapeCurve = 1,
-    slide = 0,
-    deltaSlide = 0,
-    pitchJump = 0,
-    pitchJumpTime = 0,
-    repeatTime = 0,
-    noise = 0,
-    modulation = 0,
-    bitCrush = 0,
-    delay = 0,
-    sustainVolume = 1,
-    decay = 0,
-    tremolo = 0,
-) => {
-    // init parameters
-    let PI2 = Math.PI * 2,
-        sign = (v) => (v > 0 ? 1 : -1),
-        startSlide = (slide *= (500 * PI2) / zzfxR / zzfxR),
-        startFrequency = (frequency *=
-            ((1 + randomness * 2 * Math.random() - randomness) * PI2) / zzfxR),
-        b = [],
-        t = 0,
-        tm = 0,
-        i = 0,
-        j = 1,
-        r = 0,
-        c = 0,
-        s = 0,
-        f,
-        length
-
-    // scale by sample rate
-    attack = attack * zzfxR + 9 // minimum attack to prevent pop
-    decay *= zzfxR
-    sustain *= zzfxR
-    release *= zzfxR
-    delay *= zzfxR
-    deltaSlide *= (500 * PI2) / zzfxR ** 3
-    modulation *= PI2 / zzfxR
-    pitchJump *= PI2 / zzfxR
-    pitchJumpTime *= zzfxR
-    repeatTime = (repeatTime * zzfxR) | 0
-
-    // generate waveform
-    for (
-        length = (attack + decay + sustain + release + delay) | 0;
-        i < length;
-        b[i++] = s
-    ) {
-        if (!(++c % ((bitCrush * 100) | 0))) {
-            // bit crush
-            s = shape
-                ? shape > 1
-                    ? shape > 2
-                        ? shape > 3 // wave shape
-                            ? Math.sin((t % PI2) ** 3) // 4 noise
-                            : Math.max(Math.min(Math.tan(t), 1), -1) // 3 tan
-                        : 1 - (((((2 * t) / PI2) % 2) + 2) % 2) // 2 saw
-                    : 1 - 4 * Math.abs(Math.round(t / PI2) - t / PI2) // 1 triangle
-                : Math.sin(t) // 0 sin
-
-            s =
-                (repeatTime
-                    ? 1 - tremolo + tremolo * Math.sin((PI2 * i) / repeatTime) // tremolo
-                    : 1) *
-                sign(s) *
-                Math.abs(s) ** shapeCurve * // curve 0=square, 2=pointy
-                volume *
-                zzfxV * // envelope
-                (i < attack
-                    ? i / attack // attack
-                    : i < attack + decay // decay
-                      ? 1 - ((i - attack) / decay) * (1 - sustainVolume) // decay falloff
-                      : i < attack + decay + sustain // sustain
-                        ? sustainVolume // sustain volume
-                        : i < length - delay // release
-                          ? ((length - i - delay) / release) * // release falloff
-                            sustainVolume // release volume
-                          : 0) // post release
-
-            s = delay
-                ? s / 2 +
-                  (delay > i
-                      ? 0 // delay
-                      : ((i < length - delay ? 1 : (length - i) / delay) * // release delay
-                            b[(i - delay) | 0]) /
-                        2)
-                : s // sample delay
-        }
-
-        f =
-            (frequency += slide += deltaSlide) * // frequency
-            Math.cos(modulation * tm++) // modulation
-        t += f - f * noise * (1 - (((Math.sin(i) + 1) * 1e9) % 2)) // noise
-
-        if (j && ++j > pitchJumpTime) {
-            // pitch jump
-            frequency += pitchJump // apply pitch jump
-            startFrequency += pitchJump // also apply to start
-            j = 0 // reset pitch jump time
-        }
-
-        if (repeatTime && !(++r % repeatTime)) {
-            // repeat
-            frequency = startFrequency // reset frequency
-            slide = startSlide // reset slide
-            j = j || 1 // reset pitch jump time
-        }
-    }
-
-    return b
-}
+export const zzfx=
+(p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=
+0,B=0,M=Math,R=44100,d=2*M.PI,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,g
+=0,H=0,a=0,n=1,I=0,J=0,f=0,x,h)=>{e=R*e+9;m*=R;r*=R;t*=R;c*=R;y*=500*d/R**3;A*=d
+/R;v*=d/R;z*=R;l=R*l|0;for(h=e+m+r+t+c|0;a<h;k[a++]=f)++J%(100*F|0)||(f=q?1<q?2<
+q?3<q?M.sin((g%d)**3):M.max(M.min(M.tan(g),1),-1):1-(2*g/d%2+2)%2:1-4*M.abs(M.
+round(g/d)-g/d):M.sin(g),f=(l?1-B+B*M.sin(d*a/l):1)*(0<f?1:-1)*M.abs(f)**D*zzfxV
+*p*(a<e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:0),f=c?f/2+(c>a?0:
+(a<h-c?1:(h-a)/c)*k[a-c|0]/2):f),x=(b+=u+=y)*M.cos(A*H++),g+=x-x*E*(1-1E9*(M.sin
+(a)+1)%2),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l||(b=C,u=G,n=n||1);p=zzfxX.
+createBuffer(1,h,R);p.getChannelData(0).set(k);b=zzfxX.createBufferSource();b.
+buffer=p;b.connect(zzfxX.destination);b.start();return b};
