@@ -1,8 +1,9 @@
 litecanvas()
 
 function init() {
-  size = WIDTH / 5
+  size = WIDTH / 6
   angle = 0
+  gap = 40
 }
 
 function update() {
@@ -12,15 +13,15 @@ function update() {
 function draw() {
   cls(0)
 
-  rectfill(0, CENTERY - size, size, size, 2)
+  rectfill(gap, CENTERY - size / 2, size, size, 2)
 
   // rotate the second rect
   push()
-  translate(size + 10 + size / 2, CENTERY - size + size / 2)
+  translate(gap * 2 + size + 10 + size / 2, CENTERY - size / 2 + size / 2)
   rotate(angle)
   rect(-size / 2, -size / 2, size, size, 3)
   pop()
 
-  circfill(size * 3, CENTERY - size / 2, size / 2, 4)
-  circ(size * 4, CENTERY - size / 2, size / 2, 5)
+  circfill(size * 3, CENTERY, size / 2, 4)
+  circ(gap + size * 4, CENTERY, size / 2, 5)
 }
