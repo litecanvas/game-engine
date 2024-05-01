@@ -1,4 +1,4 @@
-//! ZzFXMicro v1.2.1 | https://github.com/KilledByAPixel/ZzFX
+// ZzFXMicro - Zuper Zmall Zound Zynth - v1.2.1 by Frank Force | https://github.com/KilledByAPixel/ZzFX
 let zzfxV = 0.3 // volume
 let zzfxX = new AudioContext()
 // prettier-ignore

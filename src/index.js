@@ -1,4 +1,4 @@
-/*! litecanvas v0.21.1 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.22.0 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -8,26 +8,25 @@ export default function litecanvas(settings = {}) {
     const root = globalThis,
         body = document.body,
         math = Math,
+        TWO_PI = math.PI * 2,
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         off = (elem, evt, callback) => elem.removeEventListener(evt, callback),
         time = () => performance.now(),
-        _TWO_PI = math.PI * 2,
-        _EMPTY_ARRAY = [],
-        _NULL = null,
+        NULL = null,
         defaults = {
             fps: 60,
             fullscreen: true,
-            width: _NULL,
-            height: _NULL,
+            width: NULL,
+            height: NULL,
             autoscale: true,
             pixelart: false,
             antialias: true,
-            background: _NULL,
-            canvas: _NULL,
+            background: NULL,
+            canvas: NULL,
             global: true,
             tappingInterval: true,
             tapEvents: true,
-            loop: _NULL,
+            loop: NULL,
             plugins: [],
         },
         instance = {}
@@ -74,9 +73,11 @@ export default function litecanvas(settings = {}) {
         }
 
     Object.assign(instance, {
+        /** @type {number|null} */
         WIDTH: settings.width,
+        /** @type {number|null} */
         HEIGHT: settings.height || settings.width,
-        CANVAS: _NULL,
+        CANVAS: NULL,
         TAPPED: false,
         TAPPING: false,
         TAPX: 0,
@@ -93,11 +94,34 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * The value of the mathematical constant PI (π). Approximately 3.14159
+         *
+         * @type {number}
+         */
+        PI: math.PI,
+
+        /**
+         * Twice the value of the mathematical constant PI (π). Approximately 6.28318
+         * Note: TWO_PI radians equals 360º, PI radians equals 180º,
+         * HALF_PI radians equals 90º, and HALF_PI/2 radians equals 45º.
+         *
+         * @type {number}
+         */
+        TWO_PI,
+
+        /**
+         * Half the value of the mathematical constant PI (π). Approximately 1.5708
+         *
+         * @type {number}
+         */
+        HALF_PI: math.PI * 0.5,
+
+        /**
          * Calculates a linear (interpolation) value over t%.
          *
          * @param {number} start
          * @param {number} end
-         * @param {number} t The progress in percentage.
+         * @param {number} t The progress in percentage, where 0 = 0% and 1 = 100%.
          * @returns {number} The unterpolated value between `a` and `b`
          * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
          */
@@ -109,7 +133,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} degs
          * @returns {number} the value in radians
          */
-        deg2rad: (degs) => (instance.PI / 180) * degs,
+        deg2rad: (degs) => (math.PI / 180) * degs,
 
         /**
          * Convert radians to degrees
@@ -117,19 +141,56 @@ export default function litecanvas(settings = {}) {
          * @param {number} rads
          * @returns {number} the value in degrees
          */
-        rad2deg: (rads) => (180 / instance.PI) * rads,
+        rad2deg: (rads) => (180 / math.PI) * rads,
 
         /**
-         * Force a value within the boundaries by clamping it to the range min, max.
+         * Constrains a number between a minimum and maximum value.
          *
          * @param {number} value
          * @param {number} min
          * @param {number} max
          * @returns {number}
          */
-        clamp: function (value, min, max) {
-            return math.min(math.max(value, min), max)
+        clamp: (value, min, max) => math.min(math.max(value, min), max),
+
+        /**
+         * Re-maps a number from one range to another.
+         *
+         * @param {number} value  the value to be remapped.
+         * @param {number} start1 lower bound of the value's current range.
+         * @param {number} stop1  upper bound of the value's current range.
+         * @param {number} start2 lower bound of the value's target range.
+         * @param {number} stop2  upper bound of the value's target range.
+         * @param {boolean} withinBounds constrain the value to the newly mapped range
+         * @returns {number} the remapped number
+         */
+        map: (value, start1, stop1, start2, stop2, withinBounds = false) => {
+            // prettier-ignore
+            const result = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2
+            if (!withinBounds) return result
+            return start2 < stop2
+                ? instance.clamp(result, start2, stop2)
+                : instance.clamp(result, stop2, start2)
         },
+
+        /**
+         * Maps a number from one range to a value between 0 and 1.
+         *
+         * @param {number} value
+         * @param {number} start
+         * @param {number} stop
+         * @returns {number} the normalized number.
+         */
+        norm: (value, start, stop) => instance.map(value, start, stop, 0, 1),
+
+        /**
+         * Calculates the positive difference of two given numbers
+         *
+         * @param {number} a
+         * @param {number} b
+         * @returns {number}
+         */
+        diff: (a, b) => math.abs(b - a),
 
         /** RNG API */
         /**
@@ -183,7 +244,7 @@ export default function litecanvas(settings = {}) {
          * @alias instance.cls
          */
         clear: (color) => {
-            if (_NULL == color) {
+            if (NULL == color) {
                 _ctx.clearRect(0, 0, instance.WIDTH, instance.HEIGHT)
             } else {
                 instance.rectfill(0, 0, instance.WIDTH, instance.HEIGHT, color)
@@ -229,7 +290,7 @@ export default function litecanvas(settings = {}) {
         circ: (x, y, radius, color = 0) => {
             _ctx.strokeStyle = colors[~~color % colors.length]
             _ctx.beginPath()
-            _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
+            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             _ctx.closePath()
             _ctx.stroke()
         },
@@ -245,7 +306,7 @@ export default function litecanvas(settings = {}) {
         circfill: (x, y, radius, color = 0) => {
             _ctx.fillStyle = colors[~~color % colors.length]
             _ctx.beginPath()
-            _ctx.arc(~~x, ~~y, ~~radius, 0, _TWO_PI)
+            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             _ctx.closePath()
             _ctx.fill()
         },
@@ -284,7 +345,7 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
          */
         linedash: (value) => {
-            value = value ? value : _EMPTY_ARRAY
+            value = value ? value : []
             _ctx.setLineDash(Array.isArray(value) ? value : [value])
         },
 
@@ -322,7 +383,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} size the font size
          * @param {string} font the font family
          */
-        text: (x, y, text, color = 0, size = 20, font = _NULL) => {
+        text: (x, y, text, color = 0, size = 20, font = NULL) => {
             _ctx.font = ~~size + 'px ' + (font || _font)
             _ctx.fillStyle = colors[~~color % colors.length]
             _ctx.fillText(text, ~~x, ~~y)
@@ -510,7 +571,7 @@ export default function litecanvas(settings = {}) {
          */
         clipcirc: (x, y, radius) => {
             _ctx.beginPath()
-            _ctx.arc(x, y, radius, 0, _TWO_PI)
+            _ctx.arc(x, y, radius, 0, TWO_PI)
             _ctx.clip()
         },
 
@@ -623,7 +684,7 @@ export default function litecanvas(settings = {}) {
         print: instance.text,
     })
 
-    /** MATH API */
+    /** Copy some functions from globalThis.Math */
     for (const k of [
         'sin',
         'cos',
@@ -641,7 +702,6 @@ export default function litecanvas(settings = {}) {
         'sqrt',
         'sign',
         'exp',
-        'PI',
     ]) {
         // import some native Math functions
         instance[k] = math[k]
@@ -734,7 +794,7 @@ export default function litecanvas(settings = {}) {
         _callAll(instance.loop.init)
 
         // set canvas background color
-        if (_NULL != _bg) {
+        if (NULL != _bg) {
             // prettier-ignore
             instance.CANVAS.style.backgroundColor = colors[_bg % colors.length]
         }
