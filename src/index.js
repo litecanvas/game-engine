@@ -1,4 +1,4 @@
-/*! litecanvas v0.22.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.23.0 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -36,40 +36,70 @@ export default function litecanvas(settings = {}) {
 
     let /** @type {string|HTMLCanvasElement} _canvas */
         _canvas = settings.canvas || document.createElement('canvas'),
+        /** @type {boolean} */
         _antialias = settings.antialias,
+        /** @type {boolean} */
         _pixelart = settings.pixelart,
+        /** @type {boolean} */
         _fullscreen = settings.fullscreen,
+        /** @type {boolean} */
         _autoscale = settings.autoscale,
-        _tappingInterval = settings.tappingInterval,
-        _loop = settings.loop,
+        /** @type {function[]} */
         _plugins = settings.plugins,
+        /** @type {number|null} */
         _bg = settings.background,
+        /** @type {boolean} */
         _hasMouse = matchMedia('(pointer:fine)').matches,
+        /** @type {function} */
         _tappingHandler,
+        /** @type {number} */
         _scale = 1,
+        /** @type {number} */
         _offsetTop = 0,
+        /** @type {number} */
         _offsetLeft = 0,
+        /** @type {number} */
         _currentWidth,
+        /** @type {number} */
         _currentHeight,
-        /** @type {CanvasRenderingContext2D} _ctx */
+        /** @type {CanvasRenderingContext2D} */
         _ctx,
-        // game loop variables
-        _now,
+        /** @type {number} */
         _lastFrame,
-        _dt,
+        /** @type {number} */
         _step = 1 / settings.fps,
-        _delta = 1000 / settings.fps,
+        /** @type {number} */
+        _stepMs = _step * 1000,
+        /** @type {number} */
         _accumulator = 0,
+        /** @type {number} */
         _rafid,
+        /** @type {{count:number, time:number}} */
         _draws = { count: 0, time: 0 },
+        /** @type {string} */
         _font = 'sans-serif',
+        /** @type {any} */
         _preset = {},
+        /**
+         * The game loop callbacks
+         * @type {{init: function[], update: function[], draw: function[], resized: function[]}}
+         */
+        _loop = {
+            init: [],
+            update: [],
+            draw: [],
+            resized: [],
+        },
         // object with helpers to be used by plugins
         _helpers = {
             settings: Object.assign({}, settings),
             set: _setvar,
             colors,
             sounds,
+            on: (type, callback, highPriority = false) => {
+                if (_loop[type])
+                    _loop[type][highPriority ? 'unshift' : 'push'](callback)
+            },
         }
 
     Object.assign(instance, {
@@ -86,12 +116,6 @@ export default function litecanvas(settings = {}) {
         FPS: 0,
         CENTERX: 0,
         CENTERY: 0,
-        loop: {
-            init: [],
-            update: [],
-            draw: [],
-            resized: [],
-        },
 
         /**
          * The value of the mathematical constant PI (π). Approximately 3.14159
@@ -122,7 +146,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} start
          * @param {number} end
          * @param {number} t The progress in percentage, where 0 = 0% and 1 = 100%.
-         * @returns {number} The unterpolated value between `a` and `b`
+         * @returns {number} The unterpolated value
          * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
          */
         lerp: (start, end, t) => start + t * (end - start),
@@ -724,11 +748,11 @@ export default function litecanvas(settings = {}) {
             let _tapStartX, _tapStartY, _last, _start
 
             _tappingHandler = (ev) => {
-                _now = time()
-                if (_now - _last > _tappingInterval) {
+                let now = time()
+                if (now - _last > settings.tappingInterval) {
                     const [x, y] = _getXY(ev)
                     _updateTapping(true, x, y)
-                    _last = _now
+                    _last = now
                 }
             }
 
@@ -756,7 +780,6 @@ export default function litecanvas(settings = {}) {
 
         on(root, 'focus', () => {
             if (!_rafid) {
-                _lastFrame = time()
                 _rafid = requestAnimationFrame(_frame)
             }
         })
@@ -776,12 +799,12 @@ export default function litecanvas(settings = {}) {
             }
         })
 
-        const source = _loop ? _loop : root
+        const source = settings.loop ? settings.loop : root
         if (source) {
-            if (source.init) instance.loop.init.push(source.init)
-            if (source.update) instance.loop.update.push(source.update)
-            if (source.draw) instance.loop.draw.push(source.draw)
-            if (source.resized) instance.loop.resized.push(source.resized)
+            if (source.init) _loop.init.push(source.init)
+            if (source.update) _loop.update.push(source.update)
+            if (source.draw) _loop.draw.push(source.draw)
+            if (source.resized) _loop.resized.push(source.resized)
         }
 
         _loadPlugins()
@@ -791,7 +814,7 @@ export default function litecanvas(settings = {}) {
         }
         _resize()
 
-        _callAll(instance.loop.init)
+        _callAll(_loop.init)
 
         // set canvas background color
         if (NULL != _bg) {
@@ -803,29 +826,31 @@ export default function litecanvas(settings = {}) {
         _rafid = requestAnimationFrame(_frame)
     }
 
-    function _frame() {
-        let ticks = 0
+    /**
+     * @param {number} now
+     */
+    function _frame(now) {
+        let ticks = 0,
+            t = now - _lastFrame
 
-        _now = time()
-        _dt = _now - _lastFrame
-        _lastFrame = _now
-        _accumulator += _dt
+        _lastFrame = now
+        _accumulator += t
 
         // prevent long updates after lost focus
-        if (_dt > 1000) _accumulator = _delta
+        if (t > 1000) _accumulator = _stepMs
 
-        while (_accumulator >= _delta) {
+        while (_accumulator >= _stepMs) {
             // update
-            _callAll(instance.loop.update, _step)
+            _callAll(_loop.update, _step)
             _setvar('ELAPSED', instance.ELAPSED + _step)
-            _accumulator -= _delta
+            _accumulator -= _stepMs
             ticks++
             _resetTap()
         }
 
         if (ticks) {
             // draw
-            _callAll(instance.loop.draw)
+            _callAll(_loop.draw)
 
             _draws.count++
             _draws.time += ticks * _step
@@ -905,31 +930,49 @@ export default function litecanvas(settings = {}) {
 
         instance.textalign()
 
-        _callAll(instance.loop.resized)
+        _callAll(_loop.resized)
     }
 
     function _resetTap() {
         _setvar('TAPPED', false)
     }
 
+    /**
+     * @param {boolean} tapped
+     * @param {number} x
+     * @param {number} y
+     */
     function _updateTapped(tapped, x, y) {
         _setvar('TAPPED', tapped)
         _setvar('TAPX', (x - _offsetLeft) / _scale)
         _setvar('TAPY', (y - _offsetTop) / _scale)
     }
 
+    /**
+     * @param {boolean} tapped
+     * @param {number} x
+     * @param {number} y
+     */
     function _updateTapping(tapped, x, y) {
         _setvar('TAPPING', tapped)
         _setvar('TAPX', (x - _offsetLeft) / _scale)
         _setvar('TAPY', (y - _offsetTop) / _scale)
     }
 
+    /**
+     * @param {function[]} fnArray
+     * @param  {...any} args
+     */
     function _callAll(fnArray, ...args) {
         for (let i = 0; i < fnArray.length; ++i) {
             fnArray[i](...args)
         }
     }
 
+    /**
+     * @param {string} key
+     * @param {any} value
+     */
     function _setvar(key, value) {
         instance[key] = value
         if (settings.global) {
