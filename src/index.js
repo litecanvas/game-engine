@@ -110,7 +110,7 @@ export default function litecanvas(settings = {}) {
         TWO_PI,
 
         /**
-         * Half the value of the mathematical constant PI (π). Approximately 1.5708
+         * Half the value of the mathematical constant PI (π). Approximately 1.57079
          *
          * @type {number}
          */
