@@ -16,5 +16,5 @@ function update() {
 function draw() {
   cls(0)
   textalign('center', 'middle')
-  print(WIDTH / 2, HEIGHT / 2, 'Open your browser console', 3)
+  print(WIDTH / 2, HEIGHT / 2, 'Open your browser console and tap', 3)
 }

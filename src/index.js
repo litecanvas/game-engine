@@ -1,4 +1,4 @@
-/*! litecanvas v0.23.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.23.1 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -8,7 +8,8 @@ export default function litecanvas(settings = {}) {
     const root = globalThis,
         body = document.body,
         math = Math,
-        TWO_PI = math.PI * 2,
+        PI = math.PI,
+        TWO_PI = PI * 2,
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         off = (elem, evt, callback) => elem.removeEventListener(evt, callback),
         time = () => performance.now(),
@@ -78,8 +79,10 @@ export default function litecanvas(settings = {}) {
         _draws = { count: 0, time: 0 },
         /** @type {string} */
         _font = 'sans-serif',
-        /** @type {any} */
-        _preset = {},
+        /** @type {string} */
+        _textAlign = 'start',
+        /** @type {string} */
+        _textBaseline = 'top',
         /**
          * The game loop callbacks
          * @type {{init: function[], update: function[], draw: function[], resized: function[]}}
@@ -103,29 +106,41 @@ export default function litecanvas(settings = {}) {
         }
 
     Object.assign(instance, {
-        /** @type {number|null} */
+        /** @type {number} */
         WIDTH: settings.width,
-        /** @type {number|null} */
+        /** @type {number} */
         HEIGHT: settings.height || settings.width,
+        /** @type {HTMLCanvasElement} */
         CANVAS: NULL,
+        /** @type {boolean} */
         TAPPED: false,
+        /** @type {boolean} */
         TAPPING: false,
+        /** @type {number} */
         TAPX: 0,
+        /** @type {number} */
         TAPY: 0,
+        /** @type {number} */
         ELAPSED: 0,
+        /** @type {number} */
         FPS: 0,
+        /** @type {number} */
         CENTERX: 0,
+        /** @type {number} */
         CENTERY: 0,
 
         /**
-         * The value of the mathematical constant PI (π). Approximately 3.14159
+         * The value of the mathematical constant PI (π).
+         * Approximately 3.14159
          *
          * @type {number}
          */
-        PI: math.PI,
+        PI,
 
         /**
-         * Twice the value of the mathematical constant PI (π). Approximately 6.28318
+         * Twice the value of the mathematical constant PI (π).
+         * Approximately 6.28318
+         *
          * Note: TWO_PI radians equals 360º, PI radians equals 180º,
          * HALF_PI radians equals 90º, and HALF_PI/2 radians equals 45º.
          *
@@ -134,11 +149,12 @@ export default function litecanvas(settings = {}) {
         TWO_PI,
 
         /**
-         * Half the value of the mathematical constant PI (π). Approximately 1.57079
+         * Half the value of the mathematical constant PI (π).
+         * Approximately 1.57079
          *
          * @type {number}
          */
-        HALF_PI: math.PI * 0.5,
+        HALF_PI: PI * 0.5,
 
         /**
          * Calculates a linear (interpolation) value over t%.
@@ -157,7 +173,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} degs
          * @returns {number} the value in radians
          */
-        deg2rad: (degs) => (math.PI / 180) * degs,
+        deg2rad: (degs) => (PI / 180) * degs,
 
         /**
          * Convert radians to degrees
@@ -165,7 +181,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} rads
          * @returns {number} the value in degrees
          */
-        rad2deg: (rads) => (180 / math.PI) * rads,
+        rad2deg: (rads) => (180 / PI) * rads,
 
         /**
          * Constrains a number between a minimum and maximum value.
@@ -255,10 +271,10 @@ export default function litecanvas(settings = {}) {
         /**
          * Returns the fractional part of a number
          *
-         * @param {number} n The number
+         * @param {number} value The number
          * @returns {number}
          */
-        fract: (n) => n % 1,
+        fract: (value) => value % 1,
 
         /** BASIC GRAPHICS API */
         /**
@@ -431,10 +447,8 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
          */
         textalign: (align, baseline) => {
-            _ctx.textAlign = _preset.textalign =
-                align || _preset.textalign || 'start'
-            _ctx.textBaseline = _preset.textbaseline =
-                baseline || _preset.textbaseline || 'top'
+            _ctx.textAlign = _textAlign = align
+            _ctx.textBaseline = _textBaseline = baseline
         },
 
         /** IMAGE GRAPHICS API */
@@ -928,7 +942,8 @@ export default function litecanvas(settings = {}) {
         _offsetTop = _canvas.offsetTop
         _offsetLeft = _canvas.offsetLeft
 
-        instance.textalign()
+        // fix the font align and baseline
+        instance.textalign(_textAlign, _textBaseline)
 
         _callAll(_loop.resized)
     }
