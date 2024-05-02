@@ -4,14 +4,19 @@ function init() {
   size = WIDTH / 6
   angle = 0
   gap = 40
+  lineDashPattern = [30, 15]
+  lineDashOffset = 0
 }
 
-function update() {
+function update(dt) {
   angle += 0.01
+  lineDashOffset += 100 * dt
+  if (lineDashOffset > 50) lineDashOffset = 0
 }
 
 function draw() {
   cls(0)
+  linewidth(5)
 
   rectfill(gap, CENTERY - size / 2, size, size, 2)
 
@@ -19,7 +24,8 @@ function draw() {
   push()
   translate(gap * 2 + size + 10 + size / 2, CENTERY - size / 2 + size / 2)
   rotate(angle)
-  rect(-size / 2, -size / 2, size, size, 3)
+  linedash(lineDashPattern, -lineDashOffset)
+  rect(-size / 2, -size / 2, size, size, 1)
   pop()
 
   circfill(size * 3, CENTERY, size / 2, 4)

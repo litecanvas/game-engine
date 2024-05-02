@@ -1,4 +1,4 @@
-/*! litecanvas v0.23.1 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.24.0 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -381,12 +381,18 @@ export default function litecanvas(settings = {}) {
         /**
          * Sets the line dash pattern used when drawing lines
          *
-         * @param {number|number[]} value
+         * @param {number|number[]} segments the line dash pattern
+         * @param {number} offset the line dash offset, or "phase".
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
          */
-        linedash: (value) => {
-            value = value ? value : []
-            _ctx.setLineDash(Array.isArray(value) ? value : [value])
+        linedash: (segments, offset = 0) => {
+            if (segments) {
+                _ctx.setLineDash(
+                    Array.isArray(segments) ? segments : [segments],
+                )
+                _ctx.lineDashOffset = offset
+            }
         },
 
         /**
@@ -423,7 +429,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} size the font size
          * @param {string} font the font family
          */
-        text: (x, y, text, color = 0, size = 20, font = NULL) => {
+        text: (x, y, text, color = 0, size = 32, font = NULL) => {
             _ctx.font = ~~size + 'px ' + (font || _font)
             _ctx.fillStyle = colors[~~color % colors.length]
             _ctx.fillText(text, ~~x, ~~y)
@@ -622,6 +628,18 @@ export default function litecanvas(settings = {}) {
         blendmode: (mode = 'source-over') => {
             _ctx.globalCompositeOperation = mode
         },
+
+        /**
+         * Provides filter effects such as blurring and grayscaling.
+         * It is similar to the CSS filter property and accepts the same values.
+         *
+         * @param {string} effect
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
+         */
+        filter: (effect) => {
+            _ctx.filter = effect
+        },
+
         /**
          * saves the current drawing style settings and transformations
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
