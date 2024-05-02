@@ -1,4 +1,4 @@
-/*! litecanvas v0.24.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.24.1 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -387,12 +387,8 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
          */
         linedash: (segments, offset = 0) => {
-            if (segments) {
-                _ctx.setLineDash(
-                    Array.isArray(segments) ? segments : [segments],
-                )
-                _ctx.lineDashOffset = offset
-            }
+            _ctx.setLineDash(Array.isArray(segments) ? segments : [segments])
+            _ctx.lineDashOffset = offset
         },
 
         /**
