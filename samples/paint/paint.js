@@ -6,9 +6,10 @@ function init() {
 
   // `paint()` return a image
   // very useful to cache expensive drawing operations
-  ballpainted = paint(256, 256, () => {
-    const b = ball(128, 128)
-    b.draw()
+  BALL_IMAGE = paint(256, 256, (offcanvas, offcontext) => {
+    // inside that callback all drawing functions
+    // automatically will use the offcanvas context
+    ball(128, 128).draw()
   })
 
   // create many balls
@@ -18,9 +19,12 @@ function init() {
 }
 
 function update(dt) {
+  // toggle between draw all circles or just draw images
   if (TAPPED) {
     useImage = !useImage
   }
+
+  // update our objects
   for (const e of entities) {
     e.update(dt)
   }
@@ -30,9 +34,14 @@ function draw() {
   cls(0)
 
   for (const e of entities) {
-    e.draw(useImage)
+    if (useImage) {
+      image(e.x - e.r, e.y - e.r, BALL_IMAGE)
+    } else {
+      e.draw()
+    }
   }
 
+  textstyle('italic bold')
   text(
     0,
     0,
@@ -40,8 +49,7 @@ function draw() {
       (FPS || 0) +
       ' - Tap to draw ' +
       (useImage ? 'images (cache ON)' : 'shapes (cache OFF)'),
-    3,
-    32
+    3
   )
 }
 
@@ -66,13 +74,9 @@ function ball(x, y) {
       }
     },
 
-    draw(fast = false) {
-      if (fast) {
-        image(this.x - this.r, this.y - this.r, ballpainted)
-      } else {
-        for (let c = 2; c < 128; c++) {
-          circfill(this.x, this.y, this.r - c, c)
-        }
+    draw() {
+      for (let c = 2; c < 128; c++) {
+        circfill(this.x, this.y, this.r - c, c)
       }
     },
   }
