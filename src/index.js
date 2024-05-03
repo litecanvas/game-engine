@@ -1,4 +1,4 @@
-/*! litecanvas v0.24.1 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.25.0 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -78,7 +78,9 @@ export default function litecanvas(settings = {}) {
         /** @type {{count:number, time:number}} */
         _draws = { count: 0, time: 0 },
         /** @type {string} */
-        _font = 'sans-serif',
+        _fontFamily = 'sans-serif',
+        /** @type {string} */
+        _fontStyle = '',
         /** @type {string} */
         _textAlign = 'start',
         /** @type {string} */
@@ -423,10 +425,9 @@ export default function litecanvas(settings = {}) {
          * @param {string} text the text message
          * @param {number} color the color index (generally from 0 to 7)
          * @param {number} size the font size
-         * @param {string} font the font family
          */
-        text: (x, y, text, color = 0, size = 32, font = NULL) => {
-            _ctx.font = ~~size + 'px ' + (font || _font)
+        text: (x, y, text, color = 0, size = 32) => {
+            _ctx.font = `${_fontStyle || ''} ${~~size}px ${_fontFamily}`
             _ctx.fillStyle = colors[~~color % colors.length]
             _ctx.fillText(text, ~~x, ~~y)
         },
@@ -437,7 +438,16 @@ export default function litecanvas(settings = {}) {
          * @param {string} fontFamily
          */
         textfont: (fontFamily) => {
-            _font = fontFamily
+            _fontFamily = fontFamily
+        },
+
+        /**
+         * Sets whether a font should be styled with a normal, italic, or bold.
+         *
+         * @param {string} style
+         */
+        textstyle: (style) => {
+            _fontStyle = style
         },
 
         /**
@@ -451,6 +461,23 @@ export default function litecanvas(settings = {}) {
         textalign: (align, baseline) => {
             _ctx.textAlign = _textAlign = align
             _ctx.textBaseline = _textBaseline = baseline
+        },
+
+        /**
+         * Returns a TextMetrics object that contains information about the measured text (such as its width, for example)
+         *
+         * @param {string} text
+         * @param {number} size
+         * @returns {TextMetrics}
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
+         */
+        textmetrics: (text, size = 32) => {
+            _ctx.font = `${_fontStyle || ''} ${~~size}px ${_fontFamily}`
+            metrics = _ctx.measureText(text)
+            metrics.height =
+                metrics.actualBoundingBoxAscent +
+                metrics.actualBoundingBoxDescent
+            return metrics
         },
 
         /** IMAGE GRAPHICS API */
@@ -475,46 +502,45 @@ export default function litecanvas(settings = {}) {
          * @param {number} width
          * @param {number} height
          * @param {string[]|drawCallback} draw
+         * @param {{scale?:number}} options
          * @returns {OffscreenCanvas}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
-        paint: (width, height, draw) => {
+        paint: (width, height, draw, options = {}) => {
+            options.scale = math.max(1, ~~options.scale)
+
             const offscreenCanvas = new OffscreenCanvas(width, height),
-                ctxOriginal = _ctx
+                ctxOriginal = _ctx,
+                pixelart = Array.isArray(draw),
+                scale = pixelart ? math.floor(options.scale) : options.scale
 
-            offscreenCanvas.width = width
-            offscreenCanvas.height = height
-            offscreenCanvas.ctx = _ctx = offscreenCanvas.getContext('2d')
+            offscreenCanvas.width = width * scale
+            offscreenCanvas.height = height * scale
+            _ctx = offscreenCanvas.getContext('2d')
 
-            if (Array.isArray(draw)) {
-                const imageData = _ctx.createImageData(width, height),
-                    pixels = imageData.data
+            _ctx.scale(scale, scale)
 
+            if (pixelart) {
                 let x = 0,
                     y = 0
 
+                _ctx.imageSmoothingEnabled = false
+
                 for (const str of draw) {
                     for (const color of str.split('')) {
-                        let pixelIndex = y * (width * 4) + x * 4
                         if (' ' !== color && '.' !== color) {
-                            // support max 16-color palettes
+                            // support max 16-color palettes (from 0 to f hexadecimals)
                             // prettier-ignore
-                            const n = colors.length > 8 ? ~~parseInt(color, 16) : ~~color
-                            const c = colors[n % colors.length]
-
-                            pixels[pixelIndex] = parseInt(c.slice(1, 3), 16) // red
-                            pixels[pixelIndex + 1] = parseInt(c.slice(3, 5), 16) // green
-                            pixels[pixelIndex + 2] = parseInt(c.slice(5, 7), 16) // blue
-                            pixels[pixelIndex + 3] = 255 // alpha 100%
+                            const colorIndex = ~~parseInt(color, 16)
+                            instance.rectfill(x, y, 1, 1, colorIndex)
                         }
                         x++
                     }
                     y++
                     x = 0
                 }
-                _ctx.putImageData(imageData, 0, 0)
             } else {
-                draw(offscreenCanvas)
+                draw(offscreenCanvas, _ctx)
             }
 
             _ctx = ctxOriginal // restore the context

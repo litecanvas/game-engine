@@ -71,22 +71,17 @@ function update(dt) {
 function draw() {
   cls(0)
 
+  textfont('Silkscreen')
+
   if (lifes > 0) {
     rectfill(padX, padY, padW, padH, 3)
     circfill(ballX, ballY, ballSize, 6)
-    text(20, 20, '❤️ ' + lifes, 4, textSize, 'Silkscreen')
-    text(
-      WIDTH - 100,
-      20,
-      ('' + score).padStart(6, 0),
-      3,
-      textSize,
-      'Silkscreen'
-    )
-    text(WIDTH - 50, HEIGHT - 20, 'FPS:' + (FPS || 0), 5, 12, 'Silkscreen')
+    text(20, 20, '❤️ ' + lifes, 4, textSize)
+    text(WIDTH - 100, 20, ('' + score).padStart(6, 0), 3, textSize)
+    text(WIDTH - 50, HEIGHT - 20, 'FPS:' + (FPS || 0), 5, 12)
   } else {
     textalign('center', 'middle')
-    text(CENTERX, CENTERY - 25, 'GAME OVER', 3, 25, 'Silkscreen')
-    text(CENTERX, CENTERY + 25, 'score: ' + score, 3, 20, 'Silkscreen')
+    text(CENTERX, CENTERY - 25, 'GAME OVER', 3, 25)
+    text(CENTERX, CENTERY + 25, 'score: ' + score, 3, 20)
   }
 }

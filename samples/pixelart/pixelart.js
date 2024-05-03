@@ -5,26 +5,32 @@ litecanvas({
   // autoscale: false,
 })
 
-const art = paint(8, 8, [
-  // each char is a pixel
-  // each number is a color from 0 to 7
-  // tip: use empty character (space) to 100% transparent
-  '  0000  ',
-  ' 055550 ',
-  '05505050',
-  '05555550',
-  '05500050',
-  '05555550',
-  ' 055550 ',
-  '  0000  ',
-])
+const art = paint(
+  8, // the pixel art width
+  8, // the pixelart height
+  [
+    // the pixelart pixels:
+    // each number is a pixel color
+    // note: use space or dot to make a pixel 100% transparent
+    '  0000  ',
+    ' 055550 ',
+    '05505050',
+    '05555550',
+    '05500050',
+    '05555550',
+    ' 055550 ',
+    '..0000..',
+  ],
+  {
+    scale: 2, // this pixelart is twice bigger
+  }
+)
 
 function update() {
   // do nothing
 }
 
 function draw() {
-  if (ELAPSED > 1) return // stop the draw
   cls(1)
   image(0, 0, art)
 }
