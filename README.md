@@ -4,6 +4,16 @@ Lightweight HTML5 canvas engine suitable for small games and animations for peop
 
 :warning: **This project is still under development. All feedback is appreciated!** :warning:
 
+### Features
+
+-   **Tiny**: only `~4KB` (minified + gzipped).
+-   **Simple API**: just few functions to draw shapes and some utilities to other things like sounds and math.
+-   **Offline-first**: You can install the [playground](https://litecanvas.js.org/) as webapp and use anywhere at any time.
+-   **Predefined colors**: just use a number (from 0 to 7) to choose a color in our 8-color palette.
+-   **Predefined sounds**: packed with 8 sounds created in [ZzFX](https://killedbyapixel.github.io/ZzFX/).
+
+## Getting Started
+
 You can try our [online playground](https://litecanvas.github.io) or just installing the [basic template](https://github.com/litecanvas/template):
 
 ```sh
@@ -14,15 +24,11 @@ npm install
 npm start
 ```
 
-### Features
+If you prefer, you can manually install the package via NPM:
 
--   **Tiny**: only `~4KB` (minified + gzipped).
--   **Simple API**: just few functions to draw shapes and some utilities to other things like sounds and math.
--   **Offline-first**: You can install the [playground](https://litecanvas.js.org/) as webapp and use anywhere at any time.
--   **Predefined colors**: just use a number (from 0 to 7) to choose a color in our 8-color palette.
--   **Predefined sounds**: packed with 8 sounds created in [ZzFX](https://killedbyapixel.github.io/ZzFX/).
-
-## Getting Started
+```
+npm install @litecanvas/litecanvas
+```
 
 ```js
 import litecanvas from '@litecanvas/litecanvas'
