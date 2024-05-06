@@ -1,4 +1,4 @@
-/*! litecanvas v0.26.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.26.1 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
