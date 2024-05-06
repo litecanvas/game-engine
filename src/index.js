@@ -839,10 +839,8 @@ export default function litecanvas(settings = {}) {
         })
 
         on(root, 'blur', () => {
-            if (_rafid) {
-                cancelAnimationFrame(_rafid)
-                _rafid = 0
-            }
+            cancelAnimationFrame(_rafid)
+            _rafid = 0
             if (settings.tapEvents) {
                 off(
                     body,
