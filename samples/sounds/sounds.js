@@ -26,7 +26,11 @@ for (let i = 0; i < 9; i++) {
       index = 'custom'
       // custom zzfx sound produced in https://killedbyapixel.github.io/ZzFX/
       // prettier-ignore
-      sfx([2.69,,114,,0.23,0,,0.32,,,,,,,,,0.33,0.74,,0.01])
+      sfx(
+        [2.69, , 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.01],
+        volume.value,
+        pitch.value
+      )
     } else {
       sfx(i, volume.value, pitch.value) // for i = 0 ~ 7 use the default sounds
     }
@@ -47,6 +51,7 @@ function draw() {
   cls(index)
   if (index !== null) {
     circfill(CENTERX, CENTERY, 75, 3)
+    textsize(20)
     text(CENTERX, CENTERY, `sfx(${index});`, 0)
   }
 }

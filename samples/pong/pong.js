@@ -76,12 +76,15 @@ function draw() {
   if (lifes > 0) {
     rectfill(padX, padY, padW, padH, 3)
     circfill(ballX, ballY, ballSize, 6)
-    text(20, 20, '❤️ ' + lifes, 4, textSize)
-    text(WIDTH - 100, 20, ('' + score).padStart(6, 0), 3, textSize)
-    text(WIDTH - 50, HEIGHT - 20, 'FPS:' + (FPS || 0), 5, 12)
+    textsize(textSize)
+    text(20, 20, '❤️ ' + lifes, 4)
+    text(WIDTH - 100, 20, ('' + score).padStart(6, 0), 3)
+    // text(WIDTH - 80, HEIGHT - 20, 'FPS:' + (FPS || 0), 5)
   } else {
     textalign('center', 'middle')
-    text(CENTERX, CENTERY - 25, 'GAME OVER', 3, 25)
-    text(CENTERX, CENTERY + 25, 'score: ' + score, 3, 20)
+    textsize(textSize + 5)
+    text(CENTERX, CENTERY - 25, 'GAME OVER', 3)
+    textsize(textSize)
+    text(CENTERX, CENTERY + 25, 'score: ' + score, 3)
   }
 }

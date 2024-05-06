@@ -1,4 +1,4 @@
-/*! litecanvas v0.25.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.26.0 | https://github.com/litecanvas/game-engine */
 import { zzfx } from './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -81,6 +81,8 @@ export default function litecanvas(settings = {}) {
         _fontFamily = 'sans-serif',
         /** @type {string} */
         _fontStyle = '',
+        /** @type {number} */
+        _fontSize = 32,
         /** @type {string} */
         _textAlign = 'start',
         /** @type {string} */
@@ -260,7 +262,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} p chance from 0 to 1 (where 0 = 0% and 1 = 100%)
          * @returns {boolean}
          */
-        chance: (p = 0.5) => instance.rand() < p,
+        chance: (p) => instance.rand() < p,
 
         /**
          * Choose a random item from a Array
@@ -426,19 +428,28 @@ export default function litecanvas(settings = {}) {
          * @param {number} color the color index (generally from 0 to 7)
          * @param {number} size the font size
          */
-        text: (x, y, text, color = 0, size = 32) => {
-            _ctx.font = `${_fontStyle || ''} ${~~size}px ${_fontFamily}`
+        text: (x, y, text, color = 3) => {
+            _ctx.font = `${_fontStyle || ''} ${~~_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = colors[~~color % colors.length]
             _ctx.fillText(text, ~~x, ~~y)
         },
 
         /**
-         * Set a default font family
+         * Set the font family
          *
          * @param {string} fontFamily
          */
         textfont: (fontFamily) => {
             _fontFamily = fontFamily
+        },
+
+        /**
+         * Set the font size
+         *
+         * @param {string} size
+         */
+        textsize: (size) => {
+            _fontSize = size
         },
 
         /**
@@ -471,8 +482,9 @@ export default function litecanvas(settings = {}) {
          * @returns {TextMetrics}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
          */
-        textmetrics: (text, size = 32) => {
-            _ctx.font = `${_fontStyle || ''} ${~~size}px ${_fontFamily}`
+        textmetrics: (text, size = NULL) => {
+            // prettier-ignore
+            _ctx.font = `${_fontStyle || ''} ${~~(size || _fontSize)}px ${_fontFamily}`
             metrics = _ctx.measureText(text)
             metrics.height =
                 metrics.actualBoundingBoxAscent +
@@ -562,7 +574,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          */
-        translate: (x = 0, y = 0) => _ctx.translate(x, y),
+        translate: (x, y) => _ctx.translate(x, y),
 
         /**
          * Adds a scaling transformation to the canvas units horizontally and/or vertically.
@@ -570,14 +582,14 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          */
-        scale: (x = 1, y = 1) => _ctx.scale(x, y),
+        scale: (x, y) => _ctx.scale(x, y),
 
         /**
          * Adds a rotation to the transformation matrix
          *
          * @param {number} radians
          */
-        rotate: (radians = 0) => _ctx.rotate(radians),
+        rotate: (radians) => _ctx.rotate(radians),
 
         /**
          * Adds a transformation that skews to the transformation matrix
@@ -600,7 +612,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
          */
-        alpha: (alpha = 1) => {
+        alpha: (alpha) => {
             _ctx.globalAlpha = alpha
         },
 
@@ -642,13 +654,14 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Sets the type of compositing operation to apply when drawing new shapes
+         * Sets the type of compositing operation to apply when drawing new shapes.
+         * Default value = 'source-over'.
          *
-         * @param {string} mode
+         * @param {string} value
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
          */
-        blendmode: (mode = 'source-over') => {
-            _ctx.globalCompositeOperation = mode
+        blendmode: (value) => {
+            _ctx.globalCompositeOperation = value
         },
 
         /**
@@ -702,6 +715,7 @@ export default function litecanvas(settings = {}) {
                 z[1] = randomness > 0 ? randomness : 0
                 z[10] = ~~z[10] + ~~pitch
             }
+
             return zzfx(...z)
         },
 
@@ -811,7 +825,7 @@ export default function litecanvas(settings = {}) {
             }
 
             on(instance.CANVAS, _events.tapstart, function (ev) {
-                ev.preventDefault()
+                if (!_rafid) return
 
                 on(body, _events.tapmove, _tappingHandler)
                 const [x, y] = ([_tapStartX, _tapStartY] = _getXY(ev))
@@ -821,8 +835,6 @@ export default function litecanvas(settings = {}) {
             })
 
             on(instance.CANVAS, _events.tapend, function (ev) {
-                ev.preventDefault()
-
                 off(body, _events.tapmove, _tappingHandler)
                 _updateTapping(false)
 
@@ -834,6 +846,7 @@ export default function litecanvas(settings = {}) {
 
         on(root, 'focus', () => {
             if (!_rafid) {
+                _lastFrame = time()
                 _rafid = requestAnimationFrame(_frame)
             }
         })
@@ -888,9 +901,6 @@ export default function litecanvas(settings = {}) {
         _lastFrame = now
         _accumulator += t
 
-        // prevent long updates after lost focus
-        if (t > 1000) _accumulator = _stepMs
-
         while (_accumulator >= _stepMs) {
             // update
             _callAll(_loop.update, _step)
@@ -913,7 +923,7 @@ export default function litecanvas(settings = {}) {
             }
         }
 
-        _rafid = requestAnimationFrame(_frame)
+        if (_rafid) _rafid = requestAnimationFrame(_frame)
     }
 
     function _loadPlugins() {
@@ -940,10 +950,12 @@ export default function litecanvas(settings = {}) {
 
         _ctx.imageSmoothingEnabled = _antialias = !_pixelart
 
-        // canvas CSS tweaks
-        if (!_antialias) {
+        if (!_antialias || _pixelart) {
+            _ctx.imageSmoothingEnabled = false
             _canvas.style.imageRendering = 'pixelated'
         }
+
+        // canvas CSS tweaks
         _canvas.style.display = 'block'
         if (_fullscreen) {
             _canvas.style.position = 'absolute'
