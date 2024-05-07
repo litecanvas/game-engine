@@ -4,13 +4,9 @@ litecanvas({
 
 let _bg
 
-function log(...args) {
-  console.log(...args)
-}
-
 function update() {
-  if (TAPPED) log('TAPPED', TAPX, TAPY)
-  else if (TAPPING) log('TAPPING', TAPX, TAPY)
+  if (TAPPED) console.log('TAPPED', TAPX, TAPY)
+  else if (TAPPING) console.log('TAPPING', TAPX, TAPY)
 }
 
 function draw() {
