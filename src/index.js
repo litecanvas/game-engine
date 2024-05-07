@@ -34,7 +34,7 @@ export default function litecanvas(settings = {}) {
     // setup the settings default values
     settings = Object.assign(defaults, settings)
 
-    let /** @type {string|HTMLCanvasElement} _canvas */
+    let /** @type {HTMLCanvasElement|string} _canvas */
         _canvas = settings.canvas || document.createElement('canvas'),
         /** @type {boolean} */
         _antialias = settings.antialias,
@@ -208,7 +208,7 @@ export default function litecanvas(settings = {}) {
          * @param {boolean} withinBounds constrain the value to the newly mapped range
          * @returns {number} the remapped number
          */
-        map: (value, start1, stop1, start2, stop2, withinBounds = false) => {
+        map(value, start1, stop1, start2, stop2, withinBounds = false) {
             // prettier-ignore
             const result = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2
             if (!withinBounds) return result
@@ -228,7 +228,7 @@ export default function litecanvas(settings = {}) {
         norm: (value, start, stop) => instance.map(value, start, stop, 0, 1),
 
         /**
-         * Calculates the positive difference of two given numbers
+         * Calculates the positive difference/distance of two given numbers
          *
          * @param {number} a
          * @param {number} b
@@ -290,7 +290,7 @@ export default function litecanvas(settings = {}) {
          * @param {function} f
          * @returns {number}
          */
-        wave: (lower, higher, t, fn = math.sin) => {
+        wave(lower, higher, t, fn = math.sin) {
             return lower + ((fn(t) + 1) / 2) * (higher - lower)
         },
 
@@ -301,7 +301,7 @@ export default function litecanvas(settings = {}) {
          * @param {number|null} color The background color (from 0 to 7) or null
          * @alias instance.cls
          */
-        clear: (color) => {
+        clear(color) {
             if (NULL == color) {
                 _ctx.clearRect(0, 0, instance.WIDTH, instance.HEIGHT)
             } else {
@@ -318,8 +318,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          * @param {number} color the color index (generally from 0 to 7)
          */
-        rect: (x, y, width, height, color = 0) => {
-            _ctx.strokeStyle = getcolor(color)
+        rect(x, y, width, height, color = 0) {
+            _ctx.strokeStyle = instance.getcolor(color)
             _ctx.strokeRect(~~x, ~~y, ~~width, ~~height)
         },
 
@@ -332,8 +332,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          * @param {number} color the color index (generally from 0 to 7)
          */
-        rectfill: (x, y, width, height, color = 0) => {
-            _ctx.fillStyle = getcolor(color)
+        rectfill(x, y, width, height, color = 0) {
+            _ctx.fillStyle = instance.getcolor(color)
             _ctx.fillRect(~~x, ~~y, ~~width, ~~height)
         },
 
@@ -345,8 +345,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} radius
          * @param {number} color the color index (generally from 0 to 7)
          */
-        circ: (x, y, radius, color = 0) => {
-            _ctx.strokeStyle = getcolor(color)
+        circ(x, y, radius, color = 0) {
+            _ctx.strokeStyle = instance.getcolor(color)
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             _ctx.closePath()
@@ -361,8 +361,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} radius
          * @param {number} color the color index (generally from 0 to 7)
          */
-        circfill: (x, y, radius, color = 0) => {
-            _ctx.fillStyle = getcolor(color)
+        circfill(x, y, radius, color = 0) {
+            _ctx.fillStyle = instance.getcolor(color)
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             _ctx.closePath()
@@ -378,8 +378,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} y2
          * @param {number} color the color index (generally from 0 to 7)
          */
-        line: (x1, y1, x2, y2, color = 0) => {
-            _ctx.strokeStyle = getcolor(color)
+        line(x1, y1, x2, y2, color = 0) {
+            _ctx.strokeStyle = instance.getcolor(color)
             _ctx.beginPath()
             _ctx.moveTo(~~x1, ~~y1)
             _ctx.lineTo(~~x2, ~~y2)
@@ -392,7 +392,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} value
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
          */
-        linewidth: (value) => {
+        linewidth(value) {
             _ctx.lineWidth = value
         },
 
@@ -404,7 +404,7 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
          */
-        linedash: (segments, offset = 0) => {
+        linedash(segments, offset = 0) {
             _ctx.setLineDash(Array.isArray(segments) ? segments : [segments])
             _ctx.lineDashOffset = offset
         },
@@ -416,7 +416,7 @@ export default function litecanvas(settings = {}) {
          * @param {string} value
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
          */
-        linecap: (value) => {
+        linecap(value) {
             _ctx.lineCap = value
         },
 
@@ -427,7 +427,7 @@ export default function litecanvas(settings = {}) {
          * @param {string} value
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin
          */
-        linejoin: (value) => {
+        linejoin(value) {
             _ctx.lineJoin = value
         },
 
@@ -442,9 +442,9 @@ export default function litecanvas(settings = {}) {
          * @param {number} color the color index (generally from 0 to 7)
          * @param {number} size the font size
          */
-        text: (x, y, text, color = 3) => {
+        text(x, y, text, color = 3) {
             _ctx.font = `${_fontStyle || ''} ${~~_fontSize}px ${_fontFamily}`
-            _ctx.fillStyle = getcolor(color)
+            _ctx.fillStyle = instance.getcolor(color)
             _ctx.fillText(text, ~~x, ~~y)
         },
 
@@ -453,7 +453,7 @@ export default function litecanvas(settings = {}) {
          *
          * @param {string} fontFamily
          */
-        textfont: (fontFamily) => {
+        textfont(fontFamily) {
             _fontFamily = fontFamily
         },
 
@@ -462,7 +462,7 @@ export default function litecanvas(settings = {}) {
          *
          * @param {string} size
          */
-        textsize: (size) => {
+        textsize(size) {
             _fontSize = size
         },
 
@@ -471,7 +471,7 @@ export default function litecanvas(settings = {}) {
          *
          * @param {string} style
          */
-        textstyle: (style) => {
+        textstyle(style) {
             _fontStyle = style
         },
 
@@ -483,7 +483,7 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
          */
-        textalign: (align, baseline) => {
+        textalign(align, baseline) {
             _ctx.textAlign = _textAlign = align
             _ctx.textBaseline = _textBaseline = baseline
         },
@@ -496,7 +496,7 @@ export default function litecanvas(settings = {}) {
          * @returns {TextMetrics}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
          */
-        textmetrics: (text, size = NULL) => {
+        textmetrics(text, size = NULL) {
             // prettier-ignore
             _ctx.font = `${_fontStyle || ''} ${~~(size || _fontSize)}px ${_fontFamily}`
             metrics = _ctx.measureText(text)
@@ -514,7 +514,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {OffscreenCanvas|HTMLImageElement|HTMLCanvasElement} image
          */
-        image: (x, y, image) => {
+        image(x, y, image) {
             _ctx.drawImage(image, ~~x, ~~y)
         },
 
@@ -532,7 +532,7 @@ export default function litecanvas(settings = {}) {
          * @returns {OffscreenCanvas}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
-        paint: (width, height, draw, options = {}) => {
+        paint(width, height, draw, options = {}) {
             options.scale = math.max(1, ~~options.scale)
 
             const offscreenCanvas = new OffscreenCanvas(width, height),
@@ -637,7 +637,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
          */
-        alpha: (alpha) => {
+        alpha(alpha) {
             _ctx.globalAlpha = alpha
         },
 
@@ -654,7 +654,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
          */
-        cliprect: (x, y, width, height) => {
+        cliprect(x, y, width, height) {
             _ctx.beginPath()
             _ctx.rect(x, y, width, height)
             _ctx.clip()
@@ -672,7 +672,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} radius
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
          */
-        clipcirc: (x, y, radius) => {
+        clipcirc(x, y, radius) {
             _ctx.beginPath()
             _ctx.arc(x, y, radius, 0, TWO_PI)
             _ctx.clip()
@@ -685,7 +685,7 @@ export default function litecanvas(settings = {}) {
          * @param {string} value
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
          */
-        blendmode: (value) => {
+        blendmode(value) {
             _ctx.globalCompositeOperation = value
         },
 
@@ -696,7 +696,7 @@ export default function litecanvas(settings = {}) {
          * @param {string} effect
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
          */
-        filter: (effect) => {
+        filter(effect) {
             _ctx.filter = effect
         },
 
@@ -711,7 +711,7 @@ export default function litecanvas(settings = {}) {
          * @returns {AudioBufferSourceNode}
          * @see https://github.com/KilledByAPixel/ZzFX
          */
-        sfx: (sound = 0, volume = 1, pitch = 0, randomness = 0) => {
+        sfx(sound = 0, volume = 1, pitch = 0, randomness = 0) {
             if (
                 navigator.userActivation &&
                 !navigator.userActivation.hasBeenActive
@@ -773,34 +773,64 @@ export default function litecanvas(settings = {}) {
         /**
          * @param {pluginCallback} callback
          */
-        plugin: (callback) => {
+        plugin(callback) {
             const pluginData = callback(instance, _helpers)
             if ('object' === typeof pluginData) {
                 for (const key in pluginData) {
-                    setvar(key, pluginData[key])
+                    instance.setvar(key, pluginData[key])
                 }
             }
         },
 
         /**
-         * @see listen
+         * Add a game loop event listener
+         *
+         * @param {string} event should be "init", "update", "draw" or "resized"
+         * @param {function} callback the function that is called when the event occurs
+         * @param {boolean} highPriority determines whether the callback will be called before or after the others
+         * @returns {function|null} a function to remove the listener or null if passed a invalid event
          */
-        listen,
+        listen(event, callback, highPriority = false) {
+            if (!_loop[event]) return NULL
+            _loop[event][highPriority ? 'unshift' : 'push'](callback)
+            return () => {
+                _loop[event] = _loop[event].filter((f) => f !== callback)
+            }
+        },
 
         /**
-         * @see emit
+         * Call all listeners attached to a game loop
+         *
+         * @param {string} event The game loop event
+         * @param  {...any} args Arguments passed to all functions
          */
-        emit,
+        emit(event, ...args) {
+            if (!_loop[event]) return
+            for (let i = 0; i < _loop[event].length; ++i) {
+                _loop[event][i](...args)
+            }
+        },
 
         /**
-         * @see getcolor
+         * Get the color value
+         *
+         * @param {number} index The color number
+         * @returns {string} the color value
          */
-        getcolor,
+        getcolor: (index) => colors[~~index % colors.length],
 
         /**
-         * @see setvar
+         * Create or update a instance variable
+         *
+         * @param {string} key
+         * @param {any} value
          */
-        setvar,
+        setvar(key, value) {
+            instance[key] = value
+            if (settings.global) {
+                root[key] = value
+            }
+        },
     }
 
     // alias methods
@@ -912,7 +942,7 @@ export default function litecanvas(settings = {}) {
         // set canvas background color
         if (NULL != _bg) {
             // prettier-ignore
-            instance.CANVAS.style.backgroundColor = getcolor(_bg)
+            instance.CANVAS.style.backgroundColor = instance.getcolor(_bg)
         }
 
         // maybe make the canvas adaptable
@@ -922,7 +952,7 @@ export default function litecanvas(settings = {}) {
         pageResized()
 
         // start the game loop
-        emit('init')
+        instance.emit('init')
         _lastFrame = time()
         _rafid = requestAnimationFrame(frame)
     }
@@ -939,21 +969,21 @@ export default function litecanvas(settings = {}) {
 
         while (_accumulator >= _stepMs) {
             // update
-            emit('update', _step)
-            setvar('ELAPSED', instance.ELAPSED + _step)
+            instance.emit('update', _step)
+            instance.setvar('ELAPSED', instance.ELAPSED + _step)
             _accumulator -= _stepMs
             ticks++
-            setvar('TAPPED', false)
+            instance.setvar('TAPPED', false)
         }
 
         if (ticks) {
             // draw
-            emit('draw')
+            instance.emit('draw')
 
             _draws.count++
             _draws.time += ticks * _step
             if (_draws.time >= 1) {
-                setvar('FPS', _draws.count)
+                instance.setvar('FPS', _draws.count)
                 _draws.time -= 1
                 _draws.count = 0
             }
@@ -967,7 +997,7 @@ export default function litecanvas(settings = {}) {
             'string' === typeof _canvas
                 ? document.querySelector(_canvas)
                 : _canvas
-        setvar('CANVAS', _canvas)
+        instance.setvar('CANVAS', _canvas)
 
         // disable fullscreen if a width is specified
         if (instance.WIDTH > 0) _fullscreen = false
@@ -1003,8 +1033,8 @@ export default function litecanvas(settings = {}) {
             if (_fullscreen) {
                 _canvas.width = _currentWidth
                 _canvas.height = _currentHeight
-                setvar('WIDTH', _currentWidth)
-                setvar('HEIGHT', _currentHeight)
+                instance.setvar('WIDTH', _currentWidth)
+                instance.setvar('HEIGHT', _currentHeight)
             } else if (_autoscale) {
                 _scale = math.min(
                     _currentWidth / instance.WIDTH,
@@ -1016,8 +1046,8 @@ export default function litecanvas(settings = {}) {
             }
         }
 
-        setvar('CENTERX', instance.WIDTH / 2)
-        setvar('CENTERY', instance.HEIGHT / 2)
+        instance.setvar('CENTERX', instance.WIDTH / 2)
+        instance.setvar('CENTERY', instance.HEIGHT / 2)
 
         _offsetTop = _canvas.offsetTop
         _offsetLeft = _canvas.offsetLeft
@@ -1025,7 +1055,7 @@ export default function litecanvas(settings = {}) {
         // fix the font align and baseline
         instance.textalign(_textAlign, _textBaseline)
 
-        emit('resized')
+        instance.emit('resized')
     }
 
     /**
@@ -1034,9 +1064,9 @@ export default function litecanvas(settings = {}) {
      * @param {number} y
      */
     function updateTapped(tapped, x, y) {
-        setvar('TAPPED', tapped)
-        setvar('TAPX', (x - _offsetLeft) / _scale)
-        setvar('TAPY', (y - _offsetTop) / _scale)
+        instance.setvar('TAPPED', tapped)
+        instance.setvar('TAPX', (x - _offsetLeft) / _scale)
+        instance.setvar('TAPY', (y - _offsetTop) / _scale)
     }
 
     /**
@@ -1045,59 +1075,9 @@ export default function litecanvas(settings = {}) {
      * @param {number} y
      */
     function updateTapping(tapped, x, y) {
-        setvar('TAPPING', tapped)
-        setvar('TAPX', (x - _offsetLeft) / _scale)
-        setvar('TAPY', (y - _offsetTop) / _scale)
-    }
-
-    /**
-     * Add a game loop event listener
-     *
-     * @param {string} event should be "init", "update", "draw" or "resized"
-     * @param {function} callback the function that is called when the event occurs
-     * @param {boolean} highPriority determines whether the callback will be called before or after the others
-     * @returns {function} a function to remove the listener
-     */
-    function listen(event, callback, highPriority = false) {
-        if (!_loop[event]) return
-        _loop[event][highPriority ? 'unshift' : 'push'](callback)
-        return () => {
-            _loop[event] = _loop[event].filter((f) => f !== callback)
-        }
-    }
-
-    /**
-     * Call all listeners attached to a game loop
-     *
-     * @param {string} event The game loop event
-     * @param  {...any} args Arguments passed to all functions
-     */
-    function emit(event, ...args) {
-        if (!_loop[event]) return
-        for (let i = 0; i < _loop[event].length; ++i) {
-            _loop[event][i](...args)
-        }
-    }
-
-    /**
-     * Get the color value
-     *
-     * @param {number} index The color number
-     * @returns {string} the color value
-     */
-    function getcolor(index) {
-        return colors[~~index % colors.length]
-    }
-
-    /**
-     * @param {string} key
-     * @param {any} value
-     */
-    function setvar(key, value) {
-        instance[key] = value
-        if (settings.global) {
-            root[key] = value
-        }
+        instance.setvar('TAPPING', tapped)
+        instance.setvar('TAPX', (x - _offsetLeft) / _scale)
+        instance.setvar('TAPY', (y - _offsetTop) / _scale)
     }
 
     if (settings.global) {
