@@ -548,11 +548,10 @@ export default function litecanvas(settings = {}) {
                 _ctx.imageSmoothingEnabled = false
 
                 for (const str of draw) {
-                    for (const color of str.split('')) {
+                    for (const color of str) {
                         if (' ' !== color && '.' !== color) {
-                            // support max 16-color palettes (from 0 to f hexadecimals)
-                            const colorIndex = ~~parseInt(color, 16)
-                            instance.rectfill(x, y, 1, 1, colorIndex)
+                            // support for 16-color palettes using hex (from 0 to f)
+                            instance.rectfill(x, y, 1, 1, parseInt(color, 16))
                         }
                         x++
                     }
