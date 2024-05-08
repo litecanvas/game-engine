@@ -4,30 +4,41 @@ litecanvas({
 })
 
 function init() {
-  t = 0
-  destX = WIDTH - 100
-  destY = HEIGHT - 100
+  duration = 3 // change this
+  startX = 100
+  startY = 100
+  endX = WIDTH - 100
+  endY = HEIGHT - 100
   x = 0
   y = 0
+  t = 0
+  nt = 0
 }
 
 function update(dt) {
+  // compute the duration
   t += dt
+  if (t > duration) t = 0
 
-  // the animation lasts 3 seconds
-  if (t > 3) t = 0
+  // remaps t to range 0.0...1.0
+  nt = norm(t, 0, duration)
 
-  x = lerp(100, destX, norm(t, 0, 3))
-  y = lerp(100, destY, norm(t, 0, 3))
+  // interpolate the position XY
+  x = lerp(startX, endX, nt)
+  y = lerp(startY, endY, nt)
 }
 
 function draw() {
   cls(0)
   linewidth(4)
 
-  circ(100, 100, 30, 2)
-  circ(destX, destY, 30, 2)
+  // draw the start and the end
+  circ(startX, startY, 30, 2)
+  circ(endX, endY, 30, 2)
+
+  // draw the animated object
   circfill(x, y, 20, 2)
 
-  rectfill(0, 0, WIDTH * norm(t, 0, 3), 4, 2)
+  // draw a progress bar based on t
+  rectfill(0, 0, WIDTH * nt, 4, 2)
 }
