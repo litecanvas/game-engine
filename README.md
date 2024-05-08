@@ -84,3 +84,4 @@ Try some demos in our playground:
 -   [PICO-8](https://www.lexaloffle.com/pico-8.php): fantasy console for making, sharing and playing tiny games.
 -   [js13kGames](https://js13kgames.com/): a JavaScript coding competition with size limit set to 13 kilobytes.
 -   [raylib](https://www.raylib.com/): a simple and easy-to-use gamedev library.
+-   [p5.js/Processing](https://p5js.org/): a library for creative coding.
