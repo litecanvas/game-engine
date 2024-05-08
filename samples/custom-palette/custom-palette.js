@@ -1,10 +1,27 @@
 litecanvas({
-  plugins: [pluginPico8palette],
   width: 5,
   pixelart: true,
 })
 
-function pluginPico8palette(engine, { colors }) {
+use(pluginColorPalettePico8)
+
+function init() {
+  pico8logo = paint(5, 5, [
+    // prettier-ignore
+    '..8..',
+    '.97f.',
+    'a777e',
+    '.b7d.',
+    '..c..',
+  ])
+}
+
+function draw() {
+  cls(0)
+  image(0, 0, pico8logo)
+}
+
+function pluginColorPalettePico8(engine, { colors }) {
   const pico8 = [
     '#000000',
     '#1D2B53',
@@ -23,22 +40,9 @@ function pluginPico8palette(engine, { colors }) {
     '#FF77A8',
     '#FFCCAA',
   ]
-  colors.length = 0 // remove the default colors
-  colors.push(...pico8)
-}
 
-function init() {
-  pico8logo = paint(5, 5, [
-    // prettier-ignore
-    '..8..',
-    '.97f.',
-    'a777e',
-    '.b7d.',
-    '..c..',
-  ])
-}
-
-function draw() {
-  cls(0)
-  image(0, 0, pico8logo)
+  // replaces the default palette with pico8 colors
+  for (let i = 0; i < pico8.length; i++) {
+    colors[i] = pico8[i]
+  }
 }

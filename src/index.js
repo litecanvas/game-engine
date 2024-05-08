@@ -1,11 +1,11 @@
-/*! litecanvas v0.27.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.28.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
 
 export default function litecanvas(settings = {}) {
     // helpers
-    const root = globalThis,
+    const root = window,
         body = document.body,
         math = Math,
         PI = math.PI,
@@ -28,24 +28,21 @@ export default function litecanvas(settings = {}) {
             tappingInterval: true,
             tapEvents: true,
             loop: NULL,
-            plugins: [],
         }
 
     // setup the settings default values
     settings = Object.assign(defaults, settings)
 
-    let /** @type {HTMLCanvasElement|string} _canvas */
+    let /** @type {boolean} */
+        _initialized = false,
+        /** @type {function[]} */
+        _plugins = [],
+        /** @type {HTMLCanvasElement|string} _canvas */
         _canvas = settings.canvas || document.createElement('canvas'),
-        /** @type {boolean} */
-        _antialias = settings.antialias,
-        /** @type {boolean} */
-        _pixelart = settings.pixelart,
         /** @type {boolean} */
         _fullscreen = settings.fullscreen,
         /** @type {boolean} */
         _autoscale = settings.autoscale,
-        /** @type {function[]} */
-        _plugins = settings.plugins,
         /** @type {number|null} */
         _bg = settings.background,
         /** @type {boolean} */
@@ -58,10 +55,6 @@ export default function litecanvas(settings = {}) {
         _offsetTop = 0,
         /** @type {number} */
         _offsetLeft = 0,
-        /** @type {number} */
-        _currentWidth,
-        /** @type {number} */
-        _currentHeight,
         /** @type {CanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
@@ -71,11 +64,13 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _stepMs = _step * 1000,
         /** @type {number} */
-        _accumulator = 0,
+        _accumulated = 0,
         /** @type {number} */
         _rafid,
-        /** @type {{count:number, time:number}} */
-        _draws = { count: 0, time: 0 },
+        /** @type {number} */
+        _drawCount = 0,
+        /** @type {number} */
+        _drawTime = 0,
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {string} */
@@ -765,20 +760,20 @@ export default function litecanvas(settings = {}) {
 
         /** PLUGINS API */
         /**
+         * Loads a plugin
+         *
          * @callback pluginCallback
          * @param {object} instance - The litecanvas instance
          * @param {object} helpers
-         * @returns {object|null}
          */
         /**
          * @param {pluginCallback} callback
          */
-        plugin(callback) {
-            const pluginData = callback(instance, _helpers)
-            if ('object' === typeof pluginData) {
-                for (const key in pluginData) {
-                    instance.setvar(key, pluginData[key])
-                }
+        use(callback) {
+            if (_initialized) {
+                loadPlugin(callback)
+            } else {
+                _plugins.push(callback)
             }
         },
 
@@ -863,6 +858,7 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
+        _initialized = true
         setupCanvas()
 
         if (settings.tapEvents) {
@@ -889,8 +885,6 @@ export default function litecanvas(settings = {}) {
 
             on(instance.CANVAS, _eventTapStart, function (ev) {
                 ev.preventDefault()
-
-                if (!_rafid) return
 
                 on(body, _eventTapMove, _tappingHandler)
                 const [x, y] = ([_tapStartX, _tapStartY] = _getXY(ev))
@@ -935,8 +929,8 @@ export default function litecanvas(settings = {}) {
         }
 
         // load plugins
-        for (let i = 0; i < _plugins.length; ++i) {
-            instance.plugin(_plugins[i])
+        for (let i = 0; i < _plugins.length; i++) {
+            loadPlugin(_plugins[i])
         }
 
         // set canvas background color
@@ -965,27 +959,25 @@ export default function litecanvas(settings = {}) {
             t = now - _lastFrame
 
         _lastFrame = now
-        _accumulator += t
+        _accumulated += t
 
-        while (_accumulator >= _stepMs) {
+        while (_accumulated >= _stepMs) {
             // update
             instance.emit('update', _step)
             instance.setvar('ELAPSED', instance.ELAPSED + _step)
-            _accumulator -= _stepMs
+            _accumulated -= _stepMs
             ticks++
             instance.setvar('TAPPED', false)
         }
 
         if (ticks) {
-            // draw
+            _drawCount++
             instance.emit('draw')
-
-            _draws.count++
-            _draws.time += ticks * _step
-            if (_draws.time >= 1) {
-                instance.setvar('FPS', _draws.count)
-                _draws.time -= 1
-                _draws.count = 0
+            _drawTime += _stepMs * ticks
+            if (_drawTime + _accumulated >= 1000) {
+                instance.setvar('FPS', _drawCount)
+                _drawCount = 0
+                _drawTime -= 1000
             }
         }
 
@@ -1008,9 +1000,7 @@ export default function litecanvas(settings = {}) {
 
         if (!_canvas.parentNode) body.appendChild(_canvas)
 
-        _ctx.imageSmoothingEnabled = _antialias = !_pixelart
-
-        if (!_antialias || _pixelart) {
+        if (!settings.antialias || settings.pixelart) {
             _ctx.imageSmoothingEnabled = false
             _canvas.style.imageRendering = 'pixelated'
         }
@@ -1027,20 +1017,17 @@ export default function litecanvas(settings = {}) {
 
     function pageResized() {
         if (_autoscale || _fullscreen) {
-            _currentWidth = innerWidth
-            _currentHeight = innerHeight
-
             if (_fullscreen) {
-                _canvas.width = _currentWidth
-                _canvas.height = _currentHeight
-                instance.setvar('WIDTH', _currentWidth)
-                instance.setvar('HEIGHT', _currentHeight)
+                _canvas.width = innerWidth
+                _canvas.height = innerHeight
+                instance.setvar('WIDTH', innerWidth)
+                instance.setvar('HEIGHT', innerHeight)
             } else if (_autoscale) {
                 _scale = math.min(
-                    _currentWidth / instance.WIDTH,
-                    _currentHeight / instance.HEIGHT,
+                    innerWidth / instance.WIDTH,
+                    innerHeight / instance.HEIGHT,
                 )
-                _scale = _pixelart ? math.floor(_scale) : _scale
+                _scale = settings.pixelart ? math.floor(_scale) : _scale
                 _canvas.style.width = instance.WIDTH * _scale + 'px'
                 _canvas.style.height = instance.HEIGHT * _scale + 'px'
             }
@@ -1080,6 +1067,15 @@ export default function litecanvas(settings = {}) {
         instance.setvar('TAPY', (y - _offsetTop) / _scale)
     }
 
+    function loadPlugin(callback) {
+        const pluginData = callback(instance, _helpers)
+        if ('object' === typeof pluginData) {
+            for (const key in pluginData) {
+                instance.setvar(key, pluginData[key])
+            }
+        }
+    }
+
     if (settings.global) {
         if (root.__litecanvas) {
             throw new Error('Cannot instantiate litecanvas globally twice')
@@ -1097,4 +1093,4 @@ export default function litecanvas(settings = {}) {
     return instance
 }
 
-globalThis.litecanvas = litecanvas
+window.litecanvas = litecanvas

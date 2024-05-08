@@ -1,8 +1,9 @@
 litecanvas({
   width: 600,
   autoscale: false,
-  plugins: [pluginTest],
 })
+
+use(pluginTest)
 
 function init() {
   clamp(10, 0, 100)
