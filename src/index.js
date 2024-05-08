@@ -1,4 +1,4 @@
-/*! litecanvas v0.28.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.29.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -794,19 +794,6 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Call all listeners attached to a game loop
-         *
-         * @param {string} event The game loop event
-         * @param  {...any} args Arguments passed to all functions
-         */
-        emit(event, ...args) {
-            if (!_loop[event]) return
-            for (let i = 0; i < _loop[event].length; ++i) {
-                _loop[event][i](...args)
-            }
-        },
-
-        /**
          * Get the color value
          *
          * @param {number} index The color number
@@ -946,7 +933,7 @@ export default function litecanvas(settings = {}) {
         pageResized()
 
         // start the game loop
-        instance.emit('init')
+        emit('init')
         _lastFrame = time()
         _rafid = requestAnimationFrame(frame)
     }
@@ -963,7 +950,7 @@ export default function litecanvas(settings = {}) {
 
         while (_accumulated >= _stepMs) {
             // update
-            instance.emit('update', _step)
+            emit('update', _step)
             instance.setvar('ELAPSED', instance.ELAPSED + _step)
             _accumulated -= _stepMs
             ticks++
@@ -972,7 +959,7 @@ export default function litecanvas(settings = {}) {
 
         if (ticks) {
             _drawCount++
-            instance.emit('draw')
+            emit('draw')
             _drawTime += _stepMs * ticks
             if (_drawTime + _accumulated >= 1000) {
                 instance.setvar('FPS', _drawCount)
@@ -1042,7 +1029,7 @@ export default function litecanvas(settings = {}) {
         // fix the font align and baseline
         instance.textalign(_textAlign, _textBaseline)
 
-        instance.emit('resized')
+        emit('resized')
     }
 
     /**
@@ -1073,6 +1060,19 @@ export default function litecanvas(settings = {}) {
             for (const key in pluginData) {
                 instance.setvar(key, pluginData[key])
             }
+        }
+    }
+
+    /**
+     * Call all listeners attached to a game loop
+     *
+     * @param {string} event The game loop event
+     * @param  {...any} args Arguments passed to all functions
+     */
+    function emit(event, ...args) {
+        if (!_loop[event]) return
+        for (let i = 0; i < _loop[event].length; ++i) {
+            _loop[event][i](...args)
         }
     }
 
