@@ -1,4 +1,4 @@
-/*! litecanvas v0.29.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.30.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -812,6 +812,18 @@ export default function litecanvas(settings = {}) {
                 root[key] = value
             }
         },
+
+        /**
+         * Resizes the game canvas
+         *
+         * @param {number} width
+         * @param {number} height
+         */
+        resize(width, height) {
+            instance.setvar('WIDTH', (_canvas.width = ~~width))
+            instance.setvar('HEIGHT', (_canvas.height = ~~(height || width)))
+            pageResized()
+        },
     }
 
     // alias methods
@@ -871,11 +883,11 @@ export default function litecanvas(settings = {}) {
 
             on(instance.CANVAS, _eventTapStart, function (ev) {
                 ev.preventDefault()
+                if (!_rafid) _resume()
 
                 on(body, _eventTapMove, _tappingHandler)
                 const [x, y] = ([_tapStartX, _tapStartY] = _getXY(ev))
                 updateTapping(true, x, y)
-
                 _last = _start = time()
             })
 
@@ -890,11 +902,13 @@ export default function litecanvas(settings = {}) {
         }
 
         on(root, 'focus', () => {
-            if (!_rafid) {
-                _lastFrame = time()
-                _rafid = requestAnimationFrame(frame)
-            }
+            if (!_rafid) _resume()
         })
+
+        function _resume() {
+            _lastFrame = time()
+            _rafid = requestAnimationFrame(frame)
+        }
 
         on(root, 'blur', () => {
             cancelAnimationFrame(_rafid)
@@ -975,14 +989,15 @@ export default function litecanvas(settings = {}) {
             'string' === typeof _canvas
                 ? document.querySelector(_canvas)
                 : _canvas
+
         instance.setvar('CANVAS', _canvas)
+        _ctx = _canvas.getContext('2d')
 
         // disable fullscreen if a width is specified
         if (instance.WIDTH > 0) _fullscreen = false
 
         _canvas.width = instance.WIDTH
         _canvas.height = instance.HEIGHT || instance.WIDTH
-        _ctx = _canvas.getContext('2d')
 
         if (!_canvas.parentNode) body.appendChild(_canvas)
 
@@ -1002,21 +1017,19 @@ export default function litecanvas(settings = {}) {
     }
 
     function pageResized() {
-        if (_autoscale || _fullscreen) {
-            if (_fullscreen) {
-                _canvas.width = innerWidth
-                _canvas.height = innerHeight
-                instance.setvar('WIDTH', innerWidth)
-                instance.setvar('HEIGHT', innerHeight)
-            } else if (_autoscale) {
-                _scale = math.min(
-                    innerWidth / instance.WIDTH,
-                    innerHeight / instance.HEIGHT,
-                )
-                _scale = settings.pixelart ? math.floor(_scale) : _scale
-                _canvas.style.width = instance.WIDTH * _scale + 'px'
-                _canvas.style.height = instance.HEIGHT * _scale + 'px'
-            }
+        if (_fullscreen) {
+            _canvas.width = innerWidth
+            _canvas.height = innerHeight
+            instance.setvar('WIDTH', innerWidth)
+            instance.setvar('HEIGHT', innerHeight)
+        } else if (_autoscale) {
+            _scale = math.min(
+                innerWidth / instance.WIDTH,
+                innerHeight / instance.HEIGHT,
+            )
+            _scale = settings.pixelart ? math.floor(_scale) : _scale
+            _canvas.style.width = instance.WIDTH * _scale + 'px'
+            _canvas.style.height = instance.HEIGHT * _scale + 'px'
         }
 
         instance.setvar('CENTERX', instance.WIDTH / 2)
