@@ -11,7 +11,7 @@
  * @property {boolean} [antialias=true]
  * @property {string} [canvas]
  * @property {boolean} [global=true]
- * @property {boolean} [tappingInterval=100]
+ * @property {number} [tappingInterval=100]
  * @property {boolean} [tapEvents=true]
  * @property {{init?:function, update?:function, draw?:function, resized?:function}} [loop]
  */

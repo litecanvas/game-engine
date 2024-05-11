@@ -137,6 +137,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         CENTERY: NULL,
 
+        /** MATH API */
         /**
          * The value of the mathematical constant PI (π).
          * Approximately 3.14159
@@ -251,6 +252,27 @@ export default function litecanvas(settings = {}) {
          */
         diff: (a, b) => math.abs(b - a),
 
+        /**
+         * Returns the fractional part of a number
+         *
+         * @param {number} value The number
+         * @returns {number}
+         */
+        fract: (value) => value % 1,
+
+        /**
+         * Interpolate between 2 values.
+         * Optionally, takes a custom periodic function (default = `Math.sin`).
+         *
+         * @param {number} lower
+         * @param {number} higher
+         * @param {number} t
+         * @param {function} [fn=Math.sin]
+         * @returns {number}
+         */
+        wave: (lower, higher, t, fn = math.sin) =>
+            lower + ((fn(t) + 1) / 2) * (higher - lower),
+
         /** RNG API */
         /**
          * Generates a pseudorandom float between min (inclusive) and max (exclusive)
@@ -287,33 +309,11 @@ export default function litecanvas(settings = {}) {
          */
         choose: (arr) => arr[instance.randi(0, arr.length - 1)],
 
-        /**
-         * Returns the fractional part of a number
-         *
-         * @param {number} value The number
-         * @returns {number}
-         */
-        fract: (value) => value % 1,
-
-        /**
-         * Interpolate between 2 values.
-         * Optionally, takes a custom periodic function (default = `Math.sin`).
-         *
-         * @param {number} lower
-         * @param {number} higher
-         * @param {number} t
-         * @param {function} [f=Math.sin]
-         * @returns {number}
-         */
-        wave: (lower, higher, t, fn = math.sin) =>
-            lower + ((fn(t) + 1) / 2) * (higher - lower),
-
         /** BASIC GRAPHICS API */
         /**
          * Clear the game screen
          *
          * @param {number|null} color The background color (from 0 to 7) or null
-         * @alias instance.cls
          */
         clear(color) {
             if (NULL == color) {
@@ -449,12 +449,10 @@ export default function litecanvas(settings = {}) {
         /**
          * Draw text
          *
-         * @alias instance.print
          * @param {number} x
          * @param {number} y
          * @param {string} text the text message
          * @param {number} [color=3] the color index (generally from 0 to 7)
-         * @param {number} size the font size
          */
         text(x, y, text, color = 3) {
             _ctx.font = `${_fontStyle || ''} ${~~_fontSize}px ${_fontFamily}`
@@ -778,8 +776,9 @@ export default function litecanvas(settings = {}) {
          *
          * @param {pluginCallback} callback
          */
-        use: (callback) =>
-            _initialized ? loadPlugin(callback) : _plugins.push(callback),
+        use: (callback) => {
+            _initialized ? loadPlugin(callback) : _plugins.push(callback)
+        },
 
         /**
          * Add a game loop event listener
@@ -832,10 +831,8 @@ export default function litecanvas(settings = {}) {
     }
 
     // alias
-    Object.assign(instance, {
-        cls: instance.clear,
-        print: instance.text,
-    })
+    instance.cls = instance.clear
+    instance.print = instance.text
 
     /** Copy some functions from native `Math` object */
     for (const k of [

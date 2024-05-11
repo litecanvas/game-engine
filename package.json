@@ -16,6 +16,7 @@
     "bugs": {
         "url": "https://github.com/litecanvas/game-engine/issues"
     },
+    "types": "types/index.d.ts",
     "main": "src/index.js",
     "type": "module",
     "scripts": {
