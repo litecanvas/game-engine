@@ -1,4 +1,6 @@
-litecanvas()
+litecanvas({
+  tappingInterval: 0,
+})
 
 function init() {
   x = 100
