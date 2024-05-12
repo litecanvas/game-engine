@@ -1,4 +1,4 @@
-/*! litecanvas v0.31.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.32.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -21,6 +21,7 @@ export default function litecanvas(settings = {}) {
         off = (elem, evt, callback) => elem.removeEventListener(evt, callback),
         time = () => performance.now(),
         NULL = null,
+        UNDEF = undefined,
         /** @type {LitecanvasOptions} */
         defaults = {
             fps: 60,
@@ -331,10 +332,18 @@ export default function litecanvas(settings = {}) {
          * @param {number} width
          * @param {number} height
          * @param {number} [color=0] the color index (generally from 0 to 7)
+         * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
-        rect(x, y, width, height, color = 0) {
-            _ctx.strokeStyle = instance.getcolor(color)
-            _ctx.strokeRect(~~x, ~~y, ~~width, ~~height)
+        rect(x, y, width, height, color = 0, radii = UNDEF) {
+            _ctx.beginPath()
+            _ctx[radii ? 'roundRect' : 'rect'](
+                ~~x,
+                ~~y,
+                ~~width,
+                ~~height,
+                radii,
+            )
+            instance.stroke(color)
         },
 
         /**
@@ -345,10 +354,18 @@ export default function litecanvas(settings = {}) {
          * @param {number} width
          * @param {number} height
          * @param {number} [color=0] the color index (generally from 0 to 7)
+         * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
-        rectfill(x, y, width, height, color = 0) {
-            _ctx.fillStyle = instance.getcolor(color)
-            _ctx.fillRect(~~x, ~~y, ~~width, ~~height)
+        rectfill(x, y, width, height, color = 0, radii = UNDEF) {
+            _ctx.beginPath()
+            _ctx[radii ? 'roundRect' : 'rect'](
+                ~~x,
+                ~~y,
+                ~~width,
+                ~~height,
+                radii,
+            )
+            instance.fill(color)
         },
 
         /**
@@ -360,11 +377,9 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index (generally from 0 to 7)
          */
         circ(x, y, radius, color = 0) {
-            _ctx.strokeStyle = instance.getcolor(color)
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
-            _ctx.closePath()
-            _ctx.stroke()
+            instance.stroke(color)
         },
 
         /**
@@ -376,11 +391,9 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index (generally from 0 to 7)
          */
         circfill(x, y, radius, color = 0) {
-            _ctx.fillStyle = instance.getcolor(color)
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
-            _ctx.closePath()
-            _ctx.fill()
+            instance.fill(color)
         },
 
         /**
@@ -393,11 +406,10 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index (generally from 0 to 7)
          */
         line(x1, y1, x2, y2, color = 0) {
-            _ctx.strokeStyle = instance.getcolor(color)
             _ctx.beginPath()
             _ctx.moveTo(~~x1, ~~y1)
             _ctx.lineTo(~~x2, ~~y2)
-            _ctx.stroke()
+            instance.stroke(color)
         },
 
         /**
@@ -612,9 +624,9 @@ export default function litecanvas(settings = {}) {
          * Adds a scaling transformation to the canvas units horizontally and/or vertically.
          *
          * @param {number} x
-         * @param {number} y
+         * @param {number} [y]
          */
-        scale: (x, y) => _ctx.scale(x, y),
+        scale: (x, y) => _ctx.scale(x, y || x),
 
         /**
          * Adds a rotation to the transformation matrix
@@ -646,6 +658,39 @@ export default function litecanvas(settings = {}) {
          */
         alpha(alpha) {
             _ctx.globalAlpha = alpha
+        },
+
+        /**
+         * Returns a newly instantiated Path2D object, optionally with another
+         * path as an argument (creates a copy), or optionally with a string
+         * consisting of SVG path data.
+         *
+         * @param {Path2D|string} [arg]
+         * @returns Path2D
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/Path2D/Path2D
+         */
+        path: (arg) => new Path2D(arg),
+
+        /**
+         * Fills the current or given path with a given color.
+         *
+         * @param {number} color
+         * @param {Path2D} [path]
+         */
+        fill(color, path) {
+            _ctx.fillStyle = instance.getcolor(color)
+            _ctx.fill(path)
+        },
+
+        /**
+         * Outlines the current or given path with a given color.
+         *
+         * @param {number} color
+         * @param {Path2D} [path]
+         */
+        stroke(color, path) {
+            _ctx.strokeStyle = instance.getcolor(color)
+            path ? _ctx.stroke(path) : _ctx.stroke()
         },
 
         /**
@@ -941,10 +986,8 @@ export default function litecanvas(settings = {}) {
             instance.CANVAS.style.backgroundColor = instance.getcolor(_bg)
         }
 
-        // maybe make the canvas adaptable
-        if (_autoscale || _fullscreen) {
-            on(root, 'resize', pageResized)
-        }
+        // listen window resize event
+        on(root, 'resize', pageResized)
         pageResized()
 
         // start the game loop

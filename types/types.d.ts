@@ -264,6 +264,7 @@ type LitecanvasInstance = {
      * @param {number} width
      * @param {number} height
      * @param {number} [color=0] the color index (generally from 0 to 7)
+     * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
      */
     rect(
         x: number,
@@ -271,6 +272,7 @@ type LitecanvasInstance = {
         width: number,
         height: number,
         color?: number,
+        radii?: number | number[],
     ): void
     /**
      * Draw a color-filled rectangle
@@ -280,6 +282,7 @@ type LitecanvasInstance = {
      * @param {number} width
      * @param {number} height
      * @param {number} [color=0] the color index (generally from 0 to 7)
+     * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
      */
     rectfill(
         x: number,
@@ -287,6 +290,7 @@ type LitecanvasInstance = {
         width: number,
         height: number,
         color?: number,
+        radii?: number | number[],
     ): void
     /**
      * Draw a circle outline
@@ -466,9 +470,9 @@ type LitecanvasInstance = {
      * Adds a scaling transformation to the canvas units horizontally and/or vertically.
      *
      * @param {number} x
-     * @param {number} y
+     * @param {number} [y]
      */
-    scale: (x: number, y: number) => void
+    scale: (x: number, y?: number) => void
     /**
      * Adds a rotation to the transformation matrix
      *
@@ -503,6 +507,30 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
      */
     alpha(alpha: number): void
+    /**
+     * Returns a newly instantiated Path2D object, optionally with another
+     * path as an argument (creates a copy), or optionally with a string
+     * consisting of SVG path data.
+     *
+     * @param {Path2D|string} [arg]
+     * @returns Path2D
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/Path2D/Path2D
+     */
+    path(arg?: Path2D | string): Path2D
+    /**
+     * Fills the current or given path with a given color.
+     *
+     * @param {number} color
+     * @param {Path2D} [path]
+     */
+    fill(color: number, path?: Path2D): void
+    /**
+     * Outlines the current or given path with a given color.
+     *
+     * @param {number} color
+     * @param {Path2D} [path]
+     */
+    stroke(color: number, path?: Path2D): void
     /**
      * Create a retangular clipping region.
      *
