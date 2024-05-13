@@ -1,4 +1,4 @@
-/*! litecanvas v0.32.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.33.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -14,7 +14,8 @@ export default function litecanvas(settings = {}) {
     const root = window,
         body = document.body,
         math = Math,
-        TWO_PI = math.PI * 2,
+        PI = math.PI,
+        TWO_PI = PI * 2,
         /** @type {(elem:HTMLElement, evt:string, callback:Function)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         /** @type {(elem:HTMLElement, evt:string, callback:Function)=>void} */
@@ -145,7 +146,7 @@ export default function litecanvas(settings = {}) {
          *
          * @type {number}
          */
-        PI: math.PI,
+        PI,
 
         /**
          * Twice the value of the mathematical constant PI (π).
@@ -164,7 +165,7 @@ export default function litecanvas(settings = {}) {
          *
          * @type {number}
          */
-        HALF_PI: math.PI * 0.5,
+        HALF_PI: PI * 0.5,
 
         /**
          * Calculates a linear (interpolation) value over t%.
@@ -183,7 +184,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} degs
          * @returns {number} the value in radians
          */
-        deg2rad: (degs) => (math.PI / 180) * degs,
+        deg2rad: (degs) => (PI / 180) * degs,
 
         /**
          * Convert radians to degrees
@@ -191,7 +192,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} rads
          * @returns {number} the value in degrees
          */
-        rad2deg: (rads) => (180 / math.PI) * rads,
+        rad2deg: (rads) => (180 / PI) * rads,
 
         /**
          * Constrains a number between `min` and `max`.
@@ -204,7 +205,7 @@ export default function litecanvas(settings = {}) {
         clamp: (value, min, max) => math.min(math.max(value, min), max),
 
         /**
-         * Wraps a number between `min` and `max`.
+         * Wraps a number between `min` (inclusive) and `max` (exclusive).
          *
          * @param {number} value
          * @param {number} min
@@ -218,31 +219,28 @@ export default function litecanvas(settings = {}) {
          * Re-maps a number from one range to another.
          *
          * @param {number} value  the value to be remapped.
-         * @param {number} start1 lower bound of the value's current range.
-         * @param {number} stop1  upper bound of the value's current range.
-         * @param {number} start2 lower bound of the value's target range.
-         * @param {number} stop2  upper bound of the value's target range.
-         * @param {boolean} [withinBounds=true] constrain the value to the newly mapped range
+         * @param {number} min1 lower bound of the value's current range.
+         * @param {number} max1  upper bound of the value's current range.
+         * @param {number} min2 lower bound of the value's target range.
+         * @param {number} max2  upper bound of the value's target range.
+         * @param {boolean} [withinBounds=false] constrain the value to the newly mapped range
          * @returns {number} the remapped number
          */
-        map(value, start1, stop1, start2, stop2, withinBounds = false) {
+        map(value, min1, max1, min2, max2, withinBounds = false) {
             // prettier-ignore
-            const result = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2
-            if (!withinBounds) return result
-            return start2 < stop2
-                ? instance.clamp(result, start2, stop2)
-                : instance.clamp(result, stop2, start2)
+            const result = ((value - min1) / (max1 - min1)) * (max2 - min2) + min2
+            return !withinBounds ? result : instance.clamp(result, min2, max2)
         },
 
         /**
          * Maps a number from one range to a value between 0 and 1.
          *
          * @param {number} value
-         * @param {number} start
-         * @param {number} stop
+         * @param {number} min
+         * @param {number} min
          * @returns {number} the normalized number.
          */
-        norm: (value, start, stop) => instance.map(value, start, stop, 0, 1),
+        norm: (value, min, max) => instance.map(value, min, max, 0, 1),
 
         /**
          * Calculates the positive difference/distance of two given numbers
@@ -267,12 +265,12 @@ export default function litecanvas(settings = {}) {
          *
          * @param {number} lower
          * @param {number} higher
-         * @param {number} t
+         * @param {number} time
          * @param {function} [fn=Math.sin]
          * @returns {number}
          */
-        wave: (lower, higher, t, fn = math.sin) =>
-            lower + ((fn(t) + 1) / 2) * (higher - lower),
+        wave: (lower, higher, time, fn = math.sin) =>
+            lower + ((fn(time) + 1) / 2) * (higher - lower),
 
         /** RNG API */
         /**
@@ -297,10 +295,10 @@ export default function litecanvas(settings = {}) {
         /**
          * Randomly returns `true` or `false`
          *
-         * @param {number} p chance from 0 to 1 (where 0 = 0% and 1 = 100%)
+         * @param {number} percent chance from 0 to 1 (where 0 = 0% and 1 = 100%)
          * @returns {boolean}
          */
-        chance: (p) => instance.rand() < p,
+        chance: (percent) => instance.rand() < percent,
 
         /**
          * Choose a random item from a Array
@@ -379,6 +377,7 @@ export default function litecanvas(settings = {}) {
         circ(x, y, radius, color = 0) {
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
+            _ctx.closePath()
             instance.stroke(color)
         },
 
@@ -393,6 +392,7 @@ export default function litecanvas(settings = {}) {
         circfill(x, y, radius, color = 0) {
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
+            _ctx.closePath()
             instance.fill(color)
         },
 
@@ -553,12 +553,9 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, draw, options = {}) {
-            options.scale = math.max(1, ~~options.scale)
-
             const offscreenCanvas = new OffscreenCanvas(width, height),
                 ctxOriginal = _ctx,
-                pixelart = Array.isArray(draw),
-                scale = pixelart ? math.floor(options.scale) : options.scale
+                scale = options.scale || 1
 
             offscreenCanvas.width = width * scale
             offscreenCanvas.height = height * scale
@@ -566,7 +563,8 @@ export default function litecanvas(settings = {}) {
 
             _ctx.scale(scale, scale)
 
-            if (pixelart) {
+            // is pixelart?
+            if (Array.isArray(draw)) {
                 let x = 0,
                     y = 0
 

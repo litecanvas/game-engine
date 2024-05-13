@@ -86,7 +86,7 @@ declare global {
      */
     function clamp(value: number, min: number, max: number): number
     /**
-     * Wraps a number between `min` and `max`.
+     * Wraps a number between `min` (inclusive) and `max` (exclusive).
      *
      * @param {number} value
      * @param {number} min
@@ -98,30 +98,30 @@ declare global {
      * Re-maps a number from one range to another.
      *
      * @param {number} value  the value to be remapped.
-     * @param {number} start1 lower bound of the value's current range.
-     * @param {number} stop1  upper bound of the value's current range.
-     * @param {number} start2 lower bound of the value's target range.
-     * @param {number} stop2  upper bound of the value's target range.
-     * @param {boolean} [withinBounds=true] constrain the value to the newly mapped range
+     * @param {number} min1 lower bound of the value's current range.
+     * @param {number} max1  upper bound of the value's current range.
+     * @param {number} min2 lower bound of the value's target range.
+     * @param {number} max2  upper bound of the value's target range.
+     * @param {boolean} [withinBounds=false] constrain the value to the newly mapped range
      * @returns {number} the remapped number
      */
     function map(
         value: number,
-        start1: number,
-        stop1: number,
-        start2: number,
-        stop2: number,
+        min1: number,
+        max1: number,
+        min2: number,
+        max2: number,
         withinBounds?: boolean,
     ): number
     /**
      * Maps a number from one range to a value between 0 and 1.
      *
      * @param {number} value
-     * @param {number} start
-     * @param {number} stop
+     * @param {number} min
+     * @param {number} max
      * @returns {number} the normalized number.
      */
-    function norm(value: number, start: number, stop: number): number
+    function norm(value: number, min: number, max: number): number
     /**
      * Calculates the positive difference/distance of two given numbers
      *
@@ -168,7 +168,7 @@ declare global {
     /**
      * Returns the square root of the sum of squares of its arguments.
      */
-    function hypot(...ns: number): number
+    function hypot(...ns: number[]): number
     /**
      * Returns the tangent of a number in radians.
      */
@@ -196,11 +196,11 @@ declare global {
     /**
      * Returns the smallest of the numbers given as input parameters, or `Infinity` if there are no parameters.
      */
-    function min(...ns: number): number
+    function min(...ns: number[]): number
     /**
      * Returns the largest of the numbers given as input parameters, or `-Infinity` if there are no parameters.
      */
-    function max(...ns: number): number
+    function max(...ns: number[]): number
     /**
      * Returns the value of a base raised to a power.
      */
@@ -249,7 +249,7 @@ declare global {
      * @param {Array<T>} arr
      * @returns {T}
      */
-    function choose(arr: Array<T>): T
+    function choose<T>(arr: Array<T>): T
 
     /** BASIC GRAPHICS API */
     /**

@@ -52,21 +52,21 @@ type LitecanvasInstance = {
      * @returns {number} The unterpolated value
      * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
      */
-    lerp: (start: number, end: number, t: number) => number
+    lerp(start: number, end: number, t: number): number
     /**
      * Convert degrees to radians
      *
      * @param {number} degs
      * @returns {number} the value in radians
      */
-    deg2rad: (degs: number) => number
+    deg2rad(degs: number): number
     /**
      * Convert radians to degrees
      *
      * @param {number} rads
      * @returns {number} the value in degrees
      */
-    rad2deg: (rads: number) => number
+    rad2deg(rads: number): number
     /**
      * Constrains a number between `min` and `max`.
      *
@@ -75,44 +75,44 @@ type LitecanvasInstance = {
      * @param {number} max
      * @returns {number}
      */
-    clamp: (value: number, min: number, max: number) => number
+    clamp(value: number, min: number, max: number): number
     /**
-     * Wraps a number between `min` and `max`.
+     * Wraps a number between `min` (inclusive) and `max` (exclusive).
      *
      * @param {number} value
      * @param {number} min
      * @param {number} max
      * @returns {number}
      */
-    wrap: (value: number, min: number, max: number) => number
+    wrap(value: number, min: number, max: number): number
     /**
      * Re-maps a number from one range to another.
      *
      * @param {number} value  the value to be remapped.
-     * @param {number} start1 lower bound of the value's current range.
-     * @param {number} stop1  upper bound of the value's current range.
-     * @param {number} start2 lower bound of the value's target range.
-     * @param {number} stop2  upper bound of the value's target range.
-     * @param {boolean} [withinBounds=true] constrain the value to the newly mapped range
+     * @param {number} min1 lower bound of the value's current range.
+     * @param {number} max1  upper bound of the value's current range.
+     * @param {number} min2 lower bound of the value's target range.
+     * @param {number} max2  upper bound of the value's target range.
+     * @param {boolean} [withinBounds=false] constrain the value to the newly mapped range
      * @returns {number} the remapped number
      */
     map(
         value: number,
-        start1: number,
-        stop1: number,
-        start2: number,
-        stop2: number,
+        min1: number,
+        max1: number,
+        min2: number,
+        max2: number,
         withinBounds?: boolean,
     ): number
     /**
      * Maps a number from one range to a value between 0 and 1.
      *
      * @param {number} value
-     * @param {number} start
-     * @param {number} stop
+     * @param {number} min
+     * @param {number} max
      * @returns {number} the normalized number.
      */
-    norm: (value: number, start: number, stop: number) => number
+    norm(value: number, min: number, max: number): number
     /**
      * Calculates the positive difference/distance of two given numbers
      *
@@ -120,8 +120,8 @@ type LitecanvasInstance = {
      * @param {number} b
      * @returns {number}
      */
-    diff: (a: number, b: number) => number
-    fract: (value: number) => number
+    diff(a: number, b: number): number
+    fract(value: number): number
     /**
      * Interpolate between 2 values.
      * Optionally, takes a custom periodic function (default = `Math.sin`).
@@ -132,12 +132,12 @@ type LitecanvasInstance = {
      * @param {function} [f=Math.sin]
      * @returns {number}
      */
-    wave: (
+    wave(
         lower: number,
         higher: number,
         t: number,
         fn?: (x: number) => number,
-    ) => number
+    ): number
     /**
      * Returns the sine of a number in radians
      */
@@ -153,7 +153,7 @@ type LitecanvasInstance = {
     /**
      * Returns the square root of the sum of squares of its arguments.
      */
-    hypot(...ns: number): number
+    hypot(...ns: number[]): number
     /**
      * Returns the tangent of a number in radians.
      */
@@ -181,11 +181,11 @@ type LitecanvasInstance = {
     /**
      * Returns the smallest of the numbers given as input parameters, or `Infinity` if there are no parameters.
      */
-    min(...ns: number): number
+    min(...ns: number[]): number
     /**
      * Returns the largest of the numbers given as input parameters, or `-Infinity` if there are no parameters.
      */
-    max(...ns: number): number
+    max(...ns: number[]): number
     /**
      * Returns the value of a base raised to a power.
      */
@@ -212,7 +212,7 @@ type LitecanvasInstance = {
      * @param {number} [max=1.0]
      * @returns {number} the random number
      */
-    rand: (min?: number, max?: number) => number
+    rand(min?: number, max?: number): number
     /**
      * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
      *
@@ -220,21 +220,21 @@ type LitecanvasInstance = {
      * @param {number} [max=1]
      * @returns {number} the random number
      */
-    randi: (min?: number, max?: number) => number
+    randi(min?: number, max?: number): number
     /**
      * Randomly returns `true` or `false`
      *
      * @param {number} p chance from 0 to 1 (where 0 = 0% and 1 = 100%)
      * @returns {boolean}
      */
-    chance: (p: number) => boolean
+    chance(p: number): boolean
     /**
      * Choose a random item from a Array
      *
      * @param {Array.<T>} arr
      * @returns {T}
      */
-    choose: (arr: Array<T>) => T
+    choose<T>(arr: Array<T>): T
     /**
      * Returns the fractional part of a number
      *
@@ -448,37 +448,37 @@ type LitecanvasInstance = {
      *
      * @returns {CanvasRenderingContext2D}
      */
-    ctx: () => CanvasRenderingContext2D
+    ctx(): CanvasRenderingContext2D
     /**
      * saves the current drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
      */
-    push: () => void
+    push(): void
     /**
      * restores the drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore
      */
-    pop: () => void
+    pop(): void
     /**
      * Adds a translation transformation to the current matrix
      *
      * @param {number} x
      * @param {number} y
      */
-    translate: (x: number, y: number) => void
+    translate(x: number, y: number): void
     /**
      * Adds a scaling transformation to the canvas units horizontally and/or vertically.
      *
      * @param {number} x
      * @param {number} [y]
      */
-    scale: (x: number, y?: number) => void
+    scale(x: number, y?: number): void
     /**
      * Adds a rotation to the transformation matrix
      *
      * @param {number} radians
      */
-    rotate: (radians: number) => void
+    rotate(radians: number): void
     /**
      * Adds a transformation that skews to the transformation matrix
      *
@@ -491,7 +491,7 @@ type LitecanvasInstance = {
      * @param {boolean} [resetFirst=true] `false` to use _ctx.transform(); by default use _ctx.setTransform()
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
      */
-    transform: (
+    transform(
         a: number,
         b: number,
         c: number,
@@ -499,7 +499,7 @@ type LitecanvasInstance = {
         e: number,
         f: number,
         resetFirst?: boolean,
-    ) => void
+    ): void
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
      *
@@ -607,7 +607,7 @@ type LitecanvasInstance = {
      * @param {number} h2 second rectangle height
      * @returns {boolean}
      */
-    colrect: (
+    colrect(
         x1: number,
         y1: number,
         w1: number,
@@ -616,7 +616,7 @@ type LitecanvasInstance = {
         y2: number,
         w2: number,
         h2: number,
-    ) => boolean
+    ): boolean
     /**
      * Check a collision between two circles
      *
@@ -628,14 +628,14 @@ type LitecanvasInstance = {
      * @param {number} r2 second circle position radius
      * @returns {boolean}
      */
-    colcirc: (
+    colcirc(
         x1: number,
         y1: number,
         r1: number,
         x2: number,
         y2: number,
         r2: number,
-    ) => boolean
+    ): boolean
 
     /** PLUGINS API */
     /**
@@ -643,7 +643,7 @@ type LitecanvasInstance = {
      *
      * @param {pluginCallback} callback
      */
-    use: (callback: pluginCallback) => void
+    use(callback: pluginCallback): void
     /**
      * Add a game loop event listener
      *
@@ -663,7 +663,7 @@ type LitecanvasInstance = {
      * @param {number} index The color number
      * @returns {string} the color value
      */
-    getcolor: (index: number) => string
+    getcolor(index: number): string
     /**
      * Create or update a instance variable
      *
@@ -726,8 +726,9 @@ type LitecanvasOptions = {
 
     /**
      * Set the interval (in milliseconds) for the TAPX/TAPY values to be fetched when mouse/touch is being held (see TAPPING).
+     * default = 100
      */
-    tappingInterval?: number = 100
+    tappingInterval?: number
 
     /**
      * if `false` disable the click/touch events handling.
@@ -765,15 +766,15 @@ type drawCallback = (
 
 type LitecanvasPluginHelpers = {
     /**
-     * The instance color palette
+     * The instance color palette (writable)
      */
     colors: string[]
     /**
-     * The instance ZzFX sounds
+     * The instance ZzFX sounds (writable)
      */
     sounds: number[][]
     /**
-     * An instance settings/options copy
+     * An instance settings/options (read-only)
      */
     settings: LitecanvasOptions
 }

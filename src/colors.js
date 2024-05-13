@@ -1,19 +1,20 @@
-// palette inspired by https://lospec.com/palette-list/sweetie-16
+// Matriax8c Palette by Davit Masia
+// https://lospec.com/palette-list/matriax8c
 export const colors = [
     // 0 - black
-    '#1a1c2c',
-    // 1 - blue
-    '#29366f',
-    // 2 - gray
-    '#94b0c2',
+    '#101820',
+    // 1 - stone
+    '#736464',
+    // 2 - brown
+    '#a0694b',
     // 3 - white
-    '#f4f4f4',
+    '#f0f0dc',
     // 4 - red
-    '#b13e53',
+    '#d24040',
     // 5 - yellow
-    '#ffcd75',
-    // 6 - green
-    '#38b764',
-    // 7 - lime
-    '#a7f070',
+    '#fac800',
+    // 6 - blue
+    '#00a0c8',
+    // 7 - green
+    '#10c840',
 ]
