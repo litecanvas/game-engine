@@ -1,4 +1,4 @@
-/*! litecanvas v0.33.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.33.1 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -265,12 +265,12 @@ export default function litecanvas(settings = {}) {
          *
          * @param {number} lower
          * @param {number} higher
-         * @param {number} time
+         * @param {number} t
          * @param {function} [fn=Math.sin]
          * @returns {number}
          */
-        wave: (lower, higher, time, fn = math.sin) =>
-            lower + ((fn(time) + 1) / 2) * (higher - lower),
+        wave: (lower, higher, t, fn = math.sin) =>
+            lower + ((fn(t) + 1) / 2) * (higher - lower),
 
         /** RNG API */
         /**
