@@ -11,7 +11,7 @@ function init() {
 function update(dt) {
   angle += 0.01
   lineDashOffset += 100 * dt
-  if (lineDashOffset > 50) lineDashOffset = 0
+  if (lineDashOffset > 500) lineDashOffset = 0
 }
 
 function draw() {

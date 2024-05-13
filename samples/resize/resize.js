@@ -29,7 +29,7 @@ function update(dt) {
 
 function draw() {
   clear(0)
-  linewidth(4)
+  linewidth(randi(2, 12))
   circ(x, y, radius, color)
 }
 

@@ -27,7 +27,7 @@ function draw() {
   cls(3)
   for (let i = 0; i < boxes.length; i++) {
     rectfill(boxes[i][0], boxes[i][1], 25, 25, boxes[i][2])
-    rect(boxes[i][0], boxes[i][1], 25, 25, 1)
+    stroke(0)
   }
   pop()
   text(0, 0, FPS, 4)

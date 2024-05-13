@@ -31,6 +31,6 @@ function update() {
 }
 
 function draw() {
-  cls(1)
+  cls(3)
   image(0, 0, art)
 }

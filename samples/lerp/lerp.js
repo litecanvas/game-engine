@@ -33,12 +33,12 @@ function draw() {
   linewidth(4)
 
   // draw the start and the end
-  circ(startX, startY, 30, 2)
-  circ(endX, endY, 30, 2)
+  circ(startX, startY, 30, 5)
+  circ(endX, endY, 30, 5)
 
   // draw the animated object
-  circfill(x, y, 20, 2)
+  circfill(x, y, 20, 5)
 
   // draw a progress bar based on t
-  rectfill(0, 0, WIDTH * nt, 4, 2)
+  rectfill(0, 0, WIDTH * nt, 4, 5)
 }
