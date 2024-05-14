@@ -446,7 +446,7 @@ declare global {
      *
      * @param {number} width
      * @param {number} height
-     * @param {string[]|drawCallback} draw
+     * @param {string[] | drawCallback} draw
      * @param {{scale?:number}} [options]
      * @returns {OffscreenCanvas}
      * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas

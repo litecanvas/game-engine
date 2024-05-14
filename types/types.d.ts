@@ -744,12 +744,14 @@ type LitecanvasOptions = {
      * - `window.draw(): void`
      * - `window.resized(): void`
      */
-    loop?: {
-        init?: () => void
-        update?: (dt: number) => void
-        draw?: () => void
-        resized?: () => void
-    }
+    loop?: LitecanvasGameLoop
+}
+
+type LitecanvasGameLoop = {
+    init?: () => void
+    update?: (dt: number) => void
+    draw?: () => void
+    resized?: () => void
 }
 
 type LitecanvasGameLoopListeners = {

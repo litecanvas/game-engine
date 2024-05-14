@@ -13,12 +13,21 @@
  * @property {boolean} [global=true]
  * @property {number} [tappingInterval=100]
  * @property {boolean} [tapEvents=true]
- * @property {{init?:function, update?:function, draw?:function, resized?:function}} [loop]
+ * @property {LitecanvasGameLoop} [loop]
  */
 
 /**
  * @typedef LitecanvasInstance
  * @type {object}
+ */
+
+/**
+ * @typedef LitecanvasGameLoop
+ * @type {object}
+ * @property {() => void} [init]
+ * @property {(dt: number) => void} [update]
+ * @property {() => void} [draw]
+ * @property {() => void} [resized]
  */
 
 /**
