@@ -1,3 +1,5 @@
+![image](https://github.com/litecanvas/game-engine/assets/1798830/35119449-cd75-45d2-a806-462cd323cc14)
+
 # litecanvas
 
 Lightweight HTML5 canvas engine suitable for small games and animations for people who enjoy coding: there is no fancy interface, no visual helpers, no gui tools... just coding.
