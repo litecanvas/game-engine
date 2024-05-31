@@ -737,6 +737,11 @@ type LitecanvasOptions = {
     tapEvents?: boolean
 
     /**
+     * Set to true to force mouse over touch.
+     */
+    useMouse?: boolean
+
+    /**
      * Specify your game loop callbacks.
      * By default use that global functions (if they exist):
      * - `window.init(): void`

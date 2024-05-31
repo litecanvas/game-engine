@@ -13,6 +13,7 @@
  * @property {boolean} [global=true]
  * @property {number} [tappingInterval=100]
  * @property {boolean} [tapEvents=true]
+ * @property {boolean} [useMouse=false]
  * @property {LitecanvasGameLoop} [loop]
  */
 
