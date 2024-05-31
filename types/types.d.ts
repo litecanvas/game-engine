@@ -731,15 +731,16 @@ type LitecanvasOptions = {
     tappingInterval?: number
 
     /**
+     * By default, the litecanvas use only mouse or only touches (giving priority to the mouse).
+     * Set this option to `true` if you are having any troubles to detect your mouse
+     */
+    useMouse?: boolean
+
+    /**
      * if `false` disable the click/touch events handling.
      * Useful when you want to implement your own input handler.
      */
     tapEvents?: boolean
-
-    /**
-     * Set to true to force mouse over touch.
-     */
-    useMouse?: boolean
 
     /**
      * Specify your game loop callbacks.

@@ -1,4 +1,4 @@
-/*! litecanvas v0.34.0 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.34.1 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -37,7 +37,7 @@ export default function litecanvas(settings = {}) {
             global: true,
             tappingInterval: 100,
             tapEvents: true,
-            useMouse: false, // auto detect mouse or touch
+            useMouse: false,
             loop: NULL,
         }
 
