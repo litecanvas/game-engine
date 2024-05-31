@@ -1,4 +1,4 @@
-/*! litecanvas v0.34.1 | https://github.com/litecanvas/game-engine */
+/*! litecanvas v0.34.2 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -57,8 +57,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number|null} */
         _bg = settings.background,
         /** @type {boolean} */
-        _hasMouse =
-            settings.useMouse || matchMedia('(any-pointer:fine)').matches,
+        _hasMouse = settings.useMouse || matchMedia('(pointer:fine)').matches,
         /** @type {function} */
         _tappingHandler,
         /** @type {number} */
