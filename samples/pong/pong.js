@@ -43,7 +43,7 @@ function update(dt) {
     ballX = 160
     ballY = 70
     lifes = lifes - 1
-    sfx(lifes === 0 ? 3 : 2)
+    sfx(3)
   }
 
   // update ball position
@@ -53,11 +53,11 @@ function update(dt) {
   // bounce ball on screen
   if (ballX + ballSize > WIDTH || ballX < ballSize) {
     dirX *= -1
-    sfx(5)
+    sfx(1)
   }
   if (ballY < ballSize) {
     dirY = 1
-    sfx(5)
+    sfx(1)
   }
 
   // check ball collision with paddle

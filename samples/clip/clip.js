@@ -3,8 +3,8 @@ litecanvas({
 })
 
 function init() {
-  x = 100
-  y = 75
+  x = CENTERX
+  y = CENTERY
 
   boxes = []
   for (let i = 0; i < 500; i++) {
@@ -17,7 +17,7 @@ function update(dt) {
     x = TAPX
     y = TAPY
   }
-  size = abs(sin(ELAPSED)) * 50 + 100
+  size = wave(100, 150, ELAPSED * 3)
 }
 
 function draw() {

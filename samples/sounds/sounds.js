@@ -8,7 +8,8 @@ const buttons = document.querySelector('#buttons')
 const pitch = document.querySelector('#pitch-range')
 const volume = document.querySelector('#volume-range')
 
-let index = null
+let arg = null,
+  sounds = 4
 
 volume.onchange = (ev) => {
   document.querySelector('#volume-value').textContent = ev.target.value
@@ -18,24 +19,25 @@ pitch.onchange = (ev) => {
   document.querySelector('#pitch-value').textContent = ev.target.value
 }
 
-for (let i = 0; i < 9; i++) {
+for (let i = 0; i < sounds; i++) {
   const button = document.createElement('button')
   button.onclick = () => {
-    index = i
-    if (8 === i) {
-      index = 'custom'
-      // custom zzfx sound produced in https://killedbyapixel.github.io/ZzFX/
-      // prettier-ignore
-      sfx(
-        [2.69, , 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.01],
-        volume.value,
-        pitch.value
-      )
-    } else {
-      sfx(i, volume.value, pitch.value) // for i = 0 ~ 7 use the default sounds
-    }
+    sfx(i, volume.value, pitch.value) // for i = 0 ~ 7 use the default sounds
+    arg = i
   }
-  button.textContent = '#' + i + (8 === i ? '*' : '')
+  button.textContent = '#' + i
+  buttons.appendChild(button)
+}
+
+{
+  const button = document.createElement('button')
+  button.onclick = () => {
+    // prettier-ignore
+    const s = [2.69, , 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.01]
+    sfx(s, volume.value, pitch.value)
+    arg = 'custom'
+  }
+  button.textContent = '#' + sounds + '*'
   buttons.appendChild(button)
 }
 
@@ -48,10 +50,10 @@ function update() {
 }
 
 function draw() {
-  cls(index)
-  if (index !== null) {
+  cls('custom' === arg ? 4 : arg)
+  if (arg !== null) {
     circfill(CENTERX, CENTERY, 75, 3)
     textsize(20)
-    text(CENTERX, CENTERY, `sfx(${index});`, 0)
+    text(CENTERX, CENTERY, `sfx(${arg});`, 0)
   }
 }

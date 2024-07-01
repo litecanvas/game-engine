@@ -17,7 +17,7 @@ function draw() {
   cls(0)
 
   linewidth(4)
-  circfill(cx, cy, clockDiameter / 2, 1)
+  circfill(cx, cy, clockDiameter / 2, 7)
 
   const date = new Date()
   const seconds = date.getSeconds()

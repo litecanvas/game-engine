@@ -1,20 +1,17 @@
-// Matriax8c Palette by Davit Masia
-// https://lospec.com/palette-list/matriax8c
+// Default colors inspired by https://lospec.com/palette-list/trirampo
 export const colors = [
-    // 0 - black
-    '#101820',
-    // 1 - stone
-    '#736464',
-    // 2 - brown
-    '#a0694b',
-    // 3 - white
-    '#f0f0dc',
-    // 4 - red
-    '#d24040',
-    // 5 - yellow
-    '#fac800',
-    // 6 - blue
-    '#00a0c8',
-    // 7 - green
-    '#10c840',
+    '#212035',
+    '#495057',
+    '#adb5bd',
+    '#e9ecef',
+
+    '#cc3184',
+    '#ffce6b',
+    '#25a2a8',
+    '#4b56eb',
+
+    '#e87d43',
+    '#5dd477',
+    '#2f328f',
+    '#703075',
 ]

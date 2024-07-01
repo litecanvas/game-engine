@@ -1,16 +1,20 @@
-litecanvas({
-  fps: 30,
-})
+litecanvas()
 
-let _bg
+let _bg, x, y
 
 function update() {
-  if (TAPPED) console.log('TAPPED', TAPX, TAPY)
-  else if (TAPPING) console.log('TAPPING', TAPX, TAPY)
+  if (TAPPED || TAPPING) {
+    x = TAPX
+    y = TAPY
+    console.log(TAPPED ? 'TAPPED' : 'TAPPING', x, y)
+  }
 }
 
 function draw() {
   cls(0)
+  if (x) {
+    circ(x, y, 24, 4)
+  }
   textalign('center', 'middle')
-  print(WIDTH / 2, HEIGHT / 2, 'Open your browser console and tap', 3)
+  print(WIDTH / 2, HEIGHT / 2, 'Just tap anywehere', 3)
 }

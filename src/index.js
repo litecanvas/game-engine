@@ -1,7 +1,9 @@
-/*! litecanvas v0.34.2 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.35.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
+
+const root = globalThis
 
 /**
  * The litecanvas constructor
@@ -11,8 +13,7 @@ import { sounds } from './sounds'
  */
 export default function litecanvas(settings = {}) {
     // helpers
-    const root = window,
-        body = document.body,
+    const body = document.body,
         math = Math,
         PI = math.PI,
         TWO_PI = PI * 2,
@@ -1152,4 +1153,4 @@ export default function litecanvas(settings = {}) {
     return instance
 }
 
-window.litecanvas = litecanvas
+root.litecanvas = litecanvas
