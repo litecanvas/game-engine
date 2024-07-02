@@ -18,8 +18,7 @@ function update(dt) {
 }
 
 function draw() {
-  cls(11)
-
+  cls(0)
   for (const obj of objects) {
     push()
     obj.draw()
@@ -39,7 +38,7 @@ const shockwave = {
   y: 0,
   radius: 0,
   borderWidth: 30,
-  color: 4,
+  color: 5,
   speed: 1000,
   pos(x, y) {
     this.x = x

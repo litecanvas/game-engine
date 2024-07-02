@@ -1,7 +1,7 @@
-/* litecanvas v0.36.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.37.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
-import { colors } from './colors'
-import { sounds } from './sounds'
+import colors from './palette'
+import sounds from './sounds'
 
 const root = globalThis
 

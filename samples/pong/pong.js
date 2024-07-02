@@ -75,11 +75,11 @@ function draw() {
 
   if (lifes > 0) {
     rectfill(padX, padY, padW, padH, 3)
-    circfill(ballX, ballY, ballSize, 6)
+    circfill(ballX, ballY, ballSize, 5)
     textsize(textSize)
     text(20, 20, '❤️ ' + lifes, 4)
     text(WIDTH - 100, 20, ('' + score).padStart(6, 0), 3)
-    // text(WIDTH - 80, HEIGHT - 20, 'FPS:' + (FPS || 0), 5)
+    text(WIDTH - 80, HEIGHT - 20, 'FPS:' + (FPS || 0), 5)
   } else {
     textalign('center', 'middle')
     textsize(textSize + 5)
