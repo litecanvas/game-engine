@@ -17,7 +17,7 @@ function update(dt) {
     x = TAPX
     y = TAPY
   }
-  size = wave(100, 150, ELAPSED * 3)
+  size = 125
 }
 
 function draw() {

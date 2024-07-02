@@ -31,7 +31,7 @@ function update(dt) {
   }
 
   // move the paddle
-  if (diff(padX, destX) > 0.1) {
+  if (padX !== destX) {
     padX = lerp(padX, destX, 0.05)
   }
 

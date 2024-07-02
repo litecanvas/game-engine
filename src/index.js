@@ -1,4 +1,4 @@
-/* litecanvas v0.35.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.36.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './colors'
 import { sounds } from './sounds'
@@ -245,34 +245,12 @@ export default function litecanvas(settings = {}) {
         norm: (value, min, max) => instance.map(value, min, max, 0, 1),
 
         /**
-         * Calculates the positive difference/distance of two given numbers
-         *
-         * @param {number} a
-         * @param {number} b
-         * @returns {number}
-         */
-        diff: (a, b) => math.abs(b - a),
-
-        /**
          * Returns the fractional part of a number
          *
          * @param {number} value The number
          * @returns {number}
          */
         fract: (value) => value % 1,
-
-        /**
-         * Interpolate between 2 values.
-         * Optionally, takes a custom periodic function (default = `Math.sin`).
-         *
-         * @param {number} lower
-         * @param {number} higher
-         * @param {number} t
-         * @param {function} [fn=Math.sin]
-         * @returns {number}
-         */
-        wave: (lower, higher, t, fn = math.sin) =>
-            lower + ((fn(t) + 1) / 2) * (higher - lower),
 
         /** RNG API */
         /**
@@ -293,22 +271,6 @@ export default function litecanvas(settings = {}) {
          */
         randi: (min = 0, max = 1) =>
             instance.floor(instance.rand() * (max - min + 1) + min),
-
-        /**
-         * Randomly returns `true` or `false`
-         *
-         * @param {number} percent chance from 0 to 1 (where 0 = 0% and 1 = 100%)
-         * @returns {boolean}
-         */
-        chance: (percent) => instance.rand() < percent,
-
-        /**
-         * Choose a random item from a Array
-         *
-         * @param {Array.<T>} arr
-         * @returns {T}
-         */
-        choose: (arr) => arr[instance.randi(0, arr.length - 1)],
 
         /** BASIC GRAPHICS API */
         /**

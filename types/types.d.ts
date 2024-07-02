@@ -114,30 +114,12 @@ type LitecanvasInstance = {
      */
     norm(value: number, min: number, max: number): number
     /**
-     * Calculates the positive difference/distance of two given numbers
+     * Returns the fractional part of a number
      *
-     * @param {number} a
-     * @param {number} b
+     * @param {number} value The number
      * @returns {number}
      */
-    diff(a: number, b: number): number
     fract(value: number): number
-    /**
-     * Interpolate between 2 values.
-     * Optionally, takes a custom periodic function (default = `Math.sin`).
-     *
-     * @param {number} lower
-     * @param {number} higher
-     * @param {number} t
-     * @param {function} [f=Math.sin]
-     * @returns {number}
-     */
-    wave(
-        lower: number,
-        higher: number,
-        t: number,
-        fn?: (x: number) => number,
-    ): number
     /**
      * Returns the sine of a number in radians
      */
@@ -221,20 +203,6 @@ type LitecanvasInstance = {
      * @returns {number} the random number
      */
     randi(min?: number, max?: number): number
-    /**
-     * Randomly returns `true` or `false`
-     *
-     * @param {number} p chance from 0 to 1 (where 0 = 0% and 1 = 100%)
-     * @returns {boolean}
-     */
-    chance(p: number): boolean
-    /**
-     * Choose a random item from a Array
-     *
-     * @param {Array.<T>} arr
-     * @returns {T}
-     */
-    choose<T>(arr: Array<T>): T
     /**
      * Returns the fractional part of a number
      *
