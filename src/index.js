@@ -1,4 +1,4 @@
-/* litecanvas v0.37.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.37.1 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import colors from './palette'
 import sounds from './sounds'
@@ -945,7 +945,7 @@ export default function litecanvas(settings = {}) {
         // set canvas background color
         if (NULL != _bg) {
             // prettier-ignore
-            instance.CANVAS.style.backgroundColor = instance.getcolor(_bg)
+            instance.CANVAS.style.background = instance.getcolor(_bg)
         }
 
         // listen window resize event
