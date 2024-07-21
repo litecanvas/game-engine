@@ -1,7 +1,6 @@
 litecanvas({
   width: 320,
   height: 480,
-  // antialias: false,
 })
 
 function init() {
@@ -19,10 +18,15 @@ function init() {
   speed = 200
   score = 0
   lifes = 3
-  textSize = 20
+  textSize = WIDTH / 12
+  started = false
 }
 
 function update(dt) {
+  if (!started) {
+    started = TAPPED
+    return
+  }
   if (lifes === 0) return // game over?
 
   // handle inputs
@@ -69,22 +73,27 @@ function update(dt) {
 }
 
 function draw() {
-  cls(0)
-
-  textfont('Silkscreen')
-
-  if (lifes > 0) {
+  clear(0)
+  if (!started) {
+    textalign('center', 'middle')
+    textsize(textSize)
+    text(CENTERX, CENTERY, 'TAP TO START', 3)
+  } else if (lifes > 0) {
     rectfill(padX, padY, padW, padH, 3)
     circfill(ballX, ballY, ballSize, 5)
+
     textsize(textSize)
-    text(20, 20, '❤️ ' + lifes, 4)
-    text(WIDTH - 100, 20, ('' + score).padStart(6, 0), 3)
-    text(WIDTH - 80, HEIGHT - 20, 'FPS:' + (FPS || 0), 5)
+
+    textalign('start', 'hanging')
+    text(10, 10, '❤️ '.repeat(lifes), 4)
+
+    textalign('end', 'hanging')
+    text(WIDTH - 10, 10, ('' + score).padStart(6, 0), 3)
   } else {
     textalign('center', 'middle')
-    textsize(textSize + 5)
-    text(CENTERX, CENTERY - 25, 'GAME OVER', 3)
     textsize(textSize)
-    text(CENTERX, CENTERY + 25, 'score: ' + score, 3)
+    text(CENTERX, CENTERY - 25, 'GAME OVER', 3)
+    textsize(textSize * 0.85)
+    text(CENTERX, CENTERY + 10, 'SCORE:' + ('' + score).padStart(6, 0), 3)
   }
 }
