@@ -1,6 +1,4 @@
-litecanvas({
-  tappingInterval: 0,
-})
+litecanvas()
 
 function init() {
   x = CENTERX

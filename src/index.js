@@ -1,4 +1,4 @@
-/* litecanvas v0.37.1 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.38.0 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import colors from './palette'
 import sounds from './sounds'
@@ -36,7 +36,6 @@ export default function litecanvas(settings = {}) {
             background: NULL,
             canvas: NULL,
             global: true,
-            tappingInterval: 100,
             tapEvents: true,
             useMouse: false,
             loop: NULL,
@@ -882,12 +881,7 @@ export default function litecanvas(settings = {}) {
             let _tapStartX, _tapStartY, _last, _start
 
             _tappingHandler = (ev) => {
-                let now = time()
-                if (now - _last > settings.tappingInterval) {
-                    const [x, y] = _getXY(ev)
-                    updateTapping(true, x, y)
-                    _last = now
-                }
+                updateTapping(true, ..._getXY(ev))
             }
 
             on(instance.CANVAS, _eventTapStart, function (ev) {

@@ -693,12 +693,6 @@ type LitecanvasOptions = {
     global?: boolean
 
     /**
-     * Set the interval (in milliseconds) for the TAPX/TAPY values to be fetched when mouse/touch is being held (see TAPPING).
-     * default = 100
-     */
-    tappingInterval?: number
-
-    /**
      * By default, the litecanvas use only mouse or only touches (giving priority to the mouse).
      * Set this option to `true` if you are having any troubles to detect your mouse
      */

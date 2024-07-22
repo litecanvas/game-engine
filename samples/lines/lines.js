@@ -1,7 +1,6 @@
 // base on https://processing.org/examples/continuouslines.html
 litecanvas({
   background: 0,
-  tappingInterval: 0,
 })
 
 let prevx, prevy, x, y, dirty
