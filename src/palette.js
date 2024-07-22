@@ -3,7 +3,7 @@ export default colors = [
     '#18161c',
     '#6a7799',
     '#aec2c2',
-    '#e3cfb4',
+    '#f3eade',
 
     '#f04f78',
     '#fcf660',
