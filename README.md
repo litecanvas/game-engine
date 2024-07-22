@@ -12,9 +12,9 @@ Lightweight HTML5 canvas engine suitable for small games and animations for peop
 
 -   **Tiny**: only `~4KB` (minified + gzipped).
 -   **Simple API**: just few functions to draw shapes and some utilities to other things like sounds and math.
--   **Offline-first**: You can install the [playground](https://litecanvas.js.org/) as webapp and use anywhere at any time.
 -   **Predefined colors**: just use a number (from 0 to 11) to choose a color in our 12-color palette.
 -   **Predefined sounds**: packed with 4 sounds created in [ZzFX](https://killedbyapixel.github.io/ZzFX/).
+-   **Offline-first Playground**: Install the [playground](https://litecanvas.js.org/) webapp and use anywhere at any time.
 
 [Learn more](https://litecanvas.js.org/about.html)
 
