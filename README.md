@@ -33,11 +33,11 @@ npm start
 If you prefer, you can manually install the package via NPM:
 
 ```
-npm install @litecanvas/litecanvas
+npm install litecanvas
 ```
 
 ```js
-import litecanvas from '@litecanvas/litecanvas'
+import litecanvas from 'litecanvas'
 
 // you can setup other configurations here
 // learn more in the cheatsheet
