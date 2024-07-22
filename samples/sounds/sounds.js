@@ -7,6 +7,7 @@ litecanvas({
 const buttons = document.querySelector('#buttons')
 const pitch = document.querySelector('#pitch-range')
 const volume = document.querySelector('#volume-range')
+const controls = document.querySelector('#controls')
 
 let arg = null,
   sounds = 4
@@ -18,6 +19,12 @@ volume.onchange = (ev) => {
 pitch.onchange = (ev) => {
   document.querySelector('#pitch-value').textContent = ev.target.value
 }
+
+controls.onreset = () =>
+  setTimeout(() => {
+    document.querySelector('#volume-value').textContent = volume.value
+    document.querySelector('#pitch-value').textContent = pitch.value
+  }, 0)
 
 for (let i = 0; i < sounds; i++) {
   const button = document.createElement('button')
