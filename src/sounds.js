@@ -1,5 +1,5 @@
 // prettier-ignore
-export default sounds = [
+export const sounds = [
     // 0 - pickup
     [0.8, 0, 2e3, 0.01, 0.05, , 1, 2, , , -600, 0.05, , , , , , 0.5, 0.05],
     // 1 - hit
