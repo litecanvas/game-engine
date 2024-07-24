@@ -3,7 +3,10 @@ litecanvas({
   autoscale: false,
 })
 
-use(pluginTest)
+use(pluginTest, {
+  // plugin configuration
+  foo: 'bar',
+})
 
 function init() {
   clamp(10, 0, 100)
@@ -21,7 +24,7 @@ function draw() {
   print(CENTERX, CENTERY + 100, sayhello(), 3)
 }
 
-function pluginTest(engine, { settings, colors, sounds }) {
+function pluginTest(engine, { settings, colors, sounds }, config) {
   // the first argument is the current litecanvas instance
   console.log('litecanvas instance:', engine)
 
@@ -29,6 +32,9 @@ function pluginTest(engine, { settings, colors, sounds }) {
   console.log('litecanvas settings:', settings)
   console.log('litecanvas colors:', colors)
   console.log('litecanvas ZzFX sounds:', sounds)
+
+  // the third argument is the plugin configuration
+  console.log('plugin config:', config)
 
   // use `colors` to change a color or add new ones
   // example: change the red (color #4) to purple

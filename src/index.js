@@ -782,7 +782,8 @@ export default function litecanvas(settings = {}) {
          *
          * @param {pluginCallback} callback
          */
-        use: (callback) => {
+        use: (callback, config = {}) => {
+            callback._config = config
             _initialized ? loadPlugin(callback) : _plugins.push(callback)
         },
 
@@ -1072,7 +1073,7 @@ export default function litecanvas(settings = {}) {
      * @param {pluginCallback} callback
      */
     function loadPlugin(callback) {
-        const pluginData = callback(instance, _helpers)
+        const pluginData = callback(instance, _helpers, callback._config)
         if ('object' === typeof pluginData) {
             for (const key in pluginData) {
                 instance.setvar(key, pluginData[key])
