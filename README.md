@@ -43,31 +43,36 @@ import litecanvas from 'litecanvas'
 // you can setup other configurations here
 // learn more in the cheatsheet
 litecanvas({
-    loop: { init, update, draw },
+    loop: { init, update, draw, tapped },
 })
 
-// run once before the game starts
 function init() {
+    // this function run once
+    // before the game starts
     bg = 0
     color = 3
+    radius = 32
     posx = CENTERX
     posy = CENTERY
 }
 
-// called at 60 fps by default
-// use to update your things
-function update(dt) {
-    // example: tap to change the circle position
-    if (TAPPED) {
-        posx = TAPX
-        posy = TAPY
-    }
+// this function render the game scene
+function draw() {
+    cls(bg) // clear the screen
+    circfill(posx, posy, radius, color) // draw a circle
 }
 
-// use to draw your things
-function draw() {
-    clear(bg) // clear the screen
-    circfill(posx, posy, 50, color) // draw a circle
+// this function detect taps/clicks
+// and changes the circle position
+function tapped(x, y) {
+    posx = x
+    posy = y
+}
+
+// this function controls your game logic
+function update(dt) {
+    // make the circle falls 100 pixels per second
+    posy += 100 * dt
 }
 ```
 

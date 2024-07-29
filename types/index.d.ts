@@ -14,20 +14,10 @@ declare global {
     var HEIGHT: number
     /** The game canvas HTML element */
     var CANVAS: HTMLCanvasElement
-    /** `true` when the game screen is touched/clicked */
-    var TAPPED: boolean
-    /** `true` while the screen is being touched/clicked (holding) */
-    var TAPPING: boolean
-    /** the tap/click X position */
-    var TAPX: number
-    /** the tap/click Y position */
-    var TAPY: number
     /** the amount of time (in seconds) since the game started */
     var ELAPSED: number
     /** the FPS meter */
     var FPS: number
-    /** the fixed delta time */
-    var DT: number
     /** the center X of the game screen */
     var CENTERX: number
     /** the center Y of the game screen */
@@ -123,13 +113,6 @@ declare global {
      */
     function norm(value: number, min: number, max: number): number
     /**
-     * Returns the fractional part of a number
-     *
-     * @param {number} value The number
-     * @returns {number}
-     */
-    function fract(value: number): number
-    /**
      * Returns the sine of a number in radians
      */
     function sin(n: number): number
@@ -220,13 +203,7 @@ declare global {
      * @param {number|null} color The background color (from 0 to 7) or null
      */
     function cls(color: number | null): void
-    /**
-     * Clear the game screen
-     * alias of `cls()`
-     *
-     * @param {number|null} color The background color (from 0 to 7) or null
-     */
-    function clear(color: number | null): void
+
     /**
      * Draw a rectangle outline
      *
@@ -318,22 +295,7 @@ declare global {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
      */
     function linedash(segments: number | number[], offset?: number): void
-    /**
-     * Determines the shape used to draw the end points of lines
-     * Possible values are: "butt", "round" or "square"
-     *
-     * @param {string} value
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
-     */
-    function linecap(value: string): void
-    /**
-     * Determines the shape used to join two line segments where they meet
-     * Possible values are: "round", "bevel", and "miter"
-     *
-     * @param {string} value
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin
-     */
-    function linejoin(value: string): void
+
     /** TEXT RENDERING API */
     /**
      * Draw text
@@ -344,16 +306,6 @@ declare global {
      * @param {number} [color=3] the color index (generally from 0 to 7)
      */
     function text(x: number, y: number, text: string, color?: number): void
-    /**
-     * Draw text
-     * alias of `text()`
-     *
-     * @param {number} x
-     * @param {number} y
-     * @param {string} text the text message
-     * @param {number} [color=3] the color index (generally from 0 to 7)
-     */
-    function print(x: number, y: number, text: string, color?: number): void
     /**
      * Set the font family
      *
@@ -545,14 +497,6 @@ declare global {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
      */
     function blendmode(value: string): void
-    /**
-     * Provides filter effects such as blurring and grayscaling.
-     * It is similar to the CSS filter property and accepts the same values.
-     *
-     * @param {string} effect
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
-     */
-    function filter(effect: string): void
     /** SOUND API */
     /**
      * Play a defined sound or a ZzFX array of params

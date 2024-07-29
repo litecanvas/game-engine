@@ -1,44 +1,40 @@
 litecanvas({
-  width: 100,
-  autoscale: false,
+    width: 100,
+    autoscale: false,
 })
 
 function init() {
-  color = 0
-  size = 100
-  limit = Math.min(innerHeight, innerWidth)
+    color = 0
+    size = 100
+    limit = Math.min(innerHeight, innerWidth)
+}
+
+function tapped(tapx, tapy) {
+    x = tapx
+    y = tapy
+    if (size + 100 < limit) {
+        increaseCanvasSize()
+        sfx(0)
+    }
 }
 
 function update(dt) {
-  color = ELAPSED * 32
-  radius = rand() * y
-  if (TAPPED) {
-    x = TAPX
-    y = TAPY
-    if (size + 100 < limit) {
-      increaseCanvasSize()
-      sfx(0)
-    }
-  }
-
-  if (TAPPING) {
-    x = TAPX
-    y = TAPY
-  }
+    color = ELAPSED * 32
+    radius = rand() * y
 }
 
 function draw() {
-  clear(0)
-  linewidth(randi(2, 12))
-  circ(x, y, radius, color)
+    cls(0)
+    linewidth(randi(2, 12))
+    circ(x, y, radius, color)
 }
 
 function resized() {
-  x = CENTERX
-  y = CENTERY
+    x = CENTERX
+    y = CENTERY
 }
 
 function increaseCanvasSize() {
-  size += 100
-  resize(size)
+    size += 100
+    resize(size)
 }

@@ -1,8 +1,8 @@
 litecanvas({
-  canvas: '#game-canvas',
+    canvas: '#game-canvas',
 })
 
 function draw() {
-  cls(0)
-  print(20, 20, CANVAS.id, 3)
+    cls(0)
+    text(20, 20, CANVAS.id, 3)
 }

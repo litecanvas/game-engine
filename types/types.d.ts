@@ -5,20 +5,10 @@ type LitecanvasInstance = {
     HEIGHT: number
     /** The game canvas HTML element */
     CANVAS: HTMLCanvasElement
-    /** `true` when the game screen is touched/clicked */
-    TAPPED: boolean
-    /** `true` while the screen is being touched/clicked (holding) */
-    TAPPING: boolean
-    /** the tap/click X position */
-    TAPX: number
-    /** the tap/click Y position */
-    TAPY: number
     /** the amount of time (in seconds) since the game started */
     ELAPSED: number
     /** the FPS meter */
     FPS: number
-    /** the fixed delta time */
-    DT: number
     /** the center X of the game screen */
     CENTERX: number
     /** the center Y of the game screen */
@@ -113,13 +103,6 @@ type LitecanvasInstance = {
      * @returns {number} the normalized number.
      */
     norm(value: number, min: number, max: number): number
-    /**
-     * Returns the fractional part of a number
-     *
-     * @param {number} value The number
-     * @returns {number}
-     */
-    fract(value: number): number
     /**
      * Returns the sine of a number in radians
      */
@@ -218,13 +201,6 @@ type LitecanvasInstance = {
      */
     cls(color: number | null): void
     /**
-     * Clear the game screen
-     * alias of `cls`
-     *
-     * @param {number|null} color The background color (from 0 to 7) or null
-     */
-    clear(color: number | null): void
-    /**
      * Draw a rectangle outline
      *
      * @param {number} x
@@ -304,22 +280,6 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
      */
     linedash(segments: number | number[], offset?: number): void
-    /**
-     * Determines the shape used to draw the end points of lines
-     * Possible values are: "butt", "round" or "square"
-     *
-     * @param {string} value
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
-     */
-    linecap(value: string): void
-    /**
-     * Determines the shape used to join two line segments where they meet
-     * Possible values are: "round", "bevel", and "miter"
-     *
-     * @param {string} value
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin
-     */
-    linejoin(value: string): void
 
     /** TEXT RENDERING API */
     /**
@@ -331,16 +291,6 @@ type LitecanvasInstance = {
      * @param {number} [color=3] the color index (generally from 0 to 7)
      */
     text(x: number, y: number, text: string, color?: number): void
-    /**
-     * Draw text
-     * alias of `text`
-     *
-     * @param {number} x
-     * @param {number} y
-     * @param {string} text the text message
-     * @param {number} [color=3] the color index (generally from 0 to 7)
-     */
-    print(x: number, y: number, text: string, color?: number): void
     /**
      * Set the font family
      *
@@ -534,14 +484,6 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
      */
     blendmode(value: string): void
-    /**
-     * Provides filter effects such as blurring and grayscaling.
-     * It is similar to the CSS filter property and accepts the same values.
-     *
-     * @param {string} effect
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
-     */
-    filter(effect: string): void
 
     /** SOUND API */
     /**
@@ -675,11 +617,6 @@ type LitecanvasOptions = {
      */
     pixelart?: boolean
     /**
-     * By the game canvas is transparent.
-     * Set this option to a color index (from 0 to 7) to change the canvas background color.
-     */
-    background?: number
-    /**
      * If `false`, disable the canvas antialias.
      */
     antialias?: boolean
@@ -691,19 +628,11 @@ type LitecanvasOptions = {
      * If `true` (default), all methods and properties of the engine will be exposed to the global scope (window).
      */
     global?: boolean
-
-    /**
-     * By default, the litecanvas use only mouse or only touches (giving priority to the mouse).
-     * Set this option to `true` if you are having any troubles to detect your mouse
-     */
-    useMouse?: boolean
-
     /**
      * if `false` disable the click/touch events handling.
      * Useful when you want to implement your own input handler.
      */
     tapEvents?: boolean
-
     /**
      * Specify your game loop callbacks.
      * By default use that global functions (if they exist):
@@ -720,13 +649,6 @@ type LitecanvasGameLoop = {
     update?: (dt: number) => void
     draw?: () => void
     resized?: () => void
-}
-
-type LitecanvasGameLoopListeners = {
-    init: Function[]
-    update: Function[]
-    draw: Function[]
-    resized: Function[]
 }
 
 type drawCallback = (
