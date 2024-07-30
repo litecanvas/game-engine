@@ -92,7 +92,7 @@ type LitecanvasInstance = {
         max1: number,
         min2: number,
         max2: number,
-        withinBounds?: boolean,
+        withinBounds?: boolean
     ): number
     /**
      * Maps a number from one range to a value between 0 and 1.
@@ -216,7 +216,7 @@ type LitecanvasInstance = {
         width: number,
         height: number,
         color?: number,
-        radii?: number | number[],
+        radii?: number | number[]
     ): void
     /**
      * Draw a color-filled rectangle
@@ -234,7 +234,7 @@ type LitecanvasInstance = {
         width: number,
         height: number,
         color?: number,
-        radii?: number | number[],
+        radii?: number | number[]
     ): void
     /**
      * Draw a circle outline
@@ -339,7 +339,7 @@ type LitecanvasInstance = {
     image(
         x: number,
         y: number,
-        image: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement,
+        image: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
     ): void
     /**
      * Creates a offscreen canvas to draw on it
@@ -357,7 +357,7 @@ type LitecanvasInstance = {
         draw: string[] | drawCallback,
         options?: {
             scale?: number
-        },
+        }
     ): OffscreenCanvas
 
     /** ADVANCED GRAPHICS API */
@@ -416,7 +416,7 @@ type LitecanvasInstance = {
         d: number,
         e: number,
         f: number,
-        resetFirst?: boolean,
+        resetFirst?: boolean
     ): void
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
@@ -500,7 +500,7 @@ type LitecanvasInstance = {
         sound?: number | number[],
         volume?: number,
         pitch?: number,
-        randomness?: number,
+        randomness?: number
     ): AudioBufferSourceNode
 
     /** UTILS API */
@@ -525,7 +525,7 @@ type LitecanvasInstance = {
         x2: number,
         y2: number,
         w2: number,
-        h2: number,
+        h2: number
     ): boolean
     /**
      * Check a collision between two circles
@@ -544,8 +544,14 @@ type LitecanvasInstance = {
         r1: number,
         x2: number,
         y2: number,
-        r2: number,
+        r2: number
     ): boolean
+    /**
+     * Get the mouse position
+     *
+     * @returns number[]
+     */
+    mousepos(): number[]
 
     /** PLUGINS API */
     /**
@@ -565,8 +571,15 @@ type LitecanvasInstance = {
     listen(
         event: string,
         callback: Function,
-        highPriority?: boolean,
+        highPriority?: boolean
     ): Function | null
+    /**
+     * Call all listeners attached to a game event
+     *
+     * @param {string} event The game event type
+     * @param  {...any} args Arguments passed to all listeners
+     */
+    emit(event: string, ...args: any[]): void
     /**
      * Get the color value
      *
@@ -653,7 +666,7 @@ type LitecanvasGameLoop = {
 
 type drawCallback = (
     offcanvas: OffscreenCanvas,
-    context: CanvasRenderingContext2D,
+    context: CanvasRenderingContext2D
 ) => void
 
 type LitecanvasPluginHelpers = {
@@ -673,5 +686,5 @@ type LitecanvasPluginHelpers = {
 
 type pluginCallback = (
     instance: LitecanvasInstance,
-    helpers: LitecanvasPluginHelpers,
+    helpers: LitecanvasPluginHelpers
 ) => any

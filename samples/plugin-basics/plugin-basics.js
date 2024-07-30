@@ -65,7 +65,7 @@ function pluginTest(engine, { settings, colors, sounds }, config) {
         },
 
         // if true, this callback runs before other listeners
-        runBefore,
+        runBefore
     )
 
     // another `listen` example

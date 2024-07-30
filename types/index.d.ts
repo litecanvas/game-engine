@@ -2,7 +2,7 @@
  * The litecanvas constructor
  */
 export default function litecanvas(
-    settings?: LitecanvasOptions,
+    settings?: LitecanvasOptions
 ): LitecanvasInstance
 
 declare global {
@@ -101,7 +101,7 @@ declare global {
         max1: number,
         min2: number,
         max2: number,
-        withinBounds?: boolean,
+        withinBounds?: boolean
     ): number
     /**
      * Maps a number from one range to a value between 0 and 1.
@@ -220,7 +220,7 @@ declare global {
         width: number,
         height: number,
         color?: number,
-        radii?: number | number[],
+        radii?: number | number[]
     ): void
     /**
      * Draw a color-filled rectangle
@@ -238,7 +238,7 @@ declare global {
         width: number,
         height: number,
         color?: number,
-        radii?: number | number[],
+        radii?: number | number[]
     ): void
     /**
      * Draw a circle outline
@@ -261,7 +261,7 @@ declare global {
         x: number,
         y: number,
         radius: number,
-        color?: number,
+        color?: number
     ): void
     /**
      * Draw a line
@@ -277,7 +277,7 @@ declare global {
         y1: number,
         x2: number,
         y2: number,
-        color?: number,
+        color?: number
     ): void
     /**
      * Sets the thickness of lines
@@ -353,7 +353,7 @@ declare global {
     function image(
         x: number,
         y: number,
-        image: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement,
+        image: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
     ): void
     /**
      * Creates a offscreen canvas to draw on it
@@ -371,7 +371,7 @@ declare global {
         draw: string[] | drawCallback,
         options?: {
             scale?: number
-        },
+        }
     ): OffscreenCanvas
     /** ADVANCED GRAPHICS API */
     /**
@@ -429,7 +429,7 @@ declare global {
         d: number,
         e: number,
         f: number,
-        resetFirst?: boolean,
+        resetFirst?: boolean
     ): void
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
@@ -512,7 +512,7 @@ declare global {
         sound?: number | number[],
         volume?: number,
         pitch?: number,
-        randomness?: number,
+        randomness?: number
     ): AudioBufferSourceNode
     /** UTILS API */
     /**
@@ -536,7 +536,7 @@ declare global {
         x2: number,
         y2: number,
         w2: number,
-        h2: number,
+        h2: number
     ): boolean
     /**
      * Check a collision between two circles
@@ -555,8 +555,15 @@ declare global {
         r1: number,
         x2: number,
         y2: number,
-        r2: number,
+        r2: number
     ): boolean
+    /**
+     * Get the mouse position
+     *
+     * @returns number[]
+     */
+    function mousepos(): number[]
+
     /** PLUGINS API */
     /**
      * Prepares a plugin to be loaded
@@ -575,8 +582,15 @@ declare global {
     function listen(
         event: string,
         callback: Function,
-        highPriority?: boolean,
+        highPriority?: boolean
     ): Function | null
+    /**
+     * Call all listeners attached to a game event
+     *
+     * @param {string} event The game event type
+     * @param  {...any} args Arguments passed to all listeners
+     */
+    function emit(event: string, ...args: any[]): void
     /**
      * Get the color value
      *

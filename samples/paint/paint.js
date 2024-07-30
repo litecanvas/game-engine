@@ -49,7 +49,7 @@ function draw() {
             (FPS || 0) +
             ' - Tap to draw ' +
             (useImage ? 'images (cache ON)' : 'shapes (cache OFF)'),
-        3,
+        3
     )
 }
 

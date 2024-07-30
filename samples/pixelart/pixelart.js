@@ -23,7 +23,7 @@ const art = paint(
     ],
     {
         scale: 2, // this pixelart is twice bigger
-    },
+    }
 )
 
 function update() {

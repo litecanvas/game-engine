@@ -278,7 +278,7 @@ export default function litecanvas(settings = {}) {
                 ~~y,
                 ~~width,
                 ~~height,
-                radii,
+                radii
             )
             instance.stroke(color)
         },
@@ -300,7 +300,7 @@ export default function litecanvas(settings = {}) {
                 ~~y,
                 ~~width,
                 ~~height,
-                radii,
+                radii
             )
             instance.fill(color)
         },
@@ -737,26 +737,30 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Add a game loop event listener
+         * Add a game event listener
          *
-         * @param {string} event should be "init", "update", "draw" or "resized"
+         * @param {string} event the event type name
          * @param {function} callback the function that is called when the event occurs
          * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
-         * @returns {function?} a function to remove the listener or `undefined` if passed a invalid event
+         * @returns {function} a function to remove the listener
          */
         listen(event, callback, highPriority = false) {
             _events[event] = _events[event] || []
             _events[event][highPriority ? 'unshift' : 'push'](callback)
+
+            // return a function to remove this event listener
             return () => {
-                _events[event] = _events[event].filter((f) => f !== callback)
+                _events[event] = _events[event].filter(
+                    (item) => item !== callback
+                )
             }
         },
 
         /**
-         * Call all listeners attached to a game loop
+         * Call all listeners attached to a game event
          *
-         * @param {string} event The game loop event
-         * @param  {...any} args Arguments passed to all functions
+         * @param {string} event The game event type
+         * @param  {...any} args Arguments passed to all listeners
          */
         emit(event, ...args) {
             if (!_events[event]) return
@@ -1045,7 +1049,7 @@ export default function litecanvas(settings = {}) {
         } else if (_autoscale) {
             _scale = math.min(
                 innerWidth / instance.WIDTH,
-                innerHeight / instance.HEIGHT,
+                innerHeight / instance.HEIGHT
             )
             _scale = settings.pixelart ? math.floor(_scale) : _scale
             _canvas.style.width = instance.WIDTH * _scale + 'px'
