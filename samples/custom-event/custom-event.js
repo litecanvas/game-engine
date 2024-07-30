@@ -8,7 +8,8 @@ function init() {
     color = 5
 }
 
-listen('player-moved', (player, x, y) => {
+const unlistenThisEvent = listen('player-moved', (player, x, y) => {
+    unlistenThisEvent() // run once
     if (colrect(...rect, ...player)) {
         color = 8
         console.log('collision detected')
