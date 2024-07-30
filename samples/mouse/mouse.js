@@ -6,9 +6,9 @@ function init() {
 
 function draw() {
     cls(0)
-    if (!hasMouse) {
-        return text(20, 20, "mouse don't detected", 3)
-    }
     const [x, y] = mousepos()
+    if (null == x) {
+        return text(20, 20, 'move your mouse', 3)
+    }
     circfill(x, y, 32, 4)
 }

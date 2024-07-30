@@ -53,10 +53,10 @@ export default function litecanvas(settings = {}) {
         _autoscale = settings.autoscale,
         /** @type {number} */
         _scale = 1,
-        /** @type {number} */
-        _mouseX = 0,
-        /** @type {number} */
-        _mouseY = 0,
+        /** @type {number?} */
+        _mouseX,
+        /** @type {number?} */
+        _mouseY,
         /** @type {CanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
