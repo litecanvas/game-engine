@@ -1,9 +1,11 @@
 // base on https://processing.org/examples/continuouslines.html
-litecanvas({
-    background: 0,
-})
+litecanvas()
 
 let prevx, prevy, x, y, dirty
+
+function init() {
+    CANVAS.style.background = getcolor(0)
+}
 
 function tapping(tapx, tapy) {
     prevx = x ? x : tapx
