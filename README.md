@@ -17,7 +17,7 @@ Lightweight HTML5 canvas engine suitable for small games and animations for peop
 -   **Extensible**: Use or create [plugins](https://www.npmjs.com/search?q=keywords:litecanvas) to add functionalities or change the engine.
 -   **Offline Playground**: Install the [playground](https://litecanvas.js.org/) webapp and use anywhere at any time.
 
-[Learn more](https://litecanvas.js.org/about.html)
+[Learn more...](https://litecanvas.js.org/about.html)
 
 ## Getting Started
 
