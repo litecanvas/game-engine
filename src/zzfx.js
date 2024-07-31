@@ -22,7 +22,7 @@ zzfx = (
     w = 1,
     m = 0,
     B = 0,
-    N = 0,
+    N = 0
 ) => {
     let M = Math,
         d = 2 * M.PI,
@@ -80,12 +80,12 @@ zzfx = (
                 (a < e
                     ? a / e
                     : a < e + m
-                    ? 1 - ((a - e) / m) * (1 - w)
-                    : a < e + m + r
-                    ? w
-                    : a < h - c
-                    ? ((h - a - c) / t) * w
-                    : 0)),
+                      ? 1 - ((a - e) / m) * (1 - w)
+                      : a < e + m + r
+                        ? w
+                        : a < h - c
+                          ? ((h - a - c) / t) * w
+                          : 0)),
             (f = c
                 ? f / 2 +
                   (c > a

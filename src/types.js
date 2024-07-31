@@ -7,12 +7,10 @@
  * @property {number} [height]
  * @property {boolean} [autoscale=true]
  * @property {boolean} [pixelart=false]
- * @property {number} [background]
  * @property {boolean} [antialias=true]
  * @property {string} [canvas]
  * @property {boolean} [global=true]
  * @property {boolean} [tapEvents=true]
- * @property {boolean} [useMouse=false]
  * @property {LitecanvasGameLoop} [loop]
  */
 
@@ -28,15 +26,10 @@
  * @property {(dt: number) => void} [update]
  * @property {() => void} [draw]
  * @property {() => void} [resized]
- */
-
-/**
- * @typedef LitecanvasGameLoopListeners
- * @type {object}
- * @property {Function[]} init
- * @property {Function[]} update
- * @property {Function[]} draw
- * @property {Function[]} resized
+ * @property {(x: number, y: number, id: number) => void} [tap]
+ * @property {(x: number, y: number, id: number) => void} [untap]
+ * @property {(x: number, y: number, id: number) => void} [tapping]
+ * @property {(x: number, y: number, id: number) => void} [tapped]
  */
 
 /**

@@ -2,7 +2,7 @@
  * The litecanvas constructor
  */
 export default function litecanvas(
-    settings?: LitecanvasOptions,
+    settings?: LitecanvasOptions
 ): LitecanvasInstance
 
 declare global {
@@ -14,20 +14,10 @@ declare global {
     var HEIGHT: number
     /** The game canvas HTML element */
     var CANVAS: HTMLCanvasElement
-    /** `true` when the game screen is touched/clicked */
-    var TAPPED: boolean
-    /** `true` while the screen is being touched/clicked (holding) */
-    var TAPPING: boolean
-    /** the tap/click X position */
-    var TAPX: number
-    /** the tap/click Y position */
-    var TAPY: number
     /** the amount of time (in seconds) since the game started */
     var ELAPSED: number
     /** the FPS meter */
     var FPS: number
-    /** the fixed delta time */
-    var DT: number
     /** the center X of the game screen */
     var CENTERX: number
     /** the center Y of the game screen */
@@ -111,7 +101,7 @@ declare global {
         max1: number,
         min2: number,
         max2: number,
-        withinBounds?: boolean,
+        withinBounds?: boolean
     ): number
     /**
      * Maps a number from one range to a value between 0 and 1.
@@ -122,13 +112,6 @@ declare global {
      * @returns {number} the normalized number.
      */
     function norm(value: number, min: number, max: number): number
-    /**
-     * Returns the fractional part of a number
-     *
-     * @param {number} value The number
-     * @returns {number}
-     */
-    function fract(value: number): number
     /**
      * Returns the sine of a number in radians
      */
@@ -220,13 +203,7 @@ declare global {
      * @param {number|null} color The background color (from 0 to 7) or null
      */
     function cls(color: number | null): void
-    /**
-     * Clear the game screen
-     * alias of `cls()`
-     *
-     * @param {number|null} color The background color (from 0 to 7) or null
-     */
-    function clear(color: number | null): void
+
     /**
      * Draw a rectangle outline
      *
@@ -243,7 +220,7 @@ declare global {
         width: number,
         height: number,
         color?: number,
-        radii?: number | number[],
+        radii?: number | number[]
     ): void
     /**
      * Draw a color-filled rectangle
@@ -261,7 +238,7 @@ declare global {
         width: number,
         height: number,
         color?: number,
-        radii?: number | number[],
+        radii?: number | number[]
     ): void
     /**
      * Draw a circle outline
@@ -284,7 +261,7 @@ declare global {
         x: number,
         y: number,
         radius: number,
-        color?: number,
+        color?: number
     ): void
     /**
      * Draw a line
@@ -300,7 +277,7 @@ declare global {
         y1: number,
         x2: number,
         y2: number,
-        color?: number,
+        color?: number
     ): void
     /**
      * Sets the thickness of lines
@@ -318,22 +295,7 @@ declare global {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
      */
     function linedash(segments: number | number[], offset?: number): void
-    /**
-     * Determines the shape used to draw the end points of lines
-     * Possible values are: "butt", "round" or "square"
-     *
-     * @param {string} value
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
-     */
-    function linecap(value: string): void
-    /**
-     * Determines the shape used to join two line segments where they meet
-     * Possible values are: "round", "bevel", and "miter"
-     *
-     * @param {string} value
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin
-     */
-    function linejoin(value: string): void
+
     /** TEXT RENDERING API */
     /**
      * Draw text
@@ -344,16 +306,6 @@ declare global {
      * @param {number} [color=3] the color index (generally from 0 to 7)
      */
     function text(x: number, y: number, text: string, color?: number): void
-    /**
-     * Draw text
-     * alias of `text()`
-     *
-     * @param {number} x
-     * @param {number} y
-     * @param {string} text the text message
-     * @param {number} [color=3] the color index (generally from 0 to 7)
-     */
-    function print(x: number, y: number, text: string, color?: number): void
     /**
      * Set the font family
      *
@@ -401,7 +353,7 @@ declare global {
     function image(
         x: number,
         y: number,
-        image: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement,
+        image: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
     ): void
     /**
      * Creates a offscreen canvas to draw on it
@@ -419,7 +371,7 @@ declare global {
         draw: string[] | drawCallback,
         options?: {
             scale?: number
-        },
+        }
     ): OffscreenCanvas
     /** ADVANCED GRAPHICS API */
     /**
@@ -477,7 +429,7 @@ declare global {
         d: number,
         e: number,
         f: number,
-        resetFirst?: boolean,
+        resetFirst?: boolean
     ): void
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
@@ -545,14 +497,6 @@ declare global {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
      */
     function blendmode(value: string): void
-    /**
-     * Provides filter effects such as blurring and grayscaling.
-     * It is similar to the CSS filter property and accepts the same values.
-     *
-     * @param {string} effect
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
-     */
-    function filter(effect: string): void
     /** SOUND API */
     /**
      * Play a defined sound or a ZzFX array of params
@@ -568,7 +512,7 @@ declare global {
         sound?: number | number[],
         volume?: number,
         pitch?: number,
-        randomness?: number,
+        randomness?: number
     ): AudioBufferSourceNode
     /** UTILS API */
     /**
@@ -592,7 +536,7 @@ declare global {
         x2: number,
         y2: number,
         w2: number,
-        h2: number,
+        h2: number
     ): boolean
     /**
      * Check a collision between two circles
@@ -611,8 +555,15 @@ declare global {
         r1: number,
         x2: number,
         y2: number,
-        r2: number,
+        r2: number
     ): boolean
+    /**
+     * Get the mouse position
+     *
+     * @returns number[]
+     */
+    function mousepos(): number[]
+
     /** PLUGINS API */
     /**
      * Prepares a plugin to be loaded
@@ -631,8 +582,15 @@ declare global {
     function listen(
         event: string,
         callback: Function,
-        highPriority?: boolean,
+        highPriority?: boolean
     ): Function | null
+    /**
+     * Call all listeners attached to a game event
+     *
+     * @param {string} event The game event type
+     * @param  {...any} args Arguments passed to all listeners
+     */
+    function emit(event: string, ...args: any[]): void
     /**
      * Get the color value
      *

@@ -13,32 +13,23 @@ const root = globalThis
  */
 export default function litecanvas(settings = {}) {
     // helpers
-    const body = document.body,
-        math = Math,
-        PI = math.PI,
+    const PI = Math.PI,
         TWO_PI = PI * 2,
         /** @type {(elem:HTMLElement, evt:string, callback:Function)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
-        /** @type {(elem:HTMLElement, evt:string, callback:Function)=>void} */
-        off = (elem, evt, callback) => elem.removeEventListener(evt, callback),
-        time = () => performance.now(),
-        NULL = null,
-        UNDEF = undefined,
         /** @type {LitecanvasOptions} */
         defaults = {
             fps: 60,
             fullscreen: true,
-            width: NULL,
-            height: NULL,
+            width: null,
+            height: null,
             autoscale: true,
             pixelart: false,
             antialias: true,
-            background: NULL,
-            canvas: NULL,
+            canvas: null,
             global: true,
             tapEvents: true,
-            useMouse: false,
-            loop: NULL,
+            loop: null,
         }
 
     // setup the settings default values
@@ -54,18 +45,12 @@ export default function litecanvas(settings = {}) {
         _fullscreen = settings.fullscreen,
         /** @type {boolean} */
         _autoscale = settings.autoscale,
-        /** @type {number|null} */
-        _bg = settings.background,
-        /** @type {boolean} */
-        _hasMouse = settings.useMouse || matchMedia('(pointer:fine)').matches,
-        /** @type {function} */
-        _tappingHandler,
         /** @type {number} */
         _scale = 1,
-        /** @type {number} */
-        _offsetTop = 0,
-        /** @type {number} */
-        _offsetLeft = 0,
+        /** @type {number?} */
+        _mouseX,
+        /** @type {number?} */
+        _mouseY,
         /** @type {CanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
@@ -93,14 +78,17 @@ export default function litecanvas(settings = {}) {
         /** @type {string} */
         _textBaseline = 'top',
         /**
-         * The list of game loop listeners
-         * @type {LitecanvasGameLoopListeners}
+         * default game events
          */
-        _loop = {
+        _events = {
             init: [],
             update: [],
             draw: [],
             resized: [],
+            tap: [],
+            untap: [],
+            tapping: [],
+            tapped: [],
         },
         /**
          * Helpers to be used by plugins
@@ -120,25 +108,15 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         HEIGHT: settings.height || settings.width,
         /** @type {HTMLCanvasElement} */
-        CANVAS: NULL,
-        /** @type {boolean} */
-        TAPPED: NULL,
-        /** @type {boolean} */
-        TAPPING: NULL,
-        /** @type {number} */
-        TAPX: NULL,
-        /** @type {number} */
-        TAPY: NULL,
+        CANVAS: null,
         /** @type {number} */
         ELAPSED: 0,
         /** @type {number} */
         FPS: settings.fps,
         /** @type {number} */
-        DT: _step,
+        CENTERX: null,
         /** @type {number} */
-        CENTERX: NULL,
-        /** @type {number} */
-        CENTERY: NULL,
+        CENTERY: null,
 
         /** MATH API */
         /**
@@ -203,7 +181,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} max
          * @returns {number}
          */
-        clamp: (value, min, max) => math.min(math.max(value, min), max),
+        clamp: (value, min, max) => Math.min(Math.max(value, min), max),
 
         /**
          * Wraps a number between `min` (inclusive) and `max` (exclusive).
@@ -214,7 +192,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number}
          */
         wrap: (value, min, max) =>
-            value - (max - min) * math.floor((value - min) / (max - min)),
+            value - (max - min) * Math.floor((value - min) / (max - min)),
 
         /**
          * Re-maps a number from one range to another.
@@ -243,14 +221,6 @@ export default function litecanvas(settings = {}) {
          */
         norm: (value, min, max) => instance.map(value, min, max, 0, 1),
 
-        /**
-         * Returns the fractional part of a number
-         *
-         * @param {number} value The number
-         * @returns {number}
-         */
-        fract: (value) => value % 1,
-
         /** RNG API */
         /**
          * Generates a pseudorandom float between min (inclusive) and max (exclusive)
@@ -259,7 +229,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} [max=1.0]
          * @returns {number} the random number
          */
-        rand: (min = 0.0, max = 1.0) => math.random() * (max - min) + min,
+        rand: (min = 0.0, max = 1.0) => Math.random() * (max - min) + min,
 
         /**
          * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
@@ -277,8 +247,8 @@ export default function litecanvas(settings = {}) {
          *
          * @param {number|null} color The background color (from 0 to 7) or null
          */
-        clear(color) {
-            if (NULL == color) {
+        cls(color) {
+            if (null == color) {
                 _ctx.clearRect(0, 0, instance.WIDTH, instance.HEIGHT)
             } else {
                 instance.rectfill(0, 0, instance.WIDTH, instance.HEIGHT, color)
@@ -295,14 +265,14 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index (generally from 0 to 7)
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
-        rect(x, y, width, height, color = 0, radii = UNDEF) {
+        rect(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
                 ~~x,
                 ~~y,
                 ~~width,
                 ~~height,
-                radii,
+                radii
             )
             instance.stroke(color)
         },
@@ -317,14 +287,14 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index (generally from 0 to 7)
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
-        rectfill(x, y, width, height, color = 0, radii = UNDEF) {
+        rectfill(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
                 ~~x,
                 ~~y,
                 ~~width,
                 ~~height,
-                radii,
+                radii
             )
             instance.fill(color)
         },
@@ -396,28 +366,6 @@ export default function litecanvas(settings = {}) {
         linedash(segments, offset = 0) {
             _ctx.setLineDash(Array.isArray(segments) ? segments : [segments])
             _ctx.lineDashOffset = offset
-        },
-
-        /**
-         * Determines the shape used to draw the end points of lines
-         * Possible values are: "butt", "round" or "square"
-         *
-         * @param {string} value
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
-         */
-        linecap(value) {
-            _ctx.lineCap = value
-        },
-
-        /**
-         * Determines the shape used to join two line segments where they meet
-         * Possible values are: "round", "bevel", and "miter"
-         *
-         * @param {string} value
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin
-         */
-        linejoin(value) {
-            _ctx.lineJoin = value
         },
 
         /** TEXT RENDERING API */
@@ -702,17 +650,6 @@ export default function litecanvas(settings = {}) {
             _ctx.globalCompositeOperation = value
         },
 
-        /**
-         * Provides filter effects such as blurring and grayscaling.
-         * It is similar to the CSS filter property and accepts the same values.
-         *
-         * @param {string} effect
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
-         */
-        filter(effect) {
-            _ctx.filter = effect
-        },
-
         /** SOUND API */
         /**
          * Play a defined sound or a ZzFX array of params
@@ -776,6 +713,12 @@ export default function litecanvas(settings = {}) {
         colcirc: (x1, y1, r1, x2, y2, r2) =>
             (x2 - x1) ** 2 + (y2 - y1) ** 2 <= (r1 + r2) ** 2,
 
+        /**
+         * Get the mouse position
+         * @returns number[]
+         */
+        mousepos: () => [_mouseX, _mouseY],
+
         /** PLUGINS API */
         /**
          * Prepares a plugin to be loaded
@@ -783,23 +726,40 @@ export default function litecanvas(settings = {}) {
          * @param {pluginCallback} callback
          */
         use: (callback, config = {}) => {
-            callback._config = config
+            callback.__config = config
             _initialized ? loadPlugin(callback) : _plugins.push(callback)
         },
 
         /**
-         * Add a game loop event listener
+         * Add a game event listener
          *
-         * @param {string} event should be "init", "update", "draw" or "resized"
+         * @param {string} event the event type name
          * @param {function} callback the function that is called when the event occurs
          * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
-         * @returns {function?} a function to remove the listener or `undefined` if passed a invalid event
+         * @returns {function} a function to remove the listener
          */
         listen(event, callback, highPriority = false) {
-            if (!_loop[event]) return
-            _loop[event][highPriority ? 'unshift' : 'push'](callback)
+            _events[event] = _events[event] || []
+            _events[event][highPriority ? 'unshift' : 'push'](callback)
+
+            // return a function to remove this event listener
             return () => {
-                _loop[event] = _loop[event].filter((f) => f !== callback)
+                _events[event] = _events[event].filter(
+                    (item) => item !== callback
+                )
+            }
+        },
+
+        /**
+         * Call all listeners attached to a game event
+         *
+         * @param {string} event The game event type
+         * @param  {...any} args Arguments passed to all listeners
+         */
+        emit(event, ...args) {
+            if (!_events[event]) return
+            for (let i = 0; i < _events[event].length; ++i) {
+                _events[event][i](...args)
             }
         },
 
@@ -837,10 +797,6 @@ export default function litecanvas(settings = {}) {
         },
     }
 
-    // alias
-    instance.cls = instance.clear
-    instance.print = instance.text
-
     /** Copy some functions from native `Math` object */
     for (const k of [
         'sin',
@@ -861,75 +817,30 @@ export default function litecanvas(settings = {}) {
         'exp',
     ]) {
         // import some native Math functions
-        instance[k] = math[k]
+        instance[k] = Math[k]
     }
 
     function init() {
         _initialized = true
         setupCanvas()
 
-        if (settings.tapEvents) {
-            const _tappedLimit = 200
-            const _getXY = (event) => {
-                    return _hasMouse
-                        ? [event.pageX, event.pageY]
-                        : [event.touches[0].pageX, event.touches[0].pageY]
-                },
-                _eventTapStart = _hasMouse ? 'mousedown' : 'touchstart',
-                _eventTapEnd = _hasMouse ? 'mouseup' : 'touchend',
-                _eventTapMove = _hasMouse ? 'mousemove' : 'touchmove'
-
-            let _tapStartX, _tapStartY, _tapStartTime
-
-            _tappingHandler = (ev) => {
-                updateTapping(true, ..._getXY(ev))
-            }
-
-            on(instance.CANVAS, _eventTapStart, function (ev) {
-                ev.preventDefault()
-                if (!_rafid) _resume()
-
-                on(body, _eventTapMove, _tappingHandler)
-                const [x, y] = ([_tapStartX, _tapStartY] = _getXY(ev))
-                updateTapping(true, x, y)
-                _tapStartTime = time()
-            })
-
-            on(instance.CANVAS, _eventTapEnd, function (ev) {
-                ev.preventDefault()
-                off(body, _eventTapMove, _tappingHandler)
-                updateTapping(false)
-
-                if (time() - _tapStartTime <= _tappedLimit) {
-                    updateTapped(true, _tapStartX, _tapStartY)
-                }
-            })
-        }
-
-        on(root, 'focus', () => {
-            if (!_rafid) _resume()
-        })
-
-        function _resume() {
-            _lastFrame = time()
-            _rafid = requestAnimationFrame(frame)
-        }
-
+        // pause on page blur
         on(root, 'blur', () => {
             cancelAnimationFrame(_rafid)
             _rafid = 0
-            if (settings.tapEvents) {
-                off(
-                    body,
-                    _hasMouse ? 'mousemove' : 'touchmove',
-                    _tappingHandler,
-                )
-                updateTapping(false)
+        })
+
+        // resume on page focus if paused
+        on(root, 'focus', () => {
+            if (!_rafid) {
+                _lastFrame = performance.now()
+                _rafid = requestAnimationFrame(drawFrame)
             }
         })
 
+        // listen the default events
         const source = settings.loop ? settings.loop : root
-        for (const event in _loop) {
+        for (const event in _events) {
             if (source[event]) instance.listen(event, source[event])
         }
 
@@ -938,26 +849,132 @@ export default function litecanvas(settings = {}) {
             loadPlugin(_plugins[i])
         }
 
-        // set canvas background color
-        if (NULL != _bg) {
-            // prettier-ignore
-            instance.CANVAS.style.background = instance.getcolor(_bg)
-        }
-
         // listen window resize event
         on(root, 'resize', pageResized)
         pageResized()
 
         // start the game loop
-        emit('init')
-        _lastFrame = time()
-        _rafid = requestAnimationFrame(frame)
+        instance.emit('init')
+        _lastFrame = performance.now()
+        _rafid = requestAnimationFrame(drawFrame)
+
+        // default mouse/touch handlers
+        if (settings.tapEvents) {
+            const _getXY = (pageX, pageY) => [
+                    (pageX - _canvas.offsetLeft) / _scale,
+                    (pageY - _canvas.offsetTop) / _scale,
+                ],
+                _taps = new Map(),
+                _registerTap = (id, x, y) => {
+                    _taps.set(id, {
+                        x,
+                        y,
+                        startX: x,
+                        startY: y,
+                        timestamp: performance.now(),
+                    })
+                },
+                _updateTap = (id, x, y) => {
+                    const tap = _taps.get(id)
+                    tap.x = x
+                    tap.y = y
+                },
+                _checkTapped = (tap) => performance.now() - tap.timestamp <= 200
+
+            let _pressingMouse = false
+
+            on(_canvas, 'mousedown', (ev) => {
+                ev.preventDefault()
+                const [x, y] = _getXY(ev.pageX, ev.pageY)
+                instance.emit('tap', x, y, 0)
+                _registerTap(0, x, y)
+                _pressingMouse = true
+            })
+
+            on(_canvas, 'mousemove', (ev) => {
+                ev.preventDefault()
+                const [x, y] = ([_mouseX, _mouseY] = _getXY(ev.pageX, ev.pageY))
+                if (!_pressingMouse) return
+                instance.emit('tapping', x, y, 0)
+                _updateTap(0, x, y)
+            })
+
+            on(_canvas, 'mouseup', (ev) => {
+                ev.preventDefault()
+                const tap = _taps.get(0)
+                const [x, y] = _getXY(ev.pageX, ev.pageY)
+                if (_checkTapped(tap)) {
+                    instance.emit('tapped', tap.startX, tap.startY, 0)
+                }
+                instance.emit('untap', x, y, 0)
+                _taps.delete(0)
+                _pressingMouse = false
+            })
+
+            on(_canvas, 'touchstart', (ev) => {
+                ev.preventDefault()
+                /** @type {TouchList} touches */
+                const touches = ev.changedTouches
+                for (let i = 0; i < touches.length; i++) {
+                    const touch = touches[i]
+                    const [x, y] = _getXY(touch.pageX, touch.pageY)
+                    instance.emit('tap', x, y, touch.identifier + 1)
+                    _registerTap(touch.identifier + 1, x, y)
+                }
+            })
+
+            on(_canvas, 'touchmove', (ev) => {
+                ev.preventDefault()
+                /** @type {TouchList} touches */
+                const touches = ev.changedTouches
+                for (let i = 0; i < touches.length; i++) {
+                    const touch = touches[i]
+                    const [x, y] = _getXY(touch.pageX, touch.pageY)
+                    instance.emit('tapping', x, y, touch.identifier + 1)
+                    _updateTap(touch.identifier + 1, x, y)
+                }
+            })
+
+            const _touchEndHandler = (ev) => {
+                ev.preventDefault()
+                const existing = []
+
+                if (ev.targetTouches.length > 0) {
+                    for (const touch of ev.targetTouches) {
+                        existing.push(touch.identifier + 1)
+                    }
+                }
+
+                for (const [id, tap] of _taps) {
+                    if (existing.includes(id)) continue
+                    if (_checkTapped(tap)) {
+                        instance.emit('tapped', tap.startX, tap.startY, id)
+                    }
+                    instance.emit('untap', tap.x, tap.y, id)
+                    _taps.delete(id)
+                }
+            }
+
+            on(_canvas, 'touchend', _touchEndHandler)
+            on(_canvas, 'touchcancel', _touchEndHandler)
+
+            on(root, 'blur', () => {
+                _pressingMouse = false
+
+                if (_taps.size === 0) return
+
+                for (const [id, tap] of _taps) {
+                    instance.emit('untap', tap.x, tap.y, id)
+                    _taps.delete(id)
+                }
+            })
+        }
     }
 
     /**
      * @param {number} now
      */
-    function frame(now) {
+    function drawFrame(now) {
         let ticks = 0,
             t = now - _lastFrame
 
@@ -965,17 +982,15 @@ export default function litecanvas(settings = {}) {
         _accumulated += t
 
         while (_accumulated >= _stepMs) {
-            // update
-            emit('update', _step)
+            instance.emit('update', _step)
             instance.setvar('ELAPSED', instance.ELAPSED + _step)
             _accumulated -= _stepMs
             ticks++
-            instance.setvar('TAPPED', false)
         }
 
         if (ticks) {
             _drawCount++
-            emit('draw')
+            instance.emit('draw')
             _drawTime += _stepMs * ticks
             if (_drawTime + _accumulated >= 1000) {
                 instance.setvar('FPS', _drawCount)
@@ -984,7 +999,7 @@ export default function litecanvas(settings = {}) {
             }
         }
 
-        if (_rafid) _rafid = requestAnimationFrame(frame)
+        if (_rafid) _rafid = requestAnimationFrame(drawFrame)
     }
 
     function setupCanvas() {
@@ -1002,7 +1017,7 @@ export default function litecanvas(settings = {}) {
         _canvas.width = instance.WIDTH
         _canvas.height = instance.HEIGHT || instance.WIDTH
 
-        if (!_canvas.parentNode) body.appendChild(_canvas)
+        if (!_canvas.parentNode) document.body.appendChild(_canvas)
 
         if (!settings.antialias || settings.pixelart) {
             _ctx.imageSmoothingEnabled = false
@@ -1026,11 +1041,11 @@ export default function litecanvas(settings = {}) {
             instance.setvar('WIDTH', innerWidth)
             instance.setvar('HEIGHT', innerHeight)
         } else if (_autoscale) {
-            _scale = math.min(
+            _scale = Math.min(
                 innerWidth / instance.WIDTH,
-                innerHeight / instance.HEIGHT,
+                innerHeight / instance.HEIGHT
             )
-            _scale = settings.pixelart ? math.floor(_scale) : _scale
+            _scale = settings.pixelart ? Math.floor(_scale) : _scale
             _canvas.style.width = instance.WIDTH * _scale + 'px'
             _canvas.style.height = instance.HEIGHT * _scale + 'px'
         }
@@ -1038,59 +1053,21 @@ export default function litecanvas(settings = {}) {
         instance.setvar('CENTERX', instance.WIDTH / 2)
         instance.setvar('CENTERY', instance.HEIGHT / 2)
 
-        _offsetTop = _canvas.offsetTop
-        _offsetLeft = _canvas.offsetLeft
-
         // fix the font align and baseline
         instance.textalign(_textAlign, _textBaseline)
 
-        emit('resized')
-    }
-
-    /**
-     * @param {boolean} tapped
-     * @param {number} x
-     * @param {number} y
-     */
-    function updateTapped(tapped, x, y) {
-        instance.setvar('TAPPED', tapped)
-        instance.setvar('TAPX', (x - _offsetLeft) / _scale)
-        instance.setvar('TAPY', (y - _offsetTop) / _scale)
-    }
-
-    /**
-     * @param {boolean} tapped
-     * @param {number} x
-     * @param {number} y
-     */
-    function updateTapping(tapped, x, y) {
-        instance.setvar('TAPPING', tapped)
-        instance.setvar('TAPX', (x - _offsetLeft) / _scale)
-        instance.setvar('TAPY', (y - _offsetTop) / _scale)
+        instance.emit('resized', _scale)
     }
 
     /**
      * @param {pluginCallback} callback
      */
     function loadPlugin(callback) {
-        const pluginData = callback(instance, _helpers, callback._config)
+        const pluginData = callback(instance, _helpers, callback.__config)
         if ('object' === typeof pluginData) {
             for (const key in pluginData) {
                 instance.setvar(key, pluginData[key])
             }
-        }
-    }
-
-    /**
-     * Call all listeners attached to a game loop
-     *
-     * @param {string} event The game loop event
-     * @param  {...any} args Arguments passed to all functions
-     */
-    function emit(event, ...args) {
-        if (!_loop[event]) return
-        for (let i = 0; i < _loop[event].length; ++i) {
-            _loop[event][i](...args)
         }
     }
 
