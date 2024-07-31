@@ -30,21 +30,12 @@ function tapped(x, y) {
     destX = ~~(x - padW / 2)
 }
 
-function tapping(x, y) {
-    if (!started) {
-        started = true
-        return
-    }
-    destX = ~~(x - padW / 2)
-}
-
 function update(dt) {
+    if (!started) return // title screen?
     if (lifes === 0) return // game over?
 
     // move the paddle
-    if (padX !== destX) {
-        padX = lerp(padX, destX, 0.05)
-    }
+    padX = lerp(padX, destX, 0.05)
 
     // don't let the paddle leave the screen
     if (padX < 0) padX = 0
