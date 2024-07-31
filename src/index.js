@@ -13,29 +13,23 @@ const root = globalThis
  */
 export default function litecanvas(settings = {}) {
     // helpers
-    const body = document.body,
-        math = Math,
-        PI = math.PI,
+    const PI = Math.PI,
         TWO_PI = PI * 2,
         /** @type {(elem:HTMLElement, evt:string, callback:Function)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
-        /** @type {()=>number} */
-        time = () => performance.now(),
-        NULL = null,
-        UNDEF = undefined,
         /** @type {LitecanvasOptions} */
         defaults = {
             fps: 60,
             fullscreen: true,
-            width: NULL,
-            height: NULL,
+            width: null,
+            height: null,
             autoscale: true,
             pixelart: false,
             antialias: true,
-            canvas: NULL,
+            canvas: null,
             global: true,
             tapEvents: true,
-            loop: NULL,
+            loop: null,
         }
 
     // setup the settings default values
@@ -114,15 +108,15 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         HEIGHT: settings.height || settings.width,
         /** @type {HTMLCanvasElement} */
-        CANVAS: NULL,
+        CANVAS: null,
         /** @type {number} */
         ELAPSED: 0,
         /** @type {number} */
         FPS: settings.fps,
         /** @type {number} */
-        CENTERX: NULL,
+        CENTERX: null,
         /** @type {number} */
-        CENTERY: NULL,
+        CENTERY: null,
 
         /** MATH API */
         /**
@@ -187,7 +181,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} max
          * @returns {number}
          */
-        clamp: (value, min, max) => math.min(math.max(value, min), max),
+        clamp: (value, min, max) => Math.min(Math.max(value, min), max),
 
         /**
          * Wraps a number between `min` (inclusive) and `max` (exclusive).
@@ -198,7 +192,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number}
          */
         wrap: (value, min, max) =>
-            value - (max - min) * math.floor((value - min) / (max - min)),
+            value - (max - min) * Math.floor((value - min) / (max - min)),
 
         /**
          * Re-maps a number from one range to another.
@@ -235,7 +229,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} [max=1.0]
          * @returns {number} the random number
          */
-        rand: (min = 0.0, max = 1.0) => math.random() * (max - min) + min,
+        rand: (min = 0.0, max = 1.0) => Math.random() * (max - min) + min,
 
         /**
          * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
@@ -254,7 +248,7 @@ export default function litecanvas(settings = {}) {
          * @param {number|null} color The background color (from 0 to 7) or null
          */
         cls(color) {
-            if (NULL == color) {
+            if (null == color) {
                 _ctx.clearRect(0, 0, instance.WIDTH, instance.HEIGHT)
             } else {
                 instance.rectfill(0, 0, instance.WIDTH, instance.HEIGHT, color)
@@ -271,7 +265,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index (generally from 0 to 7)
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
-        rect(x, y, width, height, color = 0, radii = UNDEF) {
+        rect(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
                 ~~x,
@@ -293,7 +287,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index (generally from 0 to 7)
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
-        rectfill(x, y, width, height, color = 0, radii = UNDEF) {
+        rectfill(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
                 ~~x,
@@ -823,7 +817,7 @@ export default function litecanvas(settings = {}) {
         'exp',
     ]) {
         // import some native Math functions
-        instance[k] = math[k]
+        instance[k] = Math[k]
     }
 
     function init() {
@@ -839,7 +833,7 @@ export default function litecanvas(settings = {}) {
         // resume on page focus if paused
         on(root, 'focus', () => {
             if (!_rafid) {
-                _lastFrame = time()
+                _lastFrame = performance.now()
                 _rafid = requestAnimationFrame(drawFrame)
             }
         })
@@ -861,7 +855,7 @@ export default function litecanvas(settings = {}) {
 
         // start the game loop
         instance.emit('init')
-        _lastFrame = time()
+        _lastFrame = performance.now()
         _rafid = requestAnimationFrame(drawFrame)
 
         // default mouse/touch handlers
@@ -877,7 +871,7 @@ export default function litecanvas(settings = {}) {
                         y,
                         startX: x,
                         startY: y,
-                        timestamp: time(),
+                        timestamp: performance.now(),
                     })
                 },
                 _updateTap = (id, x, y) => {
@@ -885,7 +879,7 @@ export default function litecanvas(settings = {}) {
                     tap.x = x
                     tap.y = y
                 },
-                _checkTapped = (tap) => time() - tap.timestamp <= 200
+                _checkTapped = (tap) => performance.now() - tap.timestamp <= 200
 
             let _pressingMouse = false
 
@@ -1023,7 +1017,7 @@ export default function litecanvas(settings = {}) {
         _canvas.width = instance.WIDTH
         _canvas.height = instance.HEIGHT || instance.WIDTH
 
-        if (!_canvas.parentNode) body.appendChild(_canvas)
+        if (!_canvas.parentNode) document.body.appendChild(_canvas)
 
         if (!settings.antialias || settings.pixelart) {
             _ctx.imageSmoothingEnabled = false
@@ -1047,11 +1041,11 @@ export default function litecanvas(settings = {}) {
             instance.setvar('WIDTH', innerWidth)
             instance.setvar('HEIGHT', innerHeight)
         } else if (_autoscale) {
-            _scale = math.min(
+            _scale = Math.min(
                 innerWidth / instance.WIDTH,
                 innerHeight / instance.HEIGHT
             )
-            _scale = settings.pixelart ? math.floor(_scale) : _scale
+            _scale = settings.pixelart ? Math.floor(_scale) : _scale
             _canvas.style.width = instance.WIDTH * _scale + 'px'
             _canvas.style.height = instance.HEIGHT * _scale + 'px'
         }
