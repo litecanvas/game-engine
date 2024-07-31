@@ -1,4 +1,4 @@
-/* litecanvas v0.41.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.41.1 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './palette'
 import { sounds } from './sounds'
@@ -866,20 +866,23 @@ export default function litecanvas(settings = {}) {
                 ],
                 _taps = new Map(),
                 _registerTap = (id, x, y) => {
-                    _taps.set(id, {
+                    const tap = {
                         x,
                         y,
                         startX: x,
                         startY: y,
-                        timestamp: performance.now(),
-                    })
+                        // timestamp
+                        ts: performance.now(),
+                    }
+                    _taps.set(id, tap)
+                    return tap
                 },
                 _updateTap = (id, x, y) => {
-                    const tap = _taps.get(id)
+                    const tap = _taps.get(id) || _registerTap(id)
                     tap.x = x
                     tap.y = y
                 },
-                _checkTapped = (tap) => performance.now() - tap.timestamp <= 200
+                _checkTapped = (tap) => tap && performance.now() - tap.ts <= 200
 
             let _pressingMouse = false
 
