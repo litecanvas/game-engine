@@ -1,3 +1,5 @@
+import './types'
+
 /**
  * The litecanvas constructor
  */
