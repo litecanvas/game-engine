@@ -1,6 +1,4 @@
-litecanvas({
-    loop: { init, update, draw, tapped },
-})
+litecanvas()
 
 function init() {
     // this function run once
