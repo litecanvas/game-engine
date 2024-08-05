@@ -1,4 +1,4 @@
-/* litecanvas v0.42.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.42.1 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './palette'
 import { sounds } from './sounds'
@@ -723,7 +723,7 @@ export default function litecanvas(settings = {}) {
         mousepos: () => [_mouseX, _mouseY],
 
         /**
-         * The scale of the game's time delta (dt).
+         * The scale of the game's delta time (dt).
          * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
          * A value of 0 freezes time and is effectively equivalent to pausing.
          *

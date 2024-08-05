@@ -566,7 +566,7 @@ declare global {
      */
     function mousepos(): number[]
     /**
-     * The scale of the game's time delta (dt).
+     * The scale of the game's delta time (dt).
      * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
      * A value of 0 freezes time and is effectively equivalent to pausing.
      *
