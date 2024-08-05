@@ -55,6 +55,8 @@ export default function litecanvas(settings = {}) {
         /** @type {CanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
+        _timeScale = 1,
+        /** @type {number} */
         _lastFrame,
         /** @type {number} */
         _step = 1 / settings.fps,
@@ -720,6 +722,17 @@ export default function litecanvas(settings = {}) {
          */
         mousepos: () => [_mouseX, _mouseY],
 
+        /**
+         * The scale of the game's time delta (dt).
+         * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
+         * A value of 0 freezes time and is effectively equivalent to pausing.
+         *
+         * @param {number} value
+         */
+        timescale(value) {
+            _timeScale = value
+        },
+
         /** PLUGINS API */
         /**
          * Prepares a plugin to be loaded
@@ -985,8 +998,8 @@ export default function litecanvas(settings = {}) {
         _accumulated += t
 
         while (_accumulated >= _stepMs) {
-            instance.emit('update', _step)
-            instance.setvar('ELAPSED', instance.ELAPSED + _step)
+            instance.emit('update', _step * _timeScale)
+            instance.setvar('ELAPSED', instance.ELAPSED + _step * _timeScale)
             _accumulated -= _stepMs
             ticks++
         }
