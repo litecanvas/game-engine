@@ -5,6 +5,7 @@
  * @property {boolean} [fullscreen=true]
  * @property {number} [width]
  * @property {number} [height]
+ * @property {boolean} [pauseOnBlur=true]
  * @property {boolean} [autoscale=true]
  * @property {boolean} [pixelart=false]
  * @property {boolean} [antialias=true]

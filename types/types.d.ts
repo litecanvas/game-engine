@@ -621,6 +621,11 @@ type LitecanvasOptions = {
      */
     height?: number
     /**
+     * Determines whether the game loop should be paused when the "blur" event happens.
+     * Default: `true`
+     */
+    pauseOnBlur?: boolean
+    /**
      * If `true` (default) scales the canvas to fill the screen, but preserving the aspect ratio.
      * Only works if a game screen width was specified.
      */

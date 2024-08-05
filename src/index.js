@@ -23,6 +23,7 @@ export default function litecanvas(settings = {}) {
             fullscreen: true,
             width: null,
             height: null,
+            pauseOnBlur: true,
             autoscale: true,
             pixelart: false,
             antialias: true,
@@ -245,7 +246,7 @@ export default function litecanvas(settings = {}) {
         /**
          * Clear the game screen
          *
-         * @param {number|null} color The background color (from 0 to 7) or null
+         * @param {number|null} color The background color (from 0 to 7) or null (for transparent)
          */
         cls(color) {
             if (null == color) {
@@ -764,10 +765,10 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Get the color value
+         * Get a color by index
          *
          * @param {number} index The color number
-         * @returns {string} the color value
+         * @returns {string} the color code
          */
         getcolor: (index) => colors[~~index % colors.length],
 
@@ -824,20 +825,6 @@ export default function litecanvas(settings = {}) {
         _initialized = true
         setupCanvas()
 
-        // pause on page blur
-        on(root, 'blur', () => {
-            cancelAnimationFrame(_rafid)
-            _rafid = 0
-        })
-
-        // resume on page focus if paused
-        on(root, 'focus', () => {
-            if (!_rafid) {
-                _lastFrame = performance.now()
-                _rafid = requestAnimationFrame(drawFrame)
-            }
-        })
-
         // listen the default events
         const source = settings.loop ? settings.loop : root
         for (const event in _events) {
@@ -852,11 +839,6 @@ export default function litecanvas(settings = {}) {
         // listen window resize event
         on(root, 'resize', pageResized)
         pageResized()
-
-        // start the game loop
-        instance.emit('init')
-        _lastFrame = performance.now()
-        _rafid = requestAnimationFrame(drawFrame)
 
         // default mouse/touch handlers
         if (settings.tapEvents) {
@@ -972,6 +954,24 @@ export default function litecanvas(settings = {}) {
                 }
             })
         }
+
+        // listen browser focus/blur events and pause the update/draw loop
+        if (settings.pauseOnBlur) {
+            on(root, 'blur', () => {
+                _rafid = null
+            })
+            on(root, 'focus', () => {
+                if (!_rafid) {
+                    _lastFrame = performance.now()
+                    _rafid = requestAnimationFrame(drawFrame)
+                }
+            })
+        }
+
+        // start the game loop
+        instance.emit('init')
+        _lastFrame = performance.now()
+        _rafid = requestAnimationFrame(drawFrame)
     }
 
     /**
@@ -992,8 +992,8 @@ export default function litecanvas(settings = {}) {
         }
 
         if (ticks) {
-            _drawCount++
             instance.emit('draw')
+            _drawCount++
             _drawTime += _stepMs * ticks
             if (_drawTime + _accumulated >= 1000) {
                 instance.setvar('FPS', _drawCount)
