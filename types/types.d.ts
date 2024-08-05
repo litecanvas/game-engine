@@ -552,6 +552,14 @@ type LitecanvasInstance = {
      * @returns number[]
      */
     mousepos(): number[]
+    /**
+     * The scale of the game's time delta (dt).
+     * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
+     * A value of 0 freezes time and is effectively equivalent to pausing.
+     *
+     * @param {number} value
+     */
+    timescale(value: number): void
 
     /** PLUGINS API */
     /**
@@ -620,6 +628,11 @@ type LitecanvasOptions = {
      * The game screen height.
      */
     height?: number
+    /**
+     * Determines whether the game loop should be paused when the "blur" event happens.
+     * Default: `true`
+     */
+    pauseOnBlur?: boolean
     /**
      * If `true` (default) scales the canvas to fill the screen, but preserving the aspect ratio.
      * Only works if a game screen width was specified.
