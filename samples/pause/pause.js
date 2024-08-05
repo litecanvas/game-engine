@@ -1,5 +1,5 @@
 /**
- * How to pause your game
+ * How to pause your game without `timescale(0)`
  */
 litecanvas({
     // pauseOnBlur: false,
