@@ -1,4 +1,4 @@
-/* litecanvas v0.42.1 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.42.2 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './palette'
 import { sounds } from './sounds'
@@ -739,8 +739,8 @@ export default function litecanvas(settings = {}) {
          *
          * @param {pluginCallback} callback
          */
-        use: (callback, config = {}) => {
-            callback.__config = config
+        use(callback, config = {}) {
+            callback.__conf = config
             _initialized ? loadPlugin(callback) : _plugins.push(callback)
         },
 
@@ -1079,7 +1079,7 @@ export default function litecanvas(settings = {}) {
      * @param {pluginCallback} callback
      */
     function loadPlugin(callback) {
-        const pluginData = callback(instance, _helpers, callback.__config)
+        const pluginData = callback(instance, _helpers, callback.__conf)
         if ('object' === typeof pluginData) {
             for (const key in pluginData) {
                 instance.setvar(key, pluginData[key])
