@@ -1,4 +1,4 @@
-/* litecanvas v0.42.2 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.42.3 | https://github.com/litecanvas/game-engine */
 import './zzfx'
 import { colors } from './palette'
 import { sounds } from './sounds'
@@ -1035,11 +1035,6 @@ export default function litecanvas(settings = {}) {
 
         if (!_canvas.parentNode) document.body.appendChild(_canvas)
 
-        if (!settings.antialias || settings.pixelart) {
-            _ctx.imageSmoothingEnabled = false
-            _canvas.style.imageRendering = 'pixelated'
-        }
-
         // canvas CSS tweaks
         _canvas.style.display = 'block'
         if (_fullscreen) {
@@ -1069,6 +1064,12 @@ export default function litecanvas(settings = {}) {
         instance.setvar('CENTERX', instance.WIDTH / 2)
         instance.setvar('CENTERY', instance.HEIGHT / 2)
 
+        // restore canvas image rendering properties
+        if (!settings.antialias || settings.pixelart) {
+            _ctx.imageSmoothingEnabled = false
+            _canvas.style.imageRendering = 'pixelated'
+        }
+
         // fix the font align and baseline
         instance.textalign(_textAlign, _textBaseline)
 
@@ -1089,7 +1090,7 @@ export default function litecanvas(settings = {}) {
 
     if (settings.global) {
         if (root.__litecanvas) {
-            throw new Error('Cannot instantiate litecanvas globally twice')
+            throw 'Cannot instantiate litecanvas globally twice'
         }
         Object.assign(root, instance)
         root.__litecanvas = true
