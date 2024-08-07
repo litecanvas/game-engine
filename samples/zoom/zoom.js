@@ -40,14 +40,13 @@ function update(dt) {
 }
 
 function draw() {
-    cls(3)
+    cls(1)
 
     push()
 
     translate(CENTERX, CENTERY)
     scale(zoomLevel)
     translate(-CENTERX, -CENTERY)
-    console.log(zoomLevel)
 
     image(CENTERX - coin.width / 2, CENTERY - coin.height / 2, coin)
 
