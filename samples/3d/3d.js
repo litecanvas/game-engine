@@ -69,7 +69,7 @@ function matmul(a, b) {
     const bcols = b[0].length
     const brows = b.length
 
-    if (acols !== brows) throw new Error('Invalid matrixes')
+    if (acols !== brows) throw 'Invalid matrixes'
 
     const res = []
     for (let i = 0; i < arows; i++) {
