@@ -668,11 +668,6 @@ type LitecanvasOptions = {
      * - `window.resized(): void`
      */
     loop?: LitecanvasGameLoop
-    /**
-     * The default font size for texts.
-     * Default: 32
-     */
-    defaultTextSize?: number
 }
 
 type LitecanvasGameLoop = {

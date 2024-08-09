@@ -1,15 +1,12 @@
 litecanvas()
 
 function init() {
-    size = 25
     margin = 60
+    textsize(40) // default is 32
 }
 
 function draw() {
     cls(0)
-
-    // set the text size (default = 32)
-    textsize(size)
 
     // draw next texts using "sans-serif" font
     textfont('sans-serif')

@@ -1,4 +1,4 @@
-/* litecanvas v0.44.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.45.0 | https://github.com/litecanvas/game-engine */
 import './zzfx.js'
 import { colors } from './palette.js'
 import { sounds } from './sounds.js'
@@ -31,7 +31,6 @@ export default function litecanvas(settings = {}) {
             loop: null,
             tapEvents: true,
             pauseOnBlur: true,
-            defaultTextSize: 32,
         }
 
     // setup the settings default values
@@ -76,7 +75,7 @@ export default function litecanvas(settings = {}) {
         /** @type {string} */
         _fontStyle = '',
         /** @type {number} */
-        _fontSize = settings.defaultTextSize,
+        _fontSize = 32,
         /**
          * default game events
          */
@@ -992,6 +991,7 @@ export default function litecanvas(settings = {}) {
             instance.emit('draw')
             _drawCount++
             _drawTime += _stepMs * ticks
+
             if (_drawTime + _accumulated >= 1000) {
                 instance.setvar('FPS', _drawCount)
                 _drawCount = 0

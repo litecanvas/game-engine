@@ -13,7 +13,6 @@
  * @property {boolean} [global=true]
  * @property {boolean} [tapEvents=true]
  * @property {LitecanvasGameLoop} [loop]
- * @property {number} [defaultTextSize=32]
  */
 
 /**
