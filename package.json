@@ -6,6 +6,7 @@
     "author": "Luiz Bills <luizbills@pm.me>",
     "contributors": [],
     "devDependencies": {
+        "ava": "^6.1.3",
         "esbuild": "^0.20.1"
     },
     "homepage": "https://litecanvas.github.io/about.html",
@@ -20,6 +21,8 @@
     "main": "src/index.js",
     "type": "module",
     "scripts": {
+        "test": "ava",
+        "dev:test": "ava --watch",
         "dev": "esbuild src/index.js --bundle --watch --outfile=dist/dist.js --servedir=.",
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
@@ -40,5 +43,11 @@
         "dist",
         "src",
         "types"
-    ]
+    ],
+    "ava": {
+        "files": [
+            "tests/**/*",
+            "!tests/_mocks"
+        ]
+    }
 }
