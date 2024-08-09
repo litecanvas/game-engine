@@ -80,12 +80,12 @@ globalThis.zzfx = (
                 (a < e
                     ? a / e
                     : a < e + m
-                    ? 1 - ((a - e) / m) * (1 - w)
-                    : a < e + m + r
-                    ? w
-                    : a < h - c
-                    ? ((h - a - c) / t) * w
-                    : 0)),
+                      ? 1 - ((a - e) / m) * (1 - w)
+                      : a < e + m + r
+                        ? w
+                        : a < h - c
+                          ? ((h - a - c) / t) * w
+                          : 0)),
             (f = c
                 ? f / 2 +
                   (c > a
