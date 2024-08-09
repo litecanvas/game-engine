@@ -16,12 +16,16 @@ function tapped(dt) {
     sfx(0)
 }
 
+function update() {
+    // nothing here
+}
+
 function draw() {
     cls(0)
     textalign('center', 'middle')
     text(CENTERX, CENTERY - 50, 'Open your browser console', 3)
     text(CENTERX, CENTERY, 'FOO = ' + FOO, 3)
-    text(CENTERX, CENTERY + 50, sayhello(), 3)
+    text(CENTERX, CENTERY + 50, sayhello('Everyone'), 3)
 }
 
 function pluginTest(engine, { settings, colors, sounds }, config) {
@@ -87,8 +91,8 @@ function pluginTest(engine, { settings, colors, sounds }, config) {
     // and finally...
     return {
         // you can return new litecanvas functions
-        sayhello() {
-            return 'Hello World'
+        sayhello(name) {
+            return 'Hello ' + name
         },
 
         // or override existing functions

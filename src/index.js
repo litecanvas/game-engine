@@ -80,14 +80,14 @@ export default function litecanvas(settings = {}) {
          * default game events
          */
         _events = {
-            init: [],
-            update: [],
-            draw: [],
-            resized: [],
-            tap: [],
-            untap: [],
-            tapping: [],
-            tapped: [],
+            init: false,
+            update: false,
+            draw: false,
+            resized: false,
+            tap: false,
+            untap: false,
+            tapping: false,
+            tapped: false,
         },
         /**
          * Helpers to be used by plugins
@@ -749,14 +749,12 @@ export default function litecanvas(settings = {}) {
          * @returns {function} a function to remove the listener
          */
         listen(event, callback, highPriority = false) {
-            _events[event] = _events[event] || []
-            _events[event][highPriority ? 'unshift' : 'push'](callback)
+            _events[event] = _events[event] || [[], []]
+            const size = _events[event][highPriority ? 0 : 1].push(callback)
 
             // return a function to remove this event listener
             return () => {
-                _events[event] = _events[event].filter(
-                    (item) => item !== callback
-                )
+                _events[event][highPriority ? 0 : 1].splice(size - 1, 1)
             }
         },
 
@@ -768,8 +766,10 @@ export default function litecanvas(settings = {}) {
          */
         emit(event, ...args) {
             if (!_events[event]) return
-            for (let i = 0; i < _events[event].length; ++i) {
-                _events[event][i](...args)
+            for (const list of _events[event]) {
+                for (const callback of list) {
+                    callback(...args)
+                }
             }
         },
 
