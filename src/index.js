@@ -1,4 +1,4 @@
-/* litecanvas v0.45.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.46.0 | https://github.com/litecanvas/game-engine */
 import './zzfx.js'
 import { colors } from './palette.js'
 import { sounds } from './sounds.js'
@@ -76,6 +76,8 @@ export default function litecanvas(settings = {}) {
         _fontStyle = '',
         /** @type {number} */
         _fontSize = 32,
+        /** @type {number} */
+        _rng_seed = Date.now(),
         /**
          * default game events
          */
@@ -223,12 +225,21 @@ export default function litecanvas(settings = {}) {
         /** RNG API */
         /**
          * Generates a pseudorandom float between min (inclusive) and max (exclusive)
+         * using the  Linear Congruential Generator (LCG) algorithm.
          *
          * @param {number} [min=0.0]
          * @param {number} [max=1.0]
          * @returns {number} the random number
          */
-        rand: (min = 0.0, max = 1.0) => Math.random() * (max - min) + min,
+        rand: (min = 0.0, max = 1.0) => {
+            const a = 1664525
+            const c = 1013904223
+            const m = 4294967296
+
+            _rng_seed = (a * _rng_seed + c) % m
+
+            return (_rng_seed / m) * (max - min) + min
+        },
 
         /**
          * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
@@ -239,6 +250,17 @@ export default function litecanvas(settings = {}) {
          */
         randi: (min = 0, max = 1) =>
             instance.floor(instance.rand() * (max - min + 1) + min),
+
+        /**
+         * If a value is passed, initializes the random number generator with an explicit seed value.
+         * Otherwise, returns the current seed state.
+         *
+         * @param {number} value
+         * @returns {number} the seed state
+         */
+        seed: (value) => {
+            return value ? (_rng_seed = value) : _rng_seed
+        },
 
         /** BASIC GRAPHICS API */
         /**
