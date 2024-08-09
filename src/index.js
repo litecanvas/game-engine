@@ -1,4 +1,4 @@
-/* litecanvas v0.43.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.44.0 | https://github.com/litecanvas/game-engine */
 import './zzfx.js'
 import { colors } from './palette.js'
 import { sounds } from './sounds.js'
@@ -23,14 +23,15 @@ export default function litecanvas(settings = {}) {
             fullscreen: true,
             width: null,
             height: null,
-            pauseOnBlur: true,
             autoscale: true,
             pixelart: false,
             antialias: true,
             canvas: null,
             global: true,
-            tapEvents: true,
             loop: null,
+            tapEvents: true,
+            pauseOnBlur: true,
+            defaultTextSize: 32,
         }
 
     // setup the settings default values
@@ -75,7 +76,7 @@ export default function litecanvas(settings = {}) {
         /** @type {string} */
         _fontStyle = '',
         /** @type {number} */
-        _fontSize = 32,
+        _fontSize = settings.defaultTextSize,
         /**
          * default game events
          */
@@ -266,13 +267,7 @@ export default function litecanvas(settings = {}) {
          */
         rect(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
-            _ctx[radii ? 'roundRect' : 'rect'](
-                ~~x,
-                ~~y,
-                ~~width,
-                ~~height,
-                radii
-            )
+            _ctx[radii ? 'roundRect' : 'rect'](~~x, ~~y, width, height, radii)
             instance.stroke(color)
         },
 
@@ -288,13 +283,7 @@ export default function litecanvas(settings = {}) {
          */
         rectfill(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
-            _ctx[radii ? 'roundRect' : 'rect'](
-                ~~x,
-                ~~y,
-                ~~width,
-                ~~height,
-                radii
-            )
+            _ctx[radii ? 'roundRect' : 'rect'](~~x, ~~y, width, height, radii)
             instance.fill(color)
         },
 
@@ -308,7 +297,7 @@ export default function litecanvas(settings = {}) {
          */
         circ(x, y, radius, color = 0) {
             _ctx.beginPath()
-            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
+            _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
             _ctx.closePath()
             instance.stroke(color)
         },
@@ -323,7 +312,7 @@ export default function litecanvas(settings = {}) {
          */
         circfill(x, y, radius, color = 0) {
             _ctx.beginPath()
-            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
+            _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
             _ctx.closePath()
             instance.fill(color)
         },
@@ -377,7 +366,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=3] the color index (generally from 0 to 7)
          */
         text(x, y, text, color = 3) {
-            _ctx.font = `${_fontStyle || ''} ${~~_fontSize}px ${_fontFamily}`
+            _ctx.font = `${_fontStyle || ''} ${_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = instance.getcolor(color)
             _ctx.fillText(text, ~~x, ~~y)
         },
@@ -432,7 +421,7 @@ export default function litecanvas(settings = {}) {
          */
         textmetrics(text, size) {
             // prettier-ignore
-            _ctx.font = `${_fontStyle || ''} ${~~(size || _fontSize)}px ${_fontFamily}`
+            _ctx.font = `${_fontStyle || ''} ${(size || _fontSize)}px ${_fontFamily}`
             metrics = _ctx.measureText(text)
             metrics.height =
                 metrics.actualBoundingBoxAscent +
@@ -668,9 +657,7 @@ export default function litecanvas(settings = {}) {
                 return
             }
 
-            let z = Array.isArray(sound)
-                ? sound
-                : sounds[~~sound % sounds.length]
+            let z = Array.isArray(sound) ? sound : sounds[sound % sounds.length]
             if (volume !== 1 || pitch || randomness) {
                 z = [...z] // clone the sound to not modify the original
                 z[0] = (Number(volume) || 1) * (z[0] || 1)
@@ -801,8 +788,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          */
         resize(width, height) {
-            instance.setvar('WIDTH', (_canvas.width = ~~width))
-            instance.setvar('HEIGHT', (_canvas.height = ~~(height || width)))
+            instance.setvar('WIDTH', (_canvas.width = width))
+            instance.setvar('HEIGHT', (_canvas.height = height || width))
             pageResized()
         },
     }
@@ -834,15 +821,15 @@ export default function litecanvas(settings = {}) {
         _initialized = true
         setupCanvas()
 
-        // listen the default events
+        // add listeners for default events
         const source = settings.loop ? settings.loop : root
-        for (const event in _events) {
+        for (const event of Object.keys(_events)) {
             if (source[event]) instance.listen(event, source[event])
         }
 
         // load plugins
-        for (let i = 0; i < _plugins.length; i++) {
-            loadPlugin(_plugins[i])
+        for (const plugin of _plugins) {
+            loadPlugin(plugin)
         }
 
         // listen window resize event
@@ -909,8 +896,7 @@ export default function litecanvas(settings = {}) {
                 ev.preventDefault()
                 /** @type {TouchList} touches */
                 const touches = ev.changedTouches
-                for (let i = 0; i < touches.length; i++) {
-                    const touch = touches[i]
+                for (const touch of touches) {
                     const [x, y] = _getXY(touch.pageX, touch.pageY)
                     instance.emit('tap', x, y, touch.identifier + 1)
                     _registerTap(touch.identifier + 1, x, y)
@@ -921,8 +907,7 @@ export default function litecanvas(settings = {}) {
                 ev.preventDefault()
                 /** @type {TouchList} touches */
                 const touches = ev.changedTouches
-                for (let i = 0; i < touches.length; i++) {
-                    const touch = touches[i]
+                for (const touch of touches) {
                     const [x, y] = _getXY(touch.pageX, touch.pageY)
                     instance.emit('tapping', x, y, touch.identifier + 1)
                     _updateTap(touch.identifier + 1, x, y)
@@ -1078,8 +1063,8 @@ export default function litecanvas(settings = {}) {
     function loadPlugin(callback) {
         const pluginData = callback(instance, _helpers, callback.__conf)
         if ('object' === typeof pluginData) {
-            for (const key in pluginData) {
-                instance.setvar(key, pluginData[key])
+            for (const [key, value] of Object.entries(pluginData)) {
+                instance.setvar(key, value)
             }
         }
     }

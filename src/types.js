@@ -1,7 +1,7 @@
 /**
  * @typedef LitecanvasOptions
  * @type {object}
- * @property {number} [fps=60] - target FPS
+ * @property {number} [fps=60]
  * @property {boolean} [fullscreen=true]
  * @property {number} [width]
  * @property {number} [height]
@@ -13,6 +13,7 @@
  * @property {boolean} [global=true]
  * @property {boolean} [tapEvents=true]
  * @property {LitecanvasGameLoop} [loop]
+ * @property {number} [defaultTextSize=32]
  */
 
 /**
