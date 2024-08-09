@@ -76,10 +76,6 @@ export default function litecanvas(settings = {}) {
         _fontStyle = '',
         /** @type {number} */
         _fontSize = 32,
-        /** @type {string} */
-        _textAlign = 'start',
-        /** @type {string} */
-        _textBaseline = 'top',
         /**
          * default game events
          */
@@ -422,8 +418,8 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
          */
         textalign(align, baseline) {
-            _ctx.textAlign = _textAlign = align
-            _ctx.textBaseline = _textBaseline = baseline
+            if (align) _ctx.textAlign = align
+            if (baseline) _ctx.textBaseline = baseline
         },
 
         /**
@@ -1005,6 +1001,9 @@ export default function litecanvas(settings = {}) {
         }
 
         if (ticks) {
+            // default custom values for textAlign & textBaseline
+            instance.textalign('start', 'top')
+
             instance.emit('draw')
             _drawCount++
             _drawTime += _stepMs * ticks
@@ -1069,9 +1068,6 @@ export default function litecanvas(settings = {}) {
             _ctx.imageSmoothingEnabled = false
             _canvas.style.imageRendering = 'pixelated'
         }
-
-        // fix the font align and baseline
-        instance.textalign(_textAlign, _textBaseline)
 
         instance.emit('resized', _scale)
     }

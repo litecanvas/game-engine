@@ -17,11 +17,11 @@ function tapped(dt) {
 }
 
 function draw() {
-    // cls(0)
-    textalign('center')
-    text(CENTERX, CENTERY, 'Open your browser console', 3)
-    text(CENTERX, CENTERY + 50, 'FOO = ' + FOO, 3)
-    text(CENTERX, CENTERY + 100, sayhello(), 3)
+    cls(0)
+    textalign('center', 'middle')
+    text(CENTERX, CENTERY - 50, 'Open your browser console', 3)
+    text(CENTERX, CENTERY, 'FOO = ' + FOO, 3)
+    text(CENTERX, CENTERY + 50, sayhello(), 3)
 }
 
 function pluginTest(engine, { settings, colors, sounds }, config) {

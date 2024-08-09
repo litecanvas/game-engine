@@ -31,10 +31,6 @@ const shake = {
 
 let ELAPSED = 0
 
-function init() {
-    textalign('center')
-}
-
 function tap() {
     shake.enabled = true
 }
@@ -60,6 +56,8 @@ function draw() {
     push()
     translate(shake.x, shake.y)
     circfill(ball.x, ball.y, ball.radius, ball.color)
+
+    textalign('center')
     text(ball.x, ball.y + ball.radius + 40, 'TAP TO SHAKE')
     pop()
 }

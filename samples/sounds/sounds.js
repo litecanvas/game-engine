@@ -48,9 +48,7 @@ for (let i = 0; i < sounds; i++) {
     buttons.appendChild(button)
 }
 
-function init() {
-    textalign('center', 'middle')
-}
+function init() {}
 
 function update() {
     // do nothing
@@ -60,6 +58,8 @@ function draw() {
     cls('custom' === arg ? 4 : arg)
     if (arg !== null) {
         circfill(CENTERX, CENTERY, 75, 3)
+
+        textalign('center', 'middle')
         textsize(20)
         text(CENTERX, CENTERY, `sfx(${arg});`, 0)
     }
