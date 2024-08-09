@@ -27,7 +27,8 @@
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
         "format": "npx prettier -w src/* samples/* types/*",
-        "prepare": "npm run build && npm run gzip-size"
+        "prepare": "npm run build && npm run gzip-size",
+        "prepublishOnly": "npm test"
     },
     "keywords": [
         "canvas",
