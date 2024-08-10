@@ -1,4 +1,4 @@
-/* litecanvas v0.46.0 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.46.1 | https://github.com/litecanvas/game-engine */
 import './zzfx.js'
 import { colors } from './palette.js'
 import { sounds } from './sounds.js'
@@ -259,7 +259,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the seed state
          */
         seed: (value) => {
-            return null == value ? _rng_seed : (_rng_seed = value)
+            return null == value ? _rng_seed : (_rng_seed = ~~value)
         },
 
         /** BASIC GRAPHICS API */
