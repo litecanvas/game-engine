@@ -1,4 +1,4 @@
-/* litecanvas v0.46.1 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.46.2 | https://github.com/litecanvas/game-engine */
 import './zzfx.js'
 import { colors } from './palette.js'
 import { sounds } from './sounds.js'
@@ -182,7 +182,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} max
          * @returns {number}
          */
-        clamp: (value, min, max) => Math.min(Math.max(value, min), max),
+        clamp: (value, min, max) => {
+            if (value < min) return min
+            if (value > max) return max
+            return value
+        },
 
         /**
          * Wraps a number between `min` (inclusive) and `max` (exclusive).
