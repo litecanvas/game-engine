@@ -1,5 +1,5 @@
 /* litecanvas v0.47.0 | https://github.com/litecanvas/game-engine */
-import './zzfx.js'
+import { zzfx } from './zzfx.js'
 import { colors } from './palette.js'
 import { sounds } from './sounds.js'
 
@@ -1101,7 +1101,7 @@ export default function litecanvas(settings = {}) {
             throw 'Cannot instantiate litecanvas globally twice'
         }
         Object.assign(root, instance)
-        root.__litecanvas = true
+        root.__litecanvas = instance
     }
 
     if ('loading' === document.readyState) {

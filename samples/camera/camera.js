@@ -15,12 +15,6 @@ const camera = {
     dx: 0,
     dy: 0,
 
-    // check if a region is currently visible in camera
-    viewing(ox, oy, ow, oh) {
-        const { x, y } = camera
-        return colrect(x, y, WIDTH, HEIGHT, ox, oy, ow, oh)
-    },
-
     update() {
         // animate the camera position using `lerp`
         camera.x = lerp(camera.x, camera.dx, 0.05)
@@ -60,24 +54,24 @@ function draw() {
     // setup the camera
     push()
     translate(-camera.x, -camera.y)
+
+    // draw the game objects
     for (let i = 0; i < objs.length; i++) {
         const o = objs[i]
         let [x, y, w, h] = o.stats
         h = h || w
 
-        // use the `camera.viewing` to only draw visible objects
         if ('rect' === o.type) {
-            if (!camera.viewing(x, y, w, h)) continue
             rectfill(x, y, w, h, o.color)
             stroke(o.color + 1)
         } else {
-            if (!camera.viewing(x - w, y - w, w * 2, h * 2)) continue
             circfill(x, y, w, o.color)
             stroke(o.color + 1)
         }
     }
+
     pop() // reset the camera
 
-    // draw a fixed UI element
+    // draw UI elements (fixed in camera)
     text(10, 10, FPS, 3)
 }
