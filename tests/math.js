@@ -64,7 +64,7 @@ test('wrap', (t) => {
 test('map', (t) => {
     t.plan(2)
 
-    // without contrains
+    // without contrains (default behavior)
     t.true(g.map(150, 0, 100, 0, 1) === 1.5)
     // with contrains
     t.true(g.map(150, 0, 100, 0, 1, true) === 1)
