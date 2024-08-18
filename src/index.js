@@ -1,9 +1,7 @@
-/* litecanvas v0.46.2 | https://github.com/litecanvas/game-engine */
+/* litecanvas v0.47.0 | https://github.com/litecanvas/game-engine */
 import './zzfx.js'
 import { colors } from './palette.js'
 import { sounds } from './sounds.js'
-
-const root = globalThis
 
 /**
  * The litecanvas constructor
@@ -13,7 +11,8 @@ const root = globalThis
  */
 export default function litecanvas(settings = {}) {
     // helpers
-    const PI = Math.PI,
+    const root = globalThis,
+        PI = Math.PI,
         TWO_PI = PI * 2,
         /** @type {(elem:HTMLElement, evt:string, callback:Function)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
@@ -218,6 +217,8 @@ export default function litecanvas(settings = {}) {
 
         /**
          * Maps a number from one range to a value between 0 and 1.
+         * Identical to `map(value, min, max, 0, 1)`.
+         * Note: Numbers outside the range are not clamped to 0 and 1.
          *
          * @param {number} value
          * @param {number} min
@@ -1111,5 +1112,3 @@ export default function litecanvas(settings = {}) {
 
     return instance
 }
-
-root.litecanvas = litecanvas

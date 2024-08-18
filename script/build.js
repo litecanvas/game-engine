@@ -4,7 +4,7 @@ import fs from 'node:fs'
 let size
 
 await esbuild.build({
-    entryPoints: ['src/index.js'],
+    entryPoints: ['src/web.js'],
     outfile: 'dist/dist.js',
     bundle: true,
     legalComments: 'eof',
@@ -14,7 +14,7 @@ size = filesize('dist/dist.js')
 console.log(`  dist/dist.js (${size})`)
 
 await esbuild.build({
-    entryPoints: ['src/index.js'],
+    entryPoints: ['src/web.js'],
     outfile: 'dist/dist.min.js',
     bundle: true,
     minify: true,
