@@ -1,5 +1,4 @@
 // ZzFXMicro - Zuper Zmall Zound Zynth - v1.3.0 by Frank Force | https://github.com/KilledByAPixel/ZzFX
-const zzfxX = new AudioContext() // audio context
 export const zzfx = (
     p = 1,
     k = 0.05,
@@ -108,3 +107,5 @@ export const zzfx = (
     b.connect(zzfxX.destination)
     b.start()
 }
+
+const zzfxX = /** @__PURE__ */ new AudioContext()
