@@ -573,10 +573,10 @@ type LitecanvasInstance = {
     /**
      * Add a game loop event listener
      *
-     * @param {string} event should be "init", "update", "draw" or "resized"
+     * @param {string} event The game event type
      * @param {function} callback the function that is called when the event occurs
      * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
-     * @returns {function?} a function to remove the listener or `undefined` if passed a invalid event
+     * @returns {function?} a function to remove the listener
      */
     listen(
         event: string,
@@ -668,6 +668,10 @@ type LitecanvasOptions = {
      * - `window.update(dt: number): void`
      * - `window.draw(): void`
      * - `window.resized(): void`
+     * - `window.tap(tapX: number, tapY: number, tapId: number): void`
+     * - `window.untap(tapX: number, tapY: number, tapId: number): void`
+     * - `window.tapped(tapX: number, tapY: number, tapId: number): void`
+     * - `window.tapping(tapX: number, tapY: number, tapId: number): void`
      */
     loop?: LitecanvasGameLoop
 }
@@ -677,6 +681,10 @@ type LitecanvasGameLoop = {
     update?: (dt: number) => void
     draw?: () => void
     resized?: () => void
+    tap?: (tapX: number, tapY: number, tapId: number) => void
+    untap?: (tapX: number, tapY: number, tapId: number) => void
+    tapped?: (tapX: number, tapY: number, tapId: number) => void
+    tapping?: (tapX: number, tapY: number, tapId: number) => void
 }
 
 type drawCallback = (
