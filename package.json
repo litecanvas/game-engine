@@ -1,6 +1,6 @@
 {
     "name": "litecanvas",
-    "version": "0.47.2",
+    "version": "0.48.0",
     "description": "Lightweight HTML5 canvas engine suitable for small games and animations.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
@@ -17,9 +17,15 @@
     "bugs": {
         "url": "https://github.com/litecanvas/game-engine/issues"
     },
-    "types": "types/index.d.ts",
     "main": "src/index.js",
     "type": "module",
+    "exports": {
+        "./palette": "./src/palette.js",
+        "./colors": "./src/palette.js",
+        "./sounds": "./src/sounds.js",
+        "./types": "./src/types.js"
+    },
+    "types": "types/index.d.ts",
     "scripts": {
         "test": "ava",
         "dev:test": "ava --watch",
