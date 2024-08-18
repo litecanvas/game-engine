@@ -107,7 +107,7 @@ declare global {
     ): number
     /**
      * Maps a number from one range to a value between 0 and 1.
-     * Identical to `map(value, low, high, 0, 1)`.
+     * Identical to `map(value, min, max, 0, 1)`.
      * Note: Numbers outside the range are not clamped to 0 and 1.
      *
      * @param {number} value
