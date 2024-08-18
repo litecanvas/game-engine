@@ -586,10 +586,10 @@ declare global {
     /**
      * Add a game loop event listener
      *
-     * @param {string} event should be "init", "update", "draw" or "resized"
+     * @param {string} event The game event type
      * @param {function} callback the function that is called when the event occurs
      * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
-     * @returns {function?} a function to remove the listener or `undefined` if passed a invalid event
+     * @returns {function?} a function to remove the listener
      */
     function listen(
         event: string,
