@@ -27,10 +27,10 @@
  * @property {(dt: number) => void} [update]
  * @property {() => void} [draw]
  * @property {() => void} [resized]
- * @property {(x: number, y: number, id: number) => void} [tap]
- * @property {(x: number, y: number, id: number) => void} [untap]
- * @property {(x: number, y: number, id: number) => void} [tapping]
- * @property {(x: number, y: number, id: number) => void} [tapped]
+ * @property {(tapX: number, tapY: number, tapId: number) => void} [tap]
+ * @property {(tapX: number, tapY: number, tapId: number) => void} [untap]
+ * @property {(tapX: number, tapY: number, tapId: number) => void} [tapping]
+ * @property {(tapX: number, tapY: number, tapId: number) => void} [tapped]
  */
 
 /**
