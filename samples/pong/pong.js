@@ -66,7 +66,7 @@ function update(dt) {
     if (colrect(ballX, ballY, ballSize, ballSize, padX, padY, padW, 1)) {
         dirY = -1
         score += 10
-        sfx(0)
+        sfx(1)
     }
 }
 
