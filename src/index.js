@@ -675,7 +675,7 @@ export default function litecanvas(settings = {}) {
          * @returns {AudioBufferSourceNode}
          * @see https://github.com/KilledByAPixel/ZzFX
          */
-        sfx(sound = 0, volume = 1, pitch = 0, randomness = 0) {
+        sfx(sound = 0, volume = 1, pitch = 0, randomness = null) {
             if (
                 navigator.userActivation &&
                 !navigator.userActivation.hasBeenActive
@@ -687,7 +687,7 @@ export default function litecanvas(settings = {}) {
             if (volume !== 1 || pitch || randomness) {
                 z = [...z] // clone the sound to not modify the original
                 z[0] = (Number(volume) || 1) * (z[0] || 1)
-                z[1] = randomness > 0 ? randomness : 0
+                z[1] = randomness != null ? randomness : z[1]
                 z[10] = ~~z[10] + ~~pitch
             }
 
