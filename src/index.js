@@ -10,11 +10,10 @@ import './types.js'
  * @returns {LitecanvasInstance}
  */
 export default function litecanvas(settings = {}) {
-    // helpers
     const root = globalThis,
         PI = Math.PI,
         TWO_PI = PI * 2,
-        /** @type {(elem:HTMLElement, evt:string, callback:Function)=>void} */
+        /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>boolean?)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         /** @type {LitecanvasOptions} */
         defaults = {
@@ -321,7 +320,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} radius
          * @param {number} [color=0] the color index (generally from 0 to 7)
          */
-        circ(x, y, radius, color = 0) {
+        circ(x, y, radius, color) {
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
             _ctx.closePath()
@@ -336,7 +335,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} radius
          * @param {number} [color=0] the color index (generally from 0 to 7)
          */
-        circfill(x, y, radius, color = 0) {
+        circfill(x, y, radius, color) {
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
             _ctx.closePath()
@@ -352,7 +351,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y2
          * @param {number} [color=0] the color index (generally from 0 to 7)
          */
-        line(x1, y1, x2, y2, color = 0) {
+        line(x1, y1, x2, y2, color) {
             _ctx.beginPath()
             _ctx.moveTo(~~x1, ~~y1)
             _ctx.lineTo(~~x2, ~~y2)
@@ -574,13 +573,13 @@ export default function litecanvas(settings = {}) {
             _ctx[resetFirst ? 'setTransform' : 'transform'](a, b, c, d, e, f),
 
         /**
-         * Sets the alpha (transparency) value to apply when drawing new shapes and images
+         * Sets the alpha (opacity) value to apply when drawing new shapes and images
          *
          * @param {number} alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
          */
-        alpha(alpha) {
-            _ctx.globalAlpha = alpha
+        alpha(value) {
+            _ctx.globalAlpha = instance.clamp(value, 0, 1)
         },
 
         /**
@@ -597,7 +596,7 @@ export default function litecanvas(settings = {}) {
         /**
          * Fills the current or given path with a given color.
          *
-         * @param {number} color
+         * @param {number} [color=0]
          * @param {Path2D} [path]
          */
         fill(color, path) {
@@ -608,7 +607,7 @@ export default function litecanvas(settings = {}) {
         /**
          * Outlines the current or given path with a given color.
          *
-         * @param {number} color
+         * @param {number} [color=0]
          * @param {Path2D} [path]
          */
         stroke(color, path) {
@@ -666,14 +665,17 @@ export default function litecanvas(settings = {}) {
 
         /** SOUND API */
         /**
-         * Play a defined sound or a ZzFX array of params
+         * Play a predefined sound or a ZzFX array of params.
+         * By default has 4 predefined sounds.
          *
-         * @param {number|number[]} [sound=0] the sound index (from 0 to 7) or a ZzFX array of params
+         * @param {number|number[]} [sound=0] the sound index (from 0 to 3) or a ZzFX array of params
          * @param {number} [volume=1]
          * @param {number} [pitch=0]
-         * @param {number} [randomness=0]
+         * @param {number} [randomness=null] an float value between 0 and 1
          * @returns {AudioBufferSourceNode}
+         *
          * @see https://github.com/KilledByAPixel/ZzFX
+         * @see https://github.com/litecanvas/game-engine/blob/main/src/sounds.js
          */
         sfx(sound = 0, volume = 1, pitch = 0, randomness = null) {
             if (
@@ -789,7 +791,7 @@ export default function litecanvas(settings = {}) {
         /**
          * Get a color by index
          *
-         * @param {number} index The color number
+         * @param {number} [index=0] The color number
          * @returns {string} the color code
          */
         getcolor: (index) => colors[~~index % colors.length],

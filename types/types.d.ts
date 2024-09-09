@@ -489,14 +489,16 @@ type LitecanvasInstance = {
 
     /** SOUND API */
     /**
-     * Play a defined sound or a ZzFX array of params
+     * Play a predefined sound or a ZzFX array of params.
+     * By default has 4 predefined sounds.
      *
-     * @param {number|number[]} [sound=0] the sound index (from 0 to 7) or a ZzFX array of params
-     * @param {number} [volume=1]
-     * @param {number} [pitch=0]
-     * @param {number} [randomness=0]
+     * @param {number|number[]} [sound=0] the sound index (from 0 to 3) or a ZzFX array of params
+     * @param {number} [volume=1] the volume factor
+     * @param {number} [pitch=0] a value to increment/decrement the pitch
+     * @param {number} [randomness=null] an float between 0 and 1
      * @returns {AudioBufferSourceNode}
      * @see https://github.com/KilledByAPixel/ZzFX
+     * @see https://github.com/litecanvas/game-engine/blob/main/src/sounds.js
      */
     sfx(
         sound?: number | number[],
