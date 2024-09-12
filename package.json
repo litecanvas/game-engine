@@ -1,6 +1,6 @@
 {
     "name": "litecanvas",
-    "version": "0.50.0",
+    "version": "0.51.0",
     "description": "Lightweight HTML5 canvas engine suitable for small games and animations.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
@@ -50,5 +50,8 @@
             "tests/**/*",
             "!tests/_mocks"
         ]
+    },
+    "dependencies": {
+        "@swc/core": "^1.7.26"
     }
 }

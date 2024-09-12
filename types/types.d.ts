@@ -580,11 +580,7 @@ type LitecanvasInstance = {
      * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
      * @returns {function?} a function to remove the listener
      */
-    listen(
-        event: string,
-        callback: Function,
-        highPriority?: boolean
-    ): Function | null
+    listen(event: string, callback: Function): Function | null
     /**
      * Call all listeners attached to a game event
      *

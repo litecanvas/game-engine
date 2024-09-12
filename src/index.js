@@ -763,13 +763,15 @@ export default function litecanvas(settings = {}) {
          * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
          * @returns {function} a function to remove the listener
          */
-        listen(event, callback, highPriority = false) {
-            _events[event] = _events[event] || [[], []]
-            const size = _events[event][highPriority ? 0 : 1].push(callback)
+        listen(eventName, callback) {
+            _events[eventName] = _events[eventName] || []
+            _events[eventName].push(callback)
 
             // return a function to remove this event listener
             return () => {
-                _events[event][highPriority ? 0 : 1].splice(size - 1, 1)
+                _events[eventName] = _events[eventName].filter(
+                    (x) => callback !== x
+                )
             }
         },
 
@@ -779,13 +781,10 @@ export default function litecanvas(settings = {}) {
          * @param {string} event The game event type
          * @param  {...any} args Arguments passed to all listeners
          */
-        emit(event, ...args) {
-            if (!_events[event]) return
-            for (const list of _events[event]) {
-                for (const callback of list) {
-                    callback(...args)
-                }
-            }
+        emit(eventName, ...args) {
+            _emit('before:' + eventName, ...args)
+            _emit(eventName, ...args)
+            _emit('after:' + eventName, ...args)
         },
 
         /**
@@ -1084,6 +1083,13 @@ export default function litecanvas(settings = {}) {
         }
 
         instance.emit('resized', _scale)
+    }
+
+    function _emit(eventName, ...args) {
+        if (!_events[eventName]) return
+        for (const callback of _events[eventName]) {
+            callback(...args)
+        }
     }
 
     /**

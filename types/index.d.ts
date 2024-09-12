@@ -595,8 +595,7 @@ declare global {
      */
     function listen(
         event: string,
-        callback: Function,
-        highPriority?: boolean
+        callback: Function
     ): Function | null
     /**
      * Call all listeners attached to a game event

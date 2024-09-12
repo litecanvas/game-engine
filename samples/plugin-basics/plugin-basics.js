@@ -56,28 +56,24 @@ function pluginTest(engine, { settings, colors, sounds }, config) {
         console.log('settings.autoscale = false')
     }
 
-    // use the `listen` function to register new game loop listeners
-    // function listen(type: string, callback: function, [highPriority = false]: boolean): void
-    const runBefore = true
+    // the `listen()` function registers game event listeners
+    // function listen(type: string, callback: Function): Function
     engine.listen(
+        // the event name
         'draw',
-
-        // a callback
+        // the event callback
         function () {
             cls(4)
             rectfill(0, 0, 100, 100, 5)
-        },
-
-        // if true, this callback runs before other listeners
-        runBefore
+        }
     )
 
-    // another `listen` example
+    // another `listen()` example
     engine.listen('tapped', function (x, y) {
         console.log(`Tap detected in X=${x} Y=${y}`)
     })
 
-    // the `listen` returns a function that when called removes the listener
+    // the `listen()` returns a function that when called removes that listener
     // example: call this listencer once and then remove it
     let deleteListener = engine.listen('update', () => {
         console.log('JUST ONE TIME!')
