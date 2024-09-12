@@ -50,5 +50,8 @@
             "tests/**/*",
             "!tests/_mocks"
         ]
+    },
+    "dependencies": {
+        "@swc/core": "^1.7.26"
     }
 }

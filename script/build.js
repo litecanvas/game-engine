@@ -1,7 +1,10 @@
-import esbuild from 'esbuild'
 import fs from 'node:fs'
+import esbuild from 'esbuild'
+import { minify } from '@swc/core'
 
 let size
+
+fs.rmSync('dist', { recursive: true, force: true })
 
 await esbuild.build({
     entryPoints: ['src/web.js'],
@@ -13,14 +16,20 @@ await esbuild.build({
 size = filesize('dist/dist.js')
 console.log(`  dist/dist.js (${size})`)
 
-await esbuild.build({
-    entryPoints: ['src/web.js'],
-    outfile: 'dist/dist.min.js',
-    bundle: true,
-    minify: true,
-    legalComments: 'eof',
-    sourcemap: true,
-})
+const minified = await minify(
+    fs.readFileSync('dist/dist.js', { encoding: 'utf-8' }),
+    {
+        compress: {
+            drop_console: true,
+            // unsafe: true,
+        },
+        mangle: true,
+        // sourceMap: true,
+    }
+)
+
+fs.writeFileSync('dist/dist.min.js', minified.code)
+// fs.writeFileSync('dist/dist.min.map', minified.map)
 
 size = filesize('dist/dist.min.js')
 console.log(`  dist/dist.min.js (${size})`)
