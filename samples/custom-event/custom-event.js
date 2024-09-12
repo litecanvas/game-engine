@@ -30,3 +30,13 @@ const unlistenThisEvent = listen('player-moved', (player, x, y) => {
         color = 5
     }
 })
+
+// before any event is emitted a another event with "before:" prefixed
+listen('before:player-moved', (player, x, y) => {
+    console.log('before event player-moved')
+})
+
+// and after any event is emitted a another event with "after:" prefixed
+listen('after:player-moved', (player, x, y) => {
+    console.log('after event player-moved')
+})
