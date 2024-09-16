@@ -13,7 +13,7 @@ export default function litecanvas(settings = {}) {
     const root = globalThis,
         PI = Math.PI,
         TWO_PI = PI * 2,
-        /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>boolean?)=>void} */
+        /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         /** @type {LitecanvasOptions} */
         defaults = {
@@ -447,7 +447,7 @@ export default function litecanvas(settings = {}) {
         textmetrics(text, size) {
             // prettier-ignore
             _ctx.font = `${_fontStyle || ''} ${(size || _fontSize)}px ${_fontFamily}`
-            metrics = _ctx.measureText(text)
+            const metrics = _ctx.measureText(text)
             metrics.height =
                 metrics.actualBoundingBoxAscent +
                 metrics.actualBoundingBoxDescent
@@ -1059,14 +1059,14 @@ export default function litecanvas(settings = {}) {
 
     function pageResized() {
         if (_fullscreen) {
-            _canvas.width = innerWidth
-            _canvas.height = innerHeight
-            instance.setvar('WIDTH', innerWidth)
-            instance.setvar('HEIGHT', innerHeight)
+            _canvas.width = root.innerWidth
+            _canvas.height = root.innerHeight
+            instance.setvar('WIDTH', _canvas.width)
+            instance.setvar('HEIGHT', _canvas.height)
         } else if (_autoscale) {
             _scale = Math.min(
-                innerWidth / instance.WIDTH,
-                innerHeight / instance.HEIGHT
+                root.innerWidth / instance.WIDTH,
+                root.innerHeight / instance.HEIGHT
             )
             _scale = settings.pixelart ? Math.floor(_scale) : _scale
             _canvas.style.width = instance.WIDTH * _scale + 'px'
