@@ -1058,15 +1058,16 @@ export default function litecanvas(settings = {}) {
     }
 
     function pageResized() {
+        const pageWidth = root.innerWidth,
+            pageHeight = root.innerHeight
+
         if (_fullscreen) {
-            _canvas.width = root.innerWidth
-            _canvas.height = root.innerHeight
-            instance.setvar('WIDTH', _canvas.width)
-            instance.setvar('HEIGHT', _canvas.height)
+            instance.setvar('WIDTH', (_canvas.width = pageWidth))
+            instance.setvar('HEIGHT', (_canvas.height = pageHeight))
         } else if (_autoscale) {
             _scale = Math.min(
-                root.innerWidth / instance.WIDTH,
-                root.innerHeight / instance.HEIGHT
+                pageWidth / instance.WIDTH,
+                pageHeight / instance.HEIGHT
             )
             _scale = settings.pixelart ? Math.floor(_scale) : _scale
             _canvas.style.width = instance.WIDTH * _scale + 'px'
