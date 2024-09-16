@@ -672,7 +672,6 @@ export default function litecanvas(settings = {}) {
          * @param {number} [volume=1]
          * @param {number} [pitch=0]
          * @param {number} [randomness=null] an float value between 0 and 1
-         * @returns {AudioBufferSourceNode}
          *
          * @see https://github.com/KilledByAPixel/ZzFX
          * @see https://github.com/litecanvas/game-engine/blob/main/src/sounds.js
@@ -685,15 +684,17 @@ export default function litecanvas(settings = {}) {
                 return
             }
 
-            let z = Array.isArray(sound) ? sound : sounds[sound % sounds.length]
+            let sample = Array.isArray(sound)
+                ? sound
+                : sounds[sound % sounds.length]
             if (volume !== 1 || pitch || randomness) {
-                z = [...z] // clone the sound to not modify the original
-                z[0] = (Number(volume) || 1) * (z[0] || 1)
-                z[1] = randomness != null ? randomness : z[1]
-                z[10] = ~~z[10] + ~~pitch
+                sample = sample.slice()
+                sample[0] = (Number(volume) || 1) * (sample[0] || 1)
+                sample[1] = randomness != null ? randomness : sample[1]
+                sample[10] = ~~sample[10] + ~~pitch
             }
 
-            return zzfx(...z)
+            zzfx.apply(0, sample)
         },
 
         /** UTILS API */
@@ -758,7 +759,7 @@ export default function litecanvas(settings = {}) {
         /**
          * Add a game event listener
          *
-         * @param {string} event the event type name
+         * @param {string} eventName the event type name
          * @param {function} callback the function that is called when the event occurs
          * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
          * @returns {function} a function to remove the listener
@@ -778,13 +779,16 @@ export default function litecanvas(settings = {}) {
         /**
          * Call all listeners attached to a game event
          *
-         * @param {string} event The game event type
-         * @param  {...any} args Arguments passed to all listeners
+         * @param {string} eventName The event type name
+         * @param {*} [arg1] any data to be passed over the listeners
+         * @param {*} [arg2] any data to be passed over the listeners
+         * @param {*} [arg3] any data to be passed over the listeners
+         * @param {*} [arg4] any data to be passed over the listeners
          */
-        emit(eventName, ...args) {
-            _emit('before:' + eventName, ...args)
-            _emit(eventName, ...args)
-            _emit('after:' + eventName, ...args)
+        emit(eventName, arg1, arg2, arg3, arg4) {
+            triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
+            triggerEvent(eventName, arg1, arg2, arg3, arg4)
+            triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
         },
 
         /**
@@ -799,7 +803,7 @@ export default function litecanvas(settings = {}) {
          * Create or update a instance variable
          *
          * @param {string} key
-         * @param {any} value
+         * @param {*} value
          */
         setvar(key, value) {
             instance[key] = value
@@ -1086,10 +1090,10 @@ export default function litecanvas(settings = {}) {
         instance.emit('resized', _scale)
     }
 
-    function _emit(eventName, ...args) {
+    function triggerEvent(eventName, arg1, arg2, arg3, arg4) {
         if (!_events[eventName]) return
         for (const callback of _events[eventName]) {
-            callback(...args)
+            callback(arg1, arg2, arg3, arg4)
         }
     }
 
