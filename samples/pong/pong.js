@@ -25,6 +25,7 @@ function init() {
 function tapped(x, y) {
     if (!started) {
         started = true
+        sfx(2)
         return
     }
     destX = ~~(x - padW / 2)
@@ -45,29 +46,32 @@ function update(dt) {
         ballX = 160
         ballY = 70
         lifes = lifes - 1
-        sfx(3)
+        sfx(3, 1, -150)
     }
 
     // update ball position
     ballX += dirX * speed * dt
     ballY += dirY * speed * dt
 
+    let bounced = false
+
     // bounce ball on screen
     if (ballX + ballSize > WIDTH || ballX < ballSize) {
         dirX *= -1
-        sfx(1)
-    }
-    if (ballY < ballSize) {
+        bounced = true
+    } else if (ballY < ballSize) {
         dirY = 1
-        sfx(1)
+        bounced = true
     }
 
     // check ball collision with paddle
     if (colrect(ballX, ballY, ballSize, ballSize, padX, padY, padW, 1)) {
         dirY = -1
         score += 10
-        sfx(1)
+        bounced = true
     }
+
+    if (bounced) sfx(1)
 }
 
 function draw() {
