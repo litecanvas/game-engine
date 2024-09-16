@@ -7,7 +7,8 @@
     "contributors": [],
     "devDependencies": {
         "ava": "^6.1.3",
-        "esbuild": "^0.23.1"
+        "esbuild": "^0.23.1",
+        "@swc/core": "^1.7.26"
     },
     "homepage": "https://litecanvas.github.io/about.html",
     "repository": {
@@ -50,8 +51,5 @@
             "tests/**/*",
             "!tests/_mocks"
         ]
-    },
-    "dependencies": {
-        "@swc/core": "^1.7.26"
     }
 }
