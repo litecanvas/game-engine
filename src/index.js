@@ -540,7 +540,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          */
-        translate: (x, y) => _ctx.translate(x, y),
+        translate: (x, y) => _ctx.translate(~~x, ~~y),
 
         /**
          * Adds a scaling transformation to the canvas units horizontally and/or vertically.
