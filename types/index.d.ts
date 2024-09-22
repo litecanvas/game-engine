@@ -379,11 +379,10 @@ declare global {
     ): OffscreenCanvas
     /** ADVANCED GRAPHICS API */
     /**
-     * Get the canvas context
-     *
-     * @returns {CanvasRenderingContext2D}
+     * Get or set the canvas context 2D
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
      */
-    function ctx(): CanvasRenderingContext2D
+    function ctx(value?: CanvasRenderingContext2D): CanvasRenderingContext2D
     /**
      * saves the current drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
@@ -593,10 +592,7 @@ declare global {
      * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
      * @returns {function?} a function to remove the listener
      */
-    function listen(
-        event: string,
-        callback: Function
-    ): Function | null
+    function listen(event: string, callback: Function): Function | null
     /**
      * Call all listeners attached to a game event
      *

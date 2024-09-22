@@ -516,11 +516,18 @@ export default function litecanvas(settings = {}) {
 
         /** ADVANCED GRAPHICS API */
         /**
-         * Get the canvas context
+         * Get or set the canvas context 2D
          *
+         * @param {CanvasRenderingContext2D} [context]
          * @returns {CanvasRenderingContext2D}
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
          */
-        ctx: () => _ctx,
+        ctx: (context) => {
+            if (context) {
+                _ctx = context
+            }
+            return _ctx
+        },
 
         /**
          * saves the current drawing style settings and transformations

@@ -43,14 +43,14 @@
 /**
  * @typedef LitecanvasPluginHelpers
  * @type {object}
- * @property {string[]} colors - the instance color palette
- * @property {number[][]} sounds - the instance ZzFX sounds
- * @property {LitecanvasOptions} settings - an copy of this instance settings
+ * @property {string[]} colors The instance color palette
+ * @property {number[][]} sounds The instance ZzFX sounds
+ * @property {LitecanvasOptions} settings An copy of this instance settings
  */
 
 /**
  * @callback pluginCallback
- * @param {LitecanvasInstance} instance - The litecanvas instance
+ * @param {LitecanvasInstance} instance The litecanvas instance
  * @param {LitecanvasPluginHelpers} helpers
  * @returns
  */
