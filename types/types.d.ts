@@ -364,11 +364,10 @@ type LitecanvasInstance = {
 
     /** ADVANCED GRAPHICS API */
     /**
-     * Get the canvas context
-     *
-     * @returns {CanvasRenderingContext2D}
+     * Get or set the canvas context 2D
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
      */
-    ctx(): CanvasRenderingContext2D
+    ctx(value?: CanvasRenderingContext2D): CanvasRenderingContext2D
     /**
      * saves the current drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
