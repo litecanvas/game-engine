@@ -14,7 +14,7 @@ function tapped(tapx, tapy) {
     y = tapy
     if (size + 100 < limit) {
         increaseCanvasSize()
-        sfx(0)
+        sfx()
     }
 }
 

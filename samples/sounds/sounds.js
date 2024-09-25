@@ -9,8 +9,12 @@ const pitch = document.querySelector('#pitch-range')
 const volume = document.querySelector('#volume-range')
 const controls = document.querySelector('#controls')
 
-let arg = null,
-    sounds = 4
+let last = null,
+    sounds = {
+        default: null,
+        // prettier-ignore
+        custom: [2.69, , 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.05],
+    }
 
 volume.onchange = (ev) => {
     document.querySelector('#volume-value').textContent = ev.target.value
@@ -26,41 +30,32 @@ controls.onreset = () =>
         document.querySelector('#pitch-value').textContent = pitch.value
     }, 0)
 
-for (let i = 0; i < sounds; i++) {
+for (const key in sounds) {
     const button = document.createElement('button')
     button.onclick = () => {
-        sfx(i, volume.value, pitch.value) // for i = 0 ~ 7 use the default sounds
-        arg = i
+        sfx(sounds[key], volume.value, pitch.value)
+        last = key
     }
-    button.textContent = '#' + i
+    button.textContent = key
     buttons.appendChild(button)
 }
-
-{
-    const button = document.createElement('button')
-    button.onclick = () => {
-        // prettier-ignore
-        const s = [2.69, , 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.01]
-        sfx(s, volume.value, pitch.value)
-        arg = 'custom'
-    }
-    button.textContent = '#' + sounds + '*'
-    buttons.appendChild(button)
-}
-
-function init() {}
 
 function update() {
     // do nothing
 }
 
 function draw() {
-    cls('custom' === arg ? 4 : arg)
-    if (arg !== null) {
+    cls(0)
+    if (last !== null) {
         circfill(CENTERX, CENTERY, 75, 3)
 
         textalign('center', 'middle')
         textsize(20)
-        text(CENTERX, CENTERY, `sfx(${arg});`, 0)
+        text(
+            CENTERX,
+            CENTERY,
+            `sfx(${'default' === last ? '' : '[ ... ]'});`,
+            0
+        )
     }
 }

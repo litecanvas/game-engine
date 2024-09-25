@@ -44,7 +44,6 @@
  * @typedef LitecanvasPluginHelpers
  * @type {object}
  * @property {string[]} colors The instance color palette
- * @property {number[][]} sounds The instance ZzFX sounds
  * @property {LitecanvasOptions} settings An copy of this instance settings
  */
 
