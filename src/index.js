@@ -1,6 +1,5 @@
 import { zzfx } from './zzfx.js'
 import { colors } from './palette.js'
-import { sounds } from './sounds.js'
 import './types.js'
 
 /**
@@ -13,6 +12,7 @@ export default function litecanvas(settings = {}) {
     const root = globalThis,
         PI = Math.PI,
         TWO_PI = PI * 2,
+        DEFAULT_SFX_SOUND = [0.5, , 1675, , 0.06, 0.2, 1, 1.8, , , 637, 0.06],
         /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         /** @type {LitecanvasOptions} */
@@ -97,7 +97,6 @@ export default function litecanvas(settings = {}) {
         _helpers = {
             settings: Object.assign({}, settings),
             colors,
-            sounds,
         }
 
     /** @type {LitecanvasInstance} */
@@ -672,18 +671,17 @@ export default function litecanvas(settings = {}) {
 
         /** SOUND API */
         /**
-         * Play a predefined sound or a ZzFX array of params.
-         * By default has 4 predefined sounds.
+         * Play a sound made using ZzFX library.
+         * If the first argument is omitted, plays an default sound.
          *
-         * @param {number|number[]} [sound=0] the sound index (from 0 to 3) or a ZzFX array of params
-         * @param {number} [volume=1]
-         * @param {number} [pitch=0]
-         * @param {number} [randomness=null] an float value between 0 and 1
+         * @param {number|number[]} [sound] a ZzFX array of params
+         * @param {number} [volume] the volume factor
+         * @param {number} [pitch] a value to increment/decrement the pitch
+         * @param {number} [randomness] an float value between 0 and 1
          *
          * @see https://github.com/KilledByAPixel/ZzFX
-         * @see https://github.com/litecanvas/game-engine/blob/main/src/sounds.js
          */
-        sfx(sound = 0, volume = 1, pitch = 0, randomness = null) {
+        sfx(zzfxParams, volume, pitch, randomness) {
             if (
                 navigator.userActivation &&
                 !navigator.userActivation.hasBeenActive
@@ -691,17 +689,28 @@ export default function litecanvas(settings = {}) {
                 return
             }
 
-            let sample = Array.isArray(sound)
-                ? sound
-                : sounds[sound % sounds.length]
-            if (volume !== 1 || pitch || randomness) {
-                sample = sample.slice()
-                sample[0] = (Number(volume) || 1) * (sample[0] || 1)
-                sample[1] = randomness != null ? randomness : sample[1]
-                sample[10] = ~~sample[10] + ~~pitch
+            // prettier-ignore
+            zzfxParams = zzfxParams || DEFAULT_SFX_SOUND
+
+            // if has other arguments, copy the sound to not change the original
+            if (volume || pitch || randomness) {
+                const isNum = Number.isFinite
+                zzfxParams = zzfxParams.slice()
+                zzfxParams[0] = (volume || 1) * (zzfxParams[0] || 1)
+                zzfxParams[1] = isNum(randomness) ? randomness : zzfxParams[1]
+                zzfxParams[10] = zzfxParams[10] + pitch
             }
 
-            zzfx.apply(0, sample)
+            zzfx.apply(0, zzfxParams)
+        },
+
+        /**
+         * Set the ZzFX's global volume.
+         *
+         * @param {number} value
+         */
+        volume(value) {
+            root.zzfxV = +value || 1
         },
 
         /** UTILS API */

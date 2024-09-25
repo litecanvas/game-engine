@@ -346,6 +346,7 @@ declare global {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
      */
     function textmetrics(text: string, size?: number): TextMetrics
+
     /** IMAGE GRAPHICS API */
     /**
      * Draw an image
@@ -377,6 +378,7 @@ declare global {
             scale?: number
         }
     ): OffscreenCanvas
+
     /** ADVANCED GRAPHICS API */
     /**
      * Get or set the canvas context 2D
@@ -500,25 +502,32 @@ declare global {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
      */
     function blendmode(value: string): void
+
     /** SOUND API */
     /**
-     * Play a predefined sound or a ZzFX array of params.
-     * By default has 4 predefined sounds.
+     * Play a sound made using ZzFX library.
+     * If the first argument is omitted, plays an default sound.
      *
-     * @param {number|number[]} [sound=0] the sound index (from 0 to 3) or a ZzFX array of params
-     * @param {number} [volume=1] the volume factor
-     * @param {number} [pitch=0] a value to increment/decrement the pitch
-     * @param {number} [randomness=null] an float between 0 and 1
-     * @returns {AudioBufferSourceNode}
+     * @param {number|number[]} [sound] a ZzFX array of params
+     * @param {number} [volume] the volume factor
+     * @param {number} [pitch] a value to increment/decrement the pitch
+     * @param {number} [randomness] an float between 0 and 1
+     *
      * @see https://github.com/KilledByAPixel/ZzFX
-     * @see https://github.com/litecanvas/game-engine/blob/main/src/sounds.js
      */
     function sfx(
-        sound?: number | number[],
+        sound?: number[],
         volume?: number,
         pitch?: number,
         randomness?: number
-    ): AudioBufferSourceNode
+    ): void
+    /**
+     * Set the ZzFX's global volume.
+     *
+     * @param {number} value
+     */
+    function volume(value: number): void
+
     /** UTILS API */
     /**
      * Check a collision between two rectangles
