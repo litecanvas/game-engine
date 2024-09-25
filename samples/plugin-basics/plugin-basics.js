@@ -12,7 +12,7 @@ function init() {
     clamp(10, 0, 100)
 }
 
-function tapped(dt) {
+function tapped(x, y) {
     sfx()
 }
 
