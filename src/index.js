@@ -705,6 +705,7 @@ export default function litecanvas(settings = {}) {
 
         /**
          * Set the ZzFX's global volume.
+         * default: `0.3`
          *
          * @param {number} value
          */
