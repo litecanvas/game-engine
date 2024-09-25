@@ -700,10 +700,6 @@ type LitecanvasPluginHelpers = {
      */
     colors: string[]
     /**
-     * The instance ZzFX sounds (writable)
-     */
-    sounds: number[][]
-    /**
      * An instance settings/options (read-only)
      */
     settings: LitecanvasOptions

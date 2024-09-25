@@ -3,29 +3,41 @@ litecanvas({
     height: 480,
 })
 
+// The ZzFX sounds for this game
+// prettier-ignore
+const BOUNCE = [, , 1e3, , .03, .02, 1, 2, , , 940, .03, , , , , .2, .6, , .06];
+// prettier-ignore
+const START = [0.5, 0, 500, , .04, .3, 1, 2, , , 570, .02, .02, , , , .04];
+// prettier-ignore
+const BALL_OFFSCREEN = [1.31, , 154, 0.05, 0.3, 0.37, 1, 0.3, -9.9, -6.9, , , 0.11, , , 0.2, 0.02, 0.42, 0.16];
+
+let padW = 120,
+    padH = 15,
+    padX = 100,
+    padY = 430,
+    destX = padX,
+    ballX,
+    ballY,
+    ballSize = 15,
+    ballAngle = 0,
+    dirX = 1,
+    dirY = 1,
+    speed = 200,
+    score = 0,
+    lifes = 3,
+    textSize,
+    started = false
+
 function init() {
-    padW = 120
-    padH = 15
-    padX = 100
-    padY = 430
-    destX = padX
     ballX = CENTERX
     ballY = CENTERY - HEIGHT / 4
-    ballSize = 15
-    ballAngle = 0
-    dirX = 1
-    dirY = 1
-    speed = 200
-    score = 0
-    lifes = 3
     textSize = WIDTH / 12
-    started = false
 }
 
 function tapped(x, y) {
     if (!started) {
         started = true
-        sfx(2)
+        sfx(START)
         return
     }
     destX = ~~(x - padW / 2)
@@ -46,7 +58,7 @@ function update(dt) {
         ballX = 160
         ballY = 70
         lifes = lifes - 1
-        sfx(3, 1, -150)
+        sfx(BALL_OFFSCREEN)
     }
 
     // update ball position
@@ -71,7 +83,7 @@ function update(dt) {
         bounced = true
     }
 
-    if (bounced) sfx(1)
+    if (bounced) sfx(BOUNCE)
 }
 
 function draw() {

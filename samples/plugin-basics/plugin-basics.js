@@ -13,7 +13,7 @@ function init() {
 }
 
 function tapped(dt) {
-    sfx(0)
+    sfx()
 }
 
 function update() {
@@ -28,14 +28,13 @@ function draw() {
     text(CENTERX, CENTERY + 50, sayhello('Everyone'), 3)
 }
 
-function pluginTest(engine, { settings, colors, sounds }, config) {
+function pluginTest(engine, { settings, colors }, config) {
     // the first argument is the current litecanvas instance
     console.log('litecanvas instance:', engine)
 
     // the second argument is a list of helpful values
     console.log('litecanvas settings:', settings)
     console.log('litecanvas colors:', colors)
-    console.log('litecanvas ZzFX sounds:', sounds)
 
     // the third argument is the plugin configuration
     console.log('plugin config:', config)
@@ -43,10 +42,6 @@ function pluginTest(engine, { settings, colors, sounds }, config) {
     // use `colors` to change a color or add new ones
     // example: change the red (color #4) to purple
     colors[4] = '#be4bdb'
-
-    // use `sounds` to change a sound or add new ones
-    // use the https://killedbyapixel.github.io/ZzFX/
-    sounds[0] = [1,,377,,.09,.18,2,1.86,,.4,,.08,.14,,,,.09,.53,.04] // prettier-ignore
 
     // use `settings` to check something
     // `settings` is read-only, changes will not take effect

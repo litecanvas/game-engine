@@ -694,11 +694,10 @@ export default function litecanvas(settings = {}) {
 
             // if has other arguments, copy the sound to not change the original
             if (volume || pitch || randomness) {
-                const isNum = Number.isFinite
                 zzfxParams = zzfxParams.slice()
                 zzfxParams[0] = (volume || 1) * (zzfxParams[0] || 1)
-                zzfxParams[1] = isNum(randomness) ? randomness : zzfxParams[1]
-                zzfxParams[10] = zzfxParams[10] + pitch
+                zzfxParams[1] = +randomness ? randomness : zzfxParams[1]
+                zzfxParams[10] = ~~zzfxParams[10] + ~~pitch
             }
 
             zzfx.apply(0, zzfxParams)
