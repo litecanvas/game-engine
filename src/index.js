@@ -685,6 +685,7 @@ export default function litecanvas(settings = {}) {
          * @param {number|number[]} [zzfxParams] a ZzFX array of params
          * @param {number} [pitchSlide] a value to increment/decrement the pitch
          * @param {number} [volumeFactor] the volume factor
+         * @returns {number[] | boolean} The sound that was played or `false`
          *
          * @see https://github.com/KilledByAPixel/ZzFX
          */
@@ -694,19 +695,21 @@ export default function litecanvas(settings = {}) {
                 (navigator.userActivation &&
                     !navigator.userActivation.hasBeenActive)
             ) {
-                return
+                return false
             }
 
             zzfxParams = zzfxParams || instance.DEFAULT_SFX
 
             // if has other arguments, copy the sound to not change the original
-            if (pitchSlide >= 0 || volumeFactor !== 1) {
+            if (pitchSlide > 0 || volumeFactor !== 1) {
                 zzfxParams = zzfxParams.slice()
                 zzfxParams[0] = volumeFactor * (zzfxParams[0] || 1)
                 zzfxParams[10] = ~~zzfxParams[10] + pitchSlide
             }
 
             zzfx.apply(0, zzfxParams)
+
+            return zzfxParams
         },
 
         /**
