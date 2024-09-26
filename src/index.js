@@ -484,13 +484,13 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, draw, options = {}) {
-            const offscreenCanvas = new OffscreenCanvas(width, height),
-                ctxOriginal = _ctx,
-                scale = options.scale || 1
+            const oc = options.canvas || new OffscreenCanvas(0, 0),
+                scale = options.scale || 1,
+                contextBackup = _ctx
 
-            offscreenCanvas.width = width * scale
-            offscreenCanvas.height = height * scale
-            _ctx = offscreenCanvas.getContext('2d')
+            oc.width = width * scale
+            oc.height = height * scale
+            _ctx = oc.getContext('2d')
 
             _ctx.scale(scale, scale)
 
@@ -513,12 +513,12 @@ export default function litecanvas(settings = {}) {
                     x = 0
                 }
             } else {
-                draw(offscreenCanvas, _ctx)
+                draw(oc, _ctx)
             }
 
-            _ctx = ctxOriginal // restore the context
+            _ctx = contextBackup // restore the context
 
-            return offscreenCanvas
+            return oc
         },
 
         /** ADVANCED GRAPHICS API */
@@ -529,7 +529,7 @@ export default function litecanvas(settings = {}) {
          * @returns {CanvasRenderingContext2D}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
          */
-        ctx: (context) => {
+        ctx(context) {
             if (context) {
                 _ctx = context
             }
