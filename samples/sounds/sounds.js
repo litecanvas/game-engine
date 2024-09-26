@@ -4,10 +4,19 @@ litecanvas({
     canvas: '#game',
 })
 
+// UI components
 const buttons = document.querySelector('#buttons')
-const pitch = document.querySelector('#pitch-range')
-const volume = document.querySelector('#volume-range')
-const controls = document.querySelector('#controls')
+const controls = {
+    form: document.querySelector('#controls'),
+    volume: {
+        label: document.querySelector('#volume-value'),
+        range: document.querySelector('#volume-range'),
+    },
+    pitch: {
+        range: document.querySelector('#pitch-range'),
+        label: document.querySelector('#pitch-value'),
+    },
+}
 
 let last = null,
     sounds = {
@@ -16,32 +25,31 @@ let last = null,
         custom: [2.69, , 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.05],
     }
 
-volume.onchange = (ev) => {
-    document.querySelector('#volume-value').textContent = ev.target.value
+controls.volume.range.onchange = () => {
+    const value = controls.volume.range.value
+    controls.volume.label.textContent = value
+    volume(value)
 }
 
-pitch.onchange = (ev) => {
-    document.querySelector('#pitch-value').textContent = ev.target.value
+controls.pitch.range.onchange = () => {
+    controls.pitch.label.textContent = controls.pitch.range.value
 }
 
-controls.onreset = () =>
+controls.form.onreset = () => {
     setTimeout(() => {
-        document.querySelector('#volume-value').textContent = volume.value
-        document.querySelector('#pitch-value').textContent = pitch.value
-    }, 0)
+        controls.volume.range.onchange()
+        controls.pitch.range.onchange()
+    })
+}
 
 for (const key in sounds) {
     const button = document.createElement('button')
     button.onclick = () => {
-        sfx(sounds[key], volume.value, pitch.value)
+        sfx(sounds[key], null, controls.pitch.range.value)
         last = key
     }
     button.textContent = key
     buttons.appendChild(button)
-}
-
-function update() {
-    // do nothing
 }
 
 function draw() {
