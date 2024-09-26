@@ -513,6 +513,7 @@ declare global {
      * @param {number|number[]} [zzfxParams] a ZzFX array of params
      * @param {number} [pitchSlide] a value to increment/decrement the pitch
      * @param {number} [volumeFactor] the volume factor
+     * @returns The sound that was played or `false`
      *
      * @see https://github.com/KilledByAPixel/ZzFX
      */
@@ -520,7 +521,7 @@ declare global {
         zzfxParams?: number[],
         pitchSlide?: number = 0,
         volumeFactor?: number = 1
-    ): void
+    ): number[] | boolean
     /**
      * Set the ZzFX's global volume factor.
      * Note: use 0 to mute all sound effects.
