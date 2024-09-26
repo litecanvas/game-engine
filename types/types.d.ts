@@ -488,7 +488,7 @@ type LitecanvasInstance = {
 
     /** SOUND API */
     /**
-     * Play a sound made using ZzFX library.
+     * Play a sound effects using ZzFX library.
      * If the first argument is omitted, plays an default sound.
      *
      * @param {number|number[]} [sound] a ZzFX array of params
@@ -505,8 +505,8 @@ type LitecanvasInstance = {
         randomness?: number
     ): void
     /**
-     * Set the ZzFX's global volume.
-     * default: `0.3`
+     * Set the ZzFX's global volume factor.
+     * Note: use 0 to mute all sound effects.
      *
      * @param {number} value
      */

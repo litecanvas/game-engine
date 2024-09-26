@@ -671,7 +671,7 @@ export default function litecanvas(settings = {}) {
 
         /** SOUND API */
         /**
-         * Play a sound made using ZzFX library.
+         * Play a sound effects using ZzFX library.
          * If the first argument is omitted, plays an default sound.
          *
          * @param {number|number[]} [sound] a ZzFX array of params
@@ -683,13 +683,13 @@ export default function litecanvas(settings = {}) {
          */
         sfx(zzfxParams, volume, pitch, randomness) {
             if (
-                navigator.userActivation &&
-                !navigator.userActivation.hasBeenActive
+                root.zzfxV <= 0 ||
+                (navigator.userActivation &&
+                    !navigator.userActivation.hasBeenActive)
             ) {
                 return
             }
 
-            // prettier-ignore
             zzfxParams = zzfxParams || DEFAULT_SFX_SOUND
 
             // if has other arguments, copy the sound to not change the original
@@ -704,13 +704,13 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Set the ZzFX's global volume.
-         * default: `0.3`
+         * Set the ZzFX's global volume factor.
+         * Note: use 0 to mute all sound effects.
          *
          * @param {number} value
          */
         volume(value) {
-            root.zzfxV = +value || 1
+            root.zzfxV = +value
         },
 
         /** UTILS API */
