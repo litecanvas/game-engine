@@ -12,7 +12,6 @@ export default function litecanvas(settings = {}) {
     const root = globalThis,
         PI = Math.PI,
         TWO_PI = PI * 2,
-        DEFAULT_SFX_SOUND = [0.5, , 1675, , 0.06, 0.2, 1, 1.8, , , 637, 0.06],
         /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         /** @type {LitecanvasOptions} */
@@ -103,18 +102,27 @@ export default function litecanvas(settings = {}) {
     const instance = {
         /** @type {number} */
         WIDTH: settings.width,
+
         /** @type {number} */
         HEIGHT: settings.height || settings.width,
+
         /** @type {HTMLCanvasElement} */
         CANVAS: null,
+
         /** @type {number} */
         ELAPSED: 0,
+
         /** @type {number} */
         FPS: settings.fps,
+
         /** @type {number} */
         CENTERX: null,
+
         /** @type {number} */
         CENTERY: null,
+
+        /** @type {number[]} */
+        DEFAULT_SFX: [0.5, , 1675, , 0.06, 0.2, 1, 1.8, , , 637, 0.06],
 
         /** MATH API */
         /**
@@ -674,14 +682,13 @@ export default function litecanvas(settings = {}) {
          * Play a sound effects using ZzFX library.
          * If the first argument is omitted, plays an default sound.
          *
-         * @param {number|number[]} [sound] a ZzFX array of params
-         * @param {number} [volume] the volume factor
-         * @param {number} [pitch] a value to increment/decrement the pitch
-         * @param {number} [randomness] an float value between 0 and 1
+         * @param {number|number[]} [zzfxParams] a ZzFX array of params
+         * @param {number} [pitchSlide] a value to increment/decrement the pitch
+         * @param {number} [volumeFactor] the volume factor
          *
          * @see https://github.com/KilledByAPixel/ZzFX
          */
-        sfx(zzfxParams, volume, pitch, randomness) {
+        sfx(zzfxParams, pitchSlide = 0, volumeFactor = 1) {
             if (
                 root.zzfxV <= 0 ||
                 (navigator.userActivation &&
@@ -690,14 +697,13 @@ export default function litecanvas(settings = {}) {
                 return
             }
 
-            zzfxParams = zzfxParams || DEFAULT_SFX_SOUND
+            zzfxParams = zzfxParams || instance.DEFAULT_SFX
 
             // if has other arguments, copy the sound to not change the original
-            if (volume || pitch || randomness) {
+            if (pitchSlide >= 0 || volumeFactor !== 1) {
                 zzfxParams = zzfxParams.slice()
-                zzfxParams[0] = (volume || 1) * (zzfxParams[0] || 1)
-                zzfxParams[1] = +randomness ? randomness : zzfxParams[1]
-                zzfxParams[10] = ~~zzfxParams[10] + ~~pitch
+                zzfxParams[0] = volumeFactor * (zzfxParams[0] || 1)
+                zzfxParams[10] = ~~zzfxParams[10] + pitchSlide
             }
 
             zzfx.apply(0, zzfxParams)

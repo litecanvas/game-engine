@@ -13,6 +13,8 @@ type LitecanvasInstance = {
     CENTERX: number
     /** the center Y of the game screen */
     CENTERY: number
+    /** the default `sfx()` sound */
+    DEFAULT_SFX: number[]
 
     /** MATH API */
     /**
@@ -491,18 +493,16 @@ type LitecanvasInstance = {
      * Play a sound effects using ZzFX library.
      * If the first argument is omitted, plays an default sound.
      *
-     * @param {number|number[]} [sound] a ZzFX array of params
-     * @param {number} [volume] the volume factor
-     * @param {number} [pitch] a value to increment/decrement the pitch
-     * @param {number} [randomness] an float between 0 and 1
+     * @param {number|number[]} [zzfxParams] a ZzFX array of params
+     * @param {number} [pitchSlide] a value to increment/decrement the pitch
+     * @param {number} [volumeFactor] the volume factor
      *
      * @see https://github.com/KilledByAPixel/ZzFX
      */
     sfx(
-        sound?: number[],
-        volume?: number,
-        pitch?: number,
-        randomness?: number
+        zzfxParams?: number[],
+        pitchSlide?: number = 0,
+        volumeFactor?: number = 1
     ): void
     /**
      * Set the ZzFX's global volume factor.
