@@ -36,8 +36,31 @@ globalThis.document = {
     },
 }
 
-globalThis.AudioContext = class {}
+globalThis.AudioContext = class {
+    createBuffer() {
+        return {
+            getChannelData() {
+                return new Map()
+            },
+        }
+    }
+
+    createBufferSource() {
+        return {
+            connect() {},
+            start() {},
+        }
+    }
+}
+
+globalThis.AudioBuffer = class {}
 
 globalThis.requestAnimationFrame = () => {}
 
 globalThis.cancelAnimationFrame = () => {}
+
+globalThis.navigator = {
+    userActivation: {
+        hasBeenActive: true,
+    },
+}
