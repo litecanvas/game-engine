@@ -45,7 +45,7 @@ controls.form.onreset = () => {
 for (const key in sounds) {
     const button = document.createElement('button')
     button.onclick = () => {
-        sfx(sounds[key], null, controls.pitch.range.value)
+        sfx(sounds[key], +controls.pitch.range.value)
         last = key
     }
     button.textContent = key
