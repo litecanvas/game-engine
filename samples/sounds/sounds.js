@@ -22,7 +22,7 @@ let last = null,
     sounds = {
         default: null,
         // prettier-ignore
-        custom: [2.69, , 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.05],
+        custom: [2.69, 0, 114, , 0.23, 0, , 0.32, , , , , , , , , 0.33, 0.74, , 0.05],
     }
 
 controls.volume.range.onchange = () => {
