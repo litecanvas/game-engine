@@ -502,8 +502,8 @@ type LitecanvasInstance = {
      */
     sfx(
         zzfxParams?: number[],
-        pitchSlide?: number = 0,
-        volumeFactor?: number = 1
+        pitchSlide?: number,
+        volumeFactor?: number
     ): number[] | boolean
     /**
      * Set the ZzFX's global volume factor.

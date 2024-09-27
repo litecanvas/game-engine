@@ -511,16 +511,16 @@ declare global {
      * If the first argument is omitted, plays an default sound.
      *
      * @param {number|number[]} [zzfxParams] a ZzFX array of params
-     * @param {number} [pitchSlide] a value to increment/decrement the pitch
-     * @param {number} [volumeFactor] the volume factor
+     * @param {number} [pitchSlide=0] a value to increment/decrement the pitch
+     * @param {number} [volumeFactor=1] the volume factor
      * @returns The sound that was played or `false`
      *
      * @see https://github.com/KilledByAPixel/ZzFX
      */
     function sfx(
         zzfxParams?: number[],
-        pitchSlide?: number = 0,
-        volumeFactor?: number = 1
+        pitchSlide?: number,
+        volumeFactor?: number
     ): number[] | boolean
     /**
      * Set the ZzFX's global volume factor.
