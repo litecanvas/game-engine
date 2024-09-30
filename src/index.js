@@ -1019,7 +1019,7 @@ export default function litecanvas(settings = {}) {
         }
 
         // start the game loop
-        instance.emit('init')
+        instance.emit('init', instance)
         _lastFrame = performance.now()
         _rafid = requestAnimationFrame(drawFrame)
     }
