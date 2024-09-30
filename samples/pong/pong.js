@@ -1,6 +1,7 @@
 litecanvas({
     width: 320,
     height: 480,
+    antialias: true,
 })
 
 // The ZzFX sounds for this game
