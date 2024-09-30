@@ -1,6 +1,6 @@
 litecanvas({
-    width: 32,
-    height: 32,
+    width: 64,
+    height: 64,
     pixelart: true,
     // autoscale: false,
 })
@@ -11,24 +11,20 @@ const art = paint(
     [
         // the pixelart pixels:
         // each number is a pixel color
-        // note: use space or dot to make a pixel 100% transparent
+        // note: use space or dots to make a pixel 100% transparent
         '  0000  ',
         ' 055550 ',
         '05505050',
         '05555550',
         '05500050',
         '05555550',
-        ' 055550 ',
+        '.055550.',
         '..0000..',
     ],
     {
         scale: 2, // this pixelart is twice bigger
     }
 )
-
-function update() {
-    // do nothing
-}
 
 function draw() {
     cls(3)

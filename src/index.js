@@ -22,7 +22,7 @@ export default function litecanvas(settings = {}) {
             height: null,
             autoscale: true,
             pixelart: false,
-            antialias: true,
+            antialias: false,
             canvas: null,
             global: true,
             loop: null,
