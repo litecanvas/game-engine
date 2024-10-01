@@ -1012,6 +1012,9 @@ export default function litecanvas(settings = {}) {
 
             /**
              * Checks if a key is currently pressed in your keyboard.
+             * Notes:
+             * - to check the space key use `iskeydown(" ")`.
+             * - you can check if any key is pressed using `iskeydown("any")`.
              *
              * @param {string} key
              * @returns {boolean}
@@ -1028,6 +1031,8 @@ export default function litecanvas(settings = {}) {
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
                 _keys.delete(event.key.toLowerCase())
             })
+
+            on(root, 'blur', () => _keys.clear())
         }
 
         // listen browser focus/blur events and pause the update/draw loop
