@@ -8,10 +8,11 @@
  * @property {boolean} [pauseOnBlur=true]
  * @property {boolean} [autoscale=true]
  * @property {boolean} [pixelart=false]
- * @property {boolean} [antialias=true]
+ * @property {boolean} [antialias=false]
  * @property {string} [canvas]
  * @property {boolean} [global=true]
  * @property {boolean} [tapEvents=true]
+ * @property {boolean} [keyboardEvents=true]
  * @property {LitecanvasGameLoop} [loop]
  */
 
