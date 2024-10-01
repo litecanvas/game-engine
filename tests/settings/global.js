@@ -12,7 +12,7 @@ test('throws error if instantiated globally more than once', (t) => {
         litecanvas()
         t.fail() // fail if not throws
     } catch (e) {
-        t.deepEqual(e, 'Cannot instantiate litecanvas globally twice')
+        t.deepEqual(e, 'global litecanvas already instantiated')
     }
 })
 

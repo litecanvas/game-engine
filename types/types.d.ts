@@ -515,6 +515,13 @@ type LitecanvasInstance = {
 
     /** UTILS API */
     /**
+     * Checks if a key is currently pressed in your keyboard.
+     *
+     * @param key
+     * @returns `true` if the which key is down
+     */
+    iskeydown(key: string): boolean
+    /**
      * Check a collision between two rectangles
      *
      * @param {number} x1 first rectangle position X
@@ -583,7 +590,6 @@ type LitecanvasInstance = {
      *
      * @param {string} event The game event type
      * @param {function} callback the function that is called when the event occurs
-     * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
      * @returns {function?} a function to remove the listener
      */
     listen(event: string, callback: Function): Function | null

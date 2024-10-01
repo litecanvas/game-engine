@@ -26,8 +26,9 @@ export default function litecanvas(settings = {}) {
             canvas: null,
             global: true,
             loop: null,
-            tapEvents: true,
             pauseOnBlur: true,
+            tapEvents: true,
+            keyboardEvents: true,
         }
 
     // setup the settings default values
@@ -1005,6 +1006,30 @@ export default function litecanvas(settings = {}) {
             })
         }
 
+        if (settings.keyboardEvents) {
+            /** @type {Set<string>} */
+            const _keys = new Set()
+
+            /**
+             * Checks if a key is currently pressed in your keyboard.
+             *
+             * @param {string} key
+             * @returns {boolean}
+             */
+            const iskeydown = (key) =>
+                'any' === key ? _keys.size > 0 : _keys.has(key.toLowerCase())
+
+            instance.setvar('iskeydown', iskeydown)
+
+            on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
+                _keys.add(event.key.toLowerCase())
+            })
+
+            on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
+                _keys.delete(event.key.toLowerCase())
+            })
+        }
+
         // listen browser focus/blur events and pause the update/draw loop
         if (settings.pauseOnBlur) {
             on(root, 'blur', () => {
@@ -1136,7 +1161,7 @@ export default function litecanvas(settings = {}) {
 
     if (settings.global) {
         if (root.__litecanvas) {
-            throw 'Cannot instantiate litecanvas globally twice'
+            throw 'global litecanvas already instantiated'
         }
         Object.assign(root, instance)
         root.__litecanvas = instance
