@@ -517,6 +517,10 @@ type LitecanvasInstance = {
     /**
      * Checks if a key is currently pressed in your keyboard.
      *
+     * Notes:
+     * - to check the space key use `iskeydown(" ")`.
+     * - you can check if any key is pressed using `iskeydown("any")`.
+     *
      * @param key
      * @returns `true` if the which key is down
      */
