@@ -659,7 +659,7 @@ type LitecanvasOptions = {
      */
     pixelart?: boolean
     /**
-     * If `false`, disable the canvas antialias.
+     * If `false` (default), disable the canvas antialias.
      */
     antialias?: boolean
     /**
@@ -670,11 +670,6 @@ type LitecanvasOptions = {
      * If `true` (default), all methods and properties of the engine will be exposed to the global scope (window).
      */
     global?: boolean
-    /**
-     * if `false` disable the click/touch events handling.
-     * Useful when you want to implement your own input handler.
-     */
-    tapEvents?: boolean
     /**
      * Specify your game loop callbacks.
      * By default use that global functions (if they exist):
@@ -688,6 +683,22 @@ type LitecanvasOptions = {
      * - `window.tapping(tapX: number, tapY: number, tapId: number): void`
      */
     loop?: LitecanvasGameLoop
+    /**
+     * default: `true`
+     *
+     * if `false` disable the click/touch events handling.
+     *
+     * Useful when you want to implement your own input handler.
+     */
+    tapEvents?: boolean
+    /**
+     * default: `true`
+     *
+     * if `false` disable the `iskeydown()` method.
+     *
+     * Useful when you want to implement your keyboard handler.
+     */
+    keyboardEvents?: boolean
 }
 
 type LitecanvasGameLoop = {
