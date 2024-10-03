@@ -13,6 +13,7 @@ test('produces random float numbers between MIN and MAX', (t) => {
     const max = 100
 
     t.plan(times)
+
     for (let i = 0; i < times; i++) {
         const randomNumber = g.rand(min, max)
         t.true(randomNumber >= min && randomNumber <= max)
@@ -28,7 +29,3 @@ test('produces random float numbers between 0 and 1.0', (t) => {
         t.true(randomNumber >= 0 && randomNumber <= 1.0)
     }
 })
-
-function range(value) {
-    return
-}

@@ -46,10 +46,6 @@ export default function litecanvas(settings = {}) {
         _autoscale = settings.autoscale,
         /** @type {number} */
         _scale = 1,
-        /** @type {number?} */
-        _mouseX,
-        /** @type {number?} */
-        _mouseY,
         /** @type {CanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
@@ -117,10 +113,16 @@ export default function litecanvas(settings = {}) {
         FPS: settings.fps,
 
         /** @type {number} */
-        CENTERX: null,
+        CENTERX: 0,
 
         /** @type {number} */
-        CENTERY: null,
+        CENTERY: 0,
+
+        /** @type {number} */
+        MOUSEX: -1,
+
+        /** @type {number} */
+        MOUSEY: -1,
 
         /** @type {number[]} */
         DEFAULT_SFX: [0.5, , 1675, , 0.06, 0.2, 1, 1.8, , , 637, 0.06],
@@ -261,7 +263,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the random number
          */
         randi: (min = 0, max = 1) =>
-            instance.floor(instance.rand() * (max - min + 1) + min),
+            instance.floor(instance.rand(min, max + 1)),
 
         /**
          * If a value is passed, initializes the random number generator with an explicit seed value.
@@ -399,7 +401,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=3] the color index (generally from 0 to 7)
          */
         text(x, y, text, color = 3) {
-            _ctx.font = `${_fontStyle || ''} ${_fontSize}px ${_fontFamily}`
+            _ctx.font = `${_fontStyle} ${_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = instance.getcolor(color)
             _ctx.fillText(text, ~~x, ~~y)
         },
@@ -423,12 +425,12 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Sets whether a font should be styled with a normal, italic, or bold.
+         * Sets whether a font should be styled with a "normal", "italic", or "bold".
          *
          * @param {string} style
          */
         textstyle(style) {
-            _fontStyle = style
+            _fontStyle = style || ''
         },
 
         /**
@@ -452,9 +454,9 @@ export default function litecanvas(settings = {}) {
          * @returns {TextMetrics}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
          */
-        textmetrics(text, size) {
+        textmetrics(text, size = _fontSize) {
             // prettier-ignore
-            _ctx.font = `${_fontStyle || ''} ${(size || _fontSize)}px ${_fontFamily}`
+            _ctx.font = `${_fontStyle} ${size}px ${_fontFamily}`
             const metrics = _ctx.measureText(text)
             metrics.height =
                 metrics.actualBoundingBoxAscent +
@@ -485,7 +487,7 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, draw, options = {}) {
-            const oc = options.canvas || new OffscreenCanvas(0, 0),
+            const oc = options.canvas || new OffscreenCanvas(1, 1),
                 scale = options.scale || 1,
                 contextBackup = _ctx
 
@@ -539,18 +541,20 @@ export default function litecanvas(settings = {}) {
 
         /**
          * saves the current drawing style settings and transformations
+         *
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
          */
         push: () => _ctx.save(),
 
         /**
          * restores the drawing style settings and transformations
+         *
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore
          */
         pop: () => _ctx.restore(),
 
         /**
-         * Adds a translation transformation to the current matrix
+         * Adds a translation to the transformation matrix.
          *
          * @param {number} x
          * @param {number} y
@@ -566,15 +570,13 @@ export default function litecanvas(settings = {}) {
         scale: (x, y) => _ctx.scale(x, y || x),
 
         /**
-         * Adds a rotation to the transformation matrix
+         * Adds a rotation to the transformation matrix.
          *
          * @param {number} radians
          */
         rotate: (radians) => _ctx.rotate(radians),
 
         /**
-         * Adds a transformation that skews to the transformation matrix
-         *
          * @param {number} a
          * @param {number} b
          * @param {number} c
@@ -582,7 +584,9 @@ export default function litecanvas(settings = {}) {
          * @param {number} e
          * @param {number} f
          * @param {boolean} [resetFirst=true] `false` to use _ctx.transform(); by default use _ctx.setTransform()
+         *
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
          */
         transform: (a, b, c, d, e, f, resetFirst = true) =>
             _ctx[resetFirst ? 'setTransform' : 'transform'](a, b, c, d, e, f),
@@ -616,7 +620,11 @@ export default function litecanvas(settings = {}) {
          */
         fill(color, path) {
             _ctx.fillStyle = instance.getcolor(color)
-            _ctx.fill(path)
+            if (path) {
+                _ctx.fill(path)
+            } else {
+                _ctx.fill()
+            }
         },
 
         /**
@@ -627,7 +635,11 @@ export default function litecanvas(settings = {}) {
          */
         stroke(color, path) {
             _ctx.strokeStyle = instance.getcolor(color)
-            path ? _ctx.stroke(path) : _ctx.stroke()
+            if (path) {
+                _ctx.stroke(path)
+            } else {
+                _ctx.stroke()
+            }
         },
 
         /**
@@ -665,17 +677,6 @@ export default function litecanvas(settings = {}) {
             _ctx.beginPath()
             _ctx.arc(x, y, radius, 0, TWO_PI)
             _ctx.clip()
-        },
-
-        /**
-         * Sets the type of compositing operation to apply when drawing new shapes.
-         * Default value = 'source-over'.
-         *
-         * @param {string} value
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-         */
-        blendmode(value) {
-            _ctx.globalCompositeOperation = value
         },
 
         /** SOUND API */
@@ -753,12 +754,6 @@ export default function litecanvas(settings = {}) {
          */
         colcirc: (x1, y1, r1, x2, y2, r2) =>
             (x2 - x1) ** 2 + (y2 - y1) ** 2 <= (r1 + r2) ** 2,
-
-        /**
-         * Get the mouse position
-         * @returns number[]
-         */
-        mousepos: () => [_mouseX, _mouseY],
 
         /**
          * The scale of the game's delta time (dt).
@@ -931,8 +926,13 @@ export default function litecanvas(settings = {}) {
 
             on(_canvas, 'mousemove', (ev) => {
                 ev.preventDefault()
-                const [x, y] = ([_mouseX, _mouseY] = _getXY(ev.pageX, ev.pageY))
+
+                const [x, y] = _getXY(ev.pageX, ev.pageY)
+                instance.setvar('MOUSEX', x)
+                instance.setvar('MOUSEY', y)
+
                 if (!_pressingMouse) return
+
                 instance.emit('tapping', x, y, 0)
                 _updateTap(0, x, y)
             })
@@ -996,9 +996,6 @@ export default function litecanvas(settings = {}) {
 
             on(root, 'blur', () => {
                 _pressingMouse = false
-
-                if (_taps.size === 0) return
-
                 for (const [id, tap] of _taps) {
                     instance.emit('untap', tap.x, tap.y, id)
                     _taps.delete(id)
@@ -1128,7 +1125,7 @@ export default function litecanvas(settings = {}) {
                 pageWidth / instance.WIDTH,
                 pageHeight / instance.HEIGHT
             )
-            _scale = settings.pixelart ? Math.floor(_scale) : _scale
+            _scale = (settings.pixelart ? ~~_scale : _scale) || 1
             _canvas.style.width = instance.WIDTH * _scale + 'px'
             _canvas.style.height = instance.HEIGHT * _scale + 'px'
         }
