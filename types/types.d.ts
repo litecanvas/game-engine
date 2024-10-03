@@ -13,6 +13,10 @@ type LitecanvasInstance = {
     CENTERX: number
     /** the center Y of the game screen */
     CENTERY: number
+    /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
+    MOUSEX: number
+    /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
+    MOUSEY: number
     /** the default `sfx()` sound */
     DEFAULT_SFX: number[]
 
@@ -401,8 +405,6 @@ type LitecanvasInstance = {
      */
     rotate(radians: number): void
     /**
-     * Adds a transformation that skews to the transformation matrix
-     *
      * @param {number} a
      * @param {number} b
      * @param {number} c
@@ -410,7 +412,9 @@ type LitecanvasInstance = {
      * @param {number} e
      * @param {number} f
      * @param {boolean} [resetFirst=true] `false` to use _ctx.transform(); by default use _ctx.setTransform()
+     *
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
      */
     transform(
         a: number,
@@ -479,14 +483,6 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
      */
     clipcirc(x: number, y: number, radius: number): void
-    /**
-     * Sets the type of compositing operation to apply when drawing new shapes.
-     * Default value = 'source-over'.
-     *
-     * @param {string} value
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-     */
-    blendmode(value: string): void
 
     /** SOUND API */
     /**
@@ -567,12 +563,6 @@ type LitecanvasInstance = {
         y2: number,
         r2: number
     ): boolean
-    /**
-     * Get the mouse position
-     *
-     * @returns number[]
-     */
-    mousepos(): number[]
     /**
      * The scale of the game's delta time (dt).
      * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.

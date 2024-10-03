@@ -1,6 +1,6 @@
 let x = 0
 
-console.log(litecanvas())
+litecanvas()
 
 function init() {
     x = CENTERX
