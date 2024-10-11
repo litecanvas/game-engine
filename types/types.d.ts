@@ -689,6 +689,12 @@ type LitecanvasOptions = {
      * Useful when you want to implement your keyboard handler.
      */
     keyboardEvents?: boolean
+    /**
+     * default: `true`
+     *
+     * if `false` stops the code in `update()` and `draw()` from running repeatedly. By default, tries to run these functions 60 times per second.
+     */
+    animate?: boolean
 }
 
 type LitecanvasGameLoop = {
