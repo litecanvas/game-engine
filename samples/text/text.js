@@ -1,4 +1,6 @@
-litecanvas()
+litecanvas({
+    animate: false,
+})
 
 function init() {
     margin = 60

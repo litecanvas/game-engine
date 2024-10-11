@@ -29,6 +29,7 @@ export default function litecanvas(settings = {}) {
             pauseOnBlur: true,
             tapEvents: true,
             keyboardEvents: true,
+            animate: true,
         }
 
     // setup the settings default values
@@ -44,6 +45,8 @@ export default function litecanvas(settings = {}) {
         _fullscreen = settings.fullscreen,
         /** @type {boolean} */
         _autoscale = settings.autoscale,
+        /** @type {boolean} */
+        _animate = settings.animate,
         /** @type {number} */
         _scale = 1,
         /** @type {CanvasRenderingContext2D} */
@@ -1068,7 +1071,7 @@ export default function litecanvas(settings = {}) {
             ticks++
         }
 
-        if (ticks) {
+        if (ticks || !_animate) {
             // default custom values for textAlign & textBaseline
             instance.textalign('start', 'top')
 
@@ -1083,7 +1086,9 @@ export default function litecanvas(settings = {}) {
             }
         }
 
-        if (_rafid) _rafid = requestAnimationFrame(drawFrame)
+        if (_rafid && _animate) {
+            _rafid = requestAnimationFrame(drawFrame)
+        }
     }
 
     function setupCanvas() {
@@ -1140,6 +1145,11 @@ export default function litecanvas(settings = {}) {
         }
 
         instance.emit('resized', _scale)
+
+        if (!_animate) {
+            _lastFrame = performance.now()
+            requestAnimationFrame(drawFrame)
+        }
     }
 
     function triggerEvent(eventName, arg1, arg2, arg3, arg4) {
