@@ -13,6 +13,7 @@
  * @property {boolean} [global=true]
  * @property {boolean} [tapEvents=true]
  * @property {boolean} [keyboardEvents=true]
+ * @property {boolean} [animate=true]
  * @property {LitecanvasGameLoop} [loop]
  */
 

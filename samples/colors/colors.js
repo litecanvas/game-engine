@@ -4,6 +4,7 @@ litecanvas({
     width: tile * 6,
     height: tile * 2,
     autoscale: false,
+    animate: false,
 })
 
 // draw the color palette
