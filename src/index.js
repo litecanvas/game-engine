@@ -646,40 +646,13 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Create a retangular clipping region.
+         * Turn given path into a clipping region.
          *
-         * Note: Clip paths cannot be reverted directly. You must save your
-         * canvas state using push() before calling cliprect(), and restore it
-         * once you have finished drawing in the clipped area using pop().
-         *
-         * @param {number} x
-         * @param {number} y
-         * @param {number} width
-         * @param {number} height
+         * @param {Path2D} path
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
          */
-        cliprect(x, y, width, height) {
-            _ctx.beginPath()
-            _ctx.rect(x, y, width, height)
-            _ctx.clip()
-        },
-
-        /**
-         * Create a circular clipping region.
-         *
-         * Note: Clip paths cannot be reverted directly. You must save your
-         * canvas state using push() before calling clipcirc(), and restore it
-         * once you have finished drawing in the clipped area using pop().
-         *
-         * @param {number} x
-         * @param {number} y
-         * @param {number} radius
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
-         */
-        clipcirc(x, y, radius) {
-            _ctx.beginPath()
-            _ctx.arc(x, y, radius, 0, TWO_PI)
-            _ctx.clip()
+        clip(path) {
+            _ctx.clip(path)
         },
 
         /** SOUND API */
