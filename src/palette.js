@@ -1,6 +1,6 @@
 // Default colors inspired by https://lospec.com/palette-list/trirampo
 export const colors = [
-    '#000',
+    '#111',
     '#6a7799',
     '#aec2c2',
     '#FFF1E8',
