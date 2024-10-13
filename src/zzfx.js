@@ -1,8 +1,6 @@
 // ZzFXMicro - Zuper Zmall Zound Zynth - v1.3.0 by Frank Force | https://github.com/KilledByAPixel/ZzFX
 const zzfxX = /** @__PURE__ */ new AudioContext()
 
-globalThis.zzfxV = 1
-
 export const zzfx = (
     p = 1,
     k = 0.05,
@@ -63,7 +61,7 @@ export const zzfx = (
     v *= d / R
     z *= R
     l = (R * l) | 0
-    p *= globalThis.zzfxV * 0.3
+    p *= 0.3 * (globalThis.zzfxV || 1)
     for (h = (e + m + r + t + c) | 0; a < h; k[a++] = f * p)
         ++J % ((100 * F) | 0) ||
             ((f = q
