@@ -758,7 +758,6 @@ export default function litecanvas(settings = {}) {
          *
          * @param {string} eventName the event type name
          * @param {function} callback the function that is called when the event occurs
-         * @param {boolean} [highPriority=false] determines whether the callback will be called before or after the others
          * @returns {function} a function to remove the listener
          */
         listen(eventName, callback) {
