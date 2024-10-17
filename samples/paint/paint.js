@@ -2,15 +2,22 @@ litecanvas()
 
 function init() {
     entities = []
-    useImage = false
+    useImage = true
 
-    // `paint()` return a image
+    // `paint()` creates a OffscreenCanvas (to be used as an image)
     // very useful to cache expensive drawing operations
-    BALL_IMAGE = paint(256, 256, (offcanvas, offcontext) => {
-        // inside that callback all drawing functions
-        // automatically will use the offcanvas context
-        ball(128, 128).draw()
-    })
+    BALL_IMAGE = paint(
+        256, // the image width
+        256, // the image height
+        /**
+         * Any drawing operation within that function will draw on the OffscreenCanvas
+         *
+         * @param {CanvasRenderingContext2D} context
+         */
+        (context) => {
+            ball(128, 128).draw()
+        }
+    )
 
     // create many balls
     for (let i = 0; i < 150; i++) {
@@ -45,10 +52,9 @@ function draw() {
     text(
         0,
         0,
-        'FPS: ' +
-            (FPS || 0) +
-            ' - Tap to draw ' +
-            (useImage ? 'images (cache ON)' : 'shapes (cache OFF)'),
+        'cache ' +
+            (useImage ? 'ON' : 'OFF') +
+            ` - FPS: ${FPS} - Tap to toggle the cache`,
         3
     )
 }
