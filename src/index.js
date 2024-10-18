@@ -12,6 +12,7 @@ export default function litecanvas(settings = {}) {
     const root = globalThis,
         PI = Math.PI,
         TWO_PI = PI * 2,
+        raf = requestAnimationFrame,
         /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
         on = (elem, evt, callback) => elem.addEventListener(evt, callback),
         /** @type {LitecanvasOptions} */
@@ -336,7 +337,6 @@ export default function litecanvas(settings = {}) {
         circ(x, y, radius, color) {
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
-            _ctx.closePath()
             instance.stroke(color)
         },
 
@@ -351,7 +351,6 @@ export default function litecanvas(settings = {}) {
         circfill(x, y, radius, color) {
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
-            _ctx.closePath()
             instance.fill(color)
         },
 
@@ -490,13 +489,13 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, draw, options = {}) {
-            const oc = options.canvas || new OffscreenCanvas(1, 1),
+            const canvas = options.canvas || new OffscreenCanvas(1, 1),
                 scale = options.scale || 1,
-                contextBackup = _ctx
+                contextOriginal = _ctx
 
-            oc.width = width * scale
-            oc.height = height * scale
-            _ctx = oc.getContext('2d')
+            canvas.width = width * scale
+            canvas.height = height * scale
+            _ctx = canvas.getContext('2d')
 
             _ctx.scale(scale, scale)
 
@@ -519,12 +518,12 @@ export default function litecanvas(settings = {}) {
                     x = 0
                 }
             } else {
-                draw(oc, _ctx)
+                draw(_ctx)
             }
 
-            _ctx = contextBackup // restore the context
+            _ctx = contextOriginal // restore the context
 
-            return oc
+            return canvas
         },
 
         /** ADVANCED GRAPHICS API */
@@ -622,6 +621,7 @@ export default function litecanvas(settings = {}) {
          * @param {Path2D} [path]
          */
         fill(color, path) {
+            // _ctx.closePath()
             _ctx.fillStyle = instance.getcolor(color)
             if (path) {
                 _ctx.fill(path)
@@ -637,6 +637,7 @@ export default function litecanvas(settings = {}) {
          * @param {Path2D} [path]
          */
         stroke(color, path) {
+            // _ctx.closePath()
             _ctx.strokeStyle = instance.getcolor(color)
             if (path) {
                 _ctx.stroke(path)
@@ -1012,18 +1013,20 @@ export default function litecanvas(settings = {}) {
             on(root, 'blur', () => {
                 _rafid = null
             })
+
             on(root, 'focus', () => {
                 if (!_rafid) {
                     _lastFrame = performance.now()
-                    _rafid = requestAnimationFrame(drawFrame)
+                    _rafid = raf(drawFrame)
                 }
             })
         }
 
         // start the game loop
         instance.emit('init', instance)
+
         _lastFrame = performance.now()
-        _rafid = requestAnimationFrame(drawFrame)
+        _rafid = raf(drawFrame)
     }
 
     /**
@@ -1044,10 +1047,11 @@ export default function litecanvas(settings = {}) {
         }
 
         if (ticks || !_animate) {
-            // default custom values for textAlign & textBaseline
+            // default values for textAlign & textBaseline
             instance.textalign('start', 'top')
 
             instance.emit('draw')
+
             _drawCount++
             _drawTime += _stepMs * ticks
 
@@ -1059,7 +1063,7 @@ export default function litecanvas(settings = {}) {
         }
 
         if (_rafid && _animate) {
-            _rafid = requestAnimationFrame(drawFrame)
+            _rafid = raf(drawFrame)
         }
     }
 
@@ -1119,8 +1123,7 @@ export default function litecanvas(settings = {}) {
         instance.emit('resized', _scale)
 
         if (!_animate) {
-            _lastFrame = performance.now()
-            requestAnimationFrame(drawFrame)
+            _rafid = raf(drawFrame)
         }
     }
 

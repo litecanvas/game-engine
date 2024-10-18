@@ -4,19 +4,26 @@ litecanvas()
 
 function init() {
     x = CENTERX
+    y = CENTERY
 }
 
 function update() {
-    if (iskeydown('arrowleft')) {
+    if (iskeydown('ArrowLeft')) {
         x -= 5
     }
-
-    if (iskeydown('arrowright')) {
+    if (iskeydown('ArrowRight')) {
         x += 5
+    }
+    if (iskeydown('ArrowUp')) {
+        y -= 5
+    }
+    if (iskeydown('ArrowDown')) {
+        y += 5
     }
 }
 
 function draw() {
     cls(0)
-    circfill(x, CENTERY, 64, 4)
+    text(0, 0, 'Use arrows to move')
+    circfill(x, y, 64, 4)
 }

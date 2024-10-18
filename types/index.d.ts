@@ -382,6 +382,7 @@ declare global {
         draw: string[] | drawCallback,
         options?: {
             scale?: number
+            canvas?: HTMLCanvasElement | OffscreenCanvas
         }
     ): OffscreenCanvas
 
@@ -606,10 +607,19 @@ declare global {
     /**
      * Call all listeners attached to a game event
      *
-     * @param {string} event The game event type
-     * @param  {...any} args Arguments passed to all listeners
+     * @param event The game event type
+     * @param arg1 any data to be passed over the listeners
+     * @param arg2 any data to be passed over the listeners
+     * @param arg3 any data to be passed over the listeners
+     * @param arg4 any data to be passed over the listeners
      */
-    function emit(event: string, ...args: any[]): void
+    function emit(
+        event: string,
+        arg1: any,
+        arg2: any,
+        arg3: any,
+        arg4: any
+    ): void
     /**
      * Get the color value
      *
