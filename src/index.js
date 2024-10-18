@@ -1015,8 +1015,10 @@ export default function litecanvas(settings = {}) {
             })
 
             on(root, 'focus', () => {
-                _lastFrame = performance.now()
-                _rafid = raf(drawFrame)
+                if (!_rafid) {
+                    _lastFrame = performance.now()
+                    _rafid = raf(drawFrame)
+                }
             })
         }
 
