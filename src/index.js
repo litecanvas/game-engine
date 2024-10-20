@@ -63,7 +63,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _accumulated = 0,
         /** @type {number} */
-        _rafid,
+        _focused = true,
         /** @type {number} */
         _drawCount = 0,
         /** @type {number} */
@@ -1011,14 +1011,13 @@ export default function litecanvas(settings = {}) {
         // listen browser focus/blur events and pause the update/draw loop
         if (settings.pauseOnBlur) {
             on(root, 'blur', () => {
-                _rafid = null
+                _focused = false
             })
 
             on(root, 'focus', () => {
-                if (!_rafid) {
-                    _lastFrame = performance.now()
-                    _rafid = raf(drawFrame)
-                }
+                _lastFrame = performance.now()
+                raf(drawFrame)
+                _focused = true
             })
         }
 
@@ -1026,7 +1025,7 @@ export default function litecanvas(settings = {}) {
         instance.emit('init', instance)
 
         _lastFrame = performance.now()
-        _rafid = raf(drawFrame)
+        raf(drawFrame)
     }
 
     /**
@@ -1039,7 +1038,7 @@ export default function litecanvas(settings = {}) {
         _lastFrame = now
         _accumulated += t
 
-        while (_accumulated >= _stepMs) {
+        while (_accumulated > _stepMs) {
             instance.emit('update', _step * _timeScale)
             instance.setvar('ELAPSED', instance.ELAPSED + _step * _timeScale)
             _accumulated -= _stepMs
@@ -1062,8 +1061,8 @@ export default function litecanvas(settings = {}) {
             }
         }
 
-        if (_rafid && _animate) {
-            _rafid = raf(drawFrame)
+        if (_focused && _animate) {
+            raf(drawFrame)
         }
     }
 
@@ -1123,7 +1122,7 @@ export default function litecanvas(settings = {}) {
         instance.emit('resized', _scale)
 
         if (!_animate) {
-            _rafid = raf(drawFrame)
+            raf(drawFrame)
         }
     }
 
