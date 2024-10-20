@@ -12,16 +12,7 @@ function init() {
     clamp(10, 0, 100)
 }
 
-function tapped(x, y) {
-    sfx()
-}
-
-function update() {
-    // nothing here
-}
-
 function draw() {
-    cls(0)
     textalign('center', 'middle')
     text(CENTERX, CENTERY - 50, 'Open your browser console', 3)
     text(CENTERX, CENTERY, 'FOO = ' + FOO, 3)
@@ -55,7 +46,7 @@ function pluginTest(engine, { settings, colors }, config) {
     // function listen(type: string, callback: Function): Function
     engine.listen(
         // the event name
-        'draw',
+        'before:draw',
         // the event callback
         function () {
             cls(4)
@@ -65,6 +56,7 @@ function pluginTest(engine, { settings, colors }, config) {
 
     // another `listen()` example
     engine.listen('tapped', function (x, y) {
+        sfx()
         console.log(`Tap detected in X=${x} Y=${y}`)
     })
 
