@@ -25,9 +25,9 @@ declare global {
     /** the center Y of the game screen */
     var CENTERY: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
-    var MOUSEX: number | null
+    var MOUSEX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
-    var MOUSEY: number | null
+    var MOUSEY: number
     /** the default `sfx()` sound */
     var DEFAULT_SFX: number[]
 
@@ -53,55 +53,55 @@ declare global {
     /**
      * Calculates a linear (interpolation) value over t%.
      *
-     * @param {number} start
-     * @param {number} end
-     * @param {number} t The progress in percentage, where 0 = 0% and 1 = 100%.
-     * @returns {number} The unterpolated value
+     * @param start
+     * @param end
+     * @param t The progress in percentage, where 0 = 0% and 1 = 100%.
+     * @returns The unterpolated value
      * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
      */
     function lerp(start: number, end: number, t: number): number
     /**
      * Convert degrees to radians
      *
-     * @param {number} degs
-     * @returns {number} the value in radians
+     * @param degs
+     * @returns the value in radians
      */
     function deg2rad(degs: number): number
     /**
      * Convert radians to degrees
      *
-     * @param {number} rads
-     * @returns {number} the value in degrees
+     * @param rads
+     * @returns the value in degrees
      */
     function rad2deg(rads: number): number
     /**
      * Constrains a number between `min` and `max`.
      *
-     * @param {number} value
-     * @param {number} min
-     * @param {number} max
-     * @returns {number}
+     * @param value
+     * @param min
+     * @param max
+     * @returns
      */
     function clamp(value: number, min: number, max: number): number
     /**
      * Wraps a number between `min` (inclusive) and `max` (exclusive).
      *
-     * @param {number} value
-     * @param {number} min
-     * @param {number} max
-     * @returns {number}
+     * @param value
+     * @param min
+     * @param max
+     * @returns
      */
     function wrap(value: number, min: number, max: number): number
     /**
      * Re-maps a number from one range to another.
      *
-     * @param {number} value  the value to be remapped.
-     * @param {number} min1 lower bound of the value's current range.
-     * @param {number} max1  upper bound of the value's current range.
-     * @param {number} min2 lower bound of the value's target range.
-     * @param {number} max2  upper bound of the value's target range.
-     * @param {boolean} [withinBounds=false] constrain the value to the newly mapped range
-     * @returns {number} the remapped number
+     * @param value  the value to be remapped.
+     * @param min1 lower bound of the value's current range.
+     * @param max1  upper bound of the value's current range.
+     * @param min2 lower bound of the value's target range.
+     * @param max2  upper bound of the value's target range.
+     * @param [withinBounds=false] constrain the value to the newly mapped range
+     * @returns the remapped number
      */
     function map(
         value: number,
@@ -116,10 +116,10 @@ declare global {
      * Identical to `map(value, min, max, 0, 1)`.
      * Note: Numbers outside the range are not clamped to 0 and 1.
      *
-     * @param {number} value
-     * @param {number} min
-     * @param {number} max
-     * @returns {number} the normalized number.
+     * @param value
+     * @param min
+     * @param max
+     * @returns the normalized number.
      */
     function norm(value: number, min: number, max: number): number
     /**
@@ -192,17 +192,17 @@ declare global {
     /**
      * Generates a pseudorandom float between min (inclusive) and max (exclusive)
      *
-     * @param {number} [min=0.0]
-     * @param {number} [max=1.0]
-     * @returns {number} the random number
+     * @param [min=0.0]
+     * @param [max=1.0]
+     * @returns the random number
      */
     function rand(min?: number, max?: number): number
     /**
      * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
      *
-     * @param {number} [min=0]
-     * @param {number} [max=1]
-     * @returns {number} the random number
+     * @param [min=0]
+     * @param [max=1]
+     * @returns the random number
      */
     function randi(min?: number, max?: number): number
 
@@ -210,19 +210,19 @@ declare global {
     /**
      * Clear the game screen
      *
-     * @param {number|null} color The background color (from 0 to 7) or null
+     * @param color The background color index or `null`
      */
     function cls(color: number | null): void
 
     /**
      * Draw a rectangle outline
      *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @param {number} [color=0] the color index (generally from 0 to 7)
-     * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param [color=0] the color index
+     * @param [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
      */
     function rect(
         x: number,
@@ -235,12 +235,12 @@ declare global {
     /**
      * Draw a color-filled rectangle
      *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @param {number} [color=0] the color index (generally from 0 to 7)
-     * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param [color=0] the color index
+     * @param [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
      */
     function rectfill(
         x: number,
@@ -253,19 +253,19 @@ declare global {
     /**
      * Draw a circle outline
      *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @param {number} [color=0] the color index (generally from 0 to 7)
+     * @param x
+     * @param y
+     * @param radius
+     * @param [color=0] the color index
      */
     function circ(x: number, y: number, radius: number, color?: number): void
     /**
      * Draw a color-filled circle
      *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @param {number} [color=0] the color index (generally from 0 to 7)
+     * @param x
+     * @param y
+     * @param radius
+     * @param [color=0] the color index
      */
     function circfill(
         x: number,
@@ -276,11 +276,11 @@ declare global {
     /**
      * Draw a line
      *
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} [color=0] the color index (generally from 0 to 7)
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param [color=0] the color index
      */
     function line(
         x1: number,
@@ -292,53 +292,53 @@ declare global {
     /**
      * Sets the thickness of lines
      *
-     * @param {number} value
+     * @param value
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
      */
     function linewidth(value: number): void
     /**
      * Sets the line dash pattern used when drawing lines
      *
-     * @param {number|number[]} segments the line dash pattern
-     * @param {number} [offset=0] the line dash offset, or "phase".
+     * @param segments the line dash pattern
+     * @param [offset=0] the line dash offset, or "phase".
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
      */
-    function linedash(segments: number | number[], offset?: number): void
+    function linedash(segments: number[], offset?: number): void
 
     /** TEXT RENDERING API */
     /**
      * Draw text
      *
-     * @param {number} x
-     * @param {number} y
-     * @param {string} text the text message
-     * @param {number} [color=3] the color index (generally from 0 to 7)
+     * @param x
+     * @param y
+     * @param text the text message
+     * @param [color=3] the color index
      */
     function text(x: number, y: number, text: string, color?: number): void
     /**
      * Set the font family
      *
-     * @param {string} fontFamily
+     * @param fontFamily
      */
     function textfont(fontFamily: string): void
     /**
      * Set the font size
      *
-     * @param {string} size
+     * @param size
      */
     function textsize(size: string): void
     /**
      * Sets whether a font should be styled with a normal, italic, or bold.
      *
-     * @param {string} style
+     * @param style
      */
     function textstyle(style: string): void
     /**
      * Sets the alignment used when drawing texts
      *
-     * @param {string} align the horizontal alignment. Possible values: "left", "right", "center", "start" or "end"
-     * @param {string} baseline the vertical alignment. Possible values: "top", "bottom", "middle", "hanging" or "ideographic"
+     * @param align the horizontal alignment. Possible values: "left", "right", "center", "start" or "end"
+     * @param baseline the vertical alignment. Possible values: "top", "bottom", "middle", "hanging" or "ideographic"
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
@@ -346,9 +346,8 @@ declare global {
     /**
      * Returns a TextMetrics object that contains information about the measured text (such as its width, for example)
      *
-     * @param {string} text
-     * @param {number} [size]
-     * @returns {TextMetrics}
+     * @param text
+     * @param [size]
      * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
      */
     function textmetrics(text: string, size?: number): TextMetrics
@@ -357,9 +356,9 @@ declare global {
     /**
      * Draw an image
      *
-     * @param {number} x
-     * @param {number} y
-     * @param {OffscreenCanvas|HTMLImageElement|HTMLCanvasElement} image
+     * @param x
+     * @param y
+     * @param image
      */
     function image(
         x: number,
@@ -369,11 +368,10 @@ declare global {
     /**
      * Creates a offscreen canvas to draw on it
      *
-     * @param {number} width
-     * @param {number} height
-     * @param {string[] | drawCallback} draw
-     * @param {{scale?:number}} [options]
-     * @returns {OffscreenCanvas}
+     * @param width
+     * @param height
+     * @param draw
+     * @param [options]
      * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
      */
     function paint(
@@ -389,9 +387,12 @@ declare global {
     /** ADVANCED GRAPHICS API */
     /**
      * Get or set the canvas context 2D
+     *
+     * @param [context] an new canvas context
+     * @returns the current canvas context
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
      */
-    function ctx(value?: CanvasRenderingContext2D): CanvasRenderingContext2D
+    function ctx(context?: CanvasRenderingContext2D): CanvasRenderingContext2D
     /**
      * saves the current drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
@@ -405,31 +406,31 @@ declare global {
     /**
      * Adds a translation transformation to the current matrix
      *
-     * @param {number} x
-     * @param {number} y
+     * @param x
+     * @param y
      */
     function translate(x: number, y: number): void
     /**
      * Adds a scaling transformation to the canvas units horizontally and/or vertically.
      *
-     * @param {number} x
-     * @param {number} [y]
+     * @param x
+     * @param [y]
      */
     function scale(x: number, y?: number): void
     /**
      * Adds a rotation to the transformation matrix
      *
-     * @param {number} radians
+     * @param radians
      */
     function rotate(radians: number): void
     /**
-     * @param {number} a
-     * @param {number} b
-     * @param {number} c
-     * @param {number} d
-     * @param {number} e
-     * @param {number} f
-     * @param {boolean} [resetFirst=true] `false` to use _ctx.transform(); by default use _ctx.setTransform()
+     * @param a
+     * @param b
+     * @param c
+     * @param d
+     * @param e
+     * @param f
+     * @param [resetFirst=true] `false` to use _ctx.transform(); by default use _ctx.setTransform()
      *
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
@@ -446,7 +447,7 @@ declare global {
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
      *
-     * @param {number} alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
+     * @param alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
      */
     function alpha(alpha: number): void
@@ -455,61 +456,40 @@ declare global {
      * path as an argument (creates a copy), or optionally with a string
      * consisting of SVG path data.
      *
-     * @param {Path2D|string} [arg]
-     * @returns Path2D
+     * @param [arg]
      * @see https://developer.mozilla.org/en-US/docs/Web/API/Path2D/Path2D
      */
     function path(arg?: Path2D | string): Path2D
     /**
      * Fills the current or given path with a given color.
      *
-     * @param {number} color
-     * @param {Path2D} [path]
+     * @param color
+     * @param [path]
      */
     function fill(color: number, path?: Path2D): void
     /**
      * Outlines the current or given path with a given color.
      *
-     * @param {number} color
-     * @param {Path2D} [path]
+     * @param color
+     * @param [path]
      */
     function stroke(color: number, path?: Path2D): void
     /**
-     * Create a retangular clipping region.
+     * Turn given path into a clipping region.
      *
-     * Note: Clip paths cannot be reverted directly. You must save your
-     * canvas state using push() before calling cliprect(), and restore it
-     * once you have finished drawing in the clipped area using pop().
-     *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
+     * @param path
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
      */
-    function cliprect(x: number, y: number, width: number, height: number): void
-    /**
-     * Create a circular clipping region.
-     *
-     * Note: Clip paths cannot be reverted directly. You must save your
-     * canvas state using push() before calling clipcirc(), and restore it
-     * once you have finished drawing in the clipped area using pop().
-     *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
-     */
-    function clipcirc(x: number, y: number, radius: number): void
+    function clip(path: Path2D): void
 
     /** SOUND API */
     /**
      * Play a sound effects using ZzFX library.
      * If the first argument is omitted, plays an default sound.
      *
-     * @param {number|number[]} [zzfxParams] a ZzFX array of params
-     * @param {number} [pitchSlide=0] a value to increment/decrement the pitch
-     * @param {number} [volumeFactor=1] the volume factor
+     * @param [zzfxParams] a ZzFX array of params
+     * @param [pitchSlide=0] a value to increment/decrement the pitch
+     * @param [volumeFactor=1] the volume factor
      * @returns The sound that was played or `false`
      *
      * @see https://github.com/KilledByAPixel/ZzFX
@@ -523,7 +503,7 @@ declare global {
      * Set the ZzFX's global volume factor.
      * Note: use 0 to mute all sound effects.
      *
-     * @param {number} value
+     * @param value
      */
     function volume(value: number): void
 
@@ -541,15 +521,14 @@ declare global {
     /**
      * Check a collision between two rectangles
      *
-     * @param {number} x1 first rectangle position X
-     * @param {number} y1 first rectangle position Y
-     * @param {number} w1 first rectangle width
-     * @param {number} h1 first rectangle height
-     * @param {number} x2 second rectangle position X
-     * @param {number} y2 second rectangle position Y
-     * @param {number} w2 second rectangle width
-     * @param {number} h2 second rectangle height
-     * @returns {boolean}
+     * @param x1 first rectangle position X
+     * @param y1 first rectangle position Y
+     * @param w1 first rectangle width
+     * @param h1 first rectangle height
+     * @param x2 second rectangle position X
+     * @param y2 second rectangle position Y
+     * @param w2 second rectangle width
+     * @param h2 second rectangle height
      */
     function colrect(
         x1: number,
@@ -564,13 +543,12 @@ declare global {
     /**
      * Check a collision between two circles
      *
-     * @param {number} x1 first circle position X
-     * @param {number} y1 first circle position Y
-     * @param {number} r1 first circle position radius
-     * @param {number} x2 second circle position X
-     * @param {number} y2 second circle position Y
-     * @param {number} r2 second circle position radius
-     * @returns {boolean}
+     * @param x1 first circle position X
+     * @param y1 first circle position Y
+     * @param r1 first circle position radius
+     * @param x2 second circle position X
+     * @param y2 second circle position Y
+     * @param r2 second circle position radius
      */
     function colcirc(
         x1: number,
@@ -585,52 +563,52 @@ declare global {
     /**
      * Prepares a plugin to be loaded
      *
-     * @param {pluginCallback} callback
+     * @param callback
      */
     function use(callback: pluginCallback): void
     /**
      * Add a game loop event listener
      *
-     * @param {string} event The game event type
-     * @param {function} callback the function that is called when the event occurs
-     * @returns {function?} a function to remove the listener
+     * @param event The game event type
+     * @param callback the function that is called when the event occurs
+     * @returns a function to remove the listener
      */
     function listen(event: string, callback: Function): Function | null
     /**
      * Call all listeners attached to a game event
      *
      * @param event The game event type
-     * @param arg1 any data to be passed over the listeners
-     * @param arg2 any data to be passed over the listeners
-     * @param arg3 any data to be passed over the listeners
-     * @param arg4 any data to be passed over the listeners
+     * @param [arg1] any data to be passed over the listeners
+     * @param [arg2] any data to be passed over the listeners
+     * @param [arg3] any data to be passed over the listeners
+     * @param [arg4] any data to be passed over the listeners
      */
     function emit(
         event: string,
-        arg1: any,
-        arg2: any,
-        arg3: any,
-        arg4: any
+        arg1?: any,
+        arg2?: any,
+        arg3?: any,
+        arg4?: any
     ): void
     /**
      * Get the color value
      *
-     * @param {number} index The color number
-     * @returns {string} the color value
+     * @param index The color number
+     * @returns the color value
      */
     function getcolor(index: number): string
     /**
      * Create or update a instance variable
      *
-     * @param {string} key
-     * @param {any} value
+     * @param key
+     * @param value
      */
     function setvar(key: string, value: any): void
     /**
      * Resizes the game canvas and emit the "resized" event
      *
-     * @param {number} width
-     * @param {number} height
+     * @param width
+     * @param height
      */
     function resize(width: number, height: number): void
     /**
@@ -638,13 +616,13 @@ declare global {
      * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
      * A value of 0 freezes time and is effectively equivalent to pausing.
      *
-     * @param {number} value
+     * @param value
      */
     function timescale(value: number): void
     /**
      * Set the target FPS at runtime.
      *
-     * @param {number} fps
+     * @param fps
      */
     function setfps(fps: number): void
 }

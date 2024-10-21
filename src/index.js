@@ -222,10 +222,10 @@ export default function litecanvas(settings = {}) {
          * @param {boolean} [withinBounds=false] constrain the value to the newly mapped range
          * @returns {number} the remapped number
          */
-        map(value, min1, max1, min2, max2, withinBounds = false) {
+        map(value, min1, max1, min2, max2, withinBounds) {
             // prettier-ignore
             const result = ((value - min1) / (max1 - min1)) * (max2 - min2) + min2
-            return !withinBounds ? result : instance.clamp(result, min2, max2)
+            return withinBounds ? instance.clamp(result, min2, max2) : result
         },
 
         /**
@@ -383,13 +383,13 @@ export default function litecanvas(settings = {}) {
         /**
          * Sets the line dash pattern used when drawing lines
          *
-         * @param {number|number[]} segments the line dash pattern
+         * @param {number[]} segments the line dash pattern
          * @param {number} [offset=0] the line dash offset, or "phase".
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
          */
         linedash(segments, offset = 0) {
-            _ctx.setLineDash(Array.isArray(segments) ? segments : [segments])
+            _ctx.setLineDash(segments)
             _ctx.lineDashOffset = offset
         },
 
@@ -484,7 +484,9 @@ export default function litecanvas(settings = {}) {
          * @param {number} width
          * @param {number} height
          * @param {string[]|drawCallback} draw
-         * @param {{scale?:number}} [options]
+         * @param {object} [options]
+         * @param {number} [options.scale]
+         * @param {OffscreenCanvas | HTMLCanvasElement} [options.canvas]
          * @returns {OffscreenCanvas}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
@@ -499,8 +501,8 @@ export default function litecanvas(settings = {}) {
 
             _ctx.scale(scale, scale)
 
-            // is pixelart?
-            if (Array.isArray(draw)) {
+            // draw pixel art if `draw` is a array
+            if (draw.pop) {
                 let x = 0,
                     y = 0
 
@@ -661,7 +663,7 @@ export default function litecanvas(settings = {}) {
          * Play a sound effects using ZzFX library.
          * If the first argument is omitted, plays an default sound.
          *
-         * @param {number|number[]} [zzfxParams] a ZzFX array of params
+         * @param {number[]} [zzfxParams] a ZzFX array of params
          * @param {number} [pitchSlide] a value to increment/decrement the pitch
          * @param {number} [volumeFactor] the volume factor
          * @returns {number[] | boolean} The sound that was played or `false`
@@ -1032,10 +1034,10 @@ export default function litecanvas(settings = {}) {
             })
         }
 
+        instance.setfps(settings.fps)
+
         // start the game loop
         instance.emit('init', instance)
-
-        setfps(settings.fps)
 
         _lastFrame = performance.now()
         raf(drawFrame)
@@ -1045,7 +1047,7 @@ export default function litecanvas(settings = {}) {
      * @param {number} now
      */
     function drawFrame(now) {
-        let ticks = 0,
+        let ticks = _animate ? 0 : 1,
             t = now - _lastFrame
 
         _lastFrame = now
@@ -1058,7 +1060,7 @@ export default function litecanvas(settings = {}) {
             ticks++
         }
 
-        if (ticks || !_animate) {
+        if (ticks) {
             // default values for textAlign & textBaseline
             instance.textalign('start', 'top')
 
