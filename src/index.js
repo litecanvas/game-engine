@@ -57,9 +57,9 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _lastFrame,
         /** @type {number} */
-        _step = 1 / settings.fps,
+        _step,
         /** @type {number} */
-        _stepMs = _step * 1000,
+        _stepMs,
         /** @type {number} */
         _accumulated = 0,
         /** @type {number} */
@@ -732,17 +732,6 @@ export default function litecanvas(settings = {}) {
         colcirc: (x1, y1, r1, x2, y2, r2) =>
             (x2 - x1) ** 2 + (y2 - y1) ** 2 <= (r1 + r2) ** 2,
 
-        /**
-         * The scale of the game's delta time (dt).
-         * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
-         * A value of 0 freezes time and is effectively equivalent to pausing.
-         *
-         * @param {number} value
-         */
-        timescale(value) {
-            _timeScale = value
-        },
-
         /** PLUGINS API */
         /**
          * Prepares a plugin to be loaded
@@ -819,6 +808,28 @@ export default function litecanvas(settings = {}) {
             instance.setvar('WIDTH', (_canvas.width = width))
             instance.setvar('HEIGHT', (_canvas.height = height || width))
             pageResized()
+        },
+
+        /**
+         * The scale of the game's delta time (dt).
+         * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
+         * A value of 0 freezes time and is effectively equivalent to pausing.
+         *
+         * @param {number} value
+         */
+        timescale(value) {
+            _timeScale = value
+        },
+
+        /**
+         * Set the target FPS at runtime.
+         *
+         * @param {number} fps
+         */
+        setfps(fps) {
+            _step = 1 / fps
+            _stepMs = _step * 1000
+            _accumulated = 0
         },
     }
 
@@ -1023,6 +1034,8 @@ export default function litecanvas(settings = {}) {
 
         // start the game loop
         instance.emit('init', instance)
+
+        setfps(settings.fps)
 
         _lastFrame = performance.now()
         raf(drawFrame)
