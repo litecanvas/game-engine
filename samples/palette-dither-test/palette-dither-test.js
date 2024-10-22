@@ -1,5 +1,5 @@
 const size = 32
-const cols = 12 // Número de colunas
+const cols = 12
 
 litecanvas({
     animate: false,
@@ -19,7 +19,6 @@ function init() {
 }
 
 function draw() {
-    let s = performance.now()
     for (let i = 0; i < combinations.length; i++) {
         const x = (i % cols) * size
         const y = floor(i / cols) * size
@@ -32,5 +31,4 @@ function draw() {
             }
         }
     }
-    console.log(performance.now() - s)
 }
