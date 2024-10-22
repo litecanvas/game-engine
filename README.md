@@ -4,7 +4,7 @@
 
 [![Discord Server](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/r2c3rGsvH3)
 
-Litecanvas is a lightweight HTML5 canvas engine suitable for small web games, prototypes, game jams, animations, creative programming, learning game programming and game design, etc.
+Litecanvas is a lightweight HTML5 canvas engine suitable for small web games, prototypes, game jams, animations, creative coding, learning game programming and game design, etc.
 
 :warning: **This project is still under development. All feedback is appreciated!** :warning:
 
