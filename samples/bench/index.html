@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width,
+    user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0"
+        />
+        <title>Litecanvas Demo</title>
+        <style type="text/css">
+            body {
+                font-family: sans-serif;
+                margin: 0;
+            }
+
+            a.active {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <p><strong>FPS:</strong> <span id="fps"></span></p>
+        <p>
+            <strong>Amount:</strong>
+            <a href="?amount=100" data-amount="100">100</a>
+            <a href="?amount=500" data-amount="500">500</a>
+            <a href="?amount=1000" data-amount="1000">1k</a>
+            <a href="?amount=2000" data-amount="2000">2k</a>
+            <a href="?amount=4000" data-amount="4000">4k</a>
+            <a href="?amount=8000" data-amount="8000">8k</a>
+            <a href="?amount=16000" data-amount="16000">16k</a>
+            <a href="?amount=32000" data-amount="32000">32k</a>
+        </p>
+        <canvas id="canvas"></canvas>
+        <!-- <script src="https://unpkg.com/litecanvas/dist/dist.js"></script> -->
+        <script src="../../dist/dist.js"></script>
+        <script src="bench.js"></script>
+    </body>
+</html>
