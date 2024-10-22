@@ -1,4 +1,4 @@
-![icon2](https://github.com/user-attachments/assets/28b92806-cb70-41c7-be72-12e658eb7819)
+![logo](https://github.com/user-attachments/assets/cbff543a-17be-44e4-b4ce-f9ff0a0581bb)
 
 # Litecanvas
 
