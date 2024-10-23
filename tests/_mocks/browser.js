@@ -55,7 +55,15 @@ globalThis.AudioContext = class {
 
 globalThis.AudioBuffer = class {}
 
-globalThis.requestAnimationFrame = () => {}
+let frames = 0
+globalThis.requestAnimationFrame = (callback) => {
+    let maxFrames = globalThis.maxFrames || 5
+    if (frames >= maxFrames) return
+    setTimeout(() => {
+        callback(performance.now())
+        frames++
+    }, 1000 / 60)
+}
 
 globalThis.cancelAnimationFrame = () => {}
 

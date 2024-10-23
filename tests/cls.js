@@ -19,8 +19,9 @@ test('clear screen with color', (t) => {
         `set fillStyle ${colorValue}`,
         'fill',
     ]
+    const actual = g.ctx()._calls.slice(-expected.length)
 
-    t.deepEqual(g.ctx()._calls.slice(-expected.length), expected)
+    t.deepEqual(actual, expected)
 })
 
 test('clear screen without 1st argument', (t) => {

@@ -43,6 +43,9 @@ class CanvasRenderingContextMock {
         this._calls.push('fill')
     }
 
+    /**
+     * @param {string} value
+     */
     set fillStyle(value) {
         this._calls.push(`set fillStyle ${value}`)
     }
