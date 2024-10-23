@@ -5,7 +5,7 @@ litecanvas({
     animate: false,
     width: size * cols,
     height: size * (cols - 1),
-    // autoscale: false,
+    autoscale: false,
 })
 
 function init() {

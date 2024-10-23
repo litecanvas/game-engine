@@ -47,7 +47,7 @@ export default function litecanvas(settings = {}) {
         /** @type {boolean} */
         _autoscale = settings.autoscale,
         /** @type {boolean} */
-        _animate = settings.animate,
+        _animated = settings.animate,
         /** @type {number} */
         _scale = 1,
         /** @type {CanvasRenderingContext2D} */
@@ -859,7 +859,6 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
-        _initialized = true
         setupCanvas()
 
         // add listeners for default events
@@ -874,7 +873,10 @@ export default function litecanvas(settings = {}) {
         }
 
         // listen window resize event
-        on(root, 'resize', pageResized)
+        if (_fullscreen || _autoscale) {
+            on(root, 'resize', pageResized)
+        }
+
         pageResized()
 
         // default mouse/touch handlers
@@ -1041,13 +1043,15 @@ export default function litecanvas(settings = {}) {
 
         _lastFrame = performance.now()
         raf(drawFrame)
+
+        _initialized = true
     }
 
     /**
      * @param {number} now
      */
     function drawFrame(now) {
-        let ticks = _animate ? 0 : 1,
+        let ticks = _animated ? 0 : 1,
             t = now - _lastFrame
 
         _lastFrame = now
@@ -1076,7 +1080,7 @@ export default function litecanvas(settings = {}) {
             }
         }
 
-        if (_focused && _animate) {
+        if (_focused && _animated) {
             raf(drawFrame)
         }
     }
@@ -1091,7 +1095,9 @@ export default function litecanvas(settings = {}) {
         _ctx = _canvas.getContext('2d')
 
         // disable fullscreen if a width is specified
-        if (instance.WIDTH > 0) _fullscreen = false
+        if (instance.WIDTH > 0) {
+            _fullscreen = false
+        }
 
         _canvas.width = instance.WIDTH
         _canvas.height = instance.HEIGHT || instance.WIDTH
@@ -1136,7 +1142,7 @@ export default function litecanvas(settings = {}) {
 
         instance.emit('resized', _scale)
 
-        if (!_animate) {
+        if (!_animated) {
             raf(drawFrame)
         }
     }
@@ -1169,9 +1175,9 @@ export default function litecanvas(settings = {}) {
     }
 
     if ('loading' === document.readyState) {
-        on(root, 'DOMContentLoaded', init)
+        on(root, 'DOMContentLoaded', () => raf(init))
     } else {
-        init()
+        raf(init)
     }
 
     return instance
