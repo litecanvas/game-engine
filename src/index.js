@@ -623,7 +623,6 @@ export default function litecanvas(settings = {}) {
          * @param {Path2D} [path]
          */
         fill(color, path) {
-            // _ctx.closePath()
             _ctx.fillStyle = instance.getcolor(color)
             if (path) {
                 _ctx.fill(path)
@@ -639,7 +638,6 @@ export default function litecanvas(settings = {}) {
          * @param {Path2D} [path]
          */
         stroke(color, path) {
-            // _ctx.closePath()
             _ctx.strokeStyle = instance.getcolor(color)
             if (path) {
                 _ctx.stroke(path)
@@ -859,8 +857,6 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
-        setupCanvas()
-
         // add listeners for default events
         const source = settings.loop ? settings.loop : root
         for (const event of Object.keys(_events)) {
@@ -1165,6 +1161,8 @@ export default function litecanvas(settings = {}) {
             }
         }
     }
+
+    setupCanvas()
 
     if (settings.global) {
         if (root.__litecanvas) {
