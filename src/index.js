@@ -857,6 +857,8 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
+        _initialized = true
+
         // add listeners for default events
         const source = settings.loop ? settings.loop : root
         for (const event of Object.keys(_events)) {
@@ -1039,8 +1041,6 @@ export default function litecanvas(settings = {}) {
 
         _lastFrame = performance.now()
         raf(drawFrame)
-
-        _initialized = true
     }
 
     /**
@@ -1162,8 +1162,6 @@ export default function litecanvas(settings = {}) {
         }
     }
 
-    setupCanvas()
-
     if (settings.global) {
         if (root.__litecanvas) {
             throw 'global litecanvas already instantiated'
@@ -1171,6 +1169,8 @@ export default function litecanvas(settings = {}) {
         Object.assign(root, instance)
         root.__litecanvas = instance
     }
+
+    setupCanvas()
 
     if ('loading' === document.readyState) {
         on(root, 'DOMContentLoaded', () => raf(init))
