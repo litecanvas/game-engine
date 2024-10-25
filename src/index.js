@@ -67,7 +67,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _drawCount = 0,
         /** @type {number} */
-        _drawTime = 0,
+        _nextFpsUpdate = 0,
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {string} */
@@ -1040,6 +1040,7 @@ export default function litecanvas(settings = {}) {
         instance.emit('init', instance)
 
         _lastFrame = performance.now()
+        _nextFpsUpdate = _lastFrame + 1000
         raf(drawFrame)
     }
 
@@ -1066,12 +1067,11 @@ export default function litecanvas(settings = {}) {
             instance.emit('draw')
 
             _drawCount++
-            _drawTime += dt
 
-            if (_drawTime + _accumulated >= 1000) {
+            if (now + _accumulated > _nextFpsUpdate) {
                 instance.setvar('FPS', _drawCount)
                 _drawCount = 0
-                _drawTime -= 1000
+                _nextFpsUpdate = now + 1000
             }
         }
 
