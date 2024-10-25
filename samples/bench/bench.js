@@ -8,10 +8,10 @@ const url = new URL(location),
     }
 
 litecanvas({
-    canvas: '#canvas',
     width: state.width,
     height: state.height,
     // autoscale: false,
+    // fps: 30
 })
 
 function init() {
