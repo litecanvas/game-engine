@@ -1047,27 +1047,26 @@ export default function litecanvas(settings = {}) {
      * @param {number} now
      */
     function drawFrame(now) {
-        let ticks = _animated ? 0 : 1,
-            t = now - _lastFrame
+        let emitDraw = !_animated,
+            dt = now - _lastFrame
 
-        _lastFrame = now
-        _accumulated += t
+        _accumulated += dt > 1000 ? _stepMs : dt
 
-        while (_accumulated > _stepMs) {
+        while (_accumulated >= _stepMs) {
             instance.emit('update', _step * _timeScale)
             instance.setvar('ELAPSED', instance.ELAPSED + _step * _timeScale)
             _accumulated -= _stepMs
-            ticks++
+            emitDraw = true
         }
 
-        if (ticks) {
+        if (emitDraw) {
             // default values for textAlign & textBaseline
             instance.textalign('start', 'top')
 
             instance.emit('draw')
 
             _drawCount++
-            _drawTime += _stepMs * ticks
+            _drawTime += dt
 
             if (_drawTime + _accumulated >= 1000) {
                 instance.setvar('FPS', _drawCount)
@@ -1075,6 +1074,8 @@ export default function litecanvas(settings = {}) {
                 _drawTime -= 1000
             }
         }
+
+        _lastFrame = now
 
         if (_focused && _animated) {
             raf(drawFrame)
