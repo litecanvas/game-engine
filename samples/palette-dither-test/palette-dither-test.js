@@ -1,11 +1,14 @@
-const size = 32
+const url = new URL(window.location)
+const zoomed = 1 === +url.searchParams.get('zoom')
+
+const size = 12
 const cols = 12
 
 litecanvas({
     animate: false,
     width: size * cols,
     height: size * (cols - 1),
-    autoscale: false,
+    autoscale: zoomed,
 })
 
 function init() {
@@ -31,4 +34,9 @@ function draw() {
             }
         }
     }
+}
+
+function tapped() {
+    url.searchParams.set('zoom', zoomed ? 0 : 1)
+    window.location = url.href
 }
