@@ -114,7 +114,7 @@ export default function litecanvas(settings = {}) {
         ELAPSED: 0,
 
         /** @type {number} */
-        FPS: settings.fps,
+        FPS: 0,
 
         /** @type {number} */
         CENTERX: 0,
@@ -1157,8 +1157,8 @@ export default function litecanvas(settings = {}) {
     function loadPlugin(callback) {
         const pluginData = callback(instance, _helpers, callback.__conf)
         if ('object' === typeof pluginData) {
-            for (const [key, value] of Object.entries(pluginData)) {
-                instance.setvar(key, value)
+            for (const key of Object.keys(pluginData)) {
+                instance.setvar(key, pluginData[key])
             }
         }
     }
