@@ -1091,6 +1091,8 @@ export default function litecanvas(settings = {}) {
         instance.setvar('CANVAS', _canvas)
         _ctx = _canvas.getContext('2d')
 
+        on(_canvas, 'click', () => root.focus())
+
         // disable fullscreen if a width is specified
         if (instance.WIDTH > 0) {
             _fullscreen = false
