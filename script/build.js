@@ -19,6 +19,9 @@ console.log(`  dist/dist.js (${size})`)
 const minified = await minify(
     fs.readFileSync('dist/dist.js', { encoding: 'utf-8' }),
     {
+        format: {
+            comments: false,
+        },
         compress: {
             drop_console: true,
             // unsafe: true,
