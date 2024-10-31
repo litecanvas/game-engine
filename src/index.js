@@ -38,7 +38,7 @@ export default function litecanvas(settings = {}) {
 
     let /** @type {boolean} */
         _initialized = false,
-        /** @type {function[]} */
+        /** @type {Function[]} */
         _plugins = [],
         /** @type {HTMLCanvasElement|string} _canvas */
         _canvas = settings.canvas || document.createElement('canvas'),
@@ -78,16 +78,17 @@ export default function litecanvas(settings = {}) {
         _rng_seed = Date.now(),
         /**
          * default game events
+         * @type {Object<string,Set<Function>>}
          */
         _events = {
-            init: false,
-            update: false,
-            draw: false,
-            resized: false,
-            tap: false,
-            untap: false,
-            tapping: false,
-            tapped: false,
+            init: null,
+            update: null,
+            draw: null,
+            resized: null,
+            tap: null,
+            untap: null,
+            tapping: null,
+            tapped: null,
         },
         /**
          * Helpers to be used by plugins
@@ -747,19 +748,15 @@ export default function litecanvas(settings = {}) {
          * Add a game event listener
          *
          * @param {string} eventName the event type name
-         * @param {function} callback the function that is called when the event occurs
-         * @returns {function} a function to remove the listener
+         * @param {Function} callback the function that is called when the event occurs
+         * @returns {Function} a function to remove the listener
          */
         listen(eventName, callback) {
-            _events[eventName] = _events[eventName] || []
-            _events[eventName].push(callback)
+            _events[eventName] = _events[eventName] || new Set()
+            _events[eventName].add(callback)
 
             // return a function to remove this event listener
-            return () => {
-                _events[eventName] = _events[eventName].filter(
-                    (x) => callback !== x
-                )
-            }
+            return () => _events[eventName].delete(callback)
         },
 
         /**
