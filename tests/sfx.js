@@ -29,7 +29,7 @@ test('the second argument increments the pitch', (t) => {
     t.true(zzfxSound[10] + pitchSlide === result[10])
 })
 
-test('the second argument chnages the sound volume', (t) => {
+test('the second argument changes the sound volume', (t) => {
     const volumeFactor = 2
     const result = g.sfx(zzfxSound, 0, volumeFactor)
 
@@ -45,7 +45,7 @@ test('returns false if the global volume is muted', (t) => {
 })
 
 test('only plays sounds if some interaction has been made on the page', (t) => {
-    navigator.userActivation.userActivation = false
+    navigator.userActivation.hasBeenActive = false
 
     const result = g.sfx()
 
