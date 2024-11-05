@@ -267,8 +267,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} [max=1]
          * @returns {number} the random number
          */
-        randi: (min = 0, max = 1) =>
-            instance.floor(instance.rand(min, max + 1)),
+        randi: (min = 0, max = 1) => Math.floor(instance.rand(min, max + 1)),
 
         /**
          * If a value is passed, initializes the random number generator with an explicit seed value.
@@ -486,7 +485,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          * @param {string[]|drawCallback} draw
          * @param {object} [options]
-         * @param {number} [options.scale]
+         * @param {number} [options.scale=1]
          * @param {OffscreenCanvas | HTMLCanvasElement} [options.canvas]
          * @returns {OffscreenCanvas}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
@@ -503,7 +502,7 @@ export default function litecanvas(settings = {}) {
             _ctx.scale(scale, scale)
 
             // draw pixel art if `draw` is a array
-            if (draw.pop) {
+            if (draw.length) {
                 let x = 0,
                     y = 0
 
@@ -512,7 +511,7 @@ export default function litecanvas(settings = {}) {
                 for (const str of draw) {
                     for (const color of str) {
                         if (' ' !== color && '.' !== color) {
-                            // support for 16-color palettes using hex (from 0 to f)
+                            // support for 16-color palette using hex (from 0 to f)
                             instance.rectfill(x, y, 1, 1, parseInt(color, 16))
                         }
                         x++
