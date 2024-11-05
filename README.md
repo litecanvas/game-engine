@@ -28,7 +28,7 @@ You can try our [online playground](https://litecanvas.github.io) or just instal
 npx tiged litecanvas/template my-game
 cd my-game
 npm install
-npm start
+npm run dev
 ```
 
 If you prefer, you can manually install the package via NPM:
