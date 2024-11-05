@@ -67,8 +67,6 @@ globalThis.requestAnimationFrame = (callback) => {
 
 globalThis.cancelAnimationFrame = () => {}
 
-globalThis.navigator = {
-    userActivation: {
-        hasBeenActive: true,
-    },
+globalThis.navigator.userActivation = {
+    hasBeenActive: true,
 }
