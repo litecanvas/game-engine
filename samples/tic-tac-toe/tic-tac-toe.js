@@ -32,6 +32,9 @@ function init() {
 }
 
 function draw() {
+    // background
+    rectfill(0, 0, WIDTH, HEIGHT);
+    
     // draw grid
     line(0, CELL, CELL * 3, CELL, RED);
     line(0, CELL * 2, CELL * 3, CELL * 2, RED);
@@ -40,23 +43,29 @@ function draw() {
     line(CELL * 2, 0, CELL * 2, CELL * 3, RED);
 
     // draw pieces
+    textalign("center", "middle")
+
     for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
             let value = map[row][col];
             if (value === 'X' || value === 'O') {
-                text(col * CELL + CELL / 2 - 10, row * CELL + CELL / 2, value, WHITE);
+                text(col * CELL + CELL / 2, row * CELL + CELL / 2, value, WHITE);
             }
         }
     }
 
     // draw end game
     if (gameOver) {
-        text(10, CELL * 3 + 10, `Game Over! ${player} wins!`, WHITE);
-        text(10, CELL * 3 + 30, "Refresh to restart.", WHITE);
+        text(0, CELL * 3 , `Game Over! ${player} wins!`, WHITE);
+        text(0, CELL * 3, "Refresh to restart.", WHITE);
     }
 }
 
 function tap(x, y, _tapId) {
+    if (gameOver) {
+        return;
+    }
+
     // Check if the click is within the grid bounds
     if (x >= 0 && x < CELL * 3 && y >= 0 && y < CELL * 3) {
         // Convert pixel coordinates to grid coordinates
