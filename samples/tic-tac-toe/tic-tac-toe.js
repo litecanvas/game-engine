@@ -56,8 +56,8 @@ function draw() {
 
     // draw end game
     if (gameOver) {
-        text(0, CELL * 3 , `Game Over! ${player} wins!`, WHITE);
-        text(0, CELL * 3, "Refresh to restart.", WHITE);
+        text(WIDTH / 2, CELL * 3 , `Game Over! ${player} wins!`, WHITE);
+        text(WIDTH / 2, CELL * 3 + CELL, "Refresh to restart.", WHITE);
     }
 }
 
