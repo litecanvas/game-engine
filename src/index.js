@@ -502,7 +502,7 @@ export default function litecanvas(settings = {}) {
             _ctx.scale(scale, scale)
 
             // draw pixel art if `draw` is a array
-            if (draw.length) {
+            if (draw.push) {
                 let x = 0,
                     y = 0
 
