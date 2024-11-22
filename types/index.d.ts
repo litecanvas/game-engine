@@ -205,6 +205,14 @@ declare global {
      * @returns the random number
      */
     function randi(min?: number, max?: number): number
+    /**
+     * If a value is passed, initializes the random number generator with an explicit seed value.
+     * Otherwise, returns the current seed state.
+     *
+     * @param [value]
+     * @returns the seed state
+     */
+    function seed(value?: number): number
 
     /** BASIC GRAPHICS API */
     /**
