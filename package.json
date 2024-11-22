@@ -6,9 +6,10 @@
     "author": "Luiz Bills <luizbills@pm.me>",
     "contributors": [],
     "devDependencies": {
+        "@swc/core": "^1.7.26",
         "ava": "^6.1.3",
         "esbuild": "^0.24.0",
-        "@swc/core": "^1.7.26"
+        "prettier": "^3.3.3"
     },
     "homepage": "https://litecanvas.github.io/about.html",
     "repository": {
@@ -27,7 +28,7 @@
         "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.js --servedir=.",
         "build": "node script/build.js",
         "gzip-size": "gzip -9 -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
-        "format": "npx prettier -w src/* samples/* types/*",
+        "format": "prettier -w src/* samples/* types/* script/* types/*",
         "prepare": "npm run build && npm run gzip-size",
         "prepublishOnly": "npm test"
     },
