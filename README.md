@@ -38,12 +38,12 @@ npm install litecanvas
 ```
 
 ```js
-// import the engine or put the script in your HTML
+// import the engine package or put the CDN script in your HTML
 // CDN: https://unpkg.com/litecanvas/dist/dist.min.js
 import litecanvas from 'litecanvas'
 
-// you can setup other configurations here
-// learn more in the cheatsheet
+// Start and setup the engine
+// learn more: https://litecanvas.js.org/about.html#settings
 litecanvas({
     loop: { init, update, draw, tapped },
 })
@@ -54,8 +54,8 @@ function init() {
     bg = 0
     color = 3
     radius = 32
-    posx = CENTERX
-    posy = CENTERY
+    posx = CENTERX // canvas width / 2
+    posy = CENTERY // canvas height / 2
 }
 
 // this function detect taps/clicks
