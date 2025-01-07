@@ -101,3 +101,4 @@ _See other demos in [samples](samples) folder_
 - [js13kGames](https://js13kgames.com/): a JavaScript coding competition with size limit set to 13 kilobytes.
 - [raylib](https://www.raylib.com/): a simple and easy-to-use gamedev library.
 - [p5.js/Processing](https://p5js.org/): a library for creative coding.
+- [Pygame Zero](https://github.com/lordmauve/pgzero): A zero-boilerplate games programming framework for Python 3.
