@@ -20,7 +20,6 @@
         </style>
     </head>
     <body>
-        <p><strong>FPS:</strong> <span id="fps"></span></p>
         <p>
             <strong>Amount:</strong>
             <a href="?amount=100" data-amount="100">100</a>
@@ -32,7 +31,12 @@
             <a href="?amount=16000" data-amount="16000">16k</a>
             <a href="?amount=32000" data-amount="32000">32k</a>
         </p>
+        <div style="position: relative">
+            <div id="stats"></div>
+            <canvas id="canvas"></canvas>
+        </div>
         <!-- <script src="https://unpkg.com/litecanvas/dist/dist.js"></script> -->
+        <script src="https://mrdoob.github.io/stats.js/build/stats.min.js"></script>
         <script src="../../dist/dist.js"></script>
         <script src="bench.js"></script>
     </body>

@@ -18,8 +18,6 @@ declare global {
     var CANVAS: HTMLCanvasElement
     /** the amount of time (in seconds) since the game started */
     var ELAPSED: number
-    /** the FPS meter */
-    var FPS: number
     /** the center X of the game screen */
     var CENTERX: number
     /** the center Y of the game screen */

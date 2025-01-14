@@ -46,7 +46,6 @@ function draw() {
         stroke(0)
     }
     pop()
-    text(0, 0, FPS, 4)
 }
 
 function clipcirc(x, y, radius) {

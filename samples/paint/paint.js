@@ -49,14 +49,7 @@ function draw() {
     }
 
     textstyle('italic bold')
-    text(
-        0,
-        0,
-        'cache ' +
-            (useImage ? 'ON' : 'OFF') +
-            ` - FPS: ${FPS} - Tap to toggle the cache`,
-        3
-    )
+    text(0, 0, 'drawing ' + (useImage ? 'images (fast)' : 'shapes (slow)'), 3)
 }
 
 function ball(x, y) {

@@ -7,8 +7,6 @@ type LitecanvasInstance = {
     CANVAS: HTMLCanvasElement
     /** the amount of time (in seconds) since the game started */
     ELAPSED: number
-    /** the FPS meter */
-    FPS: number
     /** the center X of the game screen */
     CENTERX: number
     /** the center Y of the game screen */
