@@ -14,11 +14,11 @@ export default function litecanvas(settings = {}) {
         TWO_PI = PI * 2,
         raf = requestAnimationFrame,
         /** @type {Function[]} */
-        _browerEventListeners = [],
+        _browserEventListeners = [],
         /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
         on = (elem, evt, callback) => {
             elem.addEventListener(evt, callback, false)
-            _browerEventListeners.push(() =>
+            _browserEventListeners.push(() =>
                 elem.removeEventListener(evt, callback, false)
             )
         },
@@ -835,15 +835,15 @@ export default function litecanvas(settings = {}) {
          */
         quit() {
             _focused = _events = false
-            for (const removeListener of _browerEventListeners) {
+            for (const removeListener of _browserEventListeners) {
                 removeListener()
             }
             if (_global) {
                 for (const key in instance) {
                     delete root[key]
                 }
+                delete root.__litecanvas
             }
-            delete root.__litecanvas
         },
     }
 

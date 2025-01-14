@@ -1,4 +1,4 @@
-import { addEventListener } from './events.js'
+import { addEventListener, removeEventListener } from './events.js'
 
 export class Canvas {
     width = 300
@@ -8,6 +8,7 @@ export class Canvas {
     _style = {}
 
     addEventListener = addEventListener
+    removeEventListener = removeEventListener
 
     getContext(type) {
         this._calls.push(`getContext ${type}`)

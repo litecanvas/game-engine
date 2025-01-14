@@ -1,11 +1,12 @@
 import { Canvas } from './canvas.js'
-import { addEventListener } from './events.js'
+import { addEventListener, removeEventListener } from './events.js'
 
 if (globalThis.window) throw 'global window object already exists'
 
 globalThis.window = {}
 
 globalThis.addEventListener = addEventListener
+globalThis.removeEventListener = removeEventListener
 
 globalThis.innerWidth = 1980
 globalThis.innerHeight = 1080
