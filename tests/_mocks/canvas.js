@@ -5,7 +5,7 @@ export class Canvas {
     height = 150
     context = null
     _calls = []
-    style = {}
+    _style = {}
 
     addEventListener = addEventListener
 
@@ -15,6 +15,18 @@ export class Canvas {
             this.context = new CanvasRenderingContextMock(type)
         }
         return this.context
+    }
+
+    get style() {
+        return this._style
+    }
+
+    set style(value) {
+        if (!value) {
+            this._style = {}
+        } else {
+            this._style = value
+        }
     }
 }
 
