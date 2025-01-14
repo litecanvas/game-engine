@@ -13,8 +13,15 @@ export default function litecanvas(settings = {}) {
         PI = Math.PI,
         TWO_PI = PI * 2,
         raf = requestAnimationFrame,
+        /** @type {Function[]} */
+        _browerEventListeners = [],
         /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
-        on = (elem, evt, callback) => elem.addEventListener(evt, callback),
+        on = (elem, evt, callback) => {
+            elem.addEventListener(evt, callback, false)
+            _browerEventListeners.push(() =>
+                elem.removeEventListener(evt, callback, false)
+            )
+        },
         /** @type {LitecanvasOptions} */
         defaults = {
             fps: 60,
@@ -64,10 +71,6 @@ export default function litecanvas(settings = {}) {
         _accumulated = 0,
         /** @type {number} */
         _focused = true,
-        /** @type {number} */
-        _drawCount = 0,
-        /** @type {number} */
-        _nextFpsUpdate = 0,
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {string} */
@@ -76,6 +79,8 @@ export default function litecanvas(settings = {}) {
         _fontSize = 32,
         /** @type {number} */
         _rng_seed = Date.now(),
+        /** @type {boolean} */
+        _global = settings.global,
         /**
          * default game events
          * @type {Object<string,Set<Function>>}
@@ -113,9 +118,6 @@ export default function litecanvas(settings = {}) {
 
         /** @type {number} */
         ELAPSED: 0,
-
-        /** @type {number} */
-        FPS: 0,
 
         /** @type {number} */
         CENTERX: 0,
@@ -789,7 +791,7 @@ export default function litecanvas(settings = {}) {
          */
         setvar(key, value) {
             instance[key] = value
-            if (settings.global) {
+            if (_global) {
                 root[key] = value
             }
         },
@@ -827,6 +829,22 @@ export default function litecanvas(settings = {}) {
             _stepMs = _step * 1000
             _accumulated = 0
         },
+
+        /**
+         * Stops the litecanvas instance and remove all event listeners.
+         */
+        quit() {
+            _focused = _events = false
+            for (const removeListener of _browerEventListeners) {
+                removeListener()
+            }
+            if (_global) {
+                for (const key in instance) {
+                    delete root[key]
+                }
+            }
+            delete root.__litecanvas
+        },
     }
 
     /** Copy some functions from native `Math` object */
@@ -857,7 +875,7 @@ export default function litecanvas(settings = {}) {
 
         // add listeners for default events
         const source = settings.loop ? settings.loop : root
-        for (const event of Object.keys(_events)) {
+        for (const event in _events) {
             if (source[event]) instance.listen(event, source[event])
         }
 
@@ -1025,8 +1043,8 @@ export default function litecanvas(settings = {}) {
 
             on(root, 'focus', () => {
                 _lastFrame = performance.now()
-                raf(drawFrame)
                 _focused = true
+                raf(drawFrame)
             })
         }
 
@@ -1036,7 +1054,6 @@ export default function litecanvas(settings = {}) {
         instance.emit('init', instance)
 
         _lastFrame = performance.now()
-        _nextFpsUpdate = _lastFrame + 1000
         raf(drawFrame)
     }
 
@@ -1045,30 +1062,20 @@ export default function litecanvas(settings = {}) {
      */
     function drawFrame(now) {
         let emitDraw = !_animated,
-            dt = now - _lastFrame
+            delta = now - _lastFrame
 
-        _accumulated += dt > 1000 ? _stepMs : dt
+        _accumulated += delta > 1000 ? _stepMs : delta
 
         while (_accumulated >= _stepMs) {
             instance.emit('update', _step * _timeScale)
             instance.setvar('ELAPSED', instance.ELAPSED + _step * _timeScale)
             _accumulated -= _stepMs
-            emitDraw = true
+            emitDraw = 1
         }
 
         if (emitDraw) {
-            // default values for textAlign & textBaseline
-            instance.textalign('start', 'top')
-
+            instance.textalign('start', 'top') // default values for textAlign & textBaseline
             instance.emit('draw')
-
-            _drawCount++
-
-            if (now + _accumulated > _nextFpsUpdate) {
-                instance.setvar('FPS', _drawCount)
-                _drawCount = 0
-                _nextFpsUpdate = now + 1000
-            }
         }
 
         _lastFrame = now
@@ -1094,36 +1101,34 @@ export default function litecanvas(settings = {}) {
             _fullscreen = false
         }
 
+        _canvas.style = ''
         _canvas.width = instance.WIDTH
         _canvas.height = instance.HEIGHT || instance.WIDTH
 
         if (!_canvas.parentNode) document.body.appendChild(_canvas)
-
-        // canvas CSS tweaks
-        _canvas.style.display = 'block'
-        if (_fullscreen) {
-            _canvas.style.position = 'absolute'
-            _canvas.style.inset = 0
-        } else if (_autoscale) {
-            _canvas.style.margin = 'auto'
-        }
     }
 
     function pageResized() {
         const pageWidth = root.innerWidth,
-            pageHeight = root.innerHeight
+            pageHeight = root.innerHeight,
+            styles = _canvas.style
+
+        styles.display = 'block'
 
         if (_fullscreen) {
+            styles.position = 'absolute'
+            styles.inset = 0
             instance.setvar('WIDTH', (_canvas.width = pageWidth))
             instance.setvar('HEIGHT', (_canvas.height = pageHeight))
         } else if (_autoscale) {
+            styles.margin = 'auto'
             _scale = Math.min(
                 pageWidth / instance.WIDTH,
                 pageHeight / instance.HEIGHT
             )
             _scale = (settings.pixelart ? ~~_scale : _scale) || 1
-            _canvas.style.width = instance.WIDTH * _scale + 'px'
-            _canvas.style.height = instance.HEIGHT * _scale + 'px'
+            styles.width = instance.WIDTH * _scale + 'px'
+            styles.height = instance.HEIGHT * _scale + 'px'
         }
 
         instance.setvar('CENTERX', instance.WIDTH / 2)
@@ -1161,7 +1166,7 @@ export default function litecanvas(settings = {}) {
         }
     }
 
-    if (settings.global) {
+    if (_global) {
         if (root.__litecanvas) {
             throw 'global litecanvas already instantiated'
         }

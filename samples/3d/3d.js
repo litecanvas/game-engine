@@ -47,7 +47,6 @@ function update(dt) {
 
 function draw() {
     cls(0)
-    text(0, 0, FPS, 4)
 
     push()
     translate(WIDTH / 2, HEIGHT / 2)

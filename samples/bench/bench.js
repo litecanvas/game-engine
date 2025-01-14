@@ -4,14 +4,21 @@ const url = new URL(location),
         count: +url.searchParams.get('amount') || 1000,
         width: 1024,
         height: 480,
-        fpsElement: document.querySelector('#fps'),
-    }
+        statsWrapper: document.querySelector('#stats'),
+        canvas: document.querySelector('#canvas'),
+    },
+    stats = new Stats()
+
+stats.showPanel(0)
+stats.dom.style.position = 'absolute'
+state.statsWrapper.appendChild(stats.dom)
 
 litecanvas({
     width: state.width,
     height: state.height,
+    canvas,
     // autoscale: false,
-    // fps: 30
+    // fps: 30,
 })
 
 function init() {
@@ -53,9 +60,6 @@ function init() {
 
     state.particles = particles
 
-    setInterval(() => {
-        state.fpsElement.textContent = FPS
-    }, 200)
     const link = document.querySelector(`[data-amount="${state.count}"]`)
     if (link) {
         link.classList.add('active')
@@ -64,6 +68,8 @@ function init() {
 }
 
 function draw() {
+    stats.begin()
+
     // Clear the canvas
     cls(0)
 
@@ -93,4 +99,6 @@ function draw() {
 
         image(r.x, r.y, state.sprite)
     }
+
+    stats.end()
 }
