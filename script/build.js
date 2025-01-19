@@ -7,7 +7,7 @@ let size
 fs.rmSync('dist', { recursive: true, force: true })
 
 await esbuild.build({
-    entryPoints: ['src/web.js'],
+    entryPoints: ['src/index.js'],
     outfile: 'dist/dist.js',
     bundle: true,
     legalComments: 'eof',
