@@ -741,8 +741,9 @@ export default function litecanvas(settings = {}) {
          * @param {pluginCallback} callback
          */
         use(callback, config = {}) {
-            callback.__conf = config
-            _initialized ? loadPlugin(callback) : _plugins.push(callback)
+            _initialized
+                ? loadPlugin(callback, config)
+                : _plugins.push([callback, config])
         },
 
         /**
@@ -880,8 +881,8 @@ export default function litecanvas(settings = {}) {
         }
 
         // load plugins
-        for (const plugin of _plugins) {
-            loadPlugin(plugin)
+        for (const [callback, config] of _plugins) {
+            loadPlugin(callback, config)
         }
 
         // listen window resize event
@@ -1157,8 +1158,8 @@ export default function litecanvas(settings = {}) {
     /**
      * @param {pluginCallback} callback
      */
-    function loadPlugin(callback) {
-        const pluginData = callback(instance, _helpers, callback.__conf)
+    function loadPlugin(callback, config) {
+        const pluginData = callback(instance, _helpers, config)
         if ('object' === typeof pluginData) {
             for (const key of Object.keys(pluginData)) {
                 instance.setvar(key, pluginData[key])
