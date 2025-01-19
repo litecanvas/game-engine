@@ -2,6 +2,8 @@ import { zzfx } from './zzfx.js'
 import { colors } from './palette.js'
 import './types.js'
 
+globalThis.litecanvas = litecanvas
+
 /**
  * The litecanvas constructor
  *
@@ -835,10 +837,11 @@ export default function litecanvas(settings = {}) {
          * Stops the litecanvas instance and remove all event listeners.
          */
         quit() {
-            _focused = _events = false
+            instance.emit('quit')
             for (const removeListener of _browserEventListeners) {
                 removeListener()
             }
+            _focused = _events = false
             if (_global) {
                 for (const key in instance) {
                     delete root[key]
@@ -1065,7 +1068,7 @@ export default function litecanvas(settings = {}) {
         let emitDraw = !_animated,
             delta = now - _lastFrame
 
-        _accumulated += delta > 1000 ? _stepMs : delta
+        _accumulated += delta > 100 ? _stepMs : delta
 
         while (_accumulated >= _stepMs) {
             instance.emit('update', _step * _timeScale)

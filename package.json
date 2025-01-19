@@ -25,7 +25,7 @@
     "scripts": {
         "test": "ava",
         "dev:test": "ava --watch",
-        "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.js --servedir=.",
+        "dev": "esbuild src/index.js --bundle --watch --outfile=dist/dist.js --servedir=.",
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
         "format": "prettier -w src/* samples/* types/* script/* types/*",
