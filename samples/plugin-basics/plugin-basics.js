@@ -49,14 +49,14 @@ function pluginTest(engine, { settings, colors }, config) {
         'before:draw',
         // the event callback
         function () {
-            cls(4)
-            rectfill(0, 0, 100, 100, 5)
+            engine.cls(4)
+            engine.rectfill(0, 0, 100, 100, 5)
         }
     )
 
     // another `listen()` example
     engine.listen('tapped', function (x, y) {
-        sfx()
+        engine.sfx()
         console.log(`Tap detected in X=${x} Y=${y}`)
     })
 
