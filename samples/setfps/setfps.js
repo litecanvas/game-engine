@@ -1,6 +1,7 @@
 litecanvas({
     width: 256,
     autoscale: false,
+    canvas: '#game canvas',
 })
 
 function init() {
@@ -8,11 +9,10 @@ function init() {
     setfps(url.searchParams.get('fps') || 60)
     if (Stats) {
         let stats = new Stats()
-        document.body.appendChild(stats.dom)
+        document.querySelector('#game').prepend(stats.dom)
         listen('before:update', () => stats.begin())
         listen('after:draw', () => stats.end())
-        stats.dom.style.bottom = 0
-        stats.dom.style.top = null
+        stats.dom.style.position = 'static'
     }
 }
 

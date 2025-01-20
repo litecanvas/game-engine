@@ -6,12 +6,7 @@ const url = new URL(location),
         height: 480,
         statsWrapper: document.querySelector('#stats'),
         canvas: document.querySelector('#canvas'),
-    },
-    stats = new Stats()
-
-stats.showPanel(0)
-stats.dom.style.position = 'absolute'
-state.statsWrapper.appendChild(stats.dom)
+    }
 
 litecanvas({
     width: state.width,
@@ -65,11 +60,17 @@ function init() {
         link.classList.add('active')
     }
     console.log(`Rendering ${state.count} sprites...`)
+
+    if (Stats) {
+        const stats = new Stats()
+        stats.dom.style.position = 'absolute'
+        state.statsWrapper.appendChild(stats.dom)
+        listen('before:update', () => stats.begin())
+        listen('after:draw', () => stats.end())
+    }
 }
 
 function draw() {
-    stats.begin()
-
     // Clear the canvas
     cls(0)
 
@@ -99,6 +100,4 @@ function draw() {
 
         image(r.x, r.y, state.sprite)
     }
-
-    stats.end()
 }
