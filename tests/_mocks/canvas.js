@@ -13,7 +13,7 @@ export class Canvas {
     getContext(type) {
         this._calls.push(`getContext ${type}`)
         if (!this.context) {
-            this.context = new CanvasRenderingContextMock(type)
+            this.context = new CanvasRenderingContextMock(type, this)
         }
         return this.context
     }
@@ -32,12 +32,17 @@ export class Canvas {
 }
 
 class CanvasRenderingContextMock {
+    width = 300
+    height = 150
+
+    canvas = null
     _type = null
 
     _calls = []
 
-    constructor(type) {
+    constructor(type, canvas) {
         this._type = type
+        this.canvas = canvas
     }
 
     beginPath() {
