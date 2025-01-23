@@ -291,10 +291,12 @@ export default function litecanvas(settings = {}) {
          * @param {number|null} color The background color (from 0 to 7) or null (for transparent)
          */
         cls(color) {
+            let width = _ctx.canvas.width,
+                height = _ctx.canvas.height
             if (null == color) {
-                _ctx.clearRect(0, 0, instance.WIDTH, instance.HEIGHT)
+                _ctx.clearRect(0, 0, width, height)
             } else {
-                instance.rectfill(0, 0, instance.WIDTH, instance.HEIGHT, color)
+                instance.rectfill(0, 0, width, height, color)
             }
         },
 
