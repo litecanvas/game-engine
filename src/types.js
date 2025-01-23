@@ -37,7 +37,6 @@
 
 /**
  * @callback drawCallback
- * @param {OffscreenCanvas} offcanvas
  * @param {CanvasRenderingContext2D} context
  * @returns {void}
  */

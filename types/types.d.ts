@@ -696,10 +696,7 @@ type LitecanvasGameLoop = {
     tapping?: (tapX: number, tapY: number, tapId: number) => void
 }
 
-type drawCallback = (
-    offcanvas: OffscreenCanvas,
-    context: CanvasRenderingContext2D
-) => void
+type drawCallback = (context: CanvasRenderingContext2D) => void
 
 type LitecanvasPluginHelpers = {
     /**
