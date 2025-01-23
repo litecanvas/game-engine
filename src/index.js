@@ -2,8 +2,6 @@ import { zzfx } from './zzfx.js'
 import { colors } from './palette.js'
 import './types.js'
 
-globalThis.litecanvas = litecanvas
-
 /**
  * The litecanvas constructor
  *
