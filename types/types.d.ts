@@ -408,27 +408,6 @@ type LitecanvasInstance = {
      */
     rotate(radians: number): void
     /**
-     * @param a
-     * @param b
-     * @param c
-     * @param d
-     * @param e
-     * @param f
-     * @param [resetFirst=true] `false` to use _ctx.transform(); by default use _ctx.setTransform()
-     *
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
-     */
-    transform(
-        a: number,
-        b: number,
-        c: number,
-        d: number,
-        e: number,
-        f: number,
-        resetFirst?: boolean
-    ): void
-    /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
      *
      * @param alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)

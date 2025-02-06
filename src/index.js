@@ -597,21 +597,6 @@ export default function litecanvas(settings = {}) {
         rotate: (radians) => _ctx.rotate(radians),
 
         /**
-         * @param {number} a
-         * @param {number} b
-         * @param {number} c
-         * @param {number} d
-         * @param {number} e
-         * @param {number} f
-         * @param {boolean} [resetFirst=true] `false` to use _ctx.transform(); by default use _ctx.setTransform()
-         *
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
-         */
-        transform: (a, b, c, d, e, f, resetFirst = true) =>
-            _ctx[resetFirst ? 'setTransform' : 'transform'](a, b, c, d, e, f),
-
-        /**
          * Sets the alpha (opacity) value to apply when drawing new shapes and images
          *
          * @param {number} alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
