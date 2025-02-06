@@ -1,3 +1,5 @@
+let drawFn
+
 litecanvas()
 
 function init() {
@@ -11,7 +13,7 @@ function tapped() {
 
 function draw() {
     cls(0)
-    // radii = number (20) = all-corners
+    // radii = one number (the 20) = same radius for all corners
     drawFn[i](10, 10, 100, 50, 3, 20)
 
     // radii = [number, number] = [top-left-and-bottom-right, top-right-and-bottom-left]
