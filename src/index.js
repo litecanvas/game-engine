@@ -286,7 +286,7 @@ export default function litecanvas(settings = {}) {
         /**
          * Clear the game screen
          *
-         * @param {number|null} color The background color (from 0 to 7) or null (for transparent)
+         * @param {number|null} color The background color (index) or null (for transparent)
          */
         cls(color) {
             let width = _ctx.canvas.width,
@@ -305,12 +305,18 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {number} width
          * @param {number} height
-         * @param {number} [color=0] the color index (generally from 0 to 7)
+         * @param {number} [color=0] the color index
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
         rect(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
-            _ctx[radii ? 'roundRect' : 'rect'](~~x, ~~y, width, height, radii)
+            _ctx[radii ? 'roundRect' : 'rect'](
+                ~~x,
+                ~~y,
+                ~~width,
+                ~~height,
+                radii
+            )
             instance.stroke(color)
         },
 
@@ -321,12 +327,18 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {number} width
          * @param {number} height
-         * @param {number} [color=0] the color index (generally from 0 to 7)
+         * @param {number} [color=0] the color index
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
         rectfill(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
-            _ctx[radii ? 'roundRect' : 'rect'](~~x, ~~y, width, height, radii)
+            _ctx[radii ? 'roundRect' : 'rect'](
+                ~~x,
+                ~~y,
+                ~~width,
+                ~~height,
+                radii
+            )
             instance.fill(color)
         },
 
@@ -336,11 +348,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          * @param {number} radius
-         * @param {number} [color=0] the color index (generally from 0 to 7)
+         * @param {number} [color=0] the color index
          */
         circ(x, y, radius, color) {
             _ctx.beginPath()
-            _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
+            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             instance.stroke(color)
         },
 
@@ -350,11 +362,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          * @param {number} radius
-         * @param {number} [color=0] the color index (generally from 0 to 7)
+         * @param {number} [color=0] the color index
          */
         circfill(x, y, radius, color) {
             _ctx.beginPath()
-            _ctx.arc(~~x, ~~y, radius, 0, TWO_PI)
+            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             instance.fill(color)
         },
 
@@ -365,7 +377,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y1
          * @param {number} x2
          * @param {number} y2
-         * @param {number} [color=0] the color index (generally from 0 to 7)
+         * @param {number} [color=0] the color index
          */
         line(x1, y1, x2, y2, color) {
             _ctx.beginPath()
@@ -381,7 +393,7 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
          */
         linewidth(value) {
-            _ctx.lineWidth = value
+            _ctx.lineWidth = ~~value
         },
 
         /**
@@ -404,7 +416,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          * @param {string} text the text message
-         * @param {number} [color=3] the color index (generally from 0 to 7)
+         * @param {number} [color=3] the color index
          */
         text(x, y, text, color = 3) {
             _ctx.font = `${_fontStyle} ${_fontSize}px ${_fontFamily}`
