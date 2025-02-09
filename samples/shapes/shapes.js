@@ -6,6 +6,7 @@ function init() {
     gap = 40
     lineDashPattern = [30, 15]
     lineDashOffset = 0
+    lineWidth = 2
 }
 
 function update(dt) {
@@ -16,7 +17,7 @@ function update(dt) {
 
 function draw() {
     cls(0)
-    linewidth(5)
+    linewidth(sin(ELAPSED * 10) * 25)
 
     rectfill(gap, CENTERY - size / 2, size, size, 2)
 
