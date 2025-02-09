@@ -60,6 +60,8 @@ export default function litecanvas(settings = {}) {
         /** @type {CanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
+        _outline_fix = 0.5,
+        /** @type {number} */
         _timeScale = 1,
         /** @type {number} */
         _lastFrame,
@@ -311,8 +313,8 @@ export default function litecanvas(settings = {}) {
         rect(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
-                ~~x,
-                ~~y,
+                ~~x + _outline_fix,
+                ~~y + _outline_fix,
                 ~~width,
                 ~~height,
                 radii
@@ -352,7 +354,13 @@ export default function litecanvas(settings = {}) {
          */
         circ(x, y, radius, color) {
             _ctx.beginPath()
-            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
+            _ctx.arc(
+                ~~x + _outline_fix,
+                ~~y + _outline_fix,
+                ~~radius,
+                0,
+                TWO_PI
+            )
             instance.stroke(color)
         },
 
@@ -381,8 +389,10 @@ export default function litecanvas(settings = {}) {
          */
         line(x1, y1, x2, y2, color) {
             _ctx.beginPath()
-            _ctx.moveTo(~~x1, ~~y1)
-            _ctx.lineTo(~~x2, ~~y2)
+            _ctx.moveTo(~~x1 + _outline_fix, ~~y1 + _outline_fix)
+            _ctx.lineTo(~~x2 + _outline_fix, ~~y2 + _outline_fix)
+            // _ctx.moveTo(~~x1, ~~y1)
+            // _ctx.lineTo(~~x2, ~~y2)
             instance.stroke(color)
         },
 
@@ -394,6 +404,7 @@ export default function litecanvas(settings = {}) {
          */
         linewidth(value) {
             _ctx.lineWidth = ~~value
+            _outline_fix = ~~value % 2 === 0 ? 0 : 0.5
         },
 
         /**
