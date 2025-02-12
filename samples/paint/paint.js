@@ -48,8 +48,13 @@ function draw() {
         }
     }
 
-    textstyle('italic bold')
-    text(0, 0, 'drawing ' + (useImage ? 'images (fast)' : 'shapes (slow)'), 3)
+    text(
+        0,
+        0,
+        'drawing ' + (useImage ? 'images (fast)' : 'shapes (slow)'),
+        3,
+        'italic bold'
+    )
 }
 
 function ball(x, y) {

@@ -30,7 +30,7 @@ function draw() {
 
     // Draw the hands of the clock
     linewidth(1)
-    line(cx, cy, cx + cos(s) * secondsRadius, cy + sin(s) * secondsRadius, 3)
+    line(cx, cy, cx + cos(s) * secondsRadius, cy + sin(s) * secondsRadius, 4)
     linewidth(3)
     line(cx, cy, cx + cos(m) * minutesRadius, cy + sin(m) * minutesRadius, 3)
     linewidth(6)
