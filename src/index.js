@@ -313,10 +313,10 @@ export default function litecanvas(settings = {}) {
         rect(x, y, width, height, color = 0, radii = null) {
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
-                ~~x + _outline_fix,
-                ~~y + _outline_fix,
-                ~~width,
-                ~~height,
+                ~~x - _outline_fix,
+                ~~y - _outline_fix,
+                ~~width + _outline_fix * 2,
+                ~~height + _outline_fix * 2,
                 radii
             )
             instance.stroke(color)
@@ -354,13 +354,7 @@ export default function litecanvas(settings = {}) {
          */
         circ(x, y, radius, color) {
             _ctx.beginPath()
-            _ctx.arc(
-                ~~x + _outline_fix,
-                ~~y + _outline_fix,
-                ~~radius,
-                0,
-                TWO_PI
-            )
+            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             instance.stroke(color)
         },
 
@@ -389,10 +383,13 @@ export default function litecanvas(settings = {}) {
          */
         line(x1, y1, x2, y2, color) {
             _ctx.beginPath()
-            _ctx.moveTo(~~x1 + _outline_fix, ~~y1 + _outline_fix)
-            _ctx.lineTo(~~x2 + _outline_fix, ~~y2 + _outline_fix)
-            // _ctx.moveTo(~~x1, ~~y1)
-            // _ctx.lineTo(~~x2, ~~y2)
+
+            let xfix = _outline_fix !== 0 && ~~x1 === ~~x2 ? 0.5 : 0
+            let yfix = _outline_fix !== 0 && ~~y1 === ~~y2 ? 0.5 : 0
+
+            _ctx.moveTo(~~x1 + xfix, ~~y1 + yfix)
+            _ctx.lineTo(~~x2 + xfix, ~~y2 + yfix)
+
             instance.stroke(color)
         },
 
@@ -428,9 +425,10 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {string} text the text message
          * @param {number} [color=3] the color index
+         * @param {string} [fontStyle] can be "normal" (default), "italic" and/or "bold".
          */
-        text(x, y, text, color = 3) {
-            _ctx.font = `${_fontStyle} ${_fontSize}px ${_fontFamily}`
+        text(x, y, text, color = 3, fontStyle = 'normal') {
+            _ctx.font = `${fontStyle} ${_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = instance.getcolor(color)
             _ctx.fillText(text, ~~x, ~~y)
         },
@@ -454,15 +452,6 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Sets whether a font should be styled with a "normal", "italic", or "bold".
-         *
-         * @param {string} style
-         */
-        textstyle(style) {
-            _fontStyle = style || ''
-        },
-
-        /**
          * Sets the alignment used when drawing texts
          *
          * @param {string} align the horizontal alignment. Possible values: "left", "right", "center", "start" or "end"
@@ -473,24 +462,6 @@ export default function litecanvas(settings = {}) {
         textalign(align, baseline) {
             if (align) _ctx.textAlign = align
             if (baseline) _ctx.textBaseline = baseline
-        },
-
-        /**
-         * Returns a TextMetrics object that contains information about the measured text (such as its width, for example)
-         *
-         * @param {string} text
-         * @param {number} [size]
-         * @returns {TextMetrics}
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
-         */
-        textmetrics(text, size = _fontSize) {
-            // prettier-ignore
-            _ctx.font = `${_fontStyle} ${size}px ${_fontFamily}`
-            const metrics = _ctx.measureText(text)
-            metrics.height =
-                metrics.actualBoundingBoxAscent +
-                metrics.actualBoundingBoxDescent
-            return metrics
         },
 
         /** IMAGE GRAPHICS API */

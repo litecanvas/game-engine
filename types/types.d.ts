@@ -298,8 +298,15 @@ type LitecanvasInstance = {
      * @param y
      * @param text the text message
      * @param [color=3] the color index
+     * @param [style="normal"] can be "normal" (default), "italic" and/or "bold"
      */
-    text(x: number, y: number, text: string, color?: number): void
+    text(
+        x: number,
+        y: number,
+        text: string,
+        color?: number,
+        style?: string
+    ): void
     /**
      * Set the font family
      *
@@ -313,12 +320,6 @@ type LitecanvasInstance = {
      */
     textsize(size: string): void
     /**
-     * Sets whether a font should be styled with a normal, italic, or bold.
-     *
-     * @param style
-     */
-    textstyle(style: string): void
-    /**
      * Sets the alignment used when drawing texts
      *
      * @param align the horizontal alignment. Possible values: "left", "right", "center", "start" or "end"
@@ -327,14 +328,6 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
     textalign(align: string, baseline: string): void
-    /**
-     * Returns a TextMetrics object that contains information about the measured text (such as its width, for example)
-     *
-     * @param text
-     * @param [size]
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
-     */
-    textmetrics(text: string, size?: number): TextMetrics
 
     /** IMAGE GRAPHICS API */
     /**
