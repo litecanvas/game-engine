@@ -75,8 +75,6 @@ export default function litecanvas(settings = {}) {
         _focused = true,
         /** @type {string} */
         _fontFamily = 'sans-serif',
-        /** @type {string} */
-        _fontStyle = '',
         /** @type {number} */
         _fontSize = 32,
         /** @type {number} */
