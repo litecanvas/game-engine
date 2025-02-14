@@ -2,9 +2,6 @@
 
 # Litecanvas
 
-![](https://badgen.net/bundlephobia/min/litecanvas)
-![](https://badgen.net/bundlephobia/minzip/litecanvas)
-
 Litecanvas is a lightweight HTML5 canvas engine suitable for small web games, prototypes, game jams, animations, creative coding, learning game programming and game design, etc.
 
 :warning: **This project is still under development. All feedback is appreciated!** :warning:
