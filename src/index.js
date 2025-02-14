@@ -391,7 +391,9 @@ export default function litecanvas(settings = {}) {
                     'rect: 5th param must be a positive number or zero'
                 )
                 assert(
-                    null == radii || isFinite(radii) || Array.isArray(radii),
+                    null == radii ||
+                        isFinite(radii) ||
+                        (Array.isArray(radii) && radii.length >= 1),
                     'rect: 6th param must be a number or array of numbers'
                 )
             }
@@ -435,7 +437,7 @@ export default function litecanvas(settings = {}) {
                 assert(
                     null == radii ||
                         isFinite(radii) ||
-                        (Array.isArray(radii) && radii.length >= 2),
+                        (Array.isArray(radii) && radii.length >= 1),
                     'rectfill: 6th param must be a number or array of at least 2 numbers'
                 )
             }
@@ -1364,8 +1366,15 @@ export default function litecanvas(settings = {}) {
              * @param {string} key
              * @returns {boolean}
              */
-            const iskeydown = (key) =>
+            const iskeydown = (key) => {
+                if (DEV_BUILD) {
+                    assert(
+                        'string' === typeof key,
+                        'iskeydown: 1st param must be a string'
+                    )
+                }
                 'any' === key ? _keys.size > 0 : _keys.has(key.toLowerCase())
+            }
 
             instance.setvar('iskeydown', iskeydown)
 
