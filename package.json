@@ -1,15 +1,16 @@
 {
     "name": "litecanvas",
-    "version": "0.72.0",
+    "version": "0.73.0",
     "description": "Lightweight HTML5 canvas engine suitable for small games and animations.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
     "contributors": [],
     "devDependencies": {
-        "@swc/core": "^1.10.15",
+        "@swc/core": "^1.10.16",
         "ava": "^6.2.0",
         "esbuild": "^0.25.0",
-        "prettier": "^3.5.0"
+        "gzip-size": "^7.0.0",
+        "prettier": "^3.5.1"
     },
     "homepage": "https://litecanvas.github.io/about.html",
     "repository": {
@@ -23,13 +24,13 @@
     "main": "src/index.js",
     "types": "types/index.d.ts",
     "scripts": {
-        "test": "ava",
+        "test": "npm run build && ava",
         "dev:test": "ava --watch",
-        "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.js --servedir=.",
+        "dev": "esbuild src/web.js --bundle --watch --define:DEV_BUILD=true --outfile=dist/dist.dev.js --servedir=.",
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
         "format": "prettier -w src/* samples/* types/* script/* types/*",
-        "prepare": "npm run build && npm run gzip-size",
+        "prepare": "npm run build",
         "prepublishOnly": "npm test"
     },
     "keywords": [

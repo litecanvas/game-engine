@@ -17,11 +17,11 @@ function update(dt) {
 
 function draw() {
     cls(0)
-    linewidth(sin(ELAPSED * 10) * 25)
+    linewidth(11 - sin(ELAPSED * 10) * 10)
 
     rectfill(gap, CENTERY - size / 2, size, size, 2)
 
-    // rotate the second rect
+    // rotate the second rect only
     push()
     translate(gap * 2 + size + 10 + size / 2, CENTERY - size / 2 + size / 2)
     rotate(angle)

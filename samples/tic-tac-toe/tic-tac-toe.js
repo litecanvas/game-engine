@@ -80,7 +80,6 @@ function tap(x, y, _tapId) {
 
             // Check for win or draw
             if (checkWin(row, col)) {
-                console.log(row, col)
                 gameOver = true
             } else if (checkDraw()) {
                 gameOver = true
