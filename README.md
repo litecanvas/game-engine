@@ -43,7 +43,7 @@ npm install litecanvas
 
 ```js
 // import the package or put the CDN script in your HTML
-// CDN: https://unpkg.com/litecanvas/dist/dist.min.js
+// CDN: https://unpkg.com/litecanvas/dist/dist.dev.js
 import litecanvas from 'litecanvas'
 
 // Start and setup the engine

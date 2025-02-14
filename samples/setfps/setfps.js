@@ -6,7 +6,7 @@ litecanvas({
 
 function init() {
     const url = new URL(location)
-    setfps(url.searchParams.get('fps') || 60)
+    setfps(~~url.searchParams.get('fps') || 60)
     if (Stats) {
         let stats = new Stats()
         document.querySelector('#game').prepend(stats.dom)

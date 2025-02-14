@@ -28,7 +28,7 @@ let last = null,
 controls.volume.range.onchange = () => {
     const value = controls.volume.range.value
     controls.volume.label.textContent = value
-    volume(value)
+    volume(+value)
 }
 
 controls.pitch.range.onchange = () => {

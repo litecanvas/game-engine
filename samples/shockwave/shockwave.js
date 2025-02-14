@@ -52,8 +52,10 @@ const shockwave = {
         this.borderWidth -= (this.speed / 8) * dt
     },
     draw() {
-        linewidth(this.borderWidth)
-        circ(this.x, this.y, this.radius, this.color)
+        if (this.borderWidth >= 1) {
+            linewidth(this.borderWidth)
+            circ(this.x, this.y, this.radius, this.color)
+        }
     },
     destroy() {
         objects = objects.filter((o) => o !== this)

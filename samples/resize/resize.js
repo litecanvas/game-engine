@@ -36,5 +36,5 @@ function resized() {
 
 function increaseCanvasSize() {
     size += 100
-    resize(size)
+    resize(size, size)
 }
