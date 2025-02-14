@@ -1373,7 +1373,9 @@ export default function litecanvas(settings = {}) {
                         'iskeydown: 1st param must be a string'
                     )
                 }
-                'any' === key ? _keys.size > 0 : _keys.has(key.toLowerCase())
+                return 'any' === key
+                    ? _keys.size > 0
+                    : _keys.has(key.toLowerCase())
             }
 
             instance.setvar('iskeydown', iskeydown)
