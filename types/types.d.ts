@@ -296,16 +296,16 @@ type LitecanvasInstance = {
      *
      * @param x
      * @param y
-     * @param text the text message
+     * @param message the text message
      * @param [color=3] the color index
-     * @param [style="normal"] can be "normal" (default), "italic" and/or "bold"
+     * @param [fontStyle="normal"] can be "normal" (default), "italic" and/or "bold"
      */
     text(
         x: number,
         y: number,
-        text: string,
+        message: string,
         color?: number,
-        style?: string
+        fontStyle?: string
     ): void
     /**
      * Set the font family
@@ -335,26 +335,26 @@ type LitecanvasInstance = {
      *
      * @param x
      * @param y
-     * @param image
+     * @param source
      */
     image(
         x: number,
         y: number,
-        image: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
+        source: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
     ): void
     /**
      * Creates a offscreen canvas to draw on it
      *
      * @param width
      * @param height
-     * @param draw
+     * @param drawing
      * @param [options]
      * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
      */
     paint(
         width: number,
         height: number,
-        draw: string[] | drawCallback,
+        drawing: string[] | drawCallback,
         options?: {
             scale?: number
             canvas?: HTMLCanvasElement | OffscreenCanvas
@@ -403,10 +403,10 @@ type LitecanvasInstance = {
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
      *
-     * @param alpha float from 0 to 1 (e.g: 0.5 = 50% transparent)
+     * @param value float from 0 to 1 (e.g: 0.5 = 50% transparent)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
      */
-    alpha(alpha: number): void
+    alpha(value: number): void
     /**
      * Returns a newly instantiated Path2D object, optionally with another
      * path as an argument (creates a copy), or optionally with a string
@@ -668,7 +668,9 @@ type LitecanvasGameLoop = {
     tapping?: (tapX: number, tapY: number, tapId: number) => void
 }
 
-type drawCallback = (context: CanvasRenderingContext2D) => void
+type drawCallback = (
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+) => void
 
 type LitecanvasPluginHelpers = {
     /**
@@ -676,12 +678,13 @@ type LitecanvasPluginHelpers = {
      */
     colors: string[]
     /**
-     * An instance settings/options (read-only)
+     * Litecanvas instance settings (read-only)
      */
     settings: LitecanvasOptions
 }
 
 type pluginCallback = (
     instance: LitecanvasInstance,
-    helpers: LitecanvasPluginHelpers
+    helpers: LitecanvasPluginHelpers,
+    config?: any
 ) => any
