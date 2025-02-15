@@ -66,7 +66,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _timeScale = 1,
         /** @type {number} */
-        _lastFrame,
+        _lastFrameTime,
         /** @type {number} */
         _step,
         /** @type {number} */
@@ -666,14 +666,14 @@ export default function litecanvas(settings = {}) {
          *
          * @param {number} x
          * @param {number} y
-         * @param {OffscreenCanvas|HTMLImageElement|HTMLCanvasElement} image
+         * @param {OffscreenCanvas|HTMLImageElement|HTMLCanvasElement} source
          */
-        image(x, y, image) {
+        image(x, y, source) {
             if (DEV_BUILD) {
                 assert(isFinite(x), 'image: 1st param must be a number')
                 assert(isFinite(y), 'image: 2nd param must be a number')
             }
-            _ctx.drawImage(image, ~~x, ~~y)
+            _ctx.drawImage(source, ~~x, ~~y)
         },
 
         /**
@@ -1408,7 +1408,7 @@ export default function litecanvas(settings = {}) {
         // start the game loop
         instance.emit('init', instance)
 
-        _lastFrame = performance.now()
+        _lastFrameTime = performance.now()
         raf(drawFrame)
     }
 
@@ -1417,10 +1417,10 @@ export default function litecanvas(settings = {}) {
      */
     function drawFrame(now) {
         let shouldRender = !_animated,
-            delta = now - _lastFrame
+            delta = now - _lastFrameTime
 
-        _accumulated += delta > 100 ? _stepMs : delta
-        _lastFrame = now
+        _accumulated += delta > 100 ? 100 : delta
+        _lastFrameTime = now
 
         while (_accumulated >= _stepMs) {
             instance.emit('update', _step * _timeScale)

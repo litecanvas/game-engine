@@ -37,7 +37,7 @@
 
 /**
  * @callback drawCallback
- * @param {CanvasRenderingContext2D} context
+ * @param {CanvasRenderingContext2D|OffscreenCanvasRenderingContext2D} context
  * @returns {void}
  */
 
@@ -45,12 +45,13 @@
  * @typedef LitecanvasPluginHelpers
  * @type {object}
  * @property {string[]} colors The instance color palette
- * @property {LitecanvasOptions} settings An copy of this instance settings
+ * @property {LitecanvasOptions} settings Litecanvas instance settings (read-only)
  */
 
 /**
  * @callback pluginCallback
  * @param {LitecanvasInstance} instance The litecanvas instance
  * @param {LitecanvasPluginHelpers} helpers
+ * @param {any?} [config] - option plugin configuration
  * @returns
  */
