@@ -33,6 +33,13 @@ function init() {
     ballX = CENTERX
     ballY = CENTERY - HEIGHT / 4
     textSize = WIDTH / 12
+
+    if (Stats) {
+        const stats = new Stats()
+        document.body.appendChild(stats.dom)
+        listen('before:update', () => stats.begin())
+        listen('after:draw', () => stats.end())
+    }
 }
 
 function tapped(x, y) {

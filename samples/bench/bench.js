@@ -1,6 +1,5 @@
 const url = new URL(location),
     state = {
-        type: 'sprite',
         count: +url.searchParams.get('amount') || 1000,
         width: 1024,
         height: 480,
@@ -12,8 +11,7 @@ litecanvas({
     width: state.width,
     height: state.height,
     canvas,
-    // autoscale: false,
-    // fps: 30,
+    autoscale: false,
 })
 
 function init() {
