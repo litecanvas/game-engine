@@ -1,10 +1,13 @@
 litecanvas()
 
 function init() {
-    // comment this line to use a random seed
+    // set a specific seed (by default is the current time)
     seed(42)
 
-    // generate 5 numbers from 0 to 100
+    // get the current seed
+    console.log('RNG Seed = ' + seed())
+
+    // generate 5 random numbers from 0 to 100
     numbers = [
         randi(0, 100),
         randi(0, 100),

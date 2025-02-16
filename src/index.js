@@ -221,6 +221,10 @@ export default function litecanvas(settings = {}) {
                 assert(isFinite(value), 'clamp: 1st param must be a number')
                 assert(isFinite(min), 'clamp: 2nd param must be a number')
                 assert(isFinite(max), 'clamp: 3rd param must be a number')
+                assert(
+                    max > min,
+                    'randi: the 2nd param must be less than the 3rd param'
+                )
             }
             if (value < min) return min
             if (value > max) return max
@@ -240,6 +244,14 @@ export default function litecanvas(settings = {}) {
                 assert(isFinite(value), 'wrap: 1st param must be a number')
                 assert(isFinite(min), 'wrap: 2nd param must be a number')
                 assert(isFinite(max), 'wrap: 3rd param must be a number')
+                assert(
+                    max > min,
+                    'randi: the 2nd param must be less than the 3rd param'
+                )
+                assert(
+                    max !== min,
+                    'randi: the 2nd param must be not equal to the 3rd param'
+                )
             }
             return value - (max - min) * Math.floor((value - min) / (max - min))
         },
@@ -248,24 +260,24 @@ export default function litecanvas(settings = {}) {
          * Re-maps a number from one range to another.
          *
          * @param {number} value  the value to be remapped.
-         * @param {number} min1 lower bound of the value's current range.
-         * @param {number} max1  upper bound of the value's current range.
-         * @param {number} min2 lower bound of the value's target range.
-         * @param {number} max2  upper bound of the value's target range.
+         * @param {number} start1 lower bound of the value's current range.
+         * @param {number} stop1  upper bound of the value's current range.
+         * @param {number} start2 lower bound of the value's target range.
+         * @param {number} stop2  upper bound of the value's target range.
          * @param {boolean} [withinBounds=false] constrain the value to the newly mapped range
          * @returns {number} the remapped number
          */
-        map(value, min1, max1, min2, max2, withinBounds) {
+        map(value, start1, stop1, start2, stop2, withinBounds) {
             if (DEV_BUILD) {
                 assert(isFinite(value), 'map: 1st param must be a number')
-                assert(isFinite(min1), 'map: 2nd param must be a number')
-                assert(isFinite(max1), 'map: 3rd param must be a number')
-                assert(isFinite(min2), 'map: 4th param must be a number')
-                assert(isFinite(max2), 'map: 5th param must be a number')
+                assert(isFinite(start1), 'map: 2nd param must be a number')
+                assert(isFinite(stop1), 'map: 3rd param must be a number')
+                assert(isFinite(start2), 'map: 4th param must be a number')
+                assert(isFinite(stop2), 'map: 5th param must be a number')
             }
             // prettier-ignore
-            const result = ((value - min1) / (max1 - min1)) * (max2 - min2) + min2
-            return withinBounds ? instance.clamp(result, min2, max2) : result
+            const result = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2
+            return withinBounds ? instance.clamp(result, start2, stop2) : result
         },
 
         /**
@@ -274,17 +286,17 @@ export default function litecanvas(settings = {}) {
          * Note: Numbers outside the range are not clamped to 0 and 1.
          *
          * @param {number} value
-         * @param {number} min
-         * @param {number} max
+         * @param {number} start
+         * @param {number} stop
          * @returns {number} the normalized number.
          */
-        norm: (value, min, max) => {
+        norm: (value, start, stop) => {
             if (DEV_BUILD) {
                 assert(isFinite(value), 'norm: 1st param must be a number')
-                assert(isFinite(min), 'norm: 2nd param must be a number')
-                assert(isFinite(max), 'norm: 3rd param must be a number')
+                assert(isFinite(start), 'norm: 2nd param must be a number')
+                assert(isFinite(stop), 'norm: 3rd param must be a number')
             }
-            return instance.map(value, min, max, 0, 1)
+            return instance.map(value, start, stop, 0, 1)
         },
 
         /** RNG API */
@@ -300,6 +312,10 @@ export default function litecanvas(settings = {}) {
             if (DEV_BUILD) {
                 assert(isFinite(min), 'rand: 1st param must be a number')
                 assert(isFinite(max), 'rand: 2nd param must be a number')
+                assert(
+                    max > min,
+                    'rand: the 1st param must be less than the 2nd param'
+                )
             }
             const a = 1664525
             const c = 1013904223
@@ -321,6 +337,10 @@ export default function litecanvas(settings = {}) {
             if (DEV_BUILD) {
                 assert(isFinite(min), 'randi: 1st param must be a number')
                 assert(isFinite(max), 'randi: 2nd param must be a number')
+                assert(
+                    max > min,
+                    'randi: the 1st param must be less than the 2nd param'
+                )
             }
             return Math.floor(instance.rand(min, max + 1))
         },
@@ -335,8 +355,8 @@ export default function litecanvas(settings = {}) {
         seed: (value) => {
             if (DEV_BUILD) {
                 assert(
-                    null == value || isFinite(value),
-                    'seed: 1st param must be a number'
+                    null == value || (isFinite(value) && value >= 0),
+                    'seed: 1st param must be a positive number or zero'
                 )
             }
             return null == value ? _rng_seed : (_rng_seed = ~~value)
