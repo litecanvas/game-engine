@@ -76,26 +76,26 @@ type LitecanvasInstance = {
      * @param value
      * @param min
      * @param max
-     * @returns
+     * @returns the wrapped number
      */
     wrap(value: number, min: number, max: number): number
     /**
      * Re-maps a number from one range to another.
      *
      * @param value  the value to be remapped.
-     * @param min1 lower bound of the value's current range.
-     * @param max1  upper bound of the value's current range.
-     * @param min2 lower bound of the value's target range.
-     * @param max2  upper bound of the value's target range.
+     * @param start1 lower bound of the value's current range.
+     * @param stop1  upper bound of the value's current range.
+     * @param start2 lower bound of the value's target range.
+     * @param stop2  upper bound of the value's target range.
      * @param [withinBounds=false] constrain the value to the newly mapped range
      * @returns the remapped number
      */
     map(
         value: number,
-        min1: number,
-        max1: number,
-        min2: number,
-        max2: number,
+        start1: number,
+        stop1: number,
+        start2: number,
+        stop2: number,
         withinBounds?: boolean
     ): number
     /**
@@ -104,11 +104,11 @@ type LitecanvasInstance = {
      * Note: Numbers outside the range are not clamped to 0 and 1.
      *
      * @param value
-     * @param min
-     * @param max
+     * @param start
+     * @param stop
      * @returns the normalized number.
      */
-    norm(value: number, min: number, max: number): number
+    norm(value: number, start: number, stop: number): number
     /**
      * Returns the sine of a number in radians
      */

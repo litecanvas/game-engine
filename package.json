@@ -1,6 +1,6 @@
 {
     "name": "litecanvas",
-    "version": "0.73.3",
+    "version": "0.73.4",
     "description": "Lightweight HTML5 canvas engine suitable for small games and animations.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
@@ -30,6 +30,7 @@
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
         "format": "prettier -w src/* samples/* types/* script/* types/*",
+        "check-types": "npx ts types/*",
         "prepare": "npm run build",
         "prepublishOnly": "npm test"
     },
