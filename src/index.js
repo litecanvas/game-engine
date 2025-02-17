@@ -26,7 +26,6 @@ export default function litecanvas(settings = {}) {
         isFinite = Number.isFinite,
         /** @type {LitecanvasOptions} */
         defaults = {
-            fps: 60,
             fullscreen: true,
             width: null,
             height: null,
@@ -1420,7 +1419,7 @@ export default function litecanvas(settings = {}) {
             })
         }
 
-        instance.setfps(settings.fps)
+        instance.setfps(60)
 
         // start the game loop
         instance.emit('init', instance)
