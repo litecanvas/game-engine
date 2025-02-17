@@ -68,11 +68,9 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _lastFrameTime,
         /** @type {number} */
-        _step,
+        _fixedDeltaTime,
         /** @type {number} */
-        _stepMs,
-        /** @type {number} */
-        _accumulated = 0,
+        _accumulated,
         /** @type {number} */
         _focused = true,
         /** @type {string} */
@@ -1191,8 +1189,7 @@ export default function litecanvas(settings = {}) {
                     'setfps: 1st param must be a positive number'
                 )
             }
-            _step = 1 / value
-            _stepMs = _step * 1000
+            _fixedDeltaTime = 1 / value
             _accumulated = 0
         },
 
@@ -1437,15 +1434,19 @@ export default function litecanvas(settings = {}) {
      */
     function drawFrame(now) {
         let shouldRender = !_animated,
-            delta = now - _lastFrameTime
+            frameTime = (now - _lastFrameTime) / 1000,
+            frameTimeMax = _fixedDeltaTime * 5
 
-        _accumulated += delta > 100 ? 100 : delta
+        _accumulated += frameTime > frameTimeMax ? frameTimeMax : frameTime
         _lastFrameTime = now
 
-        while (_accumulated >= _stepMs) {
-            instance.emit('update', _step * _timeScale)
-            instance.setvar('ELAPSED', instance.ELAPSED + _step * _timeScale)
-            _accumulated -= _stepMs
+        while (_accumulated >= _fixedDeltaTime) {
+            instance.emit('update', _fixedDeltaTime * _timeScale)
+            instance.setvar(
+                'ELAPSED',
+                instance.ELAPSED + _fixedDeltaTime * _timeScale
+            )
+            _accumulated -= _fixedDeltaTime
             shouldRender = true
         }
 
