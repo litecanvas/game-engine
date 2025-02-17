@@ -1184,11 +1184,11 @@ export default function litecanvas(settings = {}) {
         setfps(value) {
             if (DEV_BUILD) {
                 assert(
-                    isFinite(value) && value > 0,
+                    isFinite(value) && value >= 1,
                     'setfps: 1st param must be a positive number'
                 )
             }
-            _fixedDeltaTime = 1 / value
+            _fixedDeltaTime = 1 / ~~value
             _accumulated = 0
         },
 
