@@ -214,7 +214,7 @@ declare global {
 
     /** BASIC GRAPHICS API */
     /**
-     * Clear the game screen
+     * Clear the game screen with an optional color
      *
      * @param color The background color index or `null`
      */
