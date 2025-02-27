@@ -65,13 +65,13 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _timeScale = 1,
         /** @type {number} */
-        _lastFrameTime,
+        _lastFrameTime = performance.now(),
         /** @type {number} */
-        _fixedDeltaTime,
+        _deltaTime,
         /** @type {number} */
-        _accumulated,
+        _accumulated = 0,
         /** @type {number} */
-        _focused = true,
+        _rafid,
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {number} */
@@ -669,11 +669,22 @@ export default function litecanvas(settings = {}) {
         textalign(align, baseline) {
             if (DEV_BUILD) {
                 assert(
-                    null == align || 'string' === typeof align,
+                    null == align ||
+                        ['left', 'right', 'center', 'start', 'end'].includes(
+                            align
+                        ),
                     'textalign: 1st param must be a string'
                 )
                 assert(
-                    null == baseline || 'string' === typeof baseline,
+                    null == baseline ||
+                        [
+                            'top',
+                            'bottom',
+                            'middle',
+                            'hanging',
+                            'alphabetic',
+                            'ideographic',
+                        ].includes(baseline),
                     'textalign: 2nd param must be a string'
                 )
             }
@@ -1195,8 +1206,7 @@ export default function litecanvas(settings = {}) {
                     'setfps: 1st param must be a positive number'
                 )
             }
-            _fixedDeltaTime = 1 / ~~value
-            _accumulated = 0
+            _deltaTime = 1 / ~~value
         },
 
         /**
@@ -1207,7 +1217,7 @@ export default function litecanvas(settings = {}) {
             for (const removeListener of _browserEventListeners) {
                 removeListener()
             }
-            _focused = _events = false
+            _events = false
             if (_global) {
                 for (const key in instance) {
                     delete root[key]
@@ -1416,53 +1426,51 @@ export default function litecanvas(settings = {}) {
 
         // listen browser focus/blur events and pause the update/draw loop
         if (settings.pauseOnBlur) {
-            on(root, 'blur', () => {
-                _focused = false
-            })
+            on(root, 'blur', () => cancelAnimationFrame(_rafid))
 
             on(root, 'focus', () => {
-                _focused = true
-                raf(drawFrame)
+                _rafid = raf(drawFrame)
             })
         }
 
-        instance.setfps(60)
-
         // start the game loop
+        instance.setfps(60)
         instance.emit('init', instance)
 
-        _lastFrameTime = performance.now()
-        raf(drawFrame)
+        _rafid = raf(drawFrame)
     }
 
     /**
-     * @param {number} now
+     * @param {DOMHighResTimeStamp} now
      */
     function drawFrame(now) {
-        let shouldRender = !_animated,
-            frameTime = (now - _lastFrameTime) / 1000,
-            frameTimeMax = _fixedDeltaTime * 5
+        let updated = 0,
+            timeSinceLastFrame = (now - _lastFrameTime) / 1000
 
-        _accumulated += frameTime > frameTimeMax ? frameTimeMax : frameTime
-        _lastFrameTime = now
+        if (_animated) {
+            _rafid = raf(drawFrame)
 
-        while (_accumulated >= _fixedDeltaTime) {
-            instance.emit('update', _fixedDeltaTime * _timeScale)
+            _lastFrameTime = now
+            _accumulated += Math.min(timeSinceLastFrame, _deltaTime * 10)
+        } else {
+            // force 1 frame game loop in non-animated canvas
+            _accumulated = _deltaTime
+        }
+
+        // can update multiples times (max 10) before draw
+        for (; _accumulated >= _deltaTime; _accumulated -= _deltaTime) {
+            instance.emit('update', _deltaTime * _timeScale)
             instance.setvar(
                 'ELAPSED',
-                instance.ELAPSED + _fixedDeltaTime * _timeScale
+                instance.ELAPSED + _deltaTime * _timeScale
             )
-            _accumulated -= _fixedDeltaTime
-            shouldRender = true
+            updated++
         }
 
-        if (shouldRender) {
-            instance.textalign('start', 'top') // default values for textAlign & textBaseline
+        if (updated) {
+            // before draw: reset textAlign & textBaseline to our custom defaults
+            instance.textalign('start', 'top')
             instance.emit('draw')
-        }
-
-        if (_focused && _animated) {
-            raf(drawFrame)
         }
     }
 

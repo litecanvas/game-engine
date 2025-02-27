@@ -19,7 +19,7 @@ let padW = 120,
     destX = padX,
     ballX,
     ballY,
-    ballSize = 15,
+    ballRadius = 15,
     ballAngle = 0,
     dirX = 1,
     dirY = 1,
@@ -62,36 +62,44 @@ function update(dt) {
     if (padX < 0) padX = 0
     else if (padX + padW > WIDTH) padX = WIDTH - padW
 
-    if (ballY + ballSize > HEIGHT) {
-        ballX = 160
-        ballY = 70
-        lifes = lifes - 1
-        sfx(BALL_OFFSCREEN)
-    }
-
     // update ball position
     ballX += dirX * speed * dt
     ballY += dirY * speed * dt
 
-    let bounced = false
-
     // bounce ball on screen
-    if (ballX + ballSize > WIDTH || ballX < ballSize) {
-        dirX *= -1
-        bounced = true
-    } else if (ballY < ballSize) {
-        dirY = 1
-        bounced = true
+    if (ballX + ballRadius > WIDTH) {
+        // bounce on right
+        ballX = WIDTH - ballRadius
+        dirX = -dirX
+        sfx(BOUNCE)
+    } else if (ballX - ballRadius < 0) {
+        // bounce on left
+        ballX = ballRadius
+        dirX = -dirX
+        sfx(BOUNCE)
+    }
+
+    if (ballY - ballRadius < 0) {
+        // bounce on top
+        ballY = ballRadius
+        dirY = -dirY
+        sfx(BOUNCE)
+    } else if (ballY + ballRadius > HEIGHT) {
+        // do not bounce on bottom and lost life
+        lifes = lifes - 1
+        sfx(BALL_OFFSCREEN)
+
+        // also reset the ball
+        ballX = 160
+        ballY = 70
     }
 
     // check ball collision with paddle
-    if (colrect(ballX, ballY, ballSize, ballSize, padX, padY, padW, 1)) {
+    if (colrect(ballX, ballY, ballRadius, ballRadius, padX, padY, padW, 1)) {
         dirY = -1
         score += 10
-        bounced = true
+        sfx(BOUNCE)
     }
-
-    if (bounced) sfx(BOUNCE)
 }
 
 function draw() {
@@ -102,7 +110,7 @@ function draw() {
         text(CENTERX, CENTERY, 'TAP TO START', 3)
     } else if (lifes > 0) {
         rectfill(padX, padY, padW, padH, 3)
-        circfill(ballX, ballY, ballSize, 5)
+        circfill(ballX, ballY, ballRadius, 5)
 
         textsize(textSize)
 
@@ -111,6 +119,9 @@ function draw() {
 
         textalign('end', 'hanging')
         text(WIDTH - 10, 10, ('' + score).padStart(6, 0), 3)
+
+        // textalign('start', 'top')
+        // text(0, HEIGHT - 32, ELAPSED.toFixed(1))
     } else {
         textalign('center', 'middle')
         textsize(textSize)

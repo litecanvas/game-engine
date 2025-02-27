@@ -53,7 +53,7 @@ console.log(
 
 function filesize(filename) {
     const stats = fs.statSync(filename)
-    return (stats.size / 1000).toFixed(2) + 'kb'
+    return (stats.size / 1000).toFixed(3) + 'kb'
 }
 
 function gzipsize(code) {
