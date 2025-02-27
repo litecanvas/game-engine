@@ -67,11 +67,11 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _lastFrameTime,
         /** @type {number} */
-        _fixedDeltaTime,
+        _deltaTime,
         /** @type {number} */
-        _accumulated,
+        _accumulated = 0,
         /** @type {number} */
-        _focused = true,
+        _rafid,
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {number} */
@@ -1195,8 +1195,7 @@ export default function litecanvas(settings = {}) {
                     'setfps: 1st param must be a positive number'
                 )
             }
-            _fixedDeltaTime = 1 / ~~value
-            _accumulated = 0
+            _deltaTime = 1 / ~~value
         },
 
         /**
@@ -1207,7 +1206,8 @@ export default function litecanvas(settings = {}) {
             for (const removeListener of _browserEventListeners) {
                 removeListener()
             }
-            _focused = _events = false
+            cancelAnimationFrame(_rafid)
+            _events = false
             if (_global) {
                 for (const key in instance) {
                     delete root[key]
@@ -1417,12 +1417,14 @@ export default function litecanvas(settings = {}) {
         // listen browser focus/blur events and pause the update/draw loop
         if (settings.pauseOnBlur) {
             on(root, 'blur', () => {
-                _focused = false
+                _rafid = cancelAnimationFrame(_rafid)
             })
 
             on(root, 'focus', () => {
-                _focused = true
-                raf(drawFrame)
+                if (!_rafid) {
+                    _lastFrameTime = performance.now()
+                    _rafid = raf(drawFrame)
+                }
             })
         }
 
@@ -1432,37 +1434,40 @@ export default function litecanvas(settings = {}) {
         instance.emit('init', instance)
 
         _lastFrameTime = performance.now()
-        raf(drawFrame)
+        _rafid = raf(drawFrame)
     }
 
     /**
-     * @param {number} now
+     * @param {DOMHighResTimeStamp} now
      */
     function drawFrame(now) {
-        let shouldRender = !_animated,
-            frameTime = (now - _lastFrameTime) / 1000,
-            frameTimeMax = _fixedDeltaTime * 5
+        if (_animated) {
+            _rafid = raf(drawFrame)
+        }
 
-        _accumulated += frameTime > frameTimeMax ? frameTimeMax : frameTime
+        let updated = 0,
+            frameTime = (now - _lastFrameTime) / 1000
+
+        _accumulated += frameTime
         _lastFrameTime = now
 
-        while (_accumulated >= _fixedDeltaTime) {
-            instance.emit('update', _fixedDeltaTime * _timeScale)
+        if (!_animated) {
+            _accumulated = _deltaTime
+        }
+
+        for (; _accumulated >= _deltaTime; _accumulated -= _deltaTime) {
+            instance.emit('update', _deltaTime * _timeScale)
             instance.setvar(
                 'ELAPSED',
-                instance.ELAPSED + _fixedDeltaTime * _timeScale
+                instance.ELAPSED + _deltaTime * _timeScale
             )
-            _accumulated -= _fixedDeltaTime
-            shouldRender = true
+            updated++
         }
 
-        if (shouldRender) {
+        if (updated) {
             instance.textalign('start', 'top') // default values for textAlign & textBaseline
             instance.emit('draw')
-        }
-
-        if (_focused && _animated) {
-            raf(drawFrame)
+            console.log(updated)
         }
     }
 
