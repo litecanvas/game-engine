@@ -13,6 +13,7 @@ await esbuild.build({
     define: {
         DEV_BUILD: 'true',
     },
+    drop: ['console', 'debugger'],
 })
 
 console.log(`  📄 dist/dist.dev.js (${filesize('dist/dist.dev.js')})`)
@@ -25,6 +26,7 @@ await esbuild.build({
     define: {
         DEV_BUILD: 'false',
     },
+    drop: ['console', 'debugger'],
 })
 
 console.log(`  📄 dist/dist.js (${filesize('dist/dist.js')})`)
@@ -53,9 +55,9 @@ console.log(
 
 function filesize(filename) {
     const stats = fs.statSync(filename)
-    return (stats.size / 1000).toFixed(2) + 'kb'
+    return (stats.size / 1000).toFixed(3) + 'kb'
 }
 
 function gzipsize(code) {
-    return (gzipSizeSync(minified.code) / 1000).toFixed(3) + 'kb'
+    return (gzipSizeSync(code) / 1000).toFixed(3) + 'kb'
 }

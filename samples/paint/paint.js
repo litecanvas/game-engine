@@ -12,7 +12,7 @@ function init() {
         /**
          * Any drawing operation within that function will draw on the OffscreenCanvas
          *
-         * @param {CanvasRenderingContext2D} context
+         * @param {OffscreenCanvasRenderingContext2D} context
          */
         (context) => {
             ball(128, 128).draw()
@@ -20,7 +20,7 @@ function init() {
     )
 
     // create many balls
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 100; i++) {
         entities.push(ball(CENTERX, CENTERY))
     }
 }
