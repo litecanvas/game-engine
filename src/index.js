@@ -669,11 +669,22 @@ export default function litecanvas(settings = {}) {
         textalign(align, baseline) {
             if (DEV_BUILD) {
                 assert(
-                    null == align || 'string' === typeof align,
+                    null == align ||
+                        ['left', 'right', 'center', 'start', 'end'].includes(
+                            align
+                        ),
                     'textalign: 1st param must be a string'
                 )
                 assert(
-                    null == baseline || 'string' === typeof baseline,
+                    null == baseline ||
+                        [
+                            'top',
+                            'bottom',
+                            'middle',
+                            'hanging',
+                            'alphabetic',
+                            'ideographic',
+                        ].includes(baseline),
                     'textalign: 2nd param must be a string'
                 )
             }
