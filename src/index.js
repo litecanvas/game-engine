@@ -1433,7 +1433,6 @@ export default function litecanvas(settings = {}) {
 
             on(root, 'focus', () => {
                 if (!_rafid) {
-                    _lastFrameTime = performance.now()
                     _rafid = raf(drawFrame)
                 }
             })
@@ -1459,8 +1458,11 @@ export default function litecanvas(settings = {}) {
         let updated = 0,
             frameTime = (now - _lastFrameTime) / 1000
 
-        _accumulated += frameTime
         _lastFrameTime = now
+
+        if (frameTime > 1) return
+
+        _accumulated += frameTime
 
         if (!_animated) {
             _accumulated = _deltaTime
@@ -1478,7 +1480,6 @@ export default function litecanvas(settings = {}) {
         if (updated) {
             instance.textalign('start', 'top') // default values for textAlign & textBaseline
             instance.emit('draw')
-            console.log(updated)
         }
     }
 
