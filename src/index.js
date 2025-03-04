@@ -1441,7 +1441,7 @@ export default function litecanvas(settings = {}) {
 
         _lastFrameTime = now
 
-        if (frameTime > 1) return
+        if (frameTime > _deltaTime * 25) return
 
         _accumulated += frameTime
 
