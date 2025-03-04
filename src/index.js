@@ -1441,7 +1441,8 @@ export default function litecanvas(settings = {}) {
 
         _lastFrameTime = now
 
-        if (frameTime > _deltaTime * 25) return
+        if (frameTime > _deltaTime * 30)
+            return console.log('skipping too long frame')
 
         _accumulated += frameTime
 
