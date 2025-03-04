@@ -1,6 +1,8 @@
 import { addEventListener, removeEventListener } from './events.js'
 
 export class Canvas {
+    tagName = 'CANVAS'
+
     width = 300
     height = 150
     context = null
