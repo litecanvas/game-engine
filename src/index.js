@@ -135,14 +135,6 @@ export default function litecanvas(settings = {}) {
 
         /** MATH API */
         /**
-         * The value of the mathematical constant PI (π).
-         * Approximately 3.14159
-         *
-         * @type {number}
-         */
-        PI,
-
-        /**
          * Twice the value of the mathematical constant PI (π).
          * Approximately 6.28318
          *
@@ -159,7 +151,7 @@ export default function litecanvas(settings = {}) {
          *
          * @type {number}
          */
-        HALF_PI: PI * 0.5,
+        HALF_PI: PI / 2,
 
         /**
          * Calculates a linear (interpolation) value over t%.
@@ -176,7 +168,7 @@ export default function litecanvas(settings = {}) {
                 assert(isFinite(end), 'lerp: 2nd param must be a number')
                 assert(isFinite(t), 'lerp: 3rd param must be a number')
             }
-            return start + t * (end - start)
+            return t * (end - start) + start
         },
 
         /**
@@ -1228,26 +1220,9 @@ export default function litecanvas(settings = {}) {
         },
     }
 
-    /** Copy some functions from native `Math` object */
-    for (const k of [
-        'sin',
-        'cos',
-        'atan2',
-        'hypot',
-        'tan',
-        'abs',
-        'ceil',
-        'round',
-        'floor',
-        'trunc',
-        'min',
-        'max',
-        'pow',
-        'sqrt',
-        'sign',
-        'exp',
-    ]) {
-        // import some native Math functions
+    // prettier-ignore
+    for (const k of 'PI,sin,cos,atan2,hypot,tan,abs,ceil,round,floor,trunc,min,max,pow,sqrt,sign,exp'.split(',')) {
+        // import native Math functions
         instance[k] = Math[k]
     }
 
@@ -1296,20 +1271,38 @@ export default function litecanvas(settings = {}) {
                     tap.x = x
                     tap.y = y
                 },
-                _checkTapped = (tap) => tap && performance.now() - tap.ts <= 200
+                _checkTapped = (tap) =>
+                    tap && performance.now() - tap.ts <= 200,
+                preventDefault = (ev) => ev.preventDefault()
 
             let _pressingMouse = false
 
             on(_canvas, 'mousedown', (ev) => {
-                ev.preventDefault()
-                const [x, y] = _getXY(ev.pageX, ev.pageY)
-                instance.emit('tap', x, y, 0)
-                _registerTap(0, x, y)
-                _pressingMouse = true
+                if (ev.button === 0) {
+                    preventDefault(ev)
+                    const [x, y] = _getXY(ev.pageX, ev.pageY)
+                    instance.emit('tap', x, y, 0)
+                    _registerTap(0, x, y)
+                    _pressingMouse = true
+                }
+            })
+
+            on(_canvas, 'mouseup', (ev) => {
+                if (ev.button === 0) {
+                    preventDefault(ev)
+                    const tap = _taps.get(0)
+                    const [x, y] = _getXY(ev.pageX, ev.pageY)
+                    if (_checkTapped(tap)) {
+                        instance.emit('tapped', tap.startX, tap.startY, 0)
+                    }
+                    instance.emit('untap', x, y, 0)
+                    _taps.delete(0)
+                    _pressingMouse = false
+                }
             })
 
             on(_canvas, 'mousemove', (ev) => {
-                ev.preventDefault()
+                preventDefault(ev)
 
                 const [x, y] = _getXY(ev.pageX, ev.pageY)
                 instance.setvar('MOUSEX', x)
@@ -1321,20 +1314,8 @@ export default function litecanvas(settings = {}) {
                 _updateTap(0, x, y)
             })
 
-            on(_canvas, 'mouseup', (ev) => {
-                ev.preventDefault()
-                const tap = _taps.get(0)
-                const [x, y] = _getXY(ev.pageX, ev.pageY)
-                if (_checkTapped(tap)) {
-                    instance.emit('tapped', tap.startX, tap.startY, 0)
-                }
-                instance.emit('untap', x, y, 0)
-                _taps.delete(0)
-                _pressingMouse = false
-            })
-
             on(_canvas, 'touchstart', (ev) => {
-                ev.preventDefault()
+                preventDefault(ev)
                 /** @type {TouchList} touches */
                 const touches = ev.changedTouches
                 for (const touch of touches) {
@@ -1345,7 +1326,7 @@ export default function litecanvas(settings = {}) {
             })
 
             on(_canvas, 'touchmove', (ev) => {
-                ev.preventDefault()
+                preventDefault(ev)
                 /** @type {TouchList} touches */
                 const touches = ev.changedTouches
                 for (const touch of touches) {
@@ -1356,7 +1337,7 @@ export default function litecanvas(settings = {}) {
             })
 
             const _touchEndHandler = (ev) => {
-                ev.preventDefault()
+                preventDefault(ev)
                 const existing = []
 
                 if (ev.targetTouches.length > 0) {
@@ -1460,7 +1441,8 @@ export default function litecanvas(settings = {}) {
 
         _lastFrameTime = now
 
-        if (frameTime > 1) return
+        if (frameTime > _deltaTime * 30)
+            return console.log('skipping too long frame')
 
         _accumulated += frameTime
 
@@ -1484,10 +1466,26 @@ export default function litecanvas(settings = {}) {
     }
 
     function setupCanvas() {
+        /** @type {HTMLCanvasElement} */
         _canvas =
             'string' === typeof _canvas
                 ? document.querySelector(_canvas)
                 : _canvas
+
+        if (DEV_BUILD) {
+            assert(
+                _canvas && _canvas.tagName === 'CANVAS',
+                'Invalid canvas element'
+            )
+            assert(
+                null === instance.WIDTH || instance.WIDTH > 0,
+                'Litecanvas\' "width" option should be null or a positive number'
+            )
+            assert(
+                null === instance.HEIGHT || instance.HEIGHT > 0,
+                'Litecanvas\' "width" option should be null or a positive number'
+            )
+        }
 
         instance.setvar('CANVAS', _canvas)
         _ctx = _canvas.getContext('2d')
@@ -1535,7 +1533,7 @@ export default function litecanvas(settings = {}) {
         // restore canvas image rendering properties
         if (!settings.antialias || settings.pixelart) {
             _ctx.imageSmoothingEnabled = false
-            _canvas.style.imageRendering = 'pixelated'
+            styles.imageRendering = 'pixelated'
         }
 
         instance.emit('resized', _scale)
@@ -1557,10 +1555,14 @@ export default function litecanvas(settings = {}) {
      */
     function loadPlugin(callback, config) {
         const pluginData = callback(instance, _helpers, config)
-        if ('object' === typeof pluginData) {
-            for (const key of Object.keys(pluginData)) {
-                instance.setvar(key, pluginData[key])
-            }
+        if (DEV_BUILD) {
+            assert(
+                null == pluginData || 'object' === typeof pluginData,
+                'Litecanvas plugins should return an object or nothing'
+            )
+        }
+        for (const key in pluginData) {
+            instance.setvar(key, pluginData[key])
         }
     }
 

@@ -1,5 +1,4 @@
 /**
- *
  * @param {any} condition
  * @param {string} message
  */
