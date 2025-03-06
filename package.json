@@ -1,6 +1,6 @@
 {
     "name": "litecanvas",
-    "version": "0.75.0",
+    "version": "0.75.1",
     "description": "Lightweight HTML5 canvas game engine suitable for small projects and creative coding. Inspired by PICO-8 and P5/Processing.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
@@ -26,7 +26,7 @@
     "scripts": {
         "test": "npm run build && ava",
         "dev:test": "ava --watch",
-        "dev": "esbuild src/web.js --bundle --watch --define:DEV_BUILD=true --outfile=dist/dist.dev.js --servedir=.",
+        "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.dev.js --servedir=.",
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
         "format": "prettier -w src/* samples/* types/* script/* types/*",
