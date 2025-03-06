@@ -1,6 +1,6 @@
 import test from 'ava'
 import './_mocks/browser.js'
-import '../dist/dist.dev.js'
+import '../src/web.js'
 
 let g = litecanvas({
     width: 256,

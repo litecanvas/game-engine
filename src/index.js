@@ -163,11 +163,10 @@ export default function litecanvas(settings = {}) {
          * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
          */
         lerp: (start, end, t) => {
-            if (DEV_BUILD) {
-                assert(isFinite(start), 'lerp: 1st param must be a number')
-                assert(isFinite(end), 'lerp: 2nd param must be a number')
-                assert(isFinite(t), 'lerp: 3rd param must be a number')
-            }
+            DEV: assert(isFinite(start), 'lerp: 1st param must be a number')
+            DEV: assert(isFinite(end), 'lerp: 2nd param must be a number')
+            DEV: assert(isFinite(t), 'lerp: 3rd param must be a number')
+
             return t * (end - start) + start
         },
 
@@ -178,9 +177,8 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the value in radians
          */
         deg2rad: (degs) => {
-            if (DEV_BUILD) {
-                assert(isFinite(degs), 'deg2rad: 1st param must be a number')
-            }
+            DEV: assert(isFinite(degs), 'deg2rad: 1st param must be a number')
+
             return (PI / 180) * degs
         },
 
@@ -191,9 +189,8 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the value in degrees
          */
         rad2deg: (rads) => {
-            if (DEV_BUILD) {
-                assert(isFinite(rads), 'rad2deg: 1st param must be a number')
-            }
+            DEV: assert(isFinite(rads), 'rad2deg: 1st param must be a number')
+
             return (180 / PI) * rads
         },
 
@@ -206,15 +203,14 @@ export default function litecanvas(settings = {}) {
          * @returns {number}
          */
         clamp: (value, min, max) => {
-            if (DEV_BUILD) {
-                assert(isFinite(value), 'clamp: 1st param must be a number')
-                assert(isFinite(min), 'clamp: 2nd param must be a number')
-                assert(isFinite(max), 'clamp: 3rd param must be a number')
-                assert(
-                    max > min,
-                    'randi: the 2nd param must be less than the 3rd param'
-                )
-            }
+            DEV: assert(isFinite(value), 'clamp: 1st param must be a number')
+            DEV: assert(isFinite(min), 'clamp: 2nd param must be a number')
+            DEV: assert(isFinite(max), 'clamp: 3rd param must be a number')
+            DEV: assert(
+                max > min,
+                'randi: the 2nd param must be less than the 3rd param'
+            )
+
             if (value < min) return min
             if (value > max) return max
             return value
@@ -229,19 +225,18 @@ export default function litecanvas(settings = {}) {
          * @returns {number}
          */
         wrap: (value, min, max) => {
-            if (DEV_BUILD) {
-                assert(isFinite(value), 'wrap: 1st param must be a number')
-                assert(isFinite(min), 'wrap: 2nd param must be a number')
-                assert(isFinite(max), 'wrap: 3rd param must be a number')
-                assert(
-                    max > min,
-                    'randi: the 2nd param must be less than the 3rd param'
-                )
-                assert(
-                    max !== min,
-                    'randi: the 2nd param must be not equal to the 3rd param'
-                )
-            }
+            DEV: assert(isFinite(value), 'wrap: 1st param must be a number')
+            DEV: assert(isFinite(min), 'wrap: 2nd param must be a number')
+            DEV: assert(isFinite(max), 'wrap: 3rd param must be a number')
+            DEV: assert(
+                max > min,
+                'randi: the 2nd param must be less than the 3rd param'
+            )
+            DEV: assert(
+                max !== min,
+                'randi: the 2nd param must be not equal to the 3rd param'
+            )
+
             return value - (max - min) * Math.floor((value - min) / (max - min))
         },
 
@@ -257,13 +252,12 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the remapped number
          */
         map(value, start1, stop1, start2, stop2, withinBounds) {
-            if (DEV_BUILD) {
-                assert(isFinite(value), 'map: 1st param must be a number')
-                assert(isFinite(start1), 'map: 2nd param must be a number')
-                assert(isFinite(stop1), 'map: 3rd param must be a number')
-                assert(isFinite(start2), 'map: 4th param must be a number')
-                assert(isFinite(stop2), 'map: 5th param must be a number')
-            }
+            DEV: assert(isFinite(value), 'map: 1st param must be a number')
+            DEV: assert(isFinite(start1), 'map: 2nd param must be a number')
+            DEV: assert(isFinite(stop1), 'map: 3rd param must be a number')
+            DEV: assert(isFinite(start2), 'map: 4th param must be a number')
+            DEV: assert(isFinite(stop2), 'map: 5th param must be a number')
+
             // prettier-ignore
             const result = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2
             return withinBounds ? instance.clamp(result, start2, stop2) : result
@@ -280,11 +274,10 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the normalized number.
          */
         norm: (value, start, stop) => {
-            if (DEV_BUILD) {
-                assert(isFinite(value), 'norm: 1st param must be a number')
-                assert(isFinite(start), 'norm: 2nd param must be a number')
-                assert(isFinite(stop), 'norm: 3rd param must be a number')
-            }
+            DEV: assert(isFinite(value), 'norm: 1st param must be a number')
+            DEV: assert(isFinite(start), 'norm: 2nd param must be a number')
+            DEV: assert(isFinite(stop), 'norm: 3rd param must be a number')
+
             return instance.map(value, start, stop, 0, 1)
         },
 
@@ -298,14 +291,13 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the random number
          */
         rand: (min = 0.0, max = 1.0) => {
-            if (DEV_BUILD) {
-                assert(isFinite(min), 'rand: 1st param must be a number')
-                assert(isFinite(max), 'rand: 2nd param must be a number')
-                assert(
-                    max > min,
-                    'rand: the 1st param must be less than the 2nd param'
-                )
-            }
+            DEV: assert(isFinite(min), 'rand: 1st param must be a number')
+            DEV: assert(isFinite(max), 'rand: 2nd param must be a number')
+            DEV: assert(
+                max > min,
+                'rand: the 1st param must be less than the 2nd param'
+            )
+
             const a = 1664525
             const c = 1013904223
             const m = 4294967296
@@ -323,14 +315,13 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the random number
          */
         randi: (min = 0, max = 1) => {
-            if (DEV_BUILD) {
-                assert(isFinite(min), 'randi: 1st param must be a number')
-                assert(isFinite(max), 'randi: 2nd param must be a number')
-                assert(
-                    max > min,
-                    'randi: the 1st param must be less than the 2nd param'
-                )
-            }
+            DEV: assert(isFinite(min), 'randi: 1st param must be a number')
+            DEV: assert(isFinite(max), 'randi: 2nd param must be a number')
+            DEV: assert(
+                max > min,
+                'randi: the 1st param must be less than the 2nd param'
+            )
+
             return Math.floor(instance.rand(min, max + 1))
         },
 
@@ -342,12 +333,11 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the seed state
          */
         seed: (value) => {
-            if (DEV_BUILD) {
-                assert(
-                    null == value || (isFinite(value) && value >= 0),
-                    'seed: 1st param must be a positive number or zero'
-                )
-            }
+            DEV: assert(
+                null == value || (isFinite(value) && value >= 0),
+                'seed: 1st param must be a positive number or zero'
+            )
+
             return null == value ? _rng_seed : (_rng_seed = ~~value)
         },
 
@@ -358,12 +348,11 @@ export default function litecanvas(settings = {}) {
          * @param {number?} color The background color (index) or null (for transparent)
          */
         cls(color) {
-            if (DEV_BUILD) {
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'cls: 1st param must be a positive number or zero or null'
-                )
-            }
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'cls: 1st param must be a positive number or zero or null'
+            )
+
             if (null == color) {
                 _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height)
             } else {
@@ -388,28 +377,27 @@ export default function litecanvas(settings = {}) {
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
         rect(x, y, width, height, color, radii = null) {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'rect: 1st param must be a number')
-                assert(isFinite(y), 'rect: 2nd param must be a number')
-                assert(
-                    isFinite(width) && width > 0,
-                    'rect: 3rd param must be a positive number'
-                )
-                assert(
-                    isFinite(height) && height >= 0,
-                    'rect: 4th param must be a positive number or zero'
-                )
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'rect: 5th param must be a positive number or zero'
-                )
-                assert(
-                    null == radii ||
-                        isFinite(radii) ||
-                        (Array.isArray(radii) && radii.length >= 1),
-                    'rect: 6th param must be a number or array of numbers'
-                )
-            }
+            DEV: assert(isFinite(x), 'rect: 1st param must be a number')
+            DEV: assert(isFinite(y), 'rect: 2nd param must be a number')
+            DEV: assert(
+                isFinite(width) && width > 0,
+                'rect: 3rd param must be a positive number'
+            )
+            DEV: assert(
+                isFinite(height) && height >= 0,
+                'rect: 4th param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'rect: 5th param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == radii ||
+                    isFinite(radii) ||
+                    (Array.isArray(radii) && radii.length >= 1),
+                'rect: 6th param must be a number or array of numbers'
+            )
+
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
                 ~~x - _outline_fix,
@@ -432,28 +420,27 @@ export default function litecanvas(settings = {}) {
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
         rectfill(x, y, width, height, color, radii = null) {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'rectfill: 1st param must be a number')
-                assert(isFinite(y), 'rectfill: 2nd param must be a number')
-                assert(
-                    isFinite(width) && width >= 0,
-                    'rectfill: 3rd param must be a positive number or zero'
-                )
-                assert(
-                    isFinite(height) && height >= 0,
-                    'rectfill: 4th param must be a positive number or zero'
-                )
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'rectfill: 5th param must be a positive number or zero'
-                )
-                assert(
-                    null == radii ||
-                        isFinite(radii) ||
-                        (Array.isArray(radii) && radii.length >= 1),
-                    'rectfill: 6th param must be a number or array of at least 2 numbers'
-                )
-            }
+            DEV: assert(isFinite(x), 'rectfill: 1st param must be a number')
+            DEV: assert(isFinite(y), 'rectfill: 2nd param must be a number')
+            DEV: assert(
+                isFinite(width) && width >= 0,
+                'rectfill: 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                isFinite(height) && height >= 0,
+                'rectfill: 4th param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'rectfill: 5th param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == radii ||
+                    isFinite(radii) ||
+                    (Array.isArray(radii) && radii.length >= 1),
+                'rectfill: 6th param must be a number or array of at least 2 numbers'
+            )
+
             _ctx.beginPath()
             _ctx[radii ? 'roundRect' : 'rect'](
                 ~~x,
@@ -474,18 +461,17 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         circ(x, y, radius, color) {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'circ: 1st param must be a number')
-                assert(isFinite(y), 'circ: 2nd param must be a number')
-                assert(
-                    isFinite(radius) && radius >= 0,
-                    'circ: 3rd param must be a positive number or zero'
-                )
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'circ: 4th param must be a positive number or zero'
-                )
-            }
+            DEV: assert(isFinite(x), 'circ: 1st param must be a number')
+            DEV: assert(isFinite(y), 'circ: 2nd param must be a number')
+            DEV: assert(
+                isFinite(radius) && radius >= 0,
+                'circ: 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'circ: 4th param must be a positive number or zero'
+            )
+
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             instance.stroke(color)
@@ -500,18 +486,17 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         circfill(x, y, radius, color) {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'circfill: 1st param must be a number')
-                assert(isFinite(y), 'circfill: 2nd param must be a number')
-                assert(
-                    isFinite(radius) && radius >= 0,
-                    'circfill: 3rd param must be a positive number or zero'
-                )
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'circfill: 4th param must be a positive number or zero'
-                )
-            }
+            DEV: assert(isFinite(x), 'circfill: 1st param must be a number')
+            DEV: assert(isFinite(y), 'circfill: 2nd param must be a number')
+            DEV: assert(
+                isFinite(radius) && radius >= 0,
+                'circfill: 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'circfill: 4th param must be a positive number or zero'
+            )
+
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             instance.fill(color)
@@ -527,22 +512,21 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         line(x1, y1, x2, y2, color) {
-            if (DEV_BUILD) {
-                assert(isFinite(x1), 'line: 1st param must be a number')
-                assert(isFinite(y1), 'line: 2nd param must be a number')
-                assert(
-                    isFinite(x2),
-                    'line: 3rd param must be a positive number or zero'
-                )
-                assert(
-                    isFinite(y2),
-                    'line: 4th param must be a positive number or zero'
-                )
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'line: 5th param must be a positive number or zero'
-                )
-            }
+            DEV: assert(isFinite(x1), 'line: 1st param must be a number')
+            DEV: assert(isFinite(y1), 'line: 2nd param must be a number')
+            DEV: assert(
+                isFinite(x2),
+                'line: 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                isFinite(y2),
+                'line: 4th param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'line: 5th param must be a positive number or zero'
+            )
+
             _ctx.beginPath()
 
             let xfix = _outline_fix !== 0 && ~~x1 === ~~x2 ? 0.5 : 0
@@ -561,12 +545,11 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
          */
         linewidth(value) {
-            if (DEV_BUILD) {
-                assert(
-                    isFinite(value) && ~~value > 0,
-                    'linewidth: 1st param must be a positive number'
-                )
-            }
+            DEV: assert(
+                isFinite(value) && ~~value > 0,
+                'linewidth: 1st param must be a positive number'
+            )
+
             _ctx.lineWidth = ~~value
             _outline_fix = ~~value % 2 === 0 ? 0 : 0.5
         },
@@ -580,13 +563,15 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
          */
         linedash(segments, offset = 0) {
-            if (DEV_BUILD) {
-                assert(
-                    Array.isArray(segments) && segments.length > 0,
-                    'linedash: 1st param must be an array of numbers'
-                )
-                assert(isFinite(offset), 'linedash: 2nd param must be a number')
-            }
+            DEV: assert(
+                Array.isArray(segments) && segments.length > 0,
+                'linedash: 1st param must be an array of numbers'
+            )
+            DEV: assert(
+                isFinite(offset),
+                'linedash: 2nd param must be a number'
+            )
+
             _ctx.setLineDash(segments)
             _ctx.lineDashOffset = offset
         },
@@ -602,22 +587,21 @@ export default function litecanvas(settings = {}) {
          * @param {string} [fontStyle] can be "normal" (default), "italic" and/or "bold".
          */
         text(x, y, message, color = 3, fontStyle = 'normal') {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'text: 1st param must be a number')
-                assert(isFinite(y), 'text: 2nd param must be a number')
-                // assert(
-                //     'string' === typeof message,
-                //     'text: 3rd param must be a string'
-                // )
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'text: 4th param must be a positive number or zero'
-                )
-                assert(
-                    'string' === typeof fontStyle,
-                    'text: 5th param must be a string'
-                )
-            }
+            DEV: assert(isFinite(x), 'text: 1st param must be a number')
+            DEV: assert(isFinite(y), 'text: 2nd param must be a number')
+            // DEV: assert(
+            //     'string' === typeof message,
+            //     'text: 3rd param must be a string'
+            // )
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'text: 4th param must be a positive number or zero'
+            )
+            DEV: assert(
+                'string' === typeof fontStyle,
+                'text: 5th param must be a string'
+            )
+
             _ctx.font = `${fontStyle} ${_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = instance.getcolor(color)
             _ctx.fillText(message, ~~x, ~~y)
@@ -629,12 +613,11 @@ export default function litecanvas(settings = {}) {
          * @param {string} family
          */
         textfont(family) {
-            if (DEV_BUILD) {
-                assert(
-                    'string' === typeof family,
-                    'textfont: 1st param must be a string'
-                )
-            }
+            DEV: assert(
+                'string' === typeof family,
+                'textfont: 1st param must be a string'
+            )
+
             _fontFamily = family
         },
 
@@ -644,9 +627,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} size
          */
         textsize(size) {
-            if (DEV_BUILD) {
-                assert(isFinite(size), 'textsize: 1st param must be a number')
-            }
+            DEV: assert(isFinite(size), 'textsize: 1st param must be a number')
+
             _fontSize = size
         },
 
@@ -659,27 +641,24 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
          */
         textalign(align, baseline) {
-            if (DEV_BUILD) {
-                assert(
-                    null == align ||
-                        ['left', 'right', 'center', 'start', 'end'].includes(
-                            align
-                        ),
-                    'textalign: 1st param must be a string'
-                )
-                assert(
-                    null == baseline ||
-                        [
-                            'top',
-                            'bottom',
-                            'middle',
-                            'hanging',
-                            'alphabetic',
-                            'ideographic',
-                        ].includes(baseline),
-                    'textalign: 2nd param must be a string'
-                )
-            }
+            DEV: assert(
+                null == align ||
+                    ['left', 'right', 'center', 'start', 'end'].includes(align),
+                'textalign: 1st param must be a string'
+            )
+            DEV: assert(
+                null == baseline ||
+                    [
+                        'top',
+                        'bottom',
+                        'middle',
+                        'hanging',
+                        'alphabetic',
+                        'ideographic',
+                    ].includes(baseline),
+                'textalign: 2nd param must be a string'
+            )
+
             if (align) _ctx.textAlign = align
             if (baseline) _ctx.textBaseline = baseline
         },
@@ -693,10 +672,9 @@ export default function litecanvas(settings = {}) {
          * @param {OffscreenCanvas|HTMLImageElement|HTMLCanvasElement} source
          */
         image(x, y, source) {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'image: 1st param must be a number')
-                assert(isFinite(y), 'image: 2nd param must be a number')
-            }
+            DEV: assert(isFinite(x), 'image: 1st param must be a number')
+            DEV: assert(isFinite(y), 'image: 2nd param must be a number')
+
             _ctx.drawImage(source, ~~x, ~~y)
         },
 
@@ -713,18 +691,17 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, drawing, options = {}) {
-            if (DEV_BUILD) {
-                assert(isFinite(width), 'paint: 1st param must be a number')
-                assert(isFinite(height), 'paint: 2nd param must be a number')
-                assert(
-                    'function' === typeof drawing || Array.isArray(drawing),
-                    'paint: 3rd param must be a function or array'
-                )
-                assert(
-                    (options && !options.scale) || isFinite(options.scale),
-                    'paint: 4th param (options.scale) must be a number'
-                )
-            }
+            DEV: assert(isFinite(width), 'paint: 1st param must be a number')
+            DEV: assert(isFinite(height), 'paint: 2nd param must be a number')
+            DEV: assert(
+                'function' === typeof drawing || Array.isArray(drawing),
+                'paint: 3rd param must be a function or array'
+            )
+            DEV: assert(
+                (options && !options.scale) || isFinite(options.scale),
+                'paint: 4th param (options.scale) must be a number'
+            )
+
             const canvas = options.canvas || new OffscreenCanvas(1, 1),
                 scale = options.scale || 1,
                 contextOriginal = _ctx
@@ -771,9 +748,6 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
          */
         ctx(context) {
-            if (DEV_BUILD) {
-                // TODO
-            }
             if (context) {
                 _ctx = context
             }
@@ -801,10 +775,9 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          */
         translate: (x, y) => {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'translate: 1st param must be a number')
-                assert(isFinite(y), 'translate: 2nd param must be a number')
-            }
+            DEV: assert(isFinite(x), 'translate: 1st param must be a number')
+            DEV: assert(isFinite(y), 'translate: 2nd param must be a number')
+
             return _ctx.translate(~~x, ~~y)
         },
 
@@ -815,13 +788,12 @@ export default function litecanvas(settings = {}) {
          * @param {number} [y]
          */
         scale: (x, y) => {
-            if (DEV_BUILD) {
-                assert(isFinite(x), 'scale: 1st param must be a number')
-                assert(
-                    y == null || isFinite(y),
-                    'scale: 2nd param must be a number'
-                )
-            }
+            DEV: assert(isFinite(x), 'scale: 1st param must be a number')
+            DEV: assert(
+                y == null || isFinite(y),
+                'scale: 2nd param must be a number'
+            )
+
             return _ctx.scale(x, y || x)
         },
 
@@ -831,9 +803,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} radians
          */
         rotate: (radians) => {
-            if (DEV_BUILD) {
-                assert(isFinite(radians), 'rotate: 1st param must be a number')
-            }
+            DEV: assert(isFinite(radians), 'rotate: 1st param must be a number')
+
             return _ctx.rotate(radians)
         },
 
@@ -844,9 +815,8 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
          */
         alpha(value) {
-            if (DEV_BUILD) {
-                assert(isFinite(value), 'alpha: 1st param must be a number')
-            }
+            DEV: assert(isFinite(value), 'alpha: 1st param must be a number')
+
             _ctx.globalAlpha = instance.clamp(value, 0, 1)
         },
 
@@ -860,14 +830,11 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/Path2D/Path2D
          */
         path: (arg) => {
-            if (DEV_BUILD) {
-                assert(
-                    null == arg ||
-                        'string' === typeof arg ||
-                        arg instanceof Path2D,
-                    'path: 1st param must be a string or a Path2D instance'
-                )
-            }
+            DEV: assert(
+                null == arg || 'string' === typeof arg || arg instanceof Path2D,
+                'path: 1st param must be a string or a Path2D instance'
+            )
+
             return new Path2D(arg)
         },
 
@@ -878,16 +845,15 @@ export default function litecanvas(settings = {}) {
          * @param {Path2D} [path]
          */
         fill(color, path) {
-            if (DEV_BUILD) {
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'fill: 1st param must be a positive number or zero'
-                )
-                assert(
-                    null == path || path instanceof Path2D,
-                    'fill: 2nd param must be a Path2D instance'
-                )
-            }
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'fill: 1st param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == path || path instanceof Path2D,
+                'fill: 2nd param must be a Path2D instance'
+            )
+
             _ctx.fillStyle = instance.getcolor(color)
             if (path) {
                 _ctx.fill(path)
@@ -903,16 +869,15 @@ export default function litecanvas(settings = {}) {
          * @param {Path2D} [path]
          */
         stroke(color, path) {
-            if (DEV_BUILD) {
-                assert(
-                    null == color || (isFinite(color) && color >= 0),
-                    'stroke: 1st param must be a positive number or zero'
-                )
-                assert(
-                    null == path || path instanceof Path2D,
-                    'stroke: 2nd param must be a Path2D instance'
-                )
-            }
+            DEV: assert(
+                null == color || (isFinite(color) && color >= 0),
+                'stroke: 1st param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == path || path instanceof Path2D,
+                'stroke: 2nd param must be a Path2D instance'
+            )
+
             _ctx.strokeStyle = instance.getcolor(color)
             if (path) {
                 _ctx.stroke(path)
@@ -928,12 +893,11 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
          */
         clip(path) {
-            if (DEV_BUILD) {
-                assert(
-                    path instanceof Path2D,
-                    'clip: 1st param must be a Path2D instance'
-                )
-            }
+            DEV: assert(
+                path instanceof Path2D,
+                'clip: 1st param must be a Path2D instance'
+            )
+
             _ctx.clip(path)
         },
 
@@ -950,17 +914,16 @@ export default function litecanvas(settings = {}) {
          * @see https://github.com/KilledByAPixel/ZzFX
          */
         sfx(zzfxParams, pitchSlide = 0, volumeFactor = 1) {
-            if (DEV_BUILD) {
-                assert(
-                    null == zzfxParams || Array.isArray(zzfxParams),
-                    'sfx: 1st param must be an array'
-                )
-                assert(isFinite(pitchSlide), 'sfx: 2nd param must be a number')
-                assert(
-                    isFinite(volumeFactor),
-                    'sfx: 3rd param must be a number'
-                )
-            }
+            DEV: assert(
+                null == zzfxParams || Array.isArray(zzfxParams),
+                'sfx: 1st param must be an array'
+            )
+            DEV: assert(isFinite(pitchSlide), 'sfx: 2nd param must be a number')
+            DEV: assert(
+                isFinite(volumeFactor),
+                'sfx: 3rd param must be a number'
+            )
+
             if (
                 root.zzfxV <= 0 ||
                 (navigator.userActivation &&
@@ -990,9 +953,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} value
          */
         volume(value) {
-            if (DEV_BUILD) {
-                assert(isFinite(value), 'volume: 1st param must be a number')
-            }
+            DEV: assert(isFinite(value), 'volume: 1st param must be a number')
+
             root.zzfxV = value
         },
 
@@ -1011,16 +973,15 @@ export default function litecanvas(settings = {}) {
          * @returns {boolean}
          */
         colrect: (x1, y1, w1, h1, x2, y2, w2, h2) => {
-            if (DEV_BUILD) {
-                assert(isFinite(x1), 'colrect: 1st param must be a number')
-                assert(isFinite(y1), 'colrect: 2nd param must be a number')
-                assert(isFinite(w1), 'colrect: 3rd param must be a number')
-                assert(isFinite(h1), 'colrect: 4th param must be a number')
-                assert(isFinite(x2), 'colrect: 5th param must be a number')
-                assert(isFinite(y2), 'colrect: 6th param must be a number')
-                assert(isFinite(w2), 'colrect: 7th param must be a number')
-                assert(isFinite(h2), 'colrect: 8th param must be a number')
-            }
+            DEV: assert(isFinite(x1), 'colrect: 1st param must be a number')
+            DEV: assert(isFinite(y1), 'colrect: 2nd param must be a number')
+            DEV: assert(isFinite(w1), 'colrect: 3rd param must be a number')
+            DEV: assert(isFinite(h1), 'colrect: 4th param must be a number')
+            DEV: assert(isFinite(x2), 'colrect: 5th param must be a number')
+            DEV: assert(isFinite(y2), 'colrect: 6th param must be a number')
+            DEV: assert(isFinite(w2), 'colrect: 7th param must be a number')
+            DEV: assert(isFinite(h2), 'colrect: 8th param must be a number')
+
             return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
         },
 
@@ -1036,14 +997,13 @@ export default function litecanvas(settings = {}) {
          * @returns {boolean}
          */
         colcirc: (x1, y1, r1, x2, y2, r2) => {
-            if (DEV_BUILD) {
-                assert(isFinite(x1), 'colcirc: 1st param must be a number')
-                assert(isFinite(y1), 'colcirc: 2nd param must be a number')
-                assert(isFinite(r1), 'colcirc: 3rd param must be a number')
-                assert(isFinite(x2), 'colcirc: 4th param must be a number')
-                assert(isFinite(y2), 'colcirc: 5th param must be a number')
-                assert(isFinite(r2), 'colcirc: 6th param must be a number')
-            }
+            DEV: assert(isFinite(x1), 'colcirc: 1st param must be a number')
+            DEV: assert(isFinite(y1), 'colcirc: 2nd param must be a number')
+            DEV: assert(isFinite(r1), 'colcirc: 3rd param must be a number')
+            DEV: assert(isFinite(x2), 'colcirc: 4th param must be a number')
+            DEV: assert(isFinite(y2), 'colcirc: 5th param must be a number')
+            DEV: assert(isFinite(r2), 'colcirc: 6th param must be a number')
+
             return (
                 (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) <=
                 (r1 + r2) * (r1 + r2)
@@ -1057,16 +1017,15 @@ export default function litecanvas(settings = {}) {
          * @param {pluginCallback} callback
          */
         use(callback, config = {}) {
-            if (DEV_BUILD) {
-                assert(
-                    'function' === typeof callback,
-                    'use: 1st param must be a function'
-                )
-                assert(
-                    'object' === typeof config,
-                    'use: 2nd param must be an object'
-                )
-            }
+            DEV: assert(
+                'function' === typeof callback,
+                'use: 1st param must be a function'
+            )
+            DEV: assert(
+                'object' === typeof config,
+                'use: 2nd param must be an object'
+            )
+
             _initialized
                 ? loadPlugin(callback, config)
                 : _plugins.push([callback, config])
@@ -1080,16 +1039,15 @@ export default function litecanvas(settings = {}) {
          * @returns {Function} a function to remove the listener
          */
         listen(eventName, callback) {
-            if (DEV_BUILD) {
-                assert(
-                    'string' === typeof eventName,
-                    'listen: 1st param must be a string'
-                )
-                assert(
-                    'function' === typeof callback,
-                    'listen: 2nd param must be a function'
-                )
-            }
+            DEV: assert(
+                'string' === typeof eventName,
+                'listen: 1st param must be a string'
+            )
+            DEV: assert(
+                'function' === typeof callback,
+                'listen: 2nd param must be a function'
+            )
+
             _events[eventName] = _events[eventName] || new Set()
             _events[eventName].add(callback)
 
@@ -1107,12 +1065,11 @@ export default function litecanvas(settings = {}) {
          * @param {*} [arg4] any data to be passed over the listeners
          */
         emit(eventName, arg1, arg2, arg3, arg4) {
-            if (DEV_BUILD) {
-                assert(
-                    'string' === typeof eventName,
-                    'emit: 1st param must be a string'
-                )
-            }
+            DEV: assert(
+                'string' === typeof eventName,
+                'emit: 1st param must be a string'
+            )
+
             triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
             triggerEvent(eventName, arg1, arg2, arg3, arg4)
             triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
@@ -1125,12 +1082,11 @@ export default function litecanvas(settings = {}) {
          * @returns {string} the color code
          */
         getcolor: (index) => {
-            if (DEV_BUILD) {
-                assert(
-                    null == index || (isFinite(index) && index >= 0),
-                    'getcolor: 1st param must be a number'
-                )
-            }
+            DEV: assert(
+                null == index || (isFinite(index) && index >= 0),
+                'getcolor: 1st param must be a number'
+            )
+
             return colors[~~index % colors.length]
         },
 
@@ -1141,15 +1097,14 @@ export default function litecanvas(settings = {}) {
          * @param {*} value
          */
         setvar(key, value) {
-            if (DEV_BUILD) {
-                assert(
-                    'string' === typeof key,
-                    'setvar: 1st param must be a string'
-                )
-                if (value == null) {
-                    console.warn(`setvar: key "${key}" was defined as ${value}`)
-                }
+            DEV: assert(
+                'string' === typeof key,
+                'setvar: 1st param must be a string'
+            )
+            if (value == null) {
+                console.warn(`setvar: key "${key}" was defined as ${value}`)
             }
+
             instance[key] = value
             if (_global) {
                 root[key] = value
@@ -1163,10 +1118,9 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          */
         resize(width, height) {
-            if (DEV_BUILD) {
-                assert(isFinite(width), 'resize: 1st param must be a number')
-                assert(isFinite(height), 'resize: 2nd param must be a number')
-            }
+            DEV: assert(isFinite(width), 'resize: 1st param must be a number')
+            DEV: assert(isFinite(height), 'resize: 2nd param must be a number')
+
             instance.setvar('WIDTH', (_canvas.width = width))
             instance.setvar('HEIGHT', (_canvas.height = height))
             pageResized()
@@ -1180,9 +1134,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} value
          */
         timescale(value) {
-            if (DEV_BUILD) {
-                assert(isFinite(value), 'timescale: 1st param must be a number')
-            }
+            DEV: assert(
+                isFinite(value),
+                'timescale: 1st param must be a number'
+            )
+
             _timeScale = value
         },
 
@@ -1192,12 +1148,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} value
          */
         setfps(value) {
-            if (DEV_BUILD) {
-                assert(
-                    isFinite(value) && value >= 1,
-                    'setfps: 1st param must be a positive number'
-                )
-            }
+            DEV: assert(
+                isFinite(value) && value >= 1,
+                'setfps: 1st param must be a positive number'
+            )
+
             _deltaTime = 1 / ~~value
         },
 
@@ -1382,12 +1337,11 @@ export default function litecanvas(settings = {}) {
              * @returns {boolean}
              */
             const iskeydown = (key) => {
-                if (DEV_BUILD) {
-                    assert(
-                        'string' === typeof key,
-                        'iskeydown: 1st param must be a string'
-                    )
-                }
+                DEV: assert(
+                    'string' === typeof key,
+                    'iskeydown: 1st param must be a string'
+                )
+
                 return 'any' === key
                     ? _keys.size > 0
                     : _keys.has(key.toLowerCase())
@@ -1472,20 +1426,18 @@ export default function litecanvas(settings = {}) {
                 ? document.querySelector(_canvas)
                 : _canvas
 
-        if (DEV_BUILD) {
-            assert(
-                _canvas && _canvas.tagName === 'CANVAS',
-                'Invalid canvas element'
-            )
-            assert(
-                null === instance.WIDTH || instance.WIDTH > 0,
-                'Litecanvas\' "width" option should be null or a positive number'
-            )
-            assert(
-                null === instance.HEIGHT || instance.HEIGHT > 0,
-                'Litecanvas\' "width" option should be null or a positive number'
-            )
-        }
+        DEV: assert(
+            _canvas && _canvas.tagName === 'CANVAS',
+            'Invalid canvas element'
+        )
+        DEV: assert(
+            null === instance.WIDTH || instance.WIDTH > 0,
+            'Litecanvas\' "width" option should be null or a positive number'
+        )
+        DEV: assert(
+            null === instance.HEIGHT || instance.HEIGHT > 0,
+            'Litecanvas\' "width" option should be null or a positive number'
+        )
 
         instance.setvar('CANVAS', _canvas)
         _ctx = _canvas.getContext('2d')
@@ -1555,12 +1507,12 @@ export default function litecanvas(settings = {}) {
      */
     function loadPlugin(callback, config) {
         const pluginData = callback(instance, _helpers, config)
-        if (DEV_BUILD) {
-            assert(
-                null == pluginData || 'object' === typeof pluginData,
-                'Litecanvas plugins should return an object or nothing'
-            )
-        }
+
+        DEV: assert(
+            null == pluginData || 'object' === typeof pluginData,
+            'Litecanvas plugins should return an object or nothing'
+        )
+
         for (const key in pluginData) {
             instance.setvar(key, pluginData[key])
         }
