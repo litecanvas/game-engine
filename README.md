@@ -32,7 +32,7 @@ npm install
 npm run dev
 ```
 
-If you prefer, you can manually install the package via NPM:
+If you prefer, you can manually install via [NPM](https://www.npmjs.com/package/litecanvas):
 
 ```
 npm install litecanvas
