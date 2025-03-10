@@ -232,7 +232,7 @@ function draw() {
                 }
             }
 
-            let transparency = null
+            let transparency = 0
 
             if (distV < distH) {
                 rayX = vx
