@@ -1,6 +1,8 @@
 litecanvas()
 
 function init() {
+    resized()
+
     x = CENTERX
     y = CENTERY
     state = 0

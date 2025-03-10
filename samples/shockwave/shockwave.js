@@ -1,6 +1,4 @@
-litecanvas({
-    fullscreen: true,
-})
+litecanvas()
 
 let objects = []
 let counter = 0

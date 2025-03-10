@@ -13,6 +13,10 @@ function resized() {
     cy = CENTERY
 }
 
+function init() {
+    resized()
+}
+
 function draw() {
     cls(0)
 

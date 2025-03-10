@@ -9,6 +9,7 @@ litecanvas({
     width: size * cols,
     height: size * (cols - 1),
     autoscale: zoomed,
+    canvas: 'canvas',
 })
 
 function init() {

@@ -17,9 +17,8 @@ function tapping(x, y, tapId) {
     speed = map(x, 0, WIDTH, 1, maxSpeed)
 }
 
-function constrainSpeed() {
-    if (speed < 1) speed = 1
-    if (speed > maxSpeed) speed = maxSpeed
+function init() {
+    resized()
 }
 
 function update() {
@@ -75,4 +74,9 @@ function draw() {
 
         circfill(sx, sy, size, color)
     }
+}
+
+function constrainSpeed() {
+    if (speed < 1) speed = 1
+    if (speed > maxSpeed) speed = maxSpeed
 }
