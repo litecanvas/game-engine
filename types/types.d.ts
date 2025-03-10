@@ -579,15 +579,7 @@ type LitecanvasInstance = {
 
 type LitecanvasOptions = {
     /**
-     * target FPS
-     */
-    fps?: number
-    /**
-     * Makes the canvas fills the entire page. By default is `true`.
-     */
-    fullscreen?: boolean
-    /**
-     * The game screen width. If specified, disables fullscreen.
+     * The game screen width. If not set, the canvas will have the size of the webpage.
      */
     width?: number
     /**

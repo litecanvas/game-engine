@@ -1,8 +1,6 @@
 /**
  * @typedef LitecanvasOptions
  * @type {object}
- * @property {number} [fps=60]
- * @property {boolean} [fullscreen=true]
  * @property {number} [width]
  * @property {number} [height]
  * @property {boolean} [pauseOnBlur=true]

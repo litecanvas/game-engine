@@ -20,8 +20,17 @@ function init() {
     )
 
     // create many balls
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
         entities.push(ball(CENTERX, CENTERY))
+    }
+
+    // fps meter
+    if (Stats) {
+        const stats = new Stats()
+        stats.dom.style = 'position: absolute; right: 0; top: 0;'
+        document.body.appendChild(stats.dom)
+        listen('before:update', () => stats.begin())
+        listen('after:draw', () => stats.end())
     }
 }
 
@@ -48,10 +57,13 @@ function draw() {
         }
     }
 
+    textsize(24)
     text(
         0,
         0,
-        'drawing ' + (useImage ? 'images (fast)' : 'shapes (slow)'),
+        'drawing ' +
+            (useImage ? 'images (fast)' : 'shapes (slow)') +
+            ' / tap to toggle',
         3,
         'italic bold'
     )

@@ -4,6 +4,8 @@ litecanvas({
 })
 
 function init() {
+    resized()
+
     color = 0
     size = 100
     limit = Math.min(innerHeight, innerWidth)

@@ -11,7 +11,7 @@ litecanvas({
     width: state.width,
     height: state.height,
     canvas,
-    autoscale: false,
+    // autoscale: false,
 })
 
 function init() {

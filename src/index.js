@@ -26,7 +26,6 @@ export default function litecanvas(settings = {}) {
         isFinite = Number.isFinite,
         /** @type {LitecanvasOptions} */
         defaults = {
-            fullscreen: true,
             width: null,
             height: null,
             autoscale: true,
@@ -50,8 +49,6 @@ export default function litecanvas(settings = {}) {
         _plugins = [],
         /** @type {HTMLCanvasElement|string} _canvas */
         _canvas = settings.canvas || document.createElement('canvas'),
-        /** @type {boolean} */
-        _fullscreen = settings.fullscreen,
         /** @type {boolean} */
         _autoscale = settings.autoscale,
         /** @type {boolean} */
@@ -1069,10 +1066,11 @@ export default function litecanvas(settings = {}) {
                 'string' === typeof eventName,
                 'emit: 1st param must be a string'
             )
-
-            triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
-            triggerEvent(eventName, arg1, arg2, arg3, arg4)
-            triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
+            if (_initialized) {
+                triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
+                triggerEvent(eventName, arg1, arg2, arg3, arg4)
+                triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
+            }
         },
 
         /**
@@ -1126,14 +1124,14 @@ export default function litecanvas(settings = {}) {
                 isFinite(height) && height > 0,
                 'resize: 2nd param must be a number'
             )
-            DEV: assert(
-                !_fullscreen,
-                'resize: you can not resize in fullscreen mode'
-            )
 
             instance.setvar('WIDTH', (_canvas.width = width))
             instance.setvar('HEIGHT', (_canvas.height = height))
-            pageResized()
+
+            instance.setvar('CENTERX', instance.WIDTH / 2)
+            instance.setvar('CENTERY', instance.HEIGHT / 2)
+
+            onResize()
         },
 
         /**
@@ -1194,7 +1192,7 @@ export default function litecanvas(settings = {}) {
     function init() {
         _initialized = true
 
-        // add listeners for default events
+        // setup default event listeners
         const source = settings.loop ? settings.loop : root
         for (const event in _events) {
             if (source[event]) instance.listen(event, source[event])
@@ -1205,12 +1203,10 @@ export default function litecanvas(settings = {}) {
             loadPlugin(callback, config)
         }
 
-        // listen window resize event
-        if (_fullscreen || _autoscale) {
-            on(root, 'resize', pageResized)
+        // listen window resize event when "autoscale" is enabled
+        if (_autoscale) {
+            on(root, 'resize', onResize)
         }
-
-        pageResized()
 
         // default mouse/touch handlers
         if (settings.tapEvents) {
@@ -1405,25 +1401,26 @@ export default function litecanvas(settings = {}) {
 
         _lastFrameTime = now
 
-        if (frameTime > _deltaTime * 30)
-            return console.log('skipping too long frame')
+        if (frameTime > _deltaTime * 30) {
+            console.log('skipping too long frame')
+        } else {
+            _accumulated += frameTime
 
-        _accumulated += frameTime
+            if (!_animated) {
+                _accumulated = _deltaTime
+            }
 
-        if (!_animated) {
-            _accumulated = _deltaTime
+            for (; _accumulated >= _deltaTime; _accumulated -= _deltaTime) {
+                instance.emit('update', _deltaTime * _timeScale)
+                instance.setvar(
+                    'ELAPSED',
+                    instance.ELAPSED + _deltaTime * _timeScale
+                )
+                updated++
+            }
         }
 
-        for (; _accumulated >= _deltaTime; _accumulated -= _deltaTime) {
-            instance.emit('update', _deltaTime * _timeScale)
-            instance.setvar(
-                'ELAPSED',
-                instance.ELAPSED + _deltaTime * _timeScale
-            )
-            updated++
-        }
-
-        if (updated) {
+        if (updated || !_animated) {
             instance.textalign('start', 'top') // default values for textAlign & textBaseline
             instance.emit('draw')
         }
@@ -1441,12 +1438,17 @@ export default function litecanvas(settings = {}) {
             'Invalid canvas element'
         )
         DEV: assert(
-            null === instance.WIDTH || instance.WIDTH > 0,
+            null == instance.WIDTH || instance.WIDTH > 0,
             'Litecanvas\' "width" option should be null or a positive number'
         )
         DEV: assert(
-            null === instance.HEIGHT || instance.HEIGHT > 0,
+            null == instance.HEIGHT || instance.HEIGHT > 0,
             'Litecanvas\' "width" option should be null or a positive number'
+        )
+        DEV: assert(
+            null == instance.HEIGHT ||
+                (instance.WIDTH > 0 && instance.HEIGHT > 0),
+            'Litecanvas\' "width" is required when "heigth" is passed'
         )
 
         instance.setvar('CANVAS', _canvas)
@@ -1454,43 +1456,37 @@ export default function litecanvas(settings = {}) {
 
         on(_canvas, 'click', () => root.focus())
 
-        // disable fullscreen if a width is specified
-        if (instance.WIDTH > 0) {
-            _fullscreen = false
+        _canvas.style = ''
+
+        // If width is not set, the canvas will have the size of the page width.
+        if (!instance.WIDTH) {
+            instance.WIDTH = root.innerWidth
+            instance.HEIGHT = root.innerHeight
         }
 
-        _canvas.style = ''
-        _canvas.width = instance.WIDTH
-        _canvas.height = instance.HEIGHT || instance.WIDTH
+        instance.resize(instance.WIDTH, instance.HEIGHT, false)
 
         if (!_canvas.parentNode) document.body.appendChild(_canvas)
     }
 
-    function pageResized() {
-        const pageWidth = root.innerWidth,
-            pageHeight = root.innerHeight,
-            styles = _canvas.style
+    function onResize() {
+        const styles = _canvas.style
 
-        styles.display = 'block'
+        if (_autoscale) {
+            if (!styles.display) {
+                styles.display = 'block'
+                styles.margin = 'auto'
+            }
 
-        if (_fullscreen) {
-            styles.position = 'absolute'
-            styles.inset = 0
-            instance.setvar('WIDTH', (_canvas.width = pageWidth))
-            instance.setvar('HEIGHT', (_canvas.height = pageHeight))
-        } else if (_autoscale) {
-            styles.margin = 'auto'
             _scale = Math.min(
-                pageWidth / instance.WIDTH,
-                pageHeight / instance.HEIGHT
+                root.innerWidth / instance.WIDTH,
+                root.innerHeight / instance.HEIGHT
             )
             _scale = (settings.pixelart ? ~~_scale : _scale) || 1
+
             styles.width = instance.WIDTH * _scale + 'px'
             styles.height = instance.HEIGHT * _scale + 'px'
         }
-
-        instance.setvar('CENTERX', instance.WIDTH / 2)
-        instance.setvar('CENTERY', instance.HEIGHT / 2)
 
         // restore canvas image rendering properties
         if (!settings.antialias || settings.pixelart) {
@@ -1500,6 +1496,7 @@ export default function litecanvas(settings = {}) {
 
         instance.emit('resized', _scale)
 
+        // force redraw
         if (!_animated) {
             raf(drawFrame)
         }
