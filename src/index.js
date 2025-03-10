@@ -1118,8 +1118,18 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          */
         resize(width, height) {
-            DEV: assert(isFinite(width), 'resize: 1st param must be a number')
-            DEV: assert(isFinite(height), 'resize: 2nd param must be a number')
+            DEV: assert(
+                isFinite(width) && width > 0,
+                'resize: 1st param must be a number'
+            )
+            DEV: assert(
+                isFinite(height) && height > 0,
+                'resize: 2nd param must be a number'
+            )
+            DEV: assert(
+                !_fullscreen,
+                'resize: you can not resize in fullscreen mode'
+            )
 
             instance.setvar('WIDTH', (_canvas.width = width))
             instance.setvar('HEIGHT', (_canvas.height = height))
