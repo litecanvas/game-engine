@@ -13,7 +13,7 @@ await esbuild.build({
     legalComments: 'eof',
     drop: ['debugger'],
 })
-console.log(`  📄 dist/dist.dev.js (${filesize('src/web.js')})`)
+console.log(`  📄 dist/dist.dev.js (${filesize('dist/dist.dev.js')})`)
 
 // build the dist.js
 await esbuild.build({
