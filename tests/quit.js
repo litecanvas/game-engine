@@ -44,19 +44,24 @@ test('remove all engine event listeners', async (t) => {
     let value = 0
     const expected = 1
 
-    const engine = await new Promise((resolve) => {
+    await new Promise((resolve) => {
         const instance = litecanvas({
             animate: false,
         })
+
         instance.listen('update', () => {
-            value += 1
+            value++
             quit()
             resolve(instance)
         })
-        instance.emit('update')
-    })
 
-    engine.emit('update') // force a "update" event
+        instance.listen('init', () => {
+            // simulate 3 updates but only 1 should happens
+            instance.emit('update')
+            instance.emit('update')
+            instance.emit('update')
+        })
+    })
 
     t.is(value, expected)
 })
