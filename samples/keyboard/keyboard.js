@@ -8,6 +8,9 @@ function init() {
 }
 
 function update() {
+    if (iskeydown('space')) {
+        return
+    }
     if (iskeydown('ArrowLeft')) {
         x -= 5
     }
@@ -25,5 +28,6 @@ function update() {
 function draw() {
     cls(0)
     text(0, 0, 'Use arrows to move')
+    text(0, 32, 'Hold space bar to disable movement')
     circfill(x, y, 64, 4)
 }
