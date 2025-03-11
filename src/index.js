@@ -1331,13 +1331,11 @@ export default function litecanvas(settings = {}) {
 
         if (settings.keyboardEvents) {
             /** @type {Set<string>} */
-            const _keys = new Set()
+            const _keyDownList = new Set()
 
             /**
-             * Checks if a key is currently pressed in your keyboard.
-             * Notes:
-             * - to check the space key use `iskeydown(" ")`.
-             * - you can check if any key is pressed using `iskeydown("any")`.
+             * Checks if a which key is pressed on the keyboard.
+             * Note: use `iskeydown("any")` to check for any key pressed.
              *
              * @param {string} key
              * @returns {boolean}
@@ -1348,22 +1346,24 @@ export default function litecanvas(settings = {}) {
                     'iskeydown: 1st param must be a string'
                 )
 
+                key = key.toLowerCase()
+
                 return 'any' === key
-                    ? _keys.size > 0
-                    : _keys.has(key.toLowerCase())
+                    ? _keyDownList.size > 0
+                    : _keyDownList.has('space' === key ? ' ' : key)
             }
 
             instance.setvar('iskeydown', iskeydown)
 
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
-                _keys.add(event.key.toLowerCase())
+                _keyDownList.add(event.key.toLowerCase())
             })
 
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
-                _keys.delete(event.key.toLowerCase())
+                _keyDownList.delete(event.key.toLowerCase())
             })
 
-            on(root, 'blur', () => _keys.clear())
+            on(root, 'blur', () => _keyDownList.clear())
         }
 
         // listen browser focus/blur events and pause the update/draw loop
