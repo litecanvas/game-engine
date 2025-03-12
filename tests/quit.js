@@ -19,7 +19,7 @@ test('deletes all exposed methods and props', (t) => {
 
     t.plan(2)
     t.true(globalThis.circfill === undefined)
-    t.true(globalThis.__litecanvas === undefined)
+    t.true(globalThis.ENGINE === undefined)
 })
 
 test('deletes exposed methods and props only when is global', (t) => {
@@ -35,7 +35,7 @@ test('deletes exposed methods and props only when is global', (t) => {
 
     t.plan(2)
     t.true(globalThis.circfill !== undefined)
-    t.true(globalThis.__litecanvas !== undefined)
+    t.true(globalThis.ENGINE !== undefined)
 
     quit()
 })

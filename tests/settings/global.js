@@ -4,7 +4,7 @@ import '../../src/web.js'
 
 test('globally by default', (t) => {
     const g = litecanvas()
-    t.true(globalThis.__litecanvas === g)
+    t.true(globalThis.ENGINE === g)
 })
 
 test('throws error if instantiated globally more than once', (t) => {
@@ -12,7 +12,7 @@ test('throws error if instantiated globally more than once', (t) => {
         litecanvas()
         t.fail() // fail if not throws
     } catch (e) {
-        t.deepEqual(e, 'global litecanvas already instantiated')
+        t.is(e, 'two global litecanvas detected')
     }
 })
 
