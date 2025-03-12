@@ -50,8 +50,6 @@ export default function litecanvas(settings = {}) {
         /** @type {HTMLCanvasElement|string} _canvas */
         _canvas = settings.canvas || document.createElement('canvas'),
         /** @type {boolean} */
-        _autoscale = settings.autoscale,
-        /** @type {boolean} */
         _animated = settings.animate,
         /** @type {number} */
         _scale = 1,
@@ -1178,7 +1176,7 @@ export default function litecanvas(settings = {}) {
                 for (const key in instance) {
                     delete root[key]
                 }
-                delete root.__litecanvas
+                delete root.ENGINE
             }
         },
     }
@@ -1204,7 +1202,7 @@ export default function litecanvas(settings = {}) {
         }
 
         // listen window resize event when "autoscale" is enabled
-        if (_autoscale) {
+        if (settings.autoscale) {
             on(root, 'resize', onResize)
         }
 
@@ -1233,7 +1231,7 @@ export default function litecanvas(settings = {}) {
                     tap.y = y
                 },
                 _checkTapped = (tap) =>
-                    tap && performance.now() - tap.ts <= 200,
+                    tap && performance.now() - tap.ts <= 300,
                 preventDefault = (ev) => ev.preventDefault()
 
             let _pressingMouse = false
@@ -1472,7 +1470,7 @@ export default function litecanvas(settings = {}) {
     function onResize() {
         const styles = _canvas.style
 
-        if (_autoscale) {
+        if (settings.autoscale) {
             if (!styles.display) {
                 styles.display = 'block'
                 styles.margin = 'auto'
@@ -1526,11 +1524,11 @@ export default function litecanvas(settings = {}) {
     }
 
     if (_global) {
-        if (root.__litecanvas) {
-            throw 'global litecanvas already instantiated'
+        if (root.ENGINE) {
+            throw 'two global litecanvas detected'
         }
         Object.assign(root, instance)
-        root.__litecanvas = instance
+        root.ENGINE = instance
     }
 
     setupCanvas()
