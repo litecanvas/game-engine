@@ -11,7 +11,8 @@ import './types.js'
  */
 export default function litecanvas(settings = {}) {
     const root = globalThis,
-        PI = Math.PI,
+        math = Math,
+        PI = math.PI,
         TWO_PI = PI * 2,
         raf = requestAnimationFrame,
         /** @type {Function[]} */
@@ -190,6 +191,26 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * Calculates the integer closest to a number and optional precision.
+         *
+         * @param {number} n number to round.
+         * @param {number} [precision] number of decimal digits to round to, default is 0.
+         * @returns {number} rounded number.
+         */
+        round: (n, precision = 0) => {
+            DEV: assert(isFinite(n), 'round: 1st param must be a number')
+            DEV: assert(
+                null === precision || (isFinite(precision) && precision >= 0),
+                'round: 2nd param must be a positive number or zero'
+            )
+            if (!precision) {
+                return math.round(n)
+            }
+            const multiplier = 10 ** precision
+            return math.round(n * multiplier) / multiplier
+        },
+
+        /**
          * Constrains a number between `min` and `max`.
          *
          * @param {number} value
@@ -232,7 +253,7 @@ export default function litecanvas(settings = {}) {
                 'randi: the 2nd param must be not equal to the 3rd param'
             )
 
-            return value - (max - min) * Math.floor((value - min) / (max - min))
+            return value - (max - min) * math.floor((value - min) / (max - min))
         },
 
         /**
@@ -317,7 +338,7 @@ export default function litecanvas(settings = {}) {
                 'randi: the 1st param must be less than the 2nd param'
             )
 
-            return Math.floor(instance.rand(min, max + 1))
+            return math.floor(instance.rand(min, max + 1))
         },
 
         /**
@@ -1130,9 +1151,9 @@ export default function litecanvas(settings = {}) {
     }
 
     // prettier-ignore
-    for (const k of 'PI,sin,cos,atan2,hypot,tan,abs,ceil,round,floor,trunc,min,max,pow,sqrt,sign,exp'.split(',')) {
+    for (const k of 'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp'.split(',')) {
         // import native Math functions
-        instance[k] = Math[k]
+        instance[k] = math[k]
     }
 
     function init() {
@@ -1458,7 +1479,7 @@ export default function litecanvas(settings = {}) {
                 styles.margin = 'auto'
             }
 
-            _scale = Math.min(
+            _scale = math.min(
                 root.innerWidth / instance.WIDTH,
                 root.innerHeight / instance.HEIGHT
             )
