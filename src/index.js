@@ -62,7 +62,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _lastFrameTime,
         /** @type {number} */
-        _deltaTime,
+        _deltaTime = 1 / 60,
         /** @type {number} */
         _accumulated = 0,
         /** @type {number} */
@@ -340,12 +340,12 @@ export default function litecanvas(settings = {}) {
         /**
          * Clear the game screen with an optional color
          *
-         * @param {number?} color The background color (index) or null (for transparent)
+         * @param {number?} color The background color (index) or null/undefined (for transparent)
          */
         cls(color) {
             DEV: assert(
                 null == color || (isFinite(color) && color >= 0),
-                'cls: 1st param must be a positive number or zero or null'
+                'cls: 1st param must be a positive number or zero or undefined'
             )
 
             if (null == color) {
@@ -953,58 +953,6 @@ export default function litecanvas(settings = {}) {
             root.zzfxV = value
         },
 
-        /** UTILS API */
-        /**
-         * Check a collision between two rectangles
-         *
-         * @param {number} x1 first rectangle position X
-         * @param {number} y1 first rectangle position Y
-         * @param {number} w1 first rectangle width
-         * @param {number} h1 first rectangle height
-         * @param {number} x2 second rectangle position X
-         * @param {number} y2 second rectangle position Y
-         * @param {number} w2 second rectangle width
-         * @param {number} h2 second rectangle height
-         * @returns {boolean}
-         */
-        colrect: (x1, y1, w1, h1, x2, y2, w2, h2) => {
-            DEV: assert(isFinite(x1), 'colrect: 1st param must be a number')
-            DEV: assert(isFinite(y1), 'colrect: 2nd param must be a number')
-            DEV: assert(isFinite(w1), 'colrect: 3rd param must be a number')
-            DEV: assert(isFinite(h1), 'colrect: 4th param must be a number')
-            DEV: assert(isFinite(x2), 'colrect: 5th param must be a number')
-            DEV: assert(isFinite(y2), 'colrect: 6th param must be a number')
-            DEV: assert(isFinite(w2), 'colrect: 7th param must be a number')
-            DEV: assert(isFinite(h2), 'colrect: 8th param must be a number')
-
-            return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-        },
-
-        /**
-         * Check a collision between two circles
-         *
-         * @param {number} x1 first circle position X
-         * @param {number} y1 first circle position Y
-         * @param {number} r1 first circle position radius
-         * @param {number} x2 second circle position X
-         * @param {number} y2 second circle position Y
-         * @param {number} r2 second circle position radius
-         * @returns {boolean}
-         */
-        colcirc: (x1, y1, r1, x2, y2, r2) => {
-            DEV: assert(isFinite(x1), 'colcirc: 1st param must be a number')
-            DEV: assert(isFinite(y1), 'colcirc: 2nd param must be a number')
-            DEV: assert(isFinite(r1), 'colcirc: 3rd param must be a number')
-            DEV: assert(isFinite(x2), 'colcirc: 4th param must be a number')
-            DEV: assert(isFinite(y2), 'colcirc: 5th param must be a number')
-            DEV: assert(isFinite(r2), 'colcirc: 6th param must be a number')
-
-            return (
-                (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) <=
-                (r1 + r2) * (r1 + r2)
-            )
-        },
-
         /** PLUGINS API */
         /**
          * Prepares a plugin to be loaded
@@ -1328,40 +1276,76 @@ export default function litecanvas(settings = {}) {
         }
 
         if (settings.keyboardEvents) {
+            const toLowerCase = (s) => s.toLowerCase()
+
             /** @type {Set<string>} */
-            const _keyDownList = new Set()
+            const _keysDown = new Set()
+
+            /** @type {Set<string>} */
+            const _keysPress = new Set()
 
             /**
-             * Checks if a which key is pressed on the keyboard.
-             * Note: use `iskeydown("any")` to check for any key pressed.
-             *
-             * @param {string} key
+             * @param {Set<string>} keysSet
+             * @param {string?} key
              * @returns {boolean}
              */
-            const iskeydown = (key) => {
-                DEV: assert(
-                    'string' === typeof key,
-                    'iskeydown: 1st param must be a string'
-                )
-
-                key = key.toLowerCase()
-
-                return 'any' === key
-                    ? _keyDownList.size > 0
-                    : _keyDownList.has('space' === key ? ' ' : key)
+            const keyCheck = (keysSet, key) => {
+                return !key
+                    ? keysSet.size > 0
+                    : keysSet.has(
+                          'space' === toLowerCase(key) ? ' ' : toLowerCase(key)
+                      )
             }
 
-            instance.setvar('iskeydown', iskeydown)
-
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
-                _keyDownList.add(event.key.toLowerCase())
+                if (!_keysDown.has(toLowerCase(event.key))) {
+                    _keysDown.add(toLowerCase(event.key))
+                    _keysPress.add(toLowerCase(event.key))
+                }
             })
 
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
-                _keyDownList.delete(event.key.toLowerCase())
+                _keysDown.delete(toLowerCase(event.key))
             })
 
-            on(root, 'blur', () => _keyDownList.clear())
+            on(root, 'blur', () => _keysDown.clear())
+            instance.listen('after:draw', () => _keysPress.clear())
+
+            instance.setvar(
+                'iskeydown',
+                /**
+                 * Checks if a which key is pressed (down) on the keyboard.
+                 * Note: use `iskeydown()` to check for any key.
+                 *
+                 * @param {string?} key
+                 * @returns {boolean}
+                 */
+                (key) => {
+                    DEV: assert(
+                        null == key || 'string' === typeof key,
+                        'iskeydown: 1st param must be a string or undefined'
+                    )
+                    return keyCheck(_keysDown, key)
+                }
+            )
+
+            instance.setvar(
+                'iskeypressed',
+                /**
+                 * Checks if a which key just got pressed on the keyboard.
+                 * Note: use `iskeypressed()` to check for any key.
+                 *
+                 * @param {string?} key
+                 * @returns {boolean}
+                 */
+                (key) => {
+                    DEV: assert(
+                        null == key || 'string' === typeof key,
+                        'iskeypressed: 1st param must be a string or undefined'
+                    )
+                    return keyCheck(_keysPress, key)
+                }
+            )
         }
 
         // listen browser focus/blur events and pause the update/draw loop
@@ -1376,8 +1360,6 @@ export default function litecanvas(settings = {}) {
                 }
             })
         }
-
-        instance.setfps(60)
 
         // start the game loop
         instance.emit('init', instance)
@@ -1400,7 +1382,7 @@ export default function litecanvas(settings = {}) {
         _lastFrameTime = now
 
         if (frameTime > _deltaTime * 30) {
-            console.log('skipping too long frame')
+            console.warn('skipping too long frame')
         } else {
             _accumulated += frameTime
 
