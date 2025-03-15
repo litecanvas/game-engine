@@ -78,3 +78,14 @@ test('norm', (t) => {
     // with contrains
     t.true(g.norm(150, 0, 100) === 1.5)
 })
+
+test('round', (t) => {
+    t.plan(3)
+
+    // without precision
+    t.true(g.round(g.PI) === 3)
+
+    // with precision
+    t.true(g.round(g.PI, 2) === 3.14)
+    t.true(g.round(g.PI, 5) === 3.14159)
+})
