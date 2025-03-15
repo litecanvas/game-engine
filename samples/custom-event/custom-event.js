@@ -1,42 +1,62 @@
 litecanvas()
 
-let rect, player
-
 function init() {
-    rect = [CENTERX, CENTERY, 64, 64]
-    player = [32, 32, 64, 64]
-    color = 5
+    player = {
+        x: 0,
+        y: CENTERY,
+        size: 64,
+        color: 4,
+    }
+    finishLineX = WIDTH * 0.7
+    victory = false
+    time = 0
+
+    // run a callback every time that event is triggered
+    // the `listen()` returns a function to unlisten your event
+    const unlistenThisEvent = listen('player-moved', (x, y) => {
+        console.log(`player moved to (${x}, ${y})`)
+        if (x > finishLineX) {
+            victory = true
+            time = ELAPSED
+            player.color = 5
+            // run until collision happens
+            unlistenThisEvent()
+        }
+    })
+
+    // you can also attach callbacks before an event
+    listen('before:player-moved', (x, y) => {
+        // do something
+    })
+
+    // or after
+    listen('after:player-moved', (x, y) => {
+        // do something
+    })
 }
 
 function draw() {
     cls(0)
-    rectfill(...rect, 4)
-    rectfill(...player, color)
+    rectfill(player.x, player.y, player.size, player.size, player.color)
+    linewidth(4)
+    linedash([8])
+    line(finishLineX, 0, finishLineX, HEIGHT, 2)
+
+    if (!victory) {
+        text(10, 10, 'Tap to move and')
+        text(10, 40, 'try to cross the finish line')
+    } else {
+        text(10, 10, 'Yeah! You won!!!', 4)
+        text(10, 40, 'Your time: ' + round(time, 2), 4)
+    }
 }
 
 function tapped(x, y) {
-    player[0] = x
-    player[1] = y
-    emit('player-moved', player, x, y) // our custom event
-}
-
-const unlistenThisEvent = listen('player-moved', (player, x, y) => {
-    if (colrect(...rect, ...player)) {
-        color = 8
-        console.log('collision detected')
-        // run until collision happens
-        unlistenThisEvent()
-    } else {
-        color = 5
+    if (!victory) {
+        // move the player
+        player.x = x
+        player.y = y
+        // triggers a event and pass some data
+        emit('player-moved', x, y)
     }
-})
-
-// before any event is emitted a another event with "before:" prefixed
-listen('before:player-moved', (player, x, y) => {
-    console.log('before event player-moved')
-})
-
-// and after any event is emitted a another event with "after:" prefixed
-listen('after:player-moved', (player, x, y) => {
-    console.log('after event player-moved')
-})
+}
