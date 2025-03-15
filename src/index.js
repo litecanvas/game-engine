@@ -1135,12 +1135,21 @@ export default function litecanvas(settings = {}) {
          * Stops the litecanvas instance and remove all event listeners.
          */
         quit() {
+            // stop the renderer
+            cancelAnimationFrame(_rafid)
+
+            // emit "quit" event to manual clean ups
             instance.emit('quit')
+
+            // clear all engine events
+            _events = []
+
+            // clear all browser events
             for (const removeListener of _browserEventListeners) {
                 removeListener()
             }
-            cancelAnimationFrame(_rafid)
-            _events = false
+
+            // maybe clear global context
             if (_global) {
                 for (const key in instance) {
                     delete root[key]
