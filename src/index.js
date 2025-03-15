@@ -71,7 +71,7 @@ export default function litecanvas(settings = {}) {
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {number} */
-        _fontSize = 32,
+        _fontSize = 18,
         /** @type {number} */
         _rng_seed = Date.now(),
         /** @type {boolean} */
