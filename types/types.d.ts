@@ -62,6 +62,14 @@ type LitecanvasInstance = {
      */
     rad2deg(rads: number): number
     /**
+     * Returns the rounded value of an number to optional precision (number of digits after the decimal point).
+     *
+     * @param n number to round.
+     * @param [precision] number of decimal digits to round to, default is 0.
+     * @returns the rounded number.
+     */
+    round(n: number, precision?: number): number
+    /**
      * Constrains a number between `min` and `max`.
      *
      * @param value

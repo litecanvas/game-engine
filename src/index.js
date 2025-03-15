@@ -191,7 +191,9 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Calculates the integer closest to a number and optional precision.
+         * Returns the rounded value of an number to optional precision (number of digits after the decimal point).
+         *
+         * Note: precision is optional but must be >= 0
          *
          * @param {number} n number to round.
          * @param {number} [precision] number of decimal digits to round to, default is 0.
