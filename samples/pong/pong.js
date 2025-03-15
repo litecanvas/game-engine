@@ -85,7 +85,8 @@ function update(dt) {
     }
 
     // check ball collision with paddle
-    if (colrect(ballX, ballY, ballSize, ballSize, padX, padY, padW, 1)) {
+    if (ballX > padX && ballX < padX + padW && ballY + ballSize > padY) {
+        // colrect(ballX, ballY, ballSize, ballSize, padX, padY, padW, 1)) {
         dirY = -1
         score += 10
         bounced = true

@@ -1,15 +1,16 @@
-let x = 0
+let x, y, color
 
 litecanvas()
 
 function init() {
     x = CENTERX
     y = CENTERY
+    color = 0
 }
 
 function update() {
-    if (iskeydown('space')) {
-        return
+    if (iskeypressed('space')) {
+        color = randi(0, 11)
     }
     if (iskeydown('ArrowLeft')) {
         x -= 5
@@ -26,8 +27,8 @@ function update() {
 }
 
 function draw() {
-    cls(0)
-    text(0, 0, 'Use arrows to move')
-    text(0, 32, 'Hold space bar to disable movement')
-    circfill(x, y, 64, 4)
+    cls(color)
+    text(0, 0, 'Press arrow keys to move', color + 3)
+    text(0, 32, 'Hit spacebar to change the colors', color + 3)
+    circfill(x, y, 64, color + 4)
 }
