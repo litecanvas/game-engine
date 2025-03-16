@@ -10,7 +10,7 @@ function init() {
 
 function update() {
     if (iskeypressed('space')) {
-        color = randi(0, 11)
+        color = randi(0, 15)
     }
     if (iskeydown('ArrowLeft')) {
         x -= 5

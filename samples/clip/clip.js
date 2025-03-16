@@ -9,7 +9,7 @@ function init() {
 
     boxes = []
     for (let i = 0; i < WIDTH / 4; i++) {
-        boxes.push([randi(0, WIDTH), randi(0, HEIGHT), randi(4, 11)])
+        boxes.push([randi(0, WIDTH), randi(0, HEIGHT), randi(4, 15)])
     }
 }
 
