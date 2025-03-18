@@ -10,7 +10,12 @@ litecanvas({
 })
 
 function init() {
-    snake = [[10, 9]]
+    volume(0.5)
+
+    snake = [
+        [10, 9],
+        [9, 9],
+    ]
 
     dx = 1
     dy = 0
@@ -57,17 +62,16 @@ function update() {
             y = mapHeight - 1
         }
 
-        for (let i = 0; i < snake.length; i++) {
-            const pos = snake[i]
-            if (x === pos[0] && y === pos[1]) {
-                gameOver = true
-                return
-            }
+        if (collides(x, y)) {
+            gameOver = true
+            return
         }
 
         snake.unshift([x, y])
 
         if (x === food[0] && y === food[1]) {
+            sfx()
+
             food = createFood()
 
             score += 10
@@ -92,7 +96,7 @@ function draw() {
             pos[1] * tileSize,
             tileSize - 1,
             tileSize - 1,
-            i > 0 ? 3 : 2
+            i > 0 ? 8 : 9
         )
     }
 
@@ -118,27 +122,34 @@ function draw() {
 }
 
 function createFood() {
-    const head = snake[0]
-    const pos = []
+    let x, y
 
     do {
-        pos[0] = randi(0, mapWidth - 1)
-    } while (pos[0] === head[0])
+        x = randi(0, mapWidth - 1)
+        y = randi(0, mapHeight - 1)
+    } while (collides(x, y))
 
-    do {
-        pos[1] = randi(0, mapHeight - 1)
-    } while (pos[1] === head[1])
-
-    return pos
+    return [x, y]
 }
 
+// helpers
 function setSpeed(value) {
     MAX = 20
     MIN = 1
-    value = clamp(value, MIN, MAX)
+    value = clamp(~~value, MIN, MAX)
     setfps(value)
 }
 
 function pad(value, n) {
     return ('' + value).padStart(n, '0')
+}
+
+function collides(x, y) {
+    for (let i = 0; i < snake.length; i++) {
+        const pos = snake[i]
+        if (x === pos[0] && y === pos[1]) {
+            return true
+        }
+    }
+    return false
 }
