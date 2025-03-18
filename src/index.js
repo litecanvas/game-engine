@@ -1404,36 +1404,41 @@ export default function litecanvas(settings = {}) {
      * @param {DOMHighResTimeStamp} now
      */
     function drawFrame(now) {
-        if (_animated) {
-            _rafid = raf(drawFrame)
-        }
-
         let updated = 0,
             frameTime = (now - _lastFrameTime) / 1000
 
         _lastFrameTime = now
 
-        if (frameTime > _deltaTime * 30) {
-            console.warn('skipping too long frame')
-        } else {
-            _accumulated += frameTime
+        if (_animated) {
+            // request the next frame
+            _rafid = raf(drawFrame)
 
-            if (!_animated) {
-                _accumulated = _deltaTime
+            if (frameTime > 0.3) {
+                return console.warn('skipping too long frame')
             }
 
-            for (; _accumulated >= _deltaTime; _accumulated -= _deltaTime) {
+            _accumulated += frameTime
+
+            while (_accumulated >= _deltaTime) {
                 instance.emit('update', _deltaTime * _timeScale)
                 instance.setvar(
                     'ELAPSED',
                     instance.ELAPSED + _deltaTime * _timeScale
                 )
                 updated++
+                _accumulated -= _deltaTime
             }
+        } else {
+            // when the canvas is not animated
+            // we for one frame when a redraw is triggered
+            updated = 1
         }
 
-        if (updated || !_animated) {
-            instance.textalign('start', 'top') // default values for textAlign & textBaseline
+        if (updated) {
+            // by default the text
+            // always set default values for
+            // _ctx.textAlign and _ctx.textBaseline before draw
+            instance.textalign('start', 'top')
             instance.emit('draw')
         }
     }
