@@ -31,16 +31,16 @@ function init() {
 function update() {
     if (gameOver) return
 
-    if (iskeypressed('w') && dy === 0) {
+    if (iskeypressed('arrowUp') && dy === 0) {
         dy = -1
         dx = 0
-    } else if (iskeypressed('s') && dy === 0) {
+    } else if (iskeypressed('arrowDown') && dy === 0) {
         dy = 1
         dx = 0
-    } else if (iskeypressed('a') && dx === 0) {
+    } else if (iskeypressed('arrowleft') && dx === 0) {
         dx = -1
         dy = 0
-    } else if (iskeypressed('d') && dx === 0) {
+    } else if (iskeypressed('arrowRight') && dx === 0) {
         dx = 1
         dy = 0
     }

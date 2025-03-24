@@ -71,7 +71,7 @@ export default function litecanvas(settings = {}) {
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {number} */
-        _fontSize = 18,
+        _fontSize = 20,
         /** @type {number} */
         _rng_seed = Date.now(),
         /** @type {boolean} */
@@ -1079,31 +1079,6 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Resizes the game canvas and emit the "resized" event
-         *
-         * @param {number} width
-         * @param {number} height
-         */
-        resize(width, height) {
-            DEV: assert(
-                isFinite(width) && width > 0,
-                'resize: 1st param must be a number'
-            )
-            DEV: assert(
-                isFinite(height) && height > 0,
-                'resize: 2nd param must be a number'
-            )
-
-            instance.setvar('WIDTH', (_canvas.width = width))
-            instance.setvar('HEIGHT', (_canvas.height = height))
-
-            instance.setvar('CENTERX', instance.WIDTH / 2)
-            instance.setvar('CENTERY', instance.HEIGHT / 2)
-
-            onResize()
-        },
-
-        /**
          * The scale of the game's delta time (dt).
          * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
          * A value of 0 freezes time and is effectively equivalent to pausing.
@@ -1183,7 +1158,7 @@ export default function litecanvas(settings = {}) {
 
         // listen window resize event when "autoscale" is enabled
         if (settings.autoscale) {
-            on(root, 'resize', onResize)
+            on(root, 'resize', resizeCanvas)
         }
 
         // default mouse/touch handlers
@@ -1435,7 +1410,6 @@ export default function litecanvas(settings = {}) {
         }
 
         if (updated) {
-            // by default the text
             // always set default values for
             // _ctx.textAlign and _ctx.textBaseline before draw
             instance.textalign('start', 'top')
@@ -1454,19 +1428,6 @@ export default function litecanvas(settings = {}) {
             _canvas && _canvas.tagName === 'CANVAS',
             'Invalid canvas element'
         )
-        DEV: assert(
-            null == instance.WIDTH || instance.WIDTH > 0,
-            'Litecanvas\' "width" option should be null or a positive number'
-        )
-        DEV: assert(
-            null == instance.HEIGHT || instance.HEIGHT > 0,
-            'Litecanvas\' "width" option should be null or a positive number'
-        )
-        DEV: assert(
-            null == instance.HEIGHT ||
-                (instance.WIDTH > 0 && instance.HEIGHT > 0),
-            'Litecanvas\' "width" is required when "heigth" is passed'
-        )
 
         instance.setvar('CANVAS', _canvas)
         _ctx = _canvas.getContext('2d')
@@ -1475,24 +1436,41 @@ export default function litecanvas(settings = {}) {
 
         _canvas.style = ''
 
-        // If width is not set, the canvas will have the size of the page width.
-        if (!instance.WIDTH) {
-            instance.WIDTH = root.innerWidth
-            instance.HEIGHT = root.innerHeight
-        }
-
-        instance.resize(instance.WIDTH, instance.HEIGHT, false)
+        resizeCanvas()
 
         if (!_canvas.parentNode) document.body.appendChild(_canvas)
     }
 
-    function onResize() {
-        const styles = _canvas.style
+    function resizeCanvas() {
+        DEV: assert(
+            null == settings.width ||
+                (isFinite(settings.width) && settings.width > 0),
+            'Litecanvas\' option "width" should be a positive number when defined'
+        )
+        DEV: assert(
+            null == settings.height ||
+                (isFinite(settings.height) && settings.height > 0),
+            'Litecanvas\' option "height" should be a positive number when defined'
+        )
+        DEV: assert(
+            null == settings.height ||
+                (settings.width > 0 && settings.height > 0),
+            'Litecanvas\' option "width" is required when the option "height" is defined'
+        )
+
+        const width = settings.width || root.innerWidth,
+            height = settings.height || settings.width || root.innerHeight
+
+        instance.setvar('WIDTH', (_canvas.width = width))
+        instance.setvar('HEIGHT', (_canvas.height = height))
+
+        instance.setvar('CENTERX', instance.WIDTH / 2)
+        instance.setvar('CENTERY', instance.HEIGHT / 2)
 
         if (settings.autoscale) {
-            if (!styles.display) {
-                styles.display = 'block'
-                styles.margin = 'auto'
+            if (!_canvas.style.display) {
+                _canvas.style.display = 'block'
+                _canvas.style.margin = 'auto'
             }
 
             _scale = math.min(
@@ -1501,16 +1479,17 @@ export default function litecanvas(settings = {}) {
             )
             _scale = (settings.pixelart ? ~~_scale : _scale) || 1
 
-            styles.width = instance.WIDTH * _scale + 'px'
-            styles.height = instance.HEIGHT * _scale + 'px'
+            _canvas.style.width = instance.WIDTH * _scale + 'px'
+            _canvas.style.height = instance.HEIGHT * _scale + 'px'
         }
 
         // restore canvas image rendering properties
         if (!settings.antialias || settings.pixelart) {
             _ctx.imageSmoothingEnabled = false
-            styles.imageRendering = 'pixelated'
+            _canvas.style.imageRendering = 'pixelated'
         }
 
+        // trigger "resized" event
         instance.emit('resized', _scale)
 
         // force redraw

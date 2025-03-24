@@ -1,14 +1,22 @@
 litecanvas({
-    autoscale: false,
+    // width: 640,
+    // autoscale: false,
 })
 
-// little hack to make the litecanvas always fullscreen
-CANVAS.style = 'position:absolute; inset:0'
-window.addEventListener('resize', () => {
-    resize(window.innerWidth, window.innerHeight)
-})
+let fullscreen
+
+function update() {
+    if (iskeypressed('f')) {
+        fullscreen = !document.fullscreenElement
+        if (fullscreen) {
+            document.documentElement.requestFullscreen()
+        } else if (document.fullscreenElement) {
+            document.exitFullscreen()
+        }
+    }
+}
 
 function draw() {
     cls(0)
-    circfill(CENTERX, CENTERY, WIDTH / 4, 3)
+    text(10, 10, 'Press "F" to toggle fullscreen mode')
 }

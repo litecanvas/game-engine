@@ -561,13 +561,6 @@ type LitecanvasInstance = {
      */
     setvar(key: string, value: any): void
     /**
-     * Resizes the game canvas and emit the "resized" event
-     *
-     * @param width
-     * @param height
-     */
-    resize(width: number, height: number): void
-    /**
      * The scale of the game's delta time (dt).
      * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
      * A value of 0 freezes time and is effectively equivalent to pausing.
