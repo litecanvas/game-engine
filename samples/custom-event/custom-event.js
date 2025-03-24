@@ -1,4 +1,7 @@
-litecanvas()
+litecanvas({
+    width: 600,
+    height: 800,
+})
 
 function init() {
     player = {
