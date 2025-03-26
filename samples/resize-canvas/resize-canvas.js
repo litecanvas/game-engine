@@ -1,7 +1,9 @@
 litecanvas({
     width: 100,
-    autoscale: false, // please disable the autoscale
+    autoscale: false, // required
 })
+
+use(pluginResize)
 
 function init() {
     resized()
@@ -9,12 +11,14 @@ function init() {
     color = 0
     size = WIDTH
     limit = Math.min(innerHeight, innerWidth)
+
+    alert('Tap the canvas to resize')
 }
 
 function tapped(tapx, tapy) {
-    console.log(size, limit)
     if (size + 100 < limit) {
-        increaseCanvasSize()
+        size += 100
+        resize(size, size) // increase the canvas size
         sfx()
     } else {
         x = tapx
@@ -38,20 +42,25 @@ function resized() {
     y = CENTERY
 }
 
-function increaseCanvasSize() {
-    size += 100
-    resize(size, size)
-}
-
 // here's where the magic happens!
-function resize(width, height) {
-    CANVAS.width = width
-    setvar('WIDTH', width)
-    setvar('CENTERX', width / 2)
+function pluginResize(engine, { settings }) {
+    DEV: if (settings.autoscale) {
+        throw new Error(
+            'pluginResize do not works with option "autoscale" enabled'
+        )
+    }
 
-    CANVAS.height = height
-    setvar('HEIGHT', height)
-    setvar('CENTERY', height / 2)
+    return {
+        resize: (width, height) => {
+            CANVAS.width = width
+            setvar('WIDTH', width)
+            setvar('CENTERX', width / 2)
 
-    emit('resized', 1)
+            CANVAS.height = height
+            setvar('HEIGHT', height)
+            setvar('CENTERY', height / 2)
+
+            emit('resized', 1)
+        },
+    }
 }

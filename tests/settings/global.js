@@ -12,7 +12,7 @@ test('throws error if instantiated globally more than once', (t) => {
         litecanvas()
         t.fail() // fail if not throws
     } catch (e) {
-        t.is(e, 'two global litecanvas detected')
+        t.is(e.message, 'two global litecanvas detected')
     }
 })
 
