@@ -4,7 +4,7 @@ function init() {
     entities = []
     useImage = true
 
-    // `paint()` creates a OffscreenCanvas (to be used as an image)
+    // Draw in an OffscreenCanvas and returns its image.
     // very useful to cache expensive drawing operations
     BALL_IMAGE = paint(
         256, // the image width

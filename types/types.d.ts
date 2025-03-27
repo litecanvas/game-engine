@@ -351,7 +351,7 @@ type LitecanvasInstance = {
         source: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
     ): void
     /**
-     * Creates a offscreen canvas to draw on it
+     * Draw in an OffscreenCanvas and returns its image.
      *
      * @param width
      * @param height
@@ -367,7 +367,7 @@ type LitecanvasInstance = {
             scale?: number
             canvas?: HTMLCanvasElement | OffscreenCanvas
         }
-    ): OffscreenCanvas
+    ): ImageBitmap
 
     /** ADVANCED GRAPHICS API */
     /**
