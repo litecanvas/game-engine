@@ -51,7 +51,7 @@ export default function litecanvas(settings = {}) {
         _canvas,
         /** @type {number} */
         _scale = 1,
-        /** @type {CanvasRenderingContext2D} */
+        /** @type {CanvasRenderingContext2D|OffscreenCanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
         _outline_fix = 0.5,
@@ -692,7 +692,7 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Creates a offscreen canvas to draw on it
+         * Draw in an OffscreenCanvas and returns its image.
          *
          * @param {number} width
          * @param {number} height
@@ -700,7 +700,7 @@ export default function litecanvas(settings = {}) {
          * @param {object} [options]
          * @param {number} [options.scale=1]
          * @param {OffscreenCanvas | HTMLCanvasElement} [options.canvas]
-         * @returns {OffscreenCanvas}
+         * @returns {ImageBitmap}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, drawing, options = {}) {
@@ -715,7 +715,8 @@ export default function litecanvas(settings = {}) {
                 'paint: 4th param (options.scale) must be a number'
             )
 
-            const canvas = options.canvas || new OffscreenCanvas(1, 1),
+            const /** @type {OffscreenCanvas} */
+                canvas = options.canvas || new OffscreenCanvas(1, 1),
                 scale = options.scale || 1,
                 contextOriginal = _ctx
 
@@ -749,7 +750,7 @@ export default function litecanvas(settings = {}) {
 
             _ctx = contextOriginal // restore the context
 
-            return canvas
+            return canvas.transferToImageBitmap()
         },
 
         /** ADVANCED GRAPHICS API */
