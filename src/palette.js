@@ -1,49 +1,49 @@
 export const colors = [
-    // 0 = black
-    '#202029',
+  // 0 = black
+  '#112',
 
-    // 1 = gray
-    '#626274',
+  // 1 = dark gray
+  '#556',
 
-    // 2 = light gray
-    '#adadbc',
+  // 2 = lite gray
+  '#aab',
 
-    // 3 = white
-    '#fff1e8',
+  // 3 = white
+  '#eee',
 
-    // 4 = red
-    '#b71d26',
+  // 4 = red
+  '#e84747',
 
-    // 5 = orange
-    '#eb5d2b',
+  // 5 = yellow
+  '#fac53f',
 
-    // 6 = blue
-    '#1764cb',
+  // 6 = dark blue
+  '#2764c8',
 
-    // 7 = light blue
-    '#37b2ff',
+  // 7 = lite blue
+  '#50c3fc',
 
-    // 8 = green
-    '#0d8217',
+  // 8 = dark green
+  '#1e8237',
 
-    // 9 = light green
-    '#42bc42',
+  // 9 = lite green
+  '#71ce59',
 
-    // 10 = brown
-    '#825d16',
+  // 10 = brown
+  '#8e3823',
 
-    // 11 = yellow
-    '#f8bd52',
+  // 11 = bronze
+  '#ac7c00',
 
-    // 12 = purple
-    '#80349a',
+  // 12 = dark purple
+  '#5e1db4',
 
-    // 13 = light purple
-    '#b86fd1',
+  // 13 = lite purple
+  '#a078d4',
 
-    // 14 = pink
-    '#f874a3',
+  // 14 = pink
+  '#f874a3',
 
-    // 15 = pearl
-    '#f8c9b4',
+  // 15 = peach
+  '#f8c9b4',
 ]
