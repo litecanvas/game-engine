@@ -474,52 +474,20 @@ type LitecanvasInstance = {
     /** UTILS API */
     /**
      * Checks if a which key is pressed on the keyboard.
-     * Note: use `iskeydown("any")` to check for any key pressed.
+     * Note: use `iskeydown()` to check for any key pressed.
      *
      * @param key
      * @returns `true` if the which key is down
      */
     iskeydown(key: string): boolean
     /**
-     * Check a collision between two rectangles
+     * Checks if a which key just got pressed on the keyboard.
+     * Note: use `iskeypressed()` to check for any key.
      *
-     * @param x1 first rectangle position X
-     * @param y1 first rectangle position Y
-     * @param w1 first rectangle width
-     * @param h1 first rectangle height
-     * @param x2 second rectangle position X
-     * @param y2 second rectangle position Y
-     * @param w2 second rectangle width
-     * @param h2 second rectangle height
+     * @param [key]
+     * @returns `true` if the which key was pressed
      */
-    colrect(
-        x1: number,
-        y1: number,
-        w1: number,
-        h1: number,
-        x2: number,
-        y2: number,
-        w2: number,
-        h2: number
-    ): boolean
-    /**
-     * Check a collision between two circles
-     *
-     * @param x1 first circle position X
-     * @param y1 first circle position Y
-     * @param r1 first circle position radius
-     * @param x2 second circle position X
-     * @param y2 second circle position Y
-     * @param r2 second circle position radius
-     */
-    colcirc(
-        x1: number,
-        y1: number,
-        r1: number,
-        x2: number,
-        y2: number,
-        r2: number
-    ): boolean
+    iskeypressed(key: string): boolean
 
     /** PLUGINS API */
     /**
