@@ -7,7 +7,7 @@ const cols = 12
 litecanvas({
     animate: false,
     width: size * cols,
-    height: size * (cols - 1),
+    height: size * cols,
     autoscale: zoomed,
     canvas: 'canvas',
 })
@@ -16,7 +16,6 @@ function init() {
     combinations = []
     for (let y = 0; y < cols; y++) {
         for (let x = 0; x < cols; x++) {
-            if (y === x) continue
             combinations.push([y, x])
         }
     }
