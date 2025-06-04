@@ -1,4 +1,4 @@
-export const colors = [
+export const defaultPalette = [
     '#111',
     '#6a7799',
     '#aec2c2',

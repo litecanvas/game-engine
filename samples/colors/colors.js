@@ -1,8 +1,12 @@
-const tile = 48
+let tile = 48,
+    showLabel = true,
+    totalColors = 12,
+    cols = totalColors / 2,
+    rows = 2
 
 litecanvas({
-    width: tile * 6,
-    height: tile * 2,
+    width: tile * cols,
+    height: tile * rows,
     autoscale: false,
     animate: false,
 })
@@ -10,14 +14,23 @@ litecanvas({
 // draw the color palette
 function draw() {
     cls()
-    textsize(HEIGHT / 6)
+    textsize(tile / 3)
     textalign('center', 'middle')
-    for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 2; j++) {
-            const c = i + j * 6
-            const fg = [0, 6, 4, 8, 10].includes(c) ? 3 : 0
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            const c = i + j * cols
+            const fg = [0, 1, 4, 6, 8, 10].includes(c) ? 3 : 0
             rectfill(i * tile, j * tile, tile, tile, c)
-            text(i * tile + tile / 2, 2 + j * tile + tile / 2, c, fg)
+
+            if (showLabel) {
+                const label = c
+                text(i * tile + tile / 2, 2 + j * tile + tile / 2, label, fg)
+            }
         }
     }
+}
+
+function tapped() {
+    showLabel = !showLabel
+    draw()
 }
