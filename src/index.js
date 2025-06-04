@@ -1,5 +1,5 @@
 import { zzfx } from './zzfx.js'
-import { colors } from './palette.js'
+import { defaultPalette } from './palette.js'
 import { assert } from './dev.js'
 import './types.js'
 
@@ -71,6 +71,8 @@ export default function litecanvas(settings = {}) {
         _fontSize = 20,
         /** @type {number} */
         _rng_seed = Date.now(),
+        /** @type {string[]} */
+        _colors = defaultPalette,
         /**
          * default game events
          * @type {Object<string,Set<Function>>}
@@ -92,7 +94,6 @@ export default function litecanvas(settings = {}) {
          */
         _helpers = {
             settings: Object.assign({}, settings),
-            colors,
         }
 
     /** @type {LitecanvasInstance} */
@@ -123,6 +124,9 @@ export default function litecanvas(settings = {}) {
 
         /** @type {number[]} */
         DEFAULT_SFX: [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
+
+        /** @type {string[]} */
+        COLORS: _colors,
 
         /** MATH API */
         /**
@@ -1039,6 +1043,20 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * Set or reset the color palette
+         *
+         * @param {string[]} [colors]
+         */
+        pal(colors = defaultPalette) {
+            DEV: assert(
+                Array.isArray(colors) && colors.length > 0,
+                'pal: 1st param must be a array of strings'
+            )
+            _colors = colors
+            instance.setvar('COLORS', _colors)
+        },
+
+        /**
          * Get a color by index
          *
          * @param {number} [index=0] The color number
@@ -1049,8 +1067,7 @@ export default function litecanvas(settings = {}) {
                 null == index || (isNumber(index) && index >= 0),
                 'getcolor: 1st param must be a number'
             )
-
-            return colors[~~index % colors.length]
+            return _colors[~~index % _colors.length]
         },
 
         /**
@@ -1359,6 +1376,7 @@ export default function litecanvas(settings = {}) {
 
             on(root, 'focus', () => {
                 if (!_rafid) {
+                    _accumulated = 0
                     _rafid = raf(drawFrame)
                 }
             })

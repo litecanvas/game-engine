@@ -1,7 +1,7 @@
 import test from 'ava'
 import './_mocks/browser.js'
 import '../src/web.js'
-import { colors } from '../src/palette.js'
+import { defaultPalette as colors } from '../src/palette.js'
 
 let g = litecanvas()
 
