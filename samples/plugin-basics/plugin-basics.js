@@ -19,20 +19,21 @@ function draw() {
     text(CENTERX, CENTERY + 50, sayhello('Everyone'), 3)
 }
 
-function pluginTest(engine, { settings, colors }, config) {
+function pluginTest(engine, { settings }, config) {
     // the first argument is the current litecanvas instance
     console.log('litecanvas instance:', engine)
 
-    // the second argument is a list of helpful values
+    // the second argument is a list of helpful values (read-only)
     console.log('litecanvas settings:', settings)
-    console.log('litecanvas colors:', colors)
 
     // the third argument is the plugin configuration
     console.log('plugin config:', config)
 
-    // use `colors` to change a color or add new ones
+    // use `COLORS` to change a color
     // example: change the red (color #4) to purple
-    colors[4] = '#be4bdb'
+    engine.COLORS[4] = '#be4bdb'
+    // update the color palette
+    engine.pal(engine.COLORS)
 
     // use `settings` to check something
     // `settings` is read-only, changes will not take effect
