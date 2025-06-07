@@ -43,22 +43,24 @@ function resized() {
 }
 
 // here's where the magic happens!
-function pluginResize(engine, { settings }) {
-    DEV: if (settings.autoscale) {
+function pluginResize(engine, config) {
+    settings = engine.stat(0)
+
+    if (settings.autoscale) {
         throw new Error(
-            'pluginResize do not works with option "autoscale" enabled'
+            'plugin Resize do not works with option "autoscale" enabled'
         )
     }
 
     return {
         resize: (width, height) => {
             CANVAS.width = width
-            setvar('WIDTH', width)
-            setvar('CENTERX', width / 2)
+            def('WIDTH', width)
+            def('CENTERX', width / 2)
 
             CANVAS.height = height
-            setvar('HEIGHT', height)
-            setvar('CENTERY', height / 2)
+            def('HEIGHT', height)
+            def('CENTERY', height / 2)
 
             emit('resized', 1)
         },

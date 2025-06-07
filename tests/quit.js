@@ -5,7 +5,9 @@ import { _listeners } from './_mocks/events.js'
 
 test('removes all browser event listeners', (t) => {
     const expected = _listeners.length
-    const engine = litecanvas()
+    const engine = litecanvas({
+        animate: false,
+    })
 
     engine.quit()
 
@@ -13,7 +15,9 @@ test('removes all browser event listeners', (t) => {
 })
 
 test('deletes all exposed methods and props', (t) => {
-    const engine = litecanvas()
+    const engine = litecanvas({
+        animate: false,
+    })
 
     engine.quit()
 
@@ -25,10 +29,12 @@ test('deletes all exposed methods and props', (t) => {
 test('deletes exposed methods and props only when is global', (t) => {
     litecanvas({
         global: true,
+        animate: false,
     })
 
     const notglobal = litecanvas({
         global: false,
+        animate: false,
     })
 
     notglobal.quit()
@@ -45,21 +51,12 @@ test('remove all engine event listeners', async (t) => {
     const expected = 1
 
     await new Promise((resolve) => {
-        const instance = litecanvas({
-            animate: false,
-        })
+        const instance = litecanvas()
 
         instance.listen('update', () => {
             value++
             quit()
-            resolve(instance)
-        })
-
-        instance.listen('init', () => {
-            // simulate 3 updates but only 1 should happens
-            instance.emit('update')
-            instance.emit('update')
-            instance.emit('update')
+            resolve()
         })
     })
 

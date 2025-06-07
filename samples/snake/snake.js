@@ -137,7 +137,7 @@ function setSpeed(value) {
     MAX = 20
     MIN = 1
     value = clamp(~~value, MIN, MAX)
-    setfps(value)
+    framerate(value)
 }
 
 function pad(value, n) {

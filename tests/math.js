@@ -2,7 +2,9 @@ import test from 'ava'
 import './_mocks/browser.js'
 import '../src/web.js'
 
-let g = litecanvas()
+let g = litecanvas({
+    animate: false,
+})
 
 test('PI', (t) => {
     t.plan(1)

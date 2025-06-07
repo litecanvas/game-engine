@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
-        "lib": ["es2016", "dom"]
-    }
+        "target": "es2016",
+        "lib": ["es2016", "dom", "dom.iterable"],
+        "allowJs": true,
+        "noEmit": true
+    },
+    "files": ["types/index.d.ts", "src/index.js"]
 }

@@ -1,4 +1,4 @@
-litecanvas()
+const e = litecanvas()
 
 function init() {
     x = 0

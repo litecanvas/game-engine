@@ -1,7 +1,7 @@
+// @ts-check
 import { zzfx } from './zzfx.js'
 import { defaultPalette } from './palette.js'
 import { assert } from './dev.js'
-import './types.js'
 
 /**
  * The litecanvas constructor
@@ -10,7 +10,8 @@ import './types.js'
  * @returns {LitecanvasInstance}
  */
 export default function litecanvas(settings = {}) {
-    const root = globalThis,
+    const /** @type {typeof globalThis} */
+        root = globalThis,
         math = Math,
         TWO_PI = math.PI * 2,
         raf = requestAnimationFrame,
@@ -45,9 +46,9 @@ export default function litecanvas(settings = {}) {
 
     let /** @type {boolean} */
         _initialized = false,
-        /** @type {Function[]} */
+        /** @type {any[]} */
         _plugins = [],
-        /** @type {HTMLCanvasElement|string} _canvas */
+        /** @type {HTMLCanvasElement} _canvas */
         _canvas,
         /** @type {number} */
         _scale = 1,
@@ -63,7 +64,7 @@ export default function litecanvas(settings = {}) {
         _deltaTime = 1 / 60,
         /** @type {number} */
         _accumulated = 0,
-        /** @type {number} */
+        /** @type {number|null} */
         _rafid,
         /** @type {string} */
         _fontFamily = 'sans-serif',
@@ -73,30 +74,24 @@ export default function litecanvas(settings = {}) {
         _rng_seed = Date.now(),
         /** @type {string[]} */
         _colors = defaultPalette,
+        /** @type {number[]} */
+        _default_sound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
         /**
          * default game events
          * @type {Object<string,Set<Function>>}
          */
         _events = {
-            init: false,
-            update: false,
-            draw: false,
-            resized: false,
-            tap: false,
-            untap: false,
-            tapping: false,
-            tapped: false,
-        },
-        /**
-         * Helpers to be used by plugins
-         *
-         * @type {LitecanvasPluginHelpers}
-         */
-        _helpers = {
-            settings: Object.assign({}, settings),
+            init: null,
+            update: null,
+            draw: null,
+            resized: null,
+            tap: null,
+            untap: null,
+            tapping: null,
+            tapped: null,
         }
 
-    /** @type {LitecanvasInstance} */
+    /** @type {Omit<LitecanvasInstance,'PI'|'sin'|'cos'|'atan2'|'hypot'|'tan'|'abs'|'ceil'|'floor'|'trunc'|'min'|'max'|'pow'|'sqrt'|'sign'|'exp'|'iskeydown'|'iskeypressed'>} */
     const instance = {
         /** @type {number} */
         WIDTH: 0,
@@ -105,7 +100,7 @@ export default function litecanvas(settings = {}) {
         HEIGHT: 0,
 
         /** @type {HTMLCanvasElement} */
-        CANVAS: false,
+        CANVAS: null,
 
         /** @type {number} */
         ELAPSED: 0,
@@ -121,12 +116,6 @@ export default function litecanvas(settings = {}) {
 
         /** @type {number} */
         MOUSEY: -1,
-
-        /** @type {number[]} */
-        DEFAULT_SFX: [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
-
-        /** @type {string[]} */
-        COLORS: _colors,
 
         /** MATH API */
         /**
@@ -343,19 +332,19 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * If a value is passed, initializes the random number generator with an explicit seed value.
-         * Otherwise, returns the current seed state.
+         * Initializes the random number generator with an explicit seed value.
+         *
+         * Note: The seed should be a integer number greater than or equal to zero.
          *
          * @param {number} value
-         * @returns {number} the seed state
          */
-        seed: (value) => {
+        rseed(value) {
             DEV: assert(
                 null == value || (isNumber(value) && value >= 0),
-                'seed: 1st param must be a positive number or zero'
+                'rseed: 1st param must be a positive number or zero'
             )
 
-            return null == value ? _rng_seed : (_rng_seed = ~~value)
+            _rng_seed = ~~value
         },
 
         /** BASIC GRAPHICS API */
@@ -606,10 +595,6 @@ export default function litecanvas(settings = {}) {
         text(x, y, message, color = 3, fontStyle = 'normal') {
             DEV: assert(isNumber(x), 'text: 1st param must be a number')
             DEV: assert(isNumber(y), 'text: 2nd param must be a number')
-            // DEV: assert(
-            //     'string' === typeof message,
-            //     'text: 3rd param must be a string'
-            // )
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
                 'text: 4th param must be a positive number or zero'
@@ -620,7 +605,7 @@ export default function litecanvas(settings = {}) {
             )
 
             _ctx.font = `${fontStyle} ${_fontSize}px ${_fontFamily}`
-            _ctx.fillStyle = instance.getcolor(color)
+            _ctx.fillStyle = _colors[~~color % _colors.length]
             _ctx.fillText(message, ~~x, ~~y)
         },
 
@@ -652,8 +637,8 @@ export default function litecanvas(settings = {}) {
         /**
          * Sets the alignment used when drawing texts
          *
-         * @param {string} align the horizontal alignment. Possible values: "left", "right", "center", "start" or "end"
-         * @param {string} baseline the vertical alignment. Possible values: "top", "bottom", "middle", "hanging" or "ideographic"
+         * @param {CanvasTextAlign} align the horizontal alignment. Possible values: "left", "right", "center", "start" or "end"
+         * @param {CanvasTextBaseline} baseline the vertical alignment. Possible values: "top", "bottom", "middle", "hanging" or "ideographic"
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
          */
@@ -661,7 +646,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(
                 null == align ||
                     ['left', 'right', 'center', 'start', 'end'].includes(align),
-                'textalign: 1st param must be null or one of the following values: center, left, right, start or end.'
+                'textalign: 1st param must be null or one of the following strings: center, left, right, start or end.'
             )
             DEV: assert(
                 null == baseline ||
@@ -673,7 +658,7 @@ export default function litecanvas(settings = {}) {
                         'alphabetic',
                         'ideographic',
                     ].includes(baseline),
-                'textalign: 2nd param must be null or one of the following values: middle, top, bottom, hanging, alphabetic or ideographic.'
+                'textalign: 2nd param must be null or one of the following strings: middle, top, bottom, hanging, alphabetic or ideographic.'
             )
 
             if (align) _ctx.textAlign = align
@@ -703,7 +688,7 @@ export default function litecanvas(settings = {}) {
          * @param {string[]|drawCallback} drawing
          * @param {object} [options]
          * @param {number} [options.scale=1]
-         * @param {OffscreenCanvas | HTMLCanvasElement} [options.canvas]
+         * @param {OffscreenCanvas} [options.canvas]
          * @returns {ImageBitmap}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
@@ -731,12 +716,14 @@ export default function litecanvas(settings = {}) {
             _ctx.scale(scale, scale)
 
             // draw pixel art if `draw` is a array
+            // @ts-ignore
             if (drawing.push) {
                 let x = 0,
                     y = 0
 
                 _ctx.imageSmoothingEnabled = false
 
+                // @ts-ignore
                 for (const str of drawing) {
                     for (const color of str) {
                         if (' ' !== color && '.' !== color) {
@@ -749,6 +736,7 @@ export default function litecanvas(settings = {}) {
                     x = 0
                 }
             } else {
+                // @ts-ignore
                 drawing(_ctx)
             }
 
@@ -872,7 +860,7 @@ export default function litecanvas(settings = {}) {
                 'fill: 2nd param must be a Path2D instance'
             )
 
-            _ctx.fillStyle = instance.getcolor(color)
+            _ctx.fillStyle = _colors[~~color % _colors.length]
             if (path) {
                 _ctx.fill(path)
             } else {
@@ -896,7 +884,7 @@ export default function litecanvas(settings = {}) {
                 'stroke: 2nd param must be a Path2D instance'
             )
 
-            _ctx.strokeStyle = instance.getcolor(color)
+            _ctx.strokeStyle = _colors[~~color % _colors.length]
             if (path) {
                 _ctx.stroke(path)
             } else {
@@ -950,7 +938,7 @@ export default function litecanvas(settings = {}) {
                 return false
             }
 
-            zzfxParams = zzfxParams || instance.DEFAULT_SFX
+            zzfxParams = zzfxParams || _default_sound
 
             // if has other arguments, copy the sound to not change the original
             if (pitchSlide !== 0 || volumeFactor !== 1) {
@@ -1053,36 +1041,23 @@ export default function litecanvas(settings = {}) {
                 'pal: 1st param must be a array of strings'
             )
             _colors = colors
-            instance.setvar('COLORS', _colors)
         },
 
         /**
-         * Get a color by index
-         *
-         * @param {number} [index=0] The color number
-         * @returns {string} the color code
-         */
-        getcolor: (index) => {
-            DEV: assert(
-                null == index || (isNumber(index) && index >= 0),
-                'getcolor: 1st param must be a number'
-            )
-            return _colors[~~index % _colors.length]
-        },
-
-        /**
-         * Create or update a instance variable
+         * Define or update a instance property.
          *
          * @param {string} key
          * @param {*} value
          */
-        setvar(key, value) {
+        def(key, value) {
             DEV: assert(
                 'string' === typeof key,
-                'setvar: 1st param must be a string'
+                'def: 1st param must be a string'
             )
-            if (null == value) {
-                console.warn(`setvar: key "${key}" was defined as ${value}`)
+            DEV: if (null == value) {
+                console.warn(
+                    `def: key "${key}" was defined as ${value} but now is null`
+                )
             }
 
             instance[key] = value
@@ -1100,44 +1075,94 @@ export default function litecanvas(settings = {}) {
          */
         timescale(value) {
             DEV: assert(
-                isNumber(value),
-                'timescale: 1st param must be a number'
+                isNumber(value) && value >= 0,
+                'timescale: 1st param must be a positive number or zero'
             )
 
             _timeScale = value
         },
 
         /**
-         * Set the target FPS at runtime.
+         * Set the target FPS (frames per second).
          *
          * @param {number} value
          */
-        setfps(value) {
+        framerate(value) {
             DEV: assert(
                 isNumber(value) && value >= 1,
-                'setfps: 1st param must be a positive number'
+                'framerate: 1st param must be a positive number'
             )
 
             _deltaTime = 1 / ~~value
         },
 
         /**
+         * Returns information about that engine instance.
+         *
+         * n = 0: the settings passed to that instance
+         * n = 1: returns true if the "init" event has already been emitted
+         * n = 2: the current ID returned by last requestAnimationFrame
+         * n = 3: the current canvas element scale (not the context 2D scale)
+         * n = 4: the attached event callbacks
+         * n = 5: the current color palette
+         * n = 6: the default sound used by `sfx()`
+         * n = 7: the current time scale
+         * n = 8: the current volume used by ZzFX
+         * n = 9: the current RNG state
+         *
+         * n = any other value: returns undefined
+         *
+         * @param {number} n
+         * @returns {any}
+         */
+        stat(n) {
+            DEV: assert(
+                isNumber(n) && n >= 0,
+                'stat: 1st param must be a positive number'
+            )
+
+            const list = [
+                // 0
+                settings,
+                // 1
+                _initialized,
+                // 2
+                _rafid,
+                // 3
+                _scale,
+                // 4
+                _events,
+                // 5
+                _colors,
+                // 6
+                _default_sound,
+                // 7
+                _timeScale,
+                // 8
+                root.zzfxV || 1,
+                // 9
+                _rng_seed,
+            ]
+            return list[n]
+        },
+
+        /**
          * Stops the litecanvas instance and remove all event listeners.
          */
         quit() {
-            // stop the renderer
+            // stop the game loop (update & draw)
             cancelAnimationFrame(_rafid)
 
             // emit "quit" event to manual clean ups
             instance.emit('quit')
 
-            // clear all engine events
-            _events = []
-
-            // clear all browser events
+            // clear all browser event listeners
             for (const removeListener of _browserEventListeners) {
                 removeListener()
             }
+
+            // clear all engine event listeners
+            _events = {}
 
             // maybe clear global context
             if (settings.global) {
@@ -1171,6 +1196,7 @@ export default function litecanvas(settings = {}) {
 
         // listen window resize event when "autoscale" is enabled
         if (settings.autoscale) {
+            // @ts-ignore
             on(root, 'resize', resizeCanvas)
         }
 
@@ -1204,65 +1230,102 @@ export default function litecanvas(settings = {}) {
 
             let _pressingMouse = false
 
-            on(_canvas, 'mousedown', (ev) => {
-                if (ev.button === 0) {
-                    preventDefault(ev)
-                    const [x, y] = _getXY(ev.pageX, ev.pageY)
-                    instance.emit('tap', x, y, 0)
-                    _registerTap(0, x, y)
-                    _pressingMouse = true
-                }
-            })
-
-            on(_canvas, 'mouseup', (ev) => {
-                if (ev.button === 0) {
-                    preventDefault(ev)
-                    const tap = _taps.get(0)
-                    const [x, y] = _getXY(ev.pageX, ev.pageY)
-                    if (_checkTapped(tap)) {
-                        instance.emit('tapped', tap.startX, tap.startY, 0)
+            on(
+                _canvas,
+                'mousedown',
+                /**
+                 * @param {MouseEvent} ev
+                 */
+                (ev) => {
+                    if (ev.button === 0) {
+                        preventDefault(ev)
+                        const [x, y] = _getXY(ev.pageX, ev.pageY)
+                        instance.emit('tap', x, y, 0)
+                        _registerTap(0, x, y)
+                        _pressingMouse = true
                     }
-                    instance.emit('untap', x, y, 0)
-                    _taps.delete(0)
-                    _pressingMouse = false
                 }
-            })
+            )
 
-            on(_canvas, 'mousemove', (ev) => {
-                preventDefault(ev)
-
-                const [x, y] = _getXY(ev.pageX, ev.pageY)
-                instance.setvar('MOUSEX', x)
-                instance.setvar('MOUSEY', y)
-
-                if (!_pressingMouse) return
-
-                instance.emit('tapping', x, y, 0)
-                _updateTap(0, x, y)
-            })
-
-            on(_canvas, 'touchstart', (ev) => {
-                preventDefault(ev)
-                /** @type {TouchList} touches */
-                const touches = ev.changedTouches
-                for (const touch of touches) {
-                    const [x, y] = _getXY(touch.pageX, touch.pageY)
-                    instance.emit('tap', x, y, touch.identifier + 1)
-                    _registerTap(touch.identifier + 1, x, y)
+            on(
+                _canvas,
+                'mouseup',
+                /**
+                 * @param {MouseEvent} ev
+                 */
+                (ev) => {
+                    if (ev.button === 0) {
+                        preventDefault(ev)
+                        const tap = _taps.get(0)
+                        const [x, y] = _getXY(ev.pageX, ev.pageY)
+                        if (_checkTapped(tap)) {
+                            instance.emit('tapped', tap.startX, tap.startY, 0)
+                        }
+                        instance.emit('untap', x, y, 0)
+                        _taps.delete(0)
+                        _pressingMouse = false
+                    }
                 }
-            })
+            )
 
-            on(_canvas, 'touchmove', (ev) => {
-                preventDefault(ev)
-                /** @type {TouchList} touches */
-                const touches = ev.changedTouches
-                for (const touch of touches) {
-                    const [x, y] = _getXY(touch.pageX, touch.pageY)
-                    instance.emit('tapping', x, y, touch.identifier + 1)
-                    _updateTap(touch.identifier + 1, x, y)
+            on(
+                _canvas,
+                'mousemove',
+                /**
+                 * @param {MouseEvent} ev
+                 */
+                (ev) => {
+                    preventDefault(ev)
+
+                    const [x, y] = _getXY(ev.pageX, ev.pageY)
+                    instance.def('MOUSEX', x)
+                    instance.def('MOUSEY', y)
+
+                    if (!_pressingMouse) return
+
+                    instance.emit('tapping', x, y, 0)
+                    _updateTap(0, x, y)
                 }
-            })
+            )
 
+            on(
+                _canvas,
+                'touchstart',
+                /**
+                 * @param {TouchEvent} ev
+                 */
+                (ev) => {
+                    preventDefault(ev)
+                    /** @type {TouchList} touches */
+                    const touches = ev.changedTouches
+                    for (const touch of touches) {
+                        const [x, y] = _getXY(touch.pageX, touch.pageY)
+                        instance.emit('tap', x, y, touch.identifier + 1)
+                        _registerTap(touch.identifier + 1, x, y)
+                    }
+                }
+            )
+
+            on(
+                _canvas,
+                'touchmove',
+                /**
+                 * @param {TouchEvent} ev
+                 */
+                (ev) => {
+                    preventDefault(ev)
+                    const touches = ev.changedTouches
+                    for (const touch of touches) {
+                        const [x, y] = _getXY(touch.pageX, touch.pageY)
+                        instance.emit('tapping', x, y, touch.identifier + 1)
+                        _updateTap(touch.identifier + 1, x, y)
+                    }
+                }
+            )
+
+            /**
+             * @param {TouchEvent} ev
+             */
             const _touchEndHandler = (ev) => {
                 preventDefault(ev)
                 const existing = []
@@ -1286,6 +1349,7 @@ export default function litecanvas(settings = {}) {
             on(_canvas, 'touchend', _touchEndHandler)
             on(_canvas, 'touchcancel', _touchEndHandler)
 
+            // @ts-ignore
             on(root, 'blur', () => {
                 _pressingMouse = false
                 for (const [id, tap] of _taps) {
@@ -1317,6 +1381,7 @@ export default function litecanvas(settings = {}) {
                       )
             }
 
+            // @ts-ignore
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
                 if (!_keysDown.has(toLowerCase(event.key))) {
                     _keysDown.add(toLowerCase(event.key))
@@ -1324,14 +1389,16 @@ export default function litecanvas(settings = {}) {
                 }
             })
 
+            // @ts-ignore
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
                 _keysDown.delete(toLowerCase(event.key))
             })
 
+            // @ts-ignore
             on(root, 'blur', () => _keysDown.clear())
             instance.listen('after:draw', () => _keysPress.clear())
 
-            instance.setvar(
+            instance.def(
                 'iskeydown',
                 /**
                  * Checks if a which key is pressed (down) on the keyboard.
@@ -1349,7 +1416,7 @@ export default function litecanvas(settings = {}) {
                 }
             )
 
-            instance.setvar(
+            instance.def(
                 'iskeypressed',
                 /**
                  * Checks if a which key just got pressed on the keyboard.
@@ -1370,10 +1437,13 @@ export default function litecanvas(settings = {}) {
 
         // listen browser focus/blur events and pause the update/draw loop
         if (settings.pauseOnBlur) {
+            // @ts-ignore
             on(root, 'blur', () => {
+                // @ts-ignore
                 _rafid = cancelAnimationFrame(_rafid)
             })
 
+            // @ts-ignore
             on(root, 'focus', () => {
                 if (!_rafid) {
                     _accumulated = 0
@@ -1410,7 +1480,7 @@ export default function litecanvas(settings = {}) {
 
             while (_accumulated >= _deltaTime) {
                 instance.emit('update', _deltaTime * _timeScale)
-                instance.setvar(
+                instance.def(
                     'ELAPSED',
                     instance.ELAPSED + _deltaTime * _timeScale
                 )
@@ -1432,29 +1502,30 @@ export default function litecanvas(settings = {}) {
     }
 
     function setupCanvas() {
-        _canvas = settings.canvas || document.createElement('canvas')
-
-        /** @type {HTMLCanvasElement} */
-        _canvas =
-            'string' === typeof _canvas
-                ? document.querySelector(_canvas)
-                : _canvas
+        if ('string' === typeof settings.canvas) {
+            _canvas = document.querySelector(settings.canvas)
+        } else {
+            _canvas = settings.canvas || document.createElement('canvas')
+        }
 
         DEV: assert(
             _canvas && _canvas.tagName === 'CANVAS',
             'Invalid canvas element'
         )
 
-        instance.setvar('CANVAS', _canvas)
+        instance.def('CANVAS', _canvas)
         _ctx = _canvas.getContext('2d')
 
         on(_canvas, 'click', () => root.focus())
 
+        // @ts-ignore
         _canvas.style = ''
 
         resizeCanvas()
 
-        if (!_canvas.parentNode) document.body.appendChild(_canvas)
+        if (!_canvas.parentNode) {
+            document.body.appendChild(_canvas)
+        }
     }
 
     function resizeCanvas() {
@@ -1477,11 +1548,11 @@ export default function litecanvas(settings = {}) {
         const width = settings.width || root.innerWidth,
             height = settings.height || settings.width || root.innerHeight
 
-        instance.setvar('WIDTH', (_canvas.width = width))
-        instance.setvar('HEIGHT', (_canvas.height = height))
+        instance.def('WIDTH', (_canvas.width = width))
+        instance.def('HEIGHT', (_canvas.height = height))
 
-        instance.setvar('CENTERX', instance.WIDTH / 2)
-        instance.setvar('CENTERY', instance.HEIGHT / 2)
+        instance.def('CENTERX', instance.WIDTH / 2)
+        instance.def('CENTERY', instance.HEIGHT / 2)
 
         if (settings.autoscale) {
             if (!_canvas.style.display) {
@@ -1508,14 +1579,24 @@ export default function litecanvas(settings = {}) {
         // trigger "resized" event
         instance.emit('resized', _scale)
 
+        instance.cls(0)
+
         // force redraw
         if (!settings.animate) {
             raf(drawFrame)
         }
     }
 
+    /**
+     * @param {string} eventName
+     * @param {*} arg1
+     * @param {*} arg2
+     * @param {*} arg3
+     * @param {*} arg4
+     */
     function triggerEvent(eventName, arg1, arg2, arg3, arg4) {
         if (!_events[eventName]) return
+        // @ts-ignore
         for (const callback of _events[eventName]) {
             callback(arg1, arg2, arg3, arg4)
         }
@@ -1523,9 +1604,11 @@ export default function litecanvas(settings = {}) {
 
     /**
      * @param {pluginCallback} callback
+     * @param {*} config
      */
     function loadPlugin(callback, config) {
-        const pluginData = callback(instance, _helpers, config)
+        // @ts-ignore
+        const pluginData = callback(instance, config)
 
         DEV: assert(
             null == pluginData || 'object' === typeof pluginData,
@@ -1533,7 +1616,7 @@ export default function litecanvas(settings = {}) {
         )
 
         for (const key in pluginData) {
-            instance.setvar(key, pluginData[key])
+            instance.def(key, pluginData[key])
         }
     }
 
@@ -1548,10 +1631,12 @@ export default function litecanvas(settings = {}) {
     setupCanvas()
 
     if ('loading' === document.readyState) {
+        // @ts-ignore
         on(root, 'DOMContentLoaded', () => raf(init))
     } else {
         raf(init)
     }
 
+    // @ts-ignore
     return instance
 }

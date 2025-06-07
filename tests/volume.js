@@ -5,6 +5,7 @@ import '../src/web.js'
 let g = litecanvas({
     width: 256,
     height: 128,
+    animate: false,
 })
 
 test('changes the global variable `zzfxV`', (t) => {

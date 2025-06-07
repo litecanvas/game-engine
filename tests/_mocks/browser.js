@@ -56,17 +56,15 @@ globalThis.AudioContext = class {
 
 globalThis.AudioBuffer = class {}
 
-let frames = 0
 globalThis.requestAnimationFrame = (callback) => {
-    let maxFrames = globalThis.maxFrames || 5
-    if (frames >= maxFrames) return
-    setTimeout(() => {
+    return setTimeout(() => {
         callback(performance.now())
-        frames++
     }, 1000 / 60)
 }
 
-globalThis.cancelAnimationFrame = () => {}
+globalThis.cancelAnimationFrame = (id) => {
+    clearTimeout(id)
+}
 
 globalThis.navigator.userActivation = {
     hasBeenActive: true,

@@ -5,11 +5,14 @@ import '../src/web.js'
 let g = litecanvas({
     width: 256,
     height: 128,
+    animate: false,
 })
 
 test('clear screen with color', (t) => {
+    const colors = g.stat(5)
+
     const colorIndex = 5
-    const colorValue = g.getcolor(colorIndex)
+    const colorValue = colors[colorIndex]
 
     g.cls(colorIndex)
 
