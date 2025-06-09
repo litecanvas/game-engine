@@ -1111,20 +1111,6 @@ export default function litecanvas(settings = {}) {
         /**
          * Returns information about that engine instance.
          *
-         * n = 0: the settings passed to that instance
-         * n = 1: returns true if the "init" event has already been emitted
-         * n = 2: the current ID returned by last requestAnimationFrame
-         * n = 3: the current canvas element scale (not the context 2D scale)
-         * n = 4: the attached event callbacks
-         * n = 5: the current color palette
-         * n = 6: the default sound used by `sfx()`
-         * n = 7: the current time scale
-         * n = 8: the current volume used by ZzFX
-         * n = 9: the current RNG state
-         * n = 10: the current font size
-         *
-         * n = any other value: returns undefined
-         *
          * @param {number} n
          * @returns {any}
          */
@@ -1157,6 +1143,8 @@ export default function litecanvas(settings = {}) {
                 _rngSeed,
                 // 10
                 _fontSize,
+                //  11
+                _fontFamily,
             ]
             return list[n]
         },
