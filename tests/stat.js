@@ -186,7 +186,7 @@ test('stat(9) returns the current RNG state', (t) => {
     t.is(expected, local.stat(9))
 })
 
-test('stat(10) returns the current font size used in text()', (t) => {
+test('stat(10) returns the current font size', (t) => {
     t.plan(2)
 
     const local = litecanvas({
@@ -204,4 +204,24 @@ test('stat(10) returns the current font size used in text()', (t) => {
     local.textsize(expected)
 
     t.is(expected, local.stat(10))
+})
+
+test('stat(11) returns the current font family', (t) => {
+    t.plan(2)
+
+    const local = litecanvas({
+        global: false,
+        animate: false,
+    })
+
+    let expected = 'sans-serif' // initial value (default)
+
+    t.is(expected, local.stat(11))
+
+    // change the font size
+    expected = 'serif'
+
+    local.textfont(expected)
+
+    t.is(expected, local.stat(11))
 })
