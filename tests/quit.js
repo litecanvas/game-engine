@@ -1,6 +1,6 @@
 import test from 'ava'
 import './_mocks/browser.js'
-import '../src/web.js'
+import litecanvas from '../src/index.js'
 import { _listeners } from './_mocks/events.js'
 
 test('removes all browser event listeners', (t) => {

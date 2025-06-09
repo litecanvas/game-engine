@@ -1,6 +1,6 @@
 import test from 'ava'
 import './_mocks/browser.js'
-import '../src/web.js'
+import litecanvas from '../src/index.js'
 import { defaultPalette } from '../src/palette.js'
 
 test('stat(0) returns the instance settings', (t) => {
@@ -160,6 +160,8 @@ test('stat(8) returns the current volume used by ZzFX', (t) => {
 })
 
 test('stat(9) returns the current RNG state', (t) => {
+    t.plan(2)
+
     const local = litecanvas({
         global: false,
         animate: false,
@@ -182,4 +184,24 @@ test('stat(9) returns the current RNG state', (t) => {
     expected = 1613448261
 
     t.is(expected, local.stat(9))
+})
+
+test('stat(10) returns the current font size used in text()', (t) => {
+    t.plan(2)
+
+    const local = litecanvas({
+        global: false,
+        animate: false,
+    })
+
+    let expected = 20 // initial value (default)
+
+    t.is(expected, local.stat(10))
+
+    // change the font size
+    expected = 125
+
+    local.textsize(expected)
+
+    t.is(expected, local.stat(10))
 })
