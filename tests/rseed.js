@@ -1,6 +1,6 @@
 import test from 'ava'
 import './_mocks/browser.js'
-import '../src/web.js'
+import litecanvas from '../src/index.js'
 
 test('produces random numbers based on initial seed', (t) => {
     t.plan(2)

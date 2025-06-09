@@ -568,6 +568,7 @@ type LitecanvasInstance = {
      * n = 7: the current time scale
      * n = 8: the current volume used by ZzFX
      * n = 9: the current RNG state
+     * n = 10: the current font size
      *
      * n = any other value: returns undefined
      *

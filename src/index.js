@@ -71,11 +71,11 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _fontSize = 20,
         /** @type {number} */
-        _rng_seed = Date.now(),
+        _rngSeed = Date.now(),
         /** @type {string[]} */
         _colors = defaultPalette,
         /** @type {number[]} */
-        _default_sound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
+        _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
         /**
          * default game events
          *
@@ -320,9 +320,9 @@ export default function litecanvas(settings = {}) {
             const c = 1013904223
             const m = 4294967296
 
-            _rng_seed = (a * _rng_seed + c) % m
+            _rngSeed = (a * _rngSeed + c) % m
 
-            return (_rng_seed / m) * (max - min) + min
+            return (_rngSeed / m) * (max - min) + min
         },
 
         /**
@@ -356,7 +356,7 @@ export default function litecanvas(settings = {}) {
                 'rseed: 1st param must be a positive number or zero'
             )
 
-            _rng_seed = ~~value
+            _rngSeed = ~~value
         },
 
         /** BASIC GRAPHICS API */
@@ -950,7 +950,7 @@ export default function litecanvas(settings = {}) {
                 return false
             }
 
-            zzfxParams = zzfxParams || _default_sound
+            zzfxParams = zzfxParams || _defaultSound
 
             // if has other arguments, copy the sound to not change the original
             if (pitchSlide !== 0 || volumeFactor !== 1) {
@@ -1121,6 +1121,7 @@ export default function litecanvas(settings = {}) {
          * n = 7: the current time scale
          * n = 8: the current volume used by ZzFX
          * n = 9: the current RNG state
+         * n = 10: the current font size
          *
          * n = any other value: returns undefined
          *
@@ -1147,13 +1148,15 @@ export default function litecanvas(settings = {}) {
                 // 5
                 _colors,
                 // 6
-                _default_sound,
+                _defaultSound,
                 // 7
                 _timeScale,
                 // 8
                 root.zzfxV || 1,
                 // 9
-                _rng_seed,
+                _rngSeed,
+                // 10
+                _fontSize,
             ]
             return list[n]
         },
