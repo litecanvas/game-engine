@@ -4,11 +4,11 @@ let objects = []
 let counter = 0
 
 function update(dt) {
-    if (ELAPSED - counter > 0.1) {
+    if (T - counter > 0.1) {
         for (let index = 0; index < 5; index++) {
             createShockwave()
         }
-        counter = ELAPSED
+        counter = T
     }
     for (const obj of objects) {
         obj.update(dt)
@@ -26,7 +26,7 @@ function draw() {
 
 function createShockwave() {
     const obj = Object.assign({}, shockwave)
-    obj.pos(randi(0, WIDTH), randi(0, HEIGHT))
+    obj.pos(randi(0, W), randi(0, H))
     obj.speed = randi(800, 2000)
     objects.push(obj)
 }

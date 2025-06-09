@@ -107,10 +107,10 @@ function draw() {
         }
     }
 
-    rect(136, HEIGHT - 62, mode.length * 16 + 30, 52, 0)
+    rect(136, H - 62, mode.length * 16 + 30, 52, 0)
     textfont('monospace')
-    text(18, HEIGHT - 49, 'MODE: ', 0)
-    text(144, HEIGHT - 49, mode, 0)
+    text(18, H - 49, 'MODE: ', 0)
+    text(144, H - 49, mode, 0)
 }
 
 function tapped(x, y) {
@@ -129,8 +129,8 @@ function tapped(x, y) {
     if (
         10 <= x - 126 &&
         x - 126 <= 10 + mode.length * 16 + 30 &&
-        HEIGHT - 62 <= y &&
-        y <= HEIGHT - 10
+        H - 62 <= y &&
+        y <= H - 10
     ) {
         mode = mode == 'play' ? 'edit' : 'play'
     }

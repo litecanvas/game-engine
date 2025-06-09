@@ -17,19 +17,13 @@ function draw() {
     linewidth(lw)
 
     // dynamic line
-    line(
-        CENTERX,
-        CENTERY,
-        CENTERX + (cos(ELAPSED) * WIDTH) / 2,
-        CENTERY + (sin(ELAPSED) * HEIGHT) / 2,
-        5
-    )
+    line(CX, CY, CX + (cos(T) * W) / 2, CY + (sin(T) * H) / 2, 5)
 
     // static lines
-    line(0, 0, 0, HEIGHT, 4)
-    line(0, 0, WIDTH, 0, 4)
-    line(WIDTH - 1, 0, WIDTH - 1, HEIGHT, 4)
-    line(0, HEIGHT - 1, WIDTH, HEIGHT - 1, 4)
-    line(0, 0, WIDTH, HEIGHT, 4)
-    line(WIDTH, 0, 0, HEIGHT, 4)
+    line(0, 0, 0, H, 4)
+    line(0, 0, W, 0, 4)
+    line(W - 1, 0, W - 1, H, 4)
+    line(0, H - 1, W, H - 1, 4)
+    line(0, 0, W, H, 4)
+    line(W, 0, 0, H, 4)
 }

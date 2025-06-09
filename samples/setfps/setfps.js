@@ -20,5 +20,5 @@ function update() {}
 
 function draw() {
     cls(0)
-    circfill(CENTERX, CENTERY, wrap(ELAPSED * 50, 0, 128), 2)
+    circfill(CX, CY, wrap(T * 50, 0, 128), 2)
 }

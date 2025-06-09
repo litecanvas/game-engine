@@ -21,7 +21,7 @@ function init() {
 
     // create many balls
     for (let i = 0; i < 50; i++) {
-        entities.push(ball(CENTERX, CENTERY))
+        entities.push(ball(CX, CY))
     }
 
     // fps meter
@@ -81,11 +81,11 @@ function ball(x, y) {
             this.x += this.dx * dt
             this.y += this.dy * dt
 
-            if (this.x + this.r >= WIDTH || this.x <= this.r) {
+            if (this.x + this.r >= W || this.x <= this.r) {
                 this.dx = -this.dx
             }
 
-            if (this.y + this.r >= HEIGHT || this.y <= this.r) {
+            if (this.y + this.r >= H || this.y <= this.r) {
                 this.dy = -this.dy
             }
         },

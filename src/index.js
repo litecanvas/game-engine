@@ -78,6 +78,7 @@ export default function litecanvas(settings = {}) {
         _default_sound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
         /**
          * default game events
+         *
          * @type {Object<string,Set<Function>>}
          */
         _events = {
@@ -93,29 +94,29 @@ export default function litecanvas(settings = {}) {
 
     /** @type {Omit<LitecanvasInstance,'PI'|'sin'|'cos'|'atan2'|'hypot'|'tan'|'abs'|'ceil'|'floor'|'trunc'|'min'|'max'|'pow'|'sqrt'|'sign'|'exp'|'iskeydown'|'iskeypressed'>} */
     const instance = {
-        /** @type {number} */
-        WIDTH: 0,
-
-        /** @type {number} */
-        HEIGHT: 0,
-
         /** @type {HTMLCanvasElement} */
         CANVAS: null,
 
         /** @type {number} */
-        ELAPSED: 0,
+        W: 0,
 
         /** @type {number} */
-        CENTERX: 0,
+        H: 0,
 
         /** @type {number} */
-        CENTERY: 0,
+        T: 0,
 
         /** @type {number} */
-        MOUSEX: -1,
+        CX: 0,
 
         /** @type {number} */
-        MOUSEY: -1,
+        CY: 0,
+
+        /** @type {number} */
+        MX: -1,
+
+        /** @type {number} */
+        MY: -1,
 
         /** MATH API */
         /**
@@ -286,6 +287,17 @@ export default function litecanvas(settings = {}) {
 
             return instance.map(value, start, stop, 0, 1)
         },
+
+        /**
+         * Interpolate between 2 values using a periodic function.
+         *
+         * @param {number} from - the lower bound
+         * @param {number} to - the higher bound
+         * @param {number} t - the amount
+         * @param {(n: number) => number} fn - the periodic function (which default to `Math.sin`)
+         */
+        wave: (from, to, t, fn = Math.sin) =>
+            from + ((fn(t) + 1) / 2) * (to - from),
 
         /** RNG API */
         /**
@@ -1181,8 +1193,6 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
-        _initialized = true
-
         // setup default event listeners
         const source = settings.loop ? settings.loop : root
         for (const event in _events) {
@@ -1278,8 +1288,8 @@ export default function litecanvas(settings = {}) {
                     preventDefault(ev)
 
                     const [x, y] = _getXY(ev.pageX, ev.pageY)
-                    instance.def('MOUSEX', x)
-                    instance.def('MOUSEY', y)
+                    instance.def('MX', x)
+                    instance.def('MY', y)
 
                     if (!_pressingMouse) return
 
@@ -1360,7 +1370,7 @@ export default function litecanvas(settings = {}) {
         }
 
         if (settings.keyboardEvents) {
-            const toLowerCase = (s) => s.toLowerCase()
+            const toLowerCase = (/** @type {string} */ s) => s.toLowerCase()
 
             /** @type {Set<string>} */
             const _keysDown = new Set()
@@ -1452,6 +1462,8 @@ export default function litecanvas(settings = {}) {
             })
         }
 
+        _initialized = true
+
         // start the game loop
         instance.emit('init', instance)
 
@@ -1480,10 +1492,7 @@ export default function litecanvas(settings = {}) {
 
             while (_accumulated >= _deltaTime) {
                 instance.emit('update', _deltaTime * _timeScale)
-                instance.def(
-                    'ELAPSED',
-                    instance.ELAPSED + _deltaTime * _timeScale
-                )
+                instance.def('T', instance.T + _deltaTime * _timeScale)
                 updated++
                 _accumulated -= _deltaTime
             }
@@ -1548,11 +1557,11 @@ export default function litecanvas(settings = {}) {
         const width = settings.width || root.innerWidth,
             height = settings.height || settings.width || root.innerHeight
 
-        instance.def('WIDTH', (_canvas.width = width))
-        instance.def('HEIGHT', (_canvas.height = height))
+        instance.def('W', (_canvas.width = width))
+        instance.def('H', (_canvas.height = height))
 
-        instance.def('CENTERX', instance.WIDTH / 2)
-        instance.def('CENTERY', instance.HEIGHT / 2)
+        instance.def('CX', instance.W / 2)
+        instance.def('CY', instance.H / 2)
 
         if (settings.autoscale) {
             if (!_canvas.style.display) {
@@ -1561,13 +1570,13 @@ export default function litecanvas(settings = {}) {
             }
 
             _scale = math.min(
-                root.innerWidth / instance.WIDTH,
-                root.innerHeight / instance.HEIGHT
+                root.innerWidth / instance.W,
+                root.innerHeight / instance.H
             )
             _scale = (settings.pixelart ? ~~_scale : _scale) || 1
 
-            _canvas.style.width = instance.WIDTH * _scale + 'px'
-            _canvas.style.height = instance.HEIGHT * _scale + 'px'
+            _canvas.style.width = instance.W * _scale + 'px'
+            _canvas.style.height = instance.H * _scale + 'px'
         }
 
         // restore canvas image rendering properties

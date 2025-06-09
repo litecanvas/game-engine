@@ -111,13 +111,13 @@ function draw() {
     textfont('sans-serif')
     textalign('right', 'hanging')
     textsize(20)
-    text(WIDTH - 5, 5, pad(score, 6), 3)
+    text(W - 5, 5, pad(score, 6), 3)
 
     if (gameOver) {
         textfont('monospace')
         textalign('center', 'middle')
         textsize(28)
-        text(CENTERX, CENTERY, 'GAME OVER', 4, 'bold')
+        text(CX, CY, 'GAME OVER', 4, 'bold')
     }
 }
 

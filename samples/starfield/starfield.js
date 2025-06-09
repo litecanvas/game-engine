@@ -10,11 +10,11 @@ let numberOfStars,
     maxSpeed = 25
 
 function resized() {
-    numberOfStars = (WIDTH + HEIGHT) / 2
+    numberOfStars = (W + H) / 2
 }
 
 function tapping(x, y, tapId) {
-    speed = map(x, 0, WIDTH, 1, maxSpeed)
+    speed = map(x, 0, W, 1, maxSpeed)
 }
 
 function init() {
@@ -27,11 +27,11 @@ function update() {
     if (stars.length < numberOfStars) {
         for (let i = 0; i < numberOfStars - stars.length; i += 1) {
             let angle = rand() * TWO_PI
-            let radius = Math.sqrt(rand()) * (WIDTH / 2)
+            let radius = Math.sqrt(rand()) * (W / 2)
 
             let x = radius * Math.cos(angle)
             let y = radius * Math.sin(angle)
-            let z = rand() * WIDTH
+            let z = rand() * W
             let size = 0.1
             stars.push([x, y, z, size])
         }
@@ -43,15 +43,15 @@ function update() {
         z -= speed
         stars[i][2] = z
 
-        let size = map(z, 1, WIDTH, 2, 0.1)
+        let size = map(z, 1, W, 2, 0.1)
         stars[i][3] = size
 
         if (z < 1) {
             let angle = rand() * TWO_PI
-            let radius = Math.sqrt(rand()) * (WIDTH / 2)
+            let radius = Math.sqrt(rand()) * (W / 2)
             stars[i][0] = radius * Math.cos(angle)
             stars[i][1] = radius * Math.sin(angle)
-            stars[i][2] = rand() * WIDTH
+            stars[i][2] = rand() * W
             stars[i][3] = 0.1
         }
     }
@@ -69,8 +69,8 @@ function draw() {
         let z = stars[i][2]
         let size = stars[i][3]
 
-        let sx = map(x / z, -1, 1, 0, WIDTH)
-        let sy = map(y / z, -1, 1, 0, HEIGHT)
+        let sx = map(x / z, -1, 1, 0, W)
+        let sy = map(y / z, -1, 1, 0, H)
 
         circfill(sx, sy, size, color)
     }

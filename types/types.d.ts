@@ -1,20 +1,20 @@
 type LitecanvasInstance = {
-    /** The game screen width */
-    WIDTH: number
-    /** The game screen height */
-    HEIGHT: number
     /** The game canvas HTML element */
     CANVAS: HTMLCanvasElement
+    /** The game screen width */
+    W: number
+    /** The game screen height */
+    H: number
     /** the amount of time (in seconds) since the game started */
-    ELAPSED: number
+    T: number
     /** the center X of the game screen */
-    CENTERX: number
+    CX: number
     /** the center Y of the game screen */
-    CENTERY: number
+    CY: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
-    MOUSEX: number
+    MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
-    MOUSEY: number
+    MY: number
 
     /** MATH API */
     /**
@@ -115,6 +115,20 @@ type LitecanvasInstance = {
      * @returns the normalized number.
      */
     norm(value: number, start: number, stop: number): number
+    /**
+     * Interpolate between 2 values using a periodic function.
+     *
+     * @param from - the lower bound
+     * @param to - the higher bound
+     * @param t - the amount
+     * @param fn - the periodic function (which default to `Math.sin`)
+     */
+    wave(
+        from: number,
+        to: number,
+        t: number,
+        fn?: (n: number) => number
+    ): number
     /**
      * Returns the sine of a number in radians
      */

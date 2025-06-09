@@ -2,7 +2,7 @@ const e = litecanvas()
 
 function init() {
     x = 0
-    y = CENTERY
+    y = CY
     vel = 2000
 
     listen('quit', () => {
@@ -17,11 +17,11 @@ function tapped() {
 }
 
 function update(dt) {
-    x = wrap(x + vel * dt, 0, WIDTH)
+    x = wrap(x + vel * dt, 0, W)
 }
 
 function draw() {
     cls(0)
-    circfill(x, y, WIDTH / 20, 3)
+    circfill(x, y, W / 20, 3)
     text(10, 10, 'Tap to shutdown the engine')
 }

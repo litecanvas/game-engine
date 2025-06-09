@@ -10,22 +10,22 @@ export default function litecanvas(
 declare global {
     function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
 
-    /** The game screen width */
-    var WIDTH: number
-    /** The game screen height */
-    var HEIGHT: number
     /** The game canvas HTML element */
     var CANVAS: HTMLCanvasElement
+    /** The game screen width */
+    var W: number
+    /** The game screen height */
+    var H: number
     /** the amount of time (in seconds) since the game started */
-    var ELAPSED: number
+    var T: number
     /** the center X of the game screen */
-    var CENTERX: number
+    var CX: number
     /** the center Y of the game screen */
-    var CENTERY: number
+    var CY: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
-    var MOUSEX: number
+    var MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
-    var MOUSEY: number
+    var MY: number
 
     /** MATH API */
     /**
@@ -126,6 +126,20 @@ declare global {
      * @returns the normalized number.
      */
     function norm(value: number, start: number, stop: number): number
+    /**
+     * Interpolate between 2 values using a periodic function.
+     *
+     * @param from - the lower bound
+     * @param to - the higher bound
+     * @param t - the amount
+     * @param fn - the periodic function (which default to `Math.sin`)
+     */
+    function wave(
+        from: number,
+        to: number,
+        t: number,
+        fn?: (n: number) => number
+    ): number
     /**
      * Returns the sine of a number in radians
      */

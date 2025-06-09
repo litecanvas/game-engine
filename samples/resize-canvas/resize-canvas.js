@@ -9,7 +9,7 @@ function init() {
     resized()
 
     color = 0
-    size = WIDTH
+    size = W
     limit = Math.min(innerHeight, innerWidth)
 
     alert('Tap the canvas to resize')
@@ -27,7 +27,7 @@ function tapped(tapx, tapy) {
 }
 
 function update(dt) {
-    color = ELAPSED * 32
+    color = T * 32
     radius = rand() * y
 }
 
@@ -38,8 +38,8 @@ function draw() {
 }
 
 function resized() {
-    x = CENTERX
-    y = CENTERY
+    x = CX
+    y = CY
 }
 
 // here's where the magic happens!
@@ -55,12 +55,12 @@ function pluginResize(engine, config) {
     return {
         resize: (width, height) => {
             CANVAS.width = width
-            def('WIDTH', width)
-            def('CENTERX', width / 2)
+            def('W', width)
+            def('CX', width / 2)
 
             CANVAS.height = height
-            def('HEIGHT', height)
-            def('CENTERY', height / 2)
+            def('H', height)
+            def('CY', height / 2)
 
             emit('resized', 1)
         },

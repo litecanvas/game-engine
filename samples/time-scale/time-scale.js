@@ -2,7 +2,7 @@ litecanvas()
 
 function init() {
     x = 0
-    y = CENTERY
+    y = CY
     vel = 500
     ts = 1
     timescale(ts)
@@ -15,12 +15,12 @@ function tapped() {
 }
 
 function update(dt) {
-    x = wrap(x + vel * dt, 0, WIDTH)
+    x = wrap(x + vel * dt, 0, W)
 }
 
 function draw() {
     cls(0)
-    circfill(x, y, WIDTH / 20, 3)
+    circfill(x, y, W / 20, 3)
     text(10, 10, 'Time Scale = ' + ts + 'x')
-    text(10, 50, 'Elapsed = ' + floor(ELAPSED) + 's')
+    text(10, 50, 'Elapsed = ' + floor(T) + 's')
 }

@@ -1,7 +1,7 @@
 litecanvas()
 
 function resized() {
-    size = WIDTH > HEIGHT ? HEIGHT / 2 : WIDTH / 2
+    size = W > H ? H / 2 : W / 2
     linewidth(5)
     ctx().lineCap = 'round'
 }
@@ -51,7 +51,7 @@ function draw() {
     cls(0)
 
     push()
-    translate(WIDTH / 2, HEIGHT / 2)
+    translate(W / 2, H / 2)
     for (let i = 0; i < 4; i++) {
         connect(i, (i + 1) % 4, projected)
         connect(i + 4, ((i + 1) % 4) + 4, projected)

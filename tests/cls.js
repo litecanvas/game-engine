@@ -18,7 +18,7 @@ test('clear screen with color', (t) => {
 
     const expected = [
         'beginPath',
-        `rect 0,0,${g.WIDTH},${g.HEIGHT}`,
+        `rect 0,0,${g.W},${g.H}`,
         `set fillStyle ${colorValue}`,
         'fill',
     ]
@@ -30,7 +30,7 @@ test('clear screen with color', (t) => {
 test('clear screen without 1st argument', (t) => {
     g.cls()
 
-    const expected = [`clearRect 0,0,${g.WIDTH},${g.HEIGHT}`]
+    const expected = [`clearRect 0,0,${g.W},${g.H}`]
 
     t.deepEqual(g.ctx()._calls.slice(-expected.length), expected)
 })

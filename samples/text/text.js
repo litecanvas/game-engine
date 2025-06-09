@@ -13,7 +13,7 @@ function draw() {
     cls(0)
 
     // dynamic dimensions
-    const size = WIDTH / 12
+    const size = W / 12
     const padding = size * 0.5
     const margin = size * 1.5
 

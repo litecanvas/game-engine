@@ -6,11 +6,11 @@ litecanvas({
 function init() {
     player = {
         x: 0,
-        y: CENTERY,
+        y: CY,
         size: 64,
         color: 4,
     }
-    finishLineX = WIDTH * 0.7
+    finishLineX = W * 0.7
     victory = false
     time = 0
 
@@ -20,7 +20,7 @@ function init() {
         console.log(`player moved to (${x}, ${y})`)
         if (x > finishLineX) {
             victory = true
-            time = ELAPSED
+            time = T
             player.color = 5
             // run until collision happens
             unlistenThisEvent()
@@ -43,7 +43,7 @@ function draw() {
     rectfill(player.x, player.y, player.size, player.size, player.color)
     linewidth(4)
     linedash([8])
-    line(finishLineX, 0, finishLineX, HEIGHT, 2)
+    line(finishLineX, 0, finishLineX, H, 2)
 
     if (!victory) {
         text(10, 10, 'Tap to move and')
