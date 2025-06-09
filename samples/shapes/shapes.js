@@ -1,7 +1,7 @@
 litecanvas()
 
 function init() {
-    size = WIDTH / 6
+    size = W / 6
     angle = 0
     gap = 40
     lineDashPattern = [30, 15]
@@ -17,18 +17,18 @@ function update(dt) {
 
 function draw() {
     cls(0)
-    linewidth(11 - sin(ELAPSED * 10) * 10)
+    linewidth(11 - wave(-10, 10, T * 10))
 
-    rectfill(gap, CENTERY - size / 2, size, size, 2)
+    rectfill(gap, CY - size / 2, size, size, 2)
 
     // rotate the second rect only
     push()
-    translate(gap * 2 + size + 10 + size / 2, CENTERY - size / 2 + size / 2)
+    translate(gap * 2 + size + 10 + size / 2, CY - size / 2 + size / 2)
     rotate(angle)
     linedash(lineDashPattern, -lineDashOffset)
     rect(-size / 2, -size / 2, size, size, 1)
     pop()
 
-    circfill(size * 3, CENTERY, size / 2, 4)
-    circ(gap + size * 4, CENTERY, size / 2, 5)
+    circfill(size * 3, CY, size / 2, 4)
+    circ(gap + size * 4, CY, size / 2, 5)
 }

@@ -17,8 +17,8 @@ const shake = {
 
     update(dt) {
         if (!this._enabled) return
-        this.x = this.amplitudeX * Math.cos(ELAPSED * this.speed)
-        this.y = this.amplitudeY * Math.sin(ELAPSED * this.speed)
+        this.x = this.amplitudeX * Math.cos(T * this.speed)
+        this.y = this.amplitudeY * Math.sin(T * this.speed)
     },
 
     set enabled(value) {
@@ -29,7 +29,7 @@ const shake = {
     },
 }
 
-let ELAPSED = 0
+let T = 0
 
 function tap() {
     shake.enabled = true
@@ -40,10 +40,10 @@ function untap() {
 }
 
 function update(dt) {
-    ELAPSED += dt
+    T += dt
 
-    ball.x = CENTERX
-    ball.y = CENTERY - ball.radius
+    ball.x = CX
+    ball.y = CY - ball.radius
 
     shake.update(dt)
 }

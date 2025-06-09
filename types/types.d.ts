@@ -1,22 +1,20 @@
 type LitecanvasInstance = {
-    /** The game screen width */
-    WIDTH: number
-    /** The game screen height */
-    HEIGHT: number
     /** The game canvas HTML element */
     CANVAS: HTMLCanvasElement
+    /** The game screen width */
+    W: number
+    /** The game screen height */
+    H: number
     /** the amount of time (in seconds) since the game started */
-    ELAPSED: number
+    T: number
     /** the center X of the game screen */
-    CENTERX: number
+    CX: number
     /** the center Y of the game screen */
-    CENTERY: number
+    CY: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
-    MOUSEX: number
+    MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
-    MOUSEY: number
-    /** the default `sfx()` sound */
-    DEFAULT_SFX: number[]
+    MY: number
 
     /** MATH API */
     /**
@@ -118,6 +116,20 @@ type LitecanvasInstance = {
      */
     norm(value: number, start: number, stop: number): number
     /**
+     * Interpolate between 2 values using a periodic function.
+     *
+     * @param from - the lower bound
+     * @param to - the higher bound
+     * @param t - the amount
+     * @param fn - the periodic function (which default to `Math.sin`)
+     */
+    wave(
+        from: number,
+        to: number,
+        t: number,
+        fn?: (n: number) => number
+    ): number
+    /**
      * Returns the sine of a number in radians
      */
     sin(n: number): number
@@ -201,13 +213,13 @@ type LitecanvasInstance = {
      */
     randi(min?: number, max?: number): number
     /**
-     * If a value is passed, initializes the random number generator with an explicit seed value.
-     * Otherwise, returns the current seed state.
+     * Initializes the random number generator with an explicit seed value.
      *
-     * @param [value]
-     * @returns the seed state
+     * Note: The seed should be a integer number greater than or equal to zero.
+     *
+     * @param value
      */
-    seed(value?: number): number
+    rseed(value: number): void
 
     /** BASIC GRAPHICS API */
     /**
@@ -326,7 +338,7 @@ type LitecanvasInstance = {
      *
      * @param size
      */
-    textsize(size: string): void
+    textsize(size: number): void
     /**
      * Sets the alignment used when drawing texts
      *
@@ -335,7 +347,7 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
-    textalign(align: string, baseline: string): void
+    textalign(align: CanvasTextAlign, baseline: CanvasTextBaseline): void
 
     /** IMAGE GRAPHICS API */
     /**
@@ -365,7 +377,7 @@ type LitecanvasInstance = {
         drawing: string[] | drawCallback,
         options?: {
             scale?: number
-            canvas?: HTMLCanvasElement | OffscreenCanvas
+            canvas?: OffscreenCanvas
         }
     ): ImageBitmap
 
@@ -377,7 +389,9 @@ type LitecanvasInstance = {
      * @returns the current canvas context
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
      */
-    ctx(context?: CanvasRenderingContext2D): CanvasRenderingContext2D
+    ctx(
+        context?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+    ): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
     /**
      * saves the current drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
@@ -515,19 +529,18 @@ type LitecanvasInstance = {
      */
     emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
     /**
-     * Get the color value
-     *
-     * @param index The color number
-     * @returns the color value
-     */
-    getcolor(index: number): string
-    /**
-     * Create or update a instance variable
+     * Define or update a instance property
      *
      * @param key
      * @param value
      */
-    setvar(key: string, value: any): void
+    def(key: string, value: any): void
+    /**
+     * Set or reset the color palette
+     *
+     * @param [colors]
+     */
+    pal(colors?: string[]): void
     /**
      * The scale of the game's delta time (dt).
      * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
@@ -537,11 +550,34 @@ type LitecanvasInstance = {
      */
     timescale(value: number): void
     /**
-     * Set the target FPS at runtime.
+     * Set the target FPS (frames per second).
      *
      * @param fps
      */
-    setfps(fps: number): void
+    framerate(fps: number): void
+    /**
+     * Returns information about that engine instance.
+     *
+     * n = 0: the settings passed to that instance
+     * n = 1: returns true if the "init" event has already been emitted
+     * n = 2: the current ID returned by last requestAnimationFrame
+     * n = 3: the current canvas element scale (not the context 2D scale)
+     * n = 4: the attached event callbacks
+     * n = 5: the current color palette
+     * n = 6: the default sound used by `sfx()`
+     * n = 7: the current time scale
+     * n = 8: the current volume used by ZzFX
+     * n = 9: the current RNG state
+     *
+     * n = any other value: returns undefined
+     *
+     * @param n
+     */
+    stat(n: number): any
+    /**
+     * Stops the litecanvas instance and remove all event listeners.
+     */
+    quit(): void
 }
 
 type LitecanvasOptions = {
@@ -631,19 +667,4 @@ type drawCallback = (
     context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
 ) => void
 
-type LitecanvasPluginHelpers = {
-    /**
-     * The instance color palette (writable)
-     */
-    colors: string[]
-    /**
-     * Litecanvas instance settings (read-only)
-     */
-    settings: LitecanvasOptions
-}
-
-type pluginCallback = (
-    instance: LitecanvasInstance,
-    helpers: LitecanvasPluginHelpers,
-    config?: any
-) => any
+type pluginCallback = (instance: LitecanvasInstance, config?: any) => any

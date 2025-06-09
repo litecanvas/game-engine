@@ -14,34 +14,17 @@ function init() {
 
 function draw() {
     textalign('center', 'middle')
-    text(CENTERX, CENTERY - 50, 'Open your browser console', 3)
-    text(CENTERX, CENTERY, 'FOO = ' + FOO, 3)
-    text(CENTERX, CENTERY + 50, sayhello('Everyone'), 3)
+    text(CX, CY - 50, 'Open your browser console', 3)
+    text(CX, CY, 'FOO = ' + FOO, 3)
+    text(CX, CY + 50, sayhello('Everyone'), 3)
 }
 
-function pluginTest(engine, { settings }, config) {
+function pluginTest(engine, config) {
     // the first argument is the current litecanvas instance
     console.log('litecanvas instance:', engine)
 
-    // the second argument is a list of helpful values (read-only)
-    console.log('litecanvas settings:', settings)
-
-    // the third argument is the plugin configuration
+    // the second argument is the plugin configuration
     console.log('plugin config:', config)
-
-    // use `COLORS` to change a color
-    // example: change the red (color #4) to purple
-    engine.COLORS[4] = '#be4bdb'
-    // update the color palette
-    engine.pal(engine.COLORS)
-
-    // use `settings` to check something
-    // `settings` is read-only, changes will not take effect
-    if (settings.autoscale) {
-        console.log('settings.autoscale = true')
-    } else {
-        console.log('settings.autoscale = false')
-    }
 
     // the `listen()` function registers game event listeners
     // function listen(type: string, callback: Function): Function
@@ -50,7 +33,7 @@ function pluginTest(engine, { settings }, config) {
         'before:draw',
         // the event callback
         function () {
-            engine.cls(4)
+            engine.cls(1)
             engine.rectfill(0, 0, 100, 100, 5)
         }
     )
@@ -68,9 +51,9 @@ function pluginTest(engine, { settings }, config) {
         deleteListener()
     })
 
-    // use `setvar` to create or update variables
+    // use `def()` to create or update that instance properties
     // example: create a variable named FOO
-    engine.setvar('FOO', 42)
+    engine.def('FOO', 42)
 
     // and finally...
     return {

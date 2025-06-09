@@ -4,13 +4,13 @@ litecanvas()
 let cx, cy, secondsRadius, minutesRadius, hoursRadius, clockDiameter
 
 function resized() {
-    radius = min(WIDTH, HEIGHT) / 2
+    radius = min(W, H) / 2
     secondsRadius = radius * 0.72
     minutesRadius = radius * 0.65
     hoursRadius = radius * 0.48
     clockDiameter = radius * 1.8
-    cx = CENTERX
-    cy = CENTERY
+    cx = CX
+    cy = CY
 }
 
 function init() {

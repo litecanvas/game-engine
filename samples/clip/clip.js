@@ -3,18 +3,18 @@ litecanvas()
 function init() {
     resized()
 
-    x = CENTERX
-    y = CENTERY
+    x = CX
+    y = CY
     state = 0
 
     boxes = []
-    for (let i = 0; i < WIDTH / 4; i++) {
-        boxes.push([randi(0, WIDTH), randi(0, HEIGHT), randi(4, 11)])
+    for (let i = 0; i < W / 4; i++) {
+        boxes.push([randi(0, W), randi(0, H), randi(4, 11)])
     }
 }
 
 function resized() {
-    size = HEIGHT / 4
+    size = H / 4
 }
 
 function tapping(tapx, tapy) {
@@ -30,13 +30,13 @@ function draw() {
     cls(0)
     push()
     if (state === 0) {
-        clipcirc(x, y, size + sin(ELAPSED * 2) * 20)
+        clipcirc(x, y, wave(size - 20, size + 20, T * 2))
     } else if (state === 1) {
         cliprect(
             x,
             y,
-            size + sin(ELAPSED * 5) * 100,
-            size + cos(ELAPSED * 5) * 100
+            wave(size - 100, size + 100, T * 5),
+            wave(size - 100, size + 100, T * 5, cos)
         )
     } else if (state === 2) {
         clipheart(x, y, size, size)

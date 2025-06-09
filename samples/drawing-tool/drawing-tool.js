@@ -4,7 +4,8 @@ litecanvas()
 let prevx, prevy, x, y, dirty
 
 function init() {
-    CANVAS.style.background = getcolor(0)
+    const colors = stat(5)
+    CANVAS.style.background = colors[0]
 }
 
 function tapping(tapx, tapy) {

@@ -5,6 +5,7 @@ import '../src/web.js'
 let g = litecanvas({
     width: 256,
     height: 128,
+    animate: false,
 })
 
 // prettier-ignore
@@ -17,9 +18,10 @@ test('plays a ZzFX array of params', (t) => {
 })
 
 test('plays a default sound if the first argument is omitted', (t) => {
+    const DEFAULT_SFX = g.stat(6)
     const result = g.sfx()
 
-    t.true(g.DEFAULT_SFX === result)
+    t.true(DEFAULT_SFX === result)
 })
 
 test('the second argument increments the pitch', (t) => {

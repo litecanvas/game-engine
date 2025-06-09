@@ -2,7 +2,7 @@ import test from 'ava'
 import './_mocks/browser.js'
 import '../src/web.js'
 
-let testPlugin = (engine, helpers, config) => {
+let testPlugin = (engine, config) => {
     return {
         foo: () => config.foo || 1,
     }
@@ -13,6 +13,7 @@ test('plugins can be loaded before "init" event', (t) => {
         let g = litecanvas({
             loop: { init },
             global: false,
+            animate: false,
         })
 
         g.use(testPlugin)
@@ -30,6 +31,7 @@ test('plugins can be loaded after "init" event', (t) => {
         let g = litecanvas({
             loop: { init },
             global: false,
+            animate: false,
         })
 
         function init() {
@@ -55,6 +57,7 @@ test('plugins can be used for multiple engine instances', (t) => {
                 },
             },
             global: false,
+            animate: false,
         })
 
         let g2 = litecanvas({
@@ -68,6 +71,7 @@ test('plugins can be used for multiple engine instances', (t) => {
                 },
             },
             global: false,
+            animate: false,
         })
 
         const check = () => {

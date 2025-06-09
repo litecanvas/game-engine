@@ -35,7 +35,7 @@ function init() {
 
 function draw() {
     // background
-    rectfill(0, 0, WIDTH, HEIGHT)
+    rectfill(0, 0, W, H)
 
     // draw grid
     line(0, CELL, CELL * 3, CELL, RED)
@@ -58,8 +58,8 @@ function draw() {
 
     // draw end game
     if (gameOver) {
-        text(WIDTH / 2, CELL * 3, `Game Over! ${player} wins!`, WHITE)
-        text(WIDTH / 2, CELL * 3 + CELL, 'Refresh to restart.', WHITE)
+        text(W / 2, CELL * 3, `Game Over! ${player} wins!`, WHITE)
+        text(W / 2, CELL * 3 + CELL, 'Refresh to restart.', WHITE)
     }
 }
 

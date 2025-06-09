@@ -6,8 +6,8 @@ litecanvas({
 })
 
 function init() {
-    speed = HEIGHT / 4
-    y = HEIGHT
+    speed = H / 4
+    y = H
     PAUSED = false
 }
 
@@ -18,12 +18,12 @@ function tapped() {
 
 function update(dt) {
     if (PAUSED) return
-    y = wrap(y - speed * dt, 0, HEIGHT) // move the line
+    y = wrap(y - speed * dt, 0, H) // move the line
 }
 
 function draw() {
     if (PAUSED) return
     cls(0)
     text(10, 10, 'Tap to pause/resume')
-    line(0, y, WIDTH, y, 5) // draw the line
+    line(0, y, W, y, 5) // draw the line
 }

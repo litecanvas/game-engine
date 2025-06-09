@@ -55,8 +55,8 @@ function init() {
     bg = 0
     color = 3
     radius = 32
-    posx = CENTERX
-    posy = CENTERY
+    posx = CX // center X or (canvas width / 2)
+    posy = CY // center Y or (canvas width / 2)
 }
 
 // this function detect taps/clicks

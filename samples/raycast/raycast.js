@@ -73,7 +73,7 @@ function init() {
 }
 
 function draw() {
-    rectfill(0, 0, WIDTH, HEIGHT, WHITE)
+    rectfill(0, 0, W, H, WHITE)
 
     {
         // map

@@ -6,8 +6,8 @@ function init() {
     bg = 0
     color = 3
     radius = 32
-    posx = CENTERX
-    posy = CENTERY
+    posx = CX
+    posy = CY
 }
 
 // this function render the game scene

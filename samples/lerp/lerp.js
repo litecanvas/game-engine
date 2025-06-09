@@ -7,8 +7,8 @@ function init() {
     duration = 3 // change this
     startX = 100
     startY = 100
-    endX = WIDTH - 100
-    endY = HEIGHT - 100
+    endX = W - 100
+    endY = H - 100
     x = 0
     y = 0
     t = 0
@@ -40,5 +40,5 @@ function draw() {
     circfill(x, y, 20, 5)
 
     // draw a progress bar based on t
-    rectfill(0, 0, WIDTH * nt, 4, 5)
+    rectfill(0, 0, W * nt, 4, 5)
 }

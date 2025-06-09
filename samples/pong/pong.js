@@ -30,9 +30,9 @@ let padW = 120,
     started = false
 
 function init() {
-    ballX = CENTERX
-    ballY = CENTERY - HEIGHT / 4
-    textSize = WIDTH / 12
+    ballX = CX
+    ballY = CY - H / 4
+    textSize = W / 12
 
     if (Stats) {
         const stats = new Stats()
@@ -60,9 +60,9 @@ function update(dt) {
 
     // don't let the paddle leave the screen
     if (padX < 0) padX = 0
-    else if (padX + padW > WIDTH) padX = WIDTH - padW
+    else if (padX + padW > W) padX = W - padW
 
-    if (ballY + ballSize > HEIGHT) {
+    if (ballY + ballSize > H) {
         ballX = 160
         ballY = 70
         lifes = lifes - 1
@@ -76,7 +76,7 @@ function update(dt) {
     let bounced = false
 
     // bounce ball on screen
-    if (ballX + ballSize > WIDTH || ballX < ballSize) {
+    if (ballX + ballSize > W || ballX < ballSize) {
         dirX *= -1
         bounced = true
     } else if (ballY < ballSize) {
@@ -99,7 +99,7 @@ function draw() {
     if (!started) {
         textalign('center', 'middle')
         textsize(textSize)
-        text(CENTERX, CENTERY, 'TAP TO START', 3)
+        text(CX, CY, 'TAP TO START', 3)
     } else if (lifes > 0) {
         rectfill(padX, padY, padW, padH, 3)
         circfill(ballX, ballY, ballSize, 5)
@@ -110,12 +110,12 @@ function draw() {
         text(10, 10, '❤️ '.repeat(lifes), 4)
 
         textalign('end', 'hanging')
-        text(WIDTH - 10, 10, ('' + score).padStart(6, 0), 3)
+        text(W - 10, 10, ('' + score).padStart(6, 0), 3)
     } else {
         textalign('center', 'middle')
         textsize(textSize)
-        text(CENTERX, CENTERY - 25, 'GAME OVER', 3)
+        text(CX, CY - 25, 'GAME OVER', 3)
         textsize(textSize * 0.85)
-        text(CENTERX, CENTERY + 10, 'SCORE:' + ('' + score).padStart(6, 0), 3)
+        text(CX, CY + 10, 'SCORE:' + ('' + score).padStart(6, 0), 3)
     }
 }
