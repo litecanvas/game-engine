@@ -17,7 +17,7 @@ function update(dt) {
 
 function draw() {
     cls(0)
-    linewidth(11 - sin(T * 10) * 10)
+    linewidth(11 - wave(-10, 10, T * 10))
 
     rectfill(gap, CY - size / 2, size, size, 2)
 

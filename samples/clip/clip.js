@@ -30,9 +30,14 @@ function draw() {
     cls(0)
     push()
     if (state === 0) {
-        clipcirc(x, y, size + sin(T * 2) * 20)
+        clipcirc(x, y, wave(size - 20, size + 20, T * 2))
     } else if (state === 1) {
-        cliprect(x, y, size + sin(T * 5) * 100, size + cos(T * 5) * 100)
+        cliprect(
+            x,
+            y,
+            wave(size - 100, size + 100, T * 5),
+            wave(size - 100, size + 100, T * 5, cos)
+        )
     } else if (state === 2) {
         clipheart(x, y, size, size)
     }
