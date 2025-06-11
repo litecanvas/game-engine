@@ -2,4 +2,4 @@
 /dist/
 /samples/_test
 /.vscode/
-/*lock*
+/package-lock.json

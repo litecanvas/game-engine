@@ -225,3 +225,60 @@ test('stat(11) returns the current font family', (t) => {
 
     t.is(expected, local.stat(11))
 })
+
+test('stat modified via event', async (t) => {
+    const expected = 'BAR'
+
+    await new Promise((resolve) => {
+        const local = litecanvas({
+            foo: 'bar',
+            animate: false,
+            global: false,
+        })
+
+        local.listen('stat', (data) => {
+            // modify only the stat(0)
+            if (0 === data.index) {
+                data.value.foo = expected
+            }
+        })
+
+        // No event is emitted before the "init"
+        // So check in "init" or later
+        local.listen('init', () => {
+            const current = local.stat(0).foo
+            t.is(current, expected)
+            resolve()
+            local.quit()
+        })
+    })
+})
+
+test('stat created via event', async (t) => {
+    const INDEX = 42
+    const expected =
+        'The answer to the Ultimate Question of Life, the Universe, and Everything'
+
+    await new Promise((resolve) => {
+        const local = litecanvas({
+            animate: false,
+            global: false,
+        })
+
+        local.listen('stat', (data) => {
+            // modify only the stat(0)
+            if (INDEX === data.index) {
+                data.value = expected
+            }
+        })
+
+        // No event is emitted before the "init"
+        // So check in "init" or later
+        local.listen('init', () => {
+            const current = local.stat(INDEX)
+            t.is(current, expected)
+            local.quit()
+            resolve()
+        })
+    })
+})
