@@ -9,10 +9,12 @@ function init() {
     framerate(~~url.searchParams.get('fps') || 60)
     if (Stats) {
         let stats = new Stats()
-        document.querySelector('#game').prepend(stats.dom)
-        listen('before:update', () => stats.begin())
-        listen('after:draw', () => stats.end())
         stats.dom.style.position = 'static'
+        document.querySelector('#game').prepend(stats.dom)
+        listen('before:update', (_, i = 1) => {
+            if (i === 1) stats.begin()
+        })
+        listen('after:draw', () => stats.end())
     }
 }
 

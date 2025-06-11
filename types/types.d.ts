@@ -591,10 +591,9 @@ type LitecanvasOptions = {
      */
     height?: number
     /**
-     * Determines whether the game loop should be paused when the "blur" event happens.
-     * Default: `true`
+     * Used to specify the selector of a custom canvas element
      */
-    pauseOnBlur?: boolean
+    canvas?: string
     /**
      * If `true` (default) scales the canvas to fill the screen, but preserving the aspect ratio.
      * Only works if a game screen width was specified.
@@ -608,10 +607,7 @@ type LitecanvasOptions = {
      * If `false` (default), disable the canvas antialias.
      */
     antialias?: boolean
-    /**
-     * Used to specify the selector of a custom canvas element
-     */
-    canvas?: string
+
     /**
      * If `true` (default), all methods and properties of the engine will be exposed to the global scope (window).
      */
