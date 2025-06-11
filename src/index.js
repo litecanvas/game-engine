@@ -1013,6 +1013,8 @@ export default function litecanvas(settings = {}) {
                 'listen: 2nd param must be a function'
             )
 
+            eventName = eventName.toLowerCase()
+
             _events[eventName] = _events[eventName] || new Set()
             _events[eventName].add(callback)
 
@@ -1035,6 +1037,8 @@ export default function litecanvas(settings = {}) {
                 'emit: 1st param must be a string'
             )
             if (_initialized) {
+                eventName = eventName.toLowerCase()
+
                 triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
                 triggerEvent(eventName, arg1, arg2, arg3, arg4)
                 triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
@@ -1145,7 +1149,13 @@ export default function litecanvas(settings = {}) {
                 //  11
                 _fontFamily,
             ]
-            return list[n]
+
+            const data = { index: n, value: list[n] }
+
+            // plugins can modify or create stat values
+            instance.emit('stat', data)
+
+            return data.value
         },
 
         /**
@@ -1361,8 +1371,6 @@ export default function litecanvas(settings = {}) {
         }
 
         if (settings.keyboardEvents) {
-            const toLowerCase = (/** @type {string} */ s) => s.toLowerCase()
-
             /** @type {Set<string>} */
             const _keysDown = new Set()
 
@@ -1370,34 +1378,34 @@ export default function litecanvas(settings = {}) {
             const _keysPress = new Set()
 
             /**
-             * @param {Set<string>} keysSet
+             * @param {Set<string>} keySet
              * @param {string} [key]
              * @returns {boolean}
              */
-            const keyCheck = (keysSet, key) => {
+            const keyCheck = (keySet, key = '') => {
+                key = key.toLowerCase()
                 return !key
-                    ? keysSet.size > 0
-                    : keysSet.has(
-                          'space' === toLowerCase(key) ? ' ' : toLowerCase(key)
-                      )
+                    ? keySet.size > 0
+                    : keySet.has('space' === key ? ' ' : key)
             }
 
             // @ts-ignore
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
-                if (!_keysDown.has(toLowerCase(event.key))) {
-                    _keysDown.add(toLowerCase(event.key))
-                    _keysPress.add(toLowerCase(event.key))
+                const key = event.key.toLowerCase()
+                if (!_keysDown.has(key)) {
+                    _keysDown.add(key)
+                    _keysPress.add(key)
                 }
             })
 
             // @ts-ignore
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
-                _keysDown.delete(toLowerCase(event.key))
+                _keysDown.delete(event.key.toLowerCase())
             })
 
             // @ts-ignore
             on(root, 'blur', () => _keysDown.clear())
-            instance.listen('after:draw', () => _keysPress.clear())
+            instance.listen('after:update', () => _keysPress.clear())
 
             instance.def(
                 'iskeydown',
