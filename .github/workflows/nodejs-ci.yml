@@ -12,6 +12,6 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 'lts/Jod'
-            - run: npm ci
+            - run: npm i --no-audit
             - run: npm run build --if-present
             - run: npm test
