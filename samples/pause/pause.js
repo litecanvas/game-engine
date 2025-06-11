@@ -1,9 +1,7 @@
 /**
  * How to pause your game without `timescale(0)`
  */
-litecanvas({
-    // pauseOnBlur: false,
-})
+litecanvas()
 
 function init() {
     speed = H / 4

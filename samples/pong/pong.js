@@ -37,7 +37,9 @@ function init() {
     if (Stats) {
         const stats = new Stats()
         document.body.appendChild(stats.dom)
-        listen('before:update', () => stats.begin())
+        listen('before:update', (_, i = 1) => {
+            if (i === 1) stats.begin()
+        })
         listen('after:draw', () => stats.end())
     }
 }
@@ -116,6 +118,6 @@ function draw() {
         textsize(textSize)
         text(CX, CY - 25, 'GAME OVER', 3)
         textsize(textSize * 0.85)
-        text(CX, CY + 10, 'SCORE:' + ('' + score).padStart(6, 0), 3)
+        text(CX, CY + 10, 'SCORE: ' + ('' + score).padStart(6, 0), 3)
     }
 }

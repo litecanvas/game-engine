@@ -35,7 +35,6 @@ export default function litecanvas(settings = {}) {
             canvas: null,
             global: true,
             loop: null,
-            pauseOnBlur: true,
             tapEvents: true,
             keyboardEvents: true,
             animate: true,
@@ -1155,6 +1154,7 @@ export default function litecanvas(settings = {}) {
         quit() {
             // stop the game loop (update & draw)
             cancelAnimationFrame(_rafid)
+            _rafid = 0
 
             // emit "quit" event to manual clean ups
             instance.emit('quit')
@@ -1436,23 +1436,6 @@ export default function litecanvas(settings = {}) {
             )
         }
 
-        // listen browser focus/blur events and pause the update/draw loop
-        if (settings.pauseOnBlur) {
-            // @ts-ignore
-            on(root, 'blur', () => {
-                // @ts-ignore
-                _rafid = cancelAnimationFrame(_rafid)
-            })
-
-            // @ts-ignore
-            on(root, 'focus', () => {
-                if (!_rafid) {
-                    _accumulated = 0
-                    _rafid = raf(drawFrame)
-                }
-            })
-        }
-
         _initialized = true
 
         // start the game loop
@@ -1472,24 +1455,26 @@ export default function litecanvas(settings = {}) {
         _lastFrameTime = now
 
         if (settings.animate) {
-            // request the next frame
-            _rafid = raf(drawFrame)
-
             if (frameTime > 0.3) {
-                return console.warn('skipping too long frame')
+                console.warn('skipping too long frame')
+            } else {
+                _accumulated += frameTime
+
+                while (_accumulated >= _deltaTime) {
+                    updated++
+                    instance.emit('update', _deltaTime * _timeScale, updated)
+                    instance.def('T', instance.T + _deltaTime * _timeScale)
+                    _accumulated -= _deltaTime
+                }
             }
 
-            _accumulated += frameTime
-
-            while (_accumulated >= _deltaTime) {
-                instance.emit('update', _deltaTime * _timeScale)
-                instance.def('T', instance.T + _deltaTime * _timeScale)
-                updated++
-                _accumulated -= _deltaTime
-            }
+            // request the next frame
+            // check if the last ID exists, because
+            // quit() delete it (sets to zero)
+            if (_rafid) _rafid = raf(drawFrame)
         } else {
             // when the canvas is not animated
-            // we for one frame when a redraw is triggered
+            // we force one frame when redraws are triggered
             updated = 1
         }
 
@@ -1502,11 +1487,15 @@ export default function litecanvas(settings = {}) {
     }
 
     function setupCanvas() {
-        if ('string' === typeof settings.canvas) {
+        if (settings.canvas) {
+            DEV: assert(
+                'string' === typeof settings.canvas,
+                'Litecanvas\' option "canvas" should be a string (a selector)'
+            )
             _canvas = document.querySelector(settings.canvas)
-        } else {
-            _canvas = settings.canvas || document.createElement('canvas')
         }
+
+        _canvas = _canvas || document.createElement('canvas')
 
         DEV: assert(
             _canvas && _canvas.tagName === 'CANVAS',

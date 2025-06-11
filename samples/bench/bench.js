@@ -4,13 +4,12 @@ const url = new URL(location),
         width: 1024,
         height: 480,
         statsWrapper: document.querySelector('#stats'),
-        canvas: document.querySelector('#canvas'),
     }
 
 litecanvas({
     width: state.width,
     height: state.height,
-    canvas,
+    canvas: '#canvas',
     // autoscale: false,
 })
 
@@ -63,7 +62,9 @@ function init() {
         const stats = new Stats()
         stats.dom.style.position = 'absolute'
         state.statsWrapper.appendChild(stats.dom)
-        listen('before:update', () => stats.begin())
+        listen('before:update', (_, i = 1) => {
+            if (i === 1) stats.begin()
+        })
         listen('after:draw', () => stats.end())
     }
 }
