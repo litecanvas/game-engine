@@ -1,6 +1,6 @@
 import test from 'ava'
 import '../_mocks/browser.js'
-import '../../src/web.js'
+import litecanvas from '../../src/index.js'
 
 test('globally by default', (t) => {
     const g = litecanvas({

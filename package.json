@@ -24,7 +24,7 @@
     "main": "src/index.js",
     "types": "types/index.d.ts",
     "scripts": {
-        "test": "npm run build && ava",
+        "test": "ava",
         "dev:test": "ava --watch",
         "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.dev.js --servedir=.",
         "build": "node script/build.js",
