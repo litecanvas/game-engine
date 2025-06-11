@@ -66,7 +66,10 @@ globalThis.cancelAnimationFrame = (id) => {
     clearTimeout(id)
 }
 
-globalThis.navigator = globalThis.navigator || {}
+if (!globalThis.navigator) {
+    globalThis.navigator = {}
+}
+
 globalThis.navigator.userActivation = {
     hasBeenActive: true,
 }
