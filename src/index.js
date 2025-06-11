@@ -1469,10 +1469,12 @@ export default function litecanvas(settings = {}) {
             }
 
             // request the next frame
-            _rafid = raf(drawFrame)
+            // check if the last ID exists, because
+            // quit() delete it (sets to zero)
+            if (_rafid) _rafid = raf(drawFrame)
         } else {
             // when the canvas is not animated
-            // we for one frame when a redraw is triggered
+            // we force one frame when redraws are triggered
             updated = 1
         }
 
