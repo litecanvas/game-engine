@@ -242,6 +242,8 @@ declare global {
      * @param height
      * @param [color=0] the color index
      * @param [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect
      */
     function rect(
         x: number,

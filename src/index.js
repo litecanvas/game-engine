@@ -377,6 +377,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} height
          * @param {number} [color=0] the color index
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
+         *
+         * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect
          */
         rect(x, y, width, height, color, radii) {
             DEV: assert(isNumber(x), 'rect: 1st param must be a number')
