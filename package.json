@@ -24,7 +24,7 @@
     "main": "src/index.js",
     "types": "types/index.d.ts",
     "scripts": {
-        "test": "ava",
+        "test": "ava --tap | tap-min",
         "dev:test": "ava --watch",
         "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.dev.js --servedir=.",
         "build": "node script/build.js",
@@ -57,5 +57,8 @@
             "tests/**/*",
             "!tests/_mocks"
         ]
+    },
+    "dependencies": {
+        "tap-min": "^3.0.0"
     }
 }
