@@ -256,8 +256,7 @@ test('stat modified via event', async (t) => {
 
 test('stat created via event', async (t) => {
     const INDEX = 42
-    const expected =
-        'The answer to the Ultimate Question of Life, the Universe, and Everything'
+    const expected = 'The answer to the Ultimate Question of Life, the Universe, and Everything'
 
     await new Promise((resolve) => {
         const local = litecanvas({

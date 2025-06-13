@@ -28,18 +28,15 @@ await esbuild.build({
 console.log(`  📄 dist/dist.js (${filesize('dist/dist.js')})`)
 
 // build the dist.min.js
-const minified = await minify(
-    fs.readFileSync('dist/dist.js', { encoding: 'utf-8' }),
-    {
-        format: {
-            comments: false,
-        },
-        compress: {
-            drop_console: true,
-        },
-        mangle: true,
-    }
-)
+const minified = await minify(fs.readFileSync('dist/dist.js', { encoding: 'utf-8' }), {
+    format: {
+        comments: false,
+    },
+    compress: {
+        drop_console: true,
+    },
+    mangle: true,
+})
 fs.writeFileSync('dist/dist.min.js', minified.code)
 console.log(
     `  📄 dist/dist.min.js (${filesize('dist/dist.min.js')} ~= ${gzipsize(minified.code)} gzip)`

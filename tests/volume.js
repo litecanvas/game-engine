@@ -3,13 +3,12 @@ import './_mocks/browser.js'
 import litecanvas from '../src/index.js'
 
 let g = litecanvas({
-    width: 256,
-    height: 128,
     animate: false,
 })
 
 test('changes the global variable `zzfxV`', (t) => {
-    g.volume(10)
+    const expected = 10
+    g.volume(expected)
 
-    t.true(10 === globalThis.zzfxV)
+    t.is(globalThis.zzfxV, expected)
 })

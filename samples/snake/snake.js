@@ -91,22 +91,10 @@ function draw() {
 
     for (let i = 0; i < snake.length; i++) {
         const pos = snake[i]
-        rectfill(
-            pos[0] * tileSize,
-            pos[1] * tileSize,
-            tileSize - 1,
-            tileSize - 1,
-            i > 0 ? 8 : 9
-        )
+        rectfill(pos[0] * tileSize, pos[1] * tileSize, tileSize - 1, tileSize - 1, i > 0 ? 8 : 9)
     }
 
-    rectfill(
-        food[0] * tileSize,
-        food[1] * tileSize,
-        tileSize - 1,
-        tileSize - 1,
-        5
-    )
+    rectfill(food[0] * tileSize, food[1] * tileSize, tileSize - 1, tileSize - 1, 5)
 
     textfont('sans-serif')
     textalign('right', 'hanging')

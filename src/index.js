@@ -20,9 +20,7 @@ export default function litecanvas(settings = {}) {
         /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
         on = (elem, evt, callback) => {
             elem.addEventListener(evt, callback, false)
-            _browserEventListeners.push(() =>
-                elem.removeEventListener(evt, callback, false)
-            )
+            _browserEventListeners.push(() => elem.removeEventListener(evt, callback, false))
         },
         isNumber = Number.isFinite,
         /** @type {LitecanvasOptions} */
@@ -135,7 +133,7 @@ export default function litecanvas(settings = {}) {
          *
          * @type {number}
          */
-        HALF_PI: math.PI / 2,
+        HALF_PI: TWO_PI / 4,
 
         /**
          * Calculates a linear (interpolation) value over t%.
@@ -212,10 +210,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(value), 'clamp: 1st param must be a number')
             DEV: assert(isNumber(min), 'clamp: 2nd param must be a number')
             DEV: assert(isNumber(max), 'clamp: 3rd param must be a number')
-            DEV: assert(
-                max > min,
-                'randi: the 2nd param must be less than the 3rd param'
-            )
+            DEV: assert(max > min, 'clamp: the 2nd param must be less than the 3rd param')
 
             if (value < min) return min
             if (value > max) return max
@@ -234,14 +229,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(value), 'wrap: 1st param must be a number')
             DEV: assert(isNumber(min), 'wrap: 2nd param must be a number')
             DEV: assert(isNumber(max), 'wrap: 3rd param must be a number')
-            DEV: assert(
-                max > min,
-                'randi: the 2nd param must be less than the 3rd param'
-            )
-            DEV: assert(
-                max !== min,
-                'randi: the 2nd param must be not equal to the 3rd param'
-            )
+            DEV: assert(max > min, 'wrap: the 2nd param must be less than the 3rd param')
 
             return value - (max - min) * math.floor((value - min) / (max - min))
         },
@@ -263,6 +251,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(stop1), 'map: 3rd param must be a number')
             DEV: assert(isNumber(start2), 'map: 4th param must be a number')
             DEV: assert(isNumber(stop2), 'map: 5th param must be a number')
+            DEV: assert(max !== min, 'map: the 3rd param must be different than the 2nd param')
 
             // prettier-ignore
             const result = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2
@@ -295,8 +284,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} t - the amount
          * @param {(n: number) => number} fn - the periodic function (which default to `Math.sin`)
          */
-        wave: (from, to, t, fn = Math.sin) =>
-            from + ((fn(t) + 1) / 2) * (to - from),
+        wave: (from, to, t, fn = Math.sin) => from + ((fn(t) + 1) / 2) * (to - from),
 
         /** RNG API */
         /**
@@ -310,10 +298,7 @@ export default function litecanvas(settings = {}) {
         rand: (min = 0.0, max = 1.0) => {
             DEV: assert(isNumber(min), 'rand: 1st param must be a number')
             DEV: assert(isNumber(max), 'rand: 2nd param must be a number')
-            DEV: assert(
-                max > min,
-                'rand: the 1st param must be less than the 2nd param'
-            )
+            DEV: assert(max > min, 'rand: the 1st param must be less than the 2nd param')
 
             const a = 1664525
             const c = 1013904223
@@ -334,10 +319,7 @@ export default function litecanvas(settings = {}) {
         randi: (min = 0, max = 1) => {
             DEV: assert(isNumber(min), 'randi: 1st param must be a number')
             DEV: assert(isNumber(max), 'randi: 2nd param must be a number')
-            DEV: assert(
-                max > min,
-                'randi: the 1st param must be less than the 2nd param'
-            )
+            DEV: assert(max > min, 'randi: the 1st param must be less than the 2nd param')
 
             return math.floor(instance.rand(min, max + 1))
         },
@@ -373,13 +355,7 @@ export default function litecanvas(settings = {}) {
             if (null == color) {
                 _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height)
             } else {
-                instance.rectfill(
-                    0,
-                    0,
-                    _ctx.canvas.width,
-                    _ctx.canvas.height,
-                    color
-                )
+                instance.rectfill(0, 0, _ctx.canvas.width, _ctx.canvas.height, color)
             }
         },
 
@@ -396,10 +372,7 @@ export default function litecanvas(settings = {}) {
         rect(x, y, width, height, color, radii) {
             DEV: assert(isNumber(x), 'rect: 1st param must be a number')
             DEV: assert(isNumber(y), 'rect: 2nd param must be a number')
-            DEV: assert(
-                isNumber(width) && width > 0,
-                'rect: 3rd param must be a positive number'
-            )
+            DEV: assert(isNumber(width) && width > 0, 'rect: 3rd param must be a positive number')
             DEV: assert(
                 isNumber(height) && height >= 0,
                 'rect: 4th param must be a positive number or zero'
@@ -409,9 +382,7 @@ export default function litecanvas(settings = {}) {
                 'rect: 5th param must be a positive number or zero'
             )
             DEV: assert(
-                null == radii ||
-                    isNumber(radii) ||
-                    (Array.isArray(radii) && radii.length >= 1),
+                null == radii || isNumber(radii) || (Array.isArray(radii) && radii.length >= 1),
                 'rect: 6th param must be a number or array of numbers'
             )
 
@@ -452,20 +423,12 @@ export default function litecanvas(settings = {}) {
                 'rectfill: 5th param must be a positive number or zero'
             )
             DEV: assert(
-                null == radii ||
-                    isNumber(radii) ||
-                    (Array.isArray(radii) && radii.length >= 1),
+                null == radii || isNumber(radii) || (Array.isArray(radii) && radii.length >= 1),
                 'rectfill: 6th param must be a number or array of at least 2 numbers'
             )
 
             _ctx.beginPath()
-            _ctx[radii ? 'roundRect' : 'rect'](
-                ~~x,
-                ~~y,
-                ~~width,
-                ~~height,
-                radii
-            )
+            _ctx[radii ? 'roundRect' : 'rect'](~~x, ~~y, ~~width, ~~height, radii)
             instance.fill(color)
         },
 
@@ -531,14 +494,8 @@ export default function litecanvas(settings = {}) {
         line(x1, y1, x2, y2, color) {
             DEV: assert(isNumber(x1), 'line: 1st param must be a number')
             DEV: assert(isNumber(y1), 'line: 2nd param must be a number')
-            DEV: assert(
-                isNumber(x2),
-                'line: 3rd param must be a positive number or zero'
-            )
-            DEV: assert(
-                isNumber(y2),
-                'line: 4th param must be a positive number or zero'
-            )
+            DEV: assert(isNumber(x2), 'line: 3rd param must be a positive number or zero')
+            DEV: assert(isNumber(y2), 'line: 4th param must be a positive number or zero')
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
                 'line: 5th param must be a positive number or zero'
@@ -584,10 +541,7 @@ export default function litecanvas(settings = {}) {
                 Array.isArray(segments) && segments.length > 0,
                 'linedash: 1st param must be an array of numbers'
             )
-            DEV: assert(
-                isNumber(offset),
-                'linedash: 2nd param must be a number'
-            )
+            DEV: assert(isNumber(offset), 'linedash: 2nd param must be a number')
 
             _ctx.setLineDash(segments)
             _ctx.lineDashOffset = offset
@@ -610,10 +564,7 @@ export default function litecanvas(settings = {}) {
                 null == color || (isNumber(color) && color >= 0),
                 'text: 4th param must be a positive number or zero'
             )
-            DEV: assert(
-                'string' === typeof fontStyle,
-                'text: 5th param must be a string'
-            )
+            DEV: assert('string' === typeof fontStyle, 'text: 5th param must be a string')
 
             _ctx.font = `${fontStyle} ${_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = _colors[~~color % _colors.length]
@@ -626,10 +577,7 @@ export default function litecanvas(settings = {}) {
          * @param {string} family
          */
         textfont(family) {
-            DEV: assert(
-                'string' === typeof family,
-                'textfont: 1st param must be a string'
-            )
+            DEV: assert('string' === typeof family, 'textfont: 1st param must be a string')
 
             _fontFamily = family
         },
@@ -655,20 +603,14 @@ export default function litecanvas(settings = {}) {
          */
         textalign(align, baseline) {
             DEV: assert(
-                null == align ||
-                    ['left', 'right', 'center', 'start', 'end'].includes(align),
+                null == align || ['left', 'right', 'center', 'start', 'end'].includes(align),
                 'textalign: 1st param must be null or one of the following strings: center, left, right, start or end.'
             )
             DEV: assert(
                 null == baseline ||
-                    [
-                        'top',
-                        'bottom',
-                        'middle',
-                        'hanging',
-                        'alphabetic',
-                        'ideographic',
-                    ].includes(baseline),
+                    ['top', 'bottom', 'middle', 'hanging', 'alphabetic', 'ideographic'].includes(
+                        baseline
+                    ),
                 'textalign: 2nd param must be null or one of the following strings: middle, top, bottom, hanging, alphabetic or ideographic.'
             )
 
@@ -806,10 +748,7 @@ export default function litecanvas(settings = {}) {
          */
         scale: (x, y) => {
             DEV: assert(isNumber(x), 'scale: 1st param must be a number')
-            DEV: assert(
-                null == y || isNumber(y),
-                'scale: 2nd param must be a number'
-            )
+            DEV: assert(null == y || isNumber(y), 'scale: 2nd param must be a number')
 
             return _ctx.scale(x, y || x)
         },
@@ -906,14 +845,13 @@ export default function litecanvas(settings = {}) {
         /**
          * Turn given path into a clipping region.
          *
+         * Note: always call `push()` before and `pop()` after.
+         *
          * @param {Path2D} path
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
          */
         clip(path) {
-            DEV: assert(
-                path instanceof Path2D,
-                'clip: 1st param must be a Path2D instance'
-            )
+            DEV: assert(path instanceof Path2D, 'clip: 1st param must be a Path2D instance')
 
             _ctx.clip(path)
         },
@@ -936,15 +874,11 @@ export default function litecanvas(settings = {}) {
                 'sfx: 1st param must be an array'
             )
             DEV: assert(isNumber(pitchSlide), 'sfx: 2nd param must be a number')
-            DEV: assert(
-                isNumber(volumeFactor),
-                'sfx: 3rd param must be a number'
-            )
+            DEV: assert(isNumber(volumeFactor), 'sfx: 3rd param must be a number')
 
             if (
                 root.zzfxV <= 0 ||
-                (navigator.userActivation &&
-                    !navigator.userActivation.hasBeenActive)
+                (navigator.userActivation && !navigator.userActivation.hasBeenActive)
             ) {
                 return false
             }
@@ -982,18 +916,16 @@ export default function litecanvas(settings = {}) {
          * @param {pluginCallback} callback
          */
         use(callback, config = {}) {
-            DEV: assert(
-                'function' === typeof callback,
-                'use: 1st param must be a function'
-            )
-            DEV: assert(
-                'object' === typeof config,
-                'use: 2nd param must be an object'
-            )
+            DEV: assert('function' === typeof callback, 'use: 1st param must be a function')
+            DEV: assert('object' === typeof config, 'use: 2nd param must be an object')
 
-            _initialized
-                ? loadPlugin(callback, config)
-                : _plugins.push([callback, config])
+            if (_initialized) {
+                // load the plugin now
+                loadPlugin(callback, config)
+            } else {
+                // schedule to load the plugin right before the "init" event
+                _plugins.push([callback, config])
+            }
         },
 
         /**
@@ -1004,14 +936,8 @@ export default function litecanvas(settings = {}) {
          * @returns {Function} a function to remove the listener
          */
         listen(eventName, callback) {
-            DEV: assert(
-                'string' === typeof eventName,
-                'listen: 1st param must be a string'
-            )
-            DEV: assert(
-                'function' === typeof callback,
-                'listen: 2nd param must be a function'
-            )
+            DEV: assert('string' === typeof eventName, 'listen: 1st param must be a string')
+            DEV: assert('function' === typeof callback, 'listen: 2nd param must be a function')
 
             eventName = eventName.toLowerCase()
 
@@ -1032,10 +958,7 @@ export default function litecanvas(settings = {}) {
          * @param {*} [arg4] any data to be passed over the listeners
          */
         emit(eventName, arg1, arg2, arg3, arg4) {
-            DEV: assert(
-                'string' === typeof eventName,
-                'emit: 1st param must be a string'
-            )
+            DEV: assert('string' === typeof eventName, 'emit: 1st param must be a string')
             if (_initialized) {
                 eventName = eventName.toLowerCase()
 
@@ -1065,14 +988,9 @@ export default function litecanvas(settings = {}) {
          * @param {*} value
          */
         def(key, value) {
-            DEV: assert(
-                'string' === typeof key,
-                'def: 1st param must be a string'
-            )
+            DEV: assert('string' === typeof key, 'def: 1st param must be a string')
             DEV: if (null == value) {
-                console.warn(
-                    `def: key "${key}" was defined as ${value} but now is null`
-                )
+                console.warn(`def: key "${key}" was defined as ${value} but now is null`)
             }
 
             instance[key] = value
@@ -1118,10 +1036,7 @@ export default function litecanvas(settings = {}) {
          * @returns {any}
          */
         stat(n) {
-            DEV: assert(
-                isNumber(n) && n >= 0,
-                'stat: 1st param must be a positive number'
-            )
+            DEV: assert(isNumber(n) && n >= 0, 'stat: 1st param must be a positive number')
 
             const list = [
                 // 0
@@ -1213,30 +1128,50 @@ export default function litecanvas(settings = {}) {
 
         // default mouse/touch handlers
         if (settings.tapEvents) {
-            const _getXY = (pageX, pageY) => [
-                    (pageX - _canvas.offsetLeft) / _scale,
-                    (pageY - _canvas.offsetTop) / _scale,
-                ],
+            const _getXY =
+                    /**
+                     * @param {number} pageX
+                     * @param {number} pageY
+                     */
+                    (pageX, pageY) => [
+                        (pageX - _canvas.offsetLeft) / _scale,
+                        (pageY - _canvas.offsetTop) / _scale,
+                    ],
                 _taps = new Map(),
-                _registerTap = (id, x, y) => {
-                    const tap = {
-                        x,
-                        y,
-                        startX: x,
-                        startY: y,
-                        // timestamp
-                        ts: performance.now(),
-                    }
-                    _taps.set(id, tap)
-                    return tap
-                },
-                _updateTap = (id, x, y) => {
-                    const tap = _taps.get(id) || _registerTap(id)
-                    tap.x = x
-                    tap.y = y
-                },
-                _checkTapped = (tap) =>
-                    tap && performance.now() - tap.ts <= 300,
+                _registerTap =
+                    /**
+                     * @param {number} id
+                     * @param {number} [x]
+                     * @param {number} [y]
+                     */
+                    (id, x, y) => {
+                        const tap = {
+                            x,
+                            y,
+                            startX: x,
+                            startY: y,
+                            // timestamp
+                            ts: performance.now(),
+                        }
+                        _taps.set(id, tap)
+                        return tap
+                    },
+                _updateTap =
+                    /**
+                     * @param {number} id
+                     * @param {number} x
+                     * @param {number} y
+                     */
+                    (id, x, y) => {
+                        const tap = _taps.get(id) || _registerTap(id)
+                        tap.x = x
+                        tap.y = y
+                    },
+                _checkTapped =
+                    /**
+                     * @param {{ts: number}} tap
+                     */
+                    (tap) => tap && performance.now() - tap.ts <= 300,
                 preventDefault = (ev) => ev.preventDefault()
 
             let _pressingMouse = false
@@ -1384,9 +1319,7 @@ export default function litecanvas(settings = {}) {
              */
             const keyCheck = (keySet, key = '') => {
                 key = key.toLowerCase()
-                return !key
-                    ? keySet.size > 0
-                    : keySet.has('space' === key ? ' ' : key)
+                return !key ? keySet.size > 0 : keySet.has('space' === key ? ' ' : key)
             }
 
             // @ts-ignore
@@ -1505,10 +1438,7 @@ export default function litecanvas(settings = {}) {
 
         _canvas = _canvas || document.createElement('canvas')
 
-        DEV: assert(
-            _canvas && _canvas.tagName === 'CANVAS',
-            'Invalid canvas element'
-        )
+        DEV: assert(_canvas && _canvas.tagName === 'CANVAS', 'Invalid canvas element')
 
         instance.def('CANVAS', _canvas)
         _ctx = _canvas.getContext('2d')
@@ -1527,18 +1457,15 @@ export default function litecanvas(settings = {}) {
 
     function resizeCanvas() {
         DEV: assert(
-            null == settings.width ||
-                (isNumber(settings.width) && settings.width > 0),
+            null == settings.width || (isNumber(settings.width) && settings.width > 0),
             'Litecanvas\' option "width" should be a positive number when defined'
         )
         DEV: assert(
-            null == settings.height ||
-                (isNumber(settings.height) && settings.height > 0),
+            null == settings.height || (isNumber(settings.height) && settings.height > 0),
             'Litecanvas\' option "height" should be a positive number when defined'
         )
         DEV: assert(
-            null == settings.height ||
-                (settings.width > 0 && settings.height > 0),
+            null == settings.height || (settings.width > 0 && settings.height > 0),
             'Litecanvas\' option "width" is required when the option "height" is defined'
         )
 
@@ -1557,10 +1484,7 @@ export default function litecanvas(settings = {}) {
                 _canvas.style.margin = 'auto'
             }
 
-            _scale = math.min(
-                root.innerWidth / instance.W,
-                root.innerHeight / instance.H
-            )
+            _scale = math.min(root.innerWidth / instance.W, root.innerHeight / instance.H)
             _scale = (settings.pixelart ? ~~_scale : _scale) || 1
 
             _canvas.style.width = instance.W * _scale + 'px'

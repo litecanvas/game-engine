@@ -114,24 +114,14 @@ function draw() {
 }
 
 function tapped(x, y) {
-    if (
-        x > 0 &&
-        x < cellSize * (cols + 1) &&
-        y > 0 &&
-        y < cellSize * (rows + 1)
-    ) {
+    if (x > 0 && x < cellSize * (cols + 1) && y > 0 && y < cellSize * (rows + 1)) {
         let row = floor(y / cellSize)
         let col = floor(x / cellSize)
 
         board[row][col] = 1 - board[row][col]
     }
 
-    if (
-        10 <= x - 126 &&
-        x - 126 <= 10 + mode.length * 16 + 30 &&
-        H - 62 <= y &&
-        y <= H - 10
-    ) {
+    if (10 <= x - 126 && x - 126 <= 10 + mode.length * 16 + 30 && H - 62 <= y && y <= H - 10) {
         mode = mode == 'play' ? 'edit' : 'play'
     }
 }

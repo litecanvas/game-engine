@@ -47,9 +47,7 @@ function pluginResize(engine, config) {
     settings = engine.stat(0)
 
     if (settings.autoscale) {
-        throw new Error(
-            'plugin Resize do not works with option "autoscale" enabled'
-        )
+        throw new Error('plugin Resize do not works with option "autoscale" enabled')
     }
 
     return {

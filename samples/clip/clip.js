@@ -67,14 +67,7 @@ function clipheart(x, y, width, height) {
     const region = path()
     var topCurveHeight = height * 0.3
     region.moveTo(x, y + topCurveHeight)
-    region.bezierCurveTo(
-        x,
-        y,
-        x - width / 2,
-        y,
-        x - width / 2,
-        y + topCurveHeight
-    )
+    region.bezierCurveTo(x, y, x - width / 2, y, x - width / 2, y + topCurveHeight)
     region.bezierCurveTo(
         x - width / 2,
         y + (height + topCurveHeight) / 2,

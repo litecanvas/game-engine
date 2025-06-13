@@ -12,9 +12,7 @@ function checkWin(row, col) {
     return (
         map[row].every((cell) => cell === player) || // Check row
         map.every((r) => r[col] === player) || // Check column
-        (map[0][0] === player &&
-            map[1][1] === player &&
-            map[2][2] === player) || // Check diagonal
+        (map[0][0] === player && map[1][1] === player && map[2][2] === player) || // Check diagonal
         (map[0][2] === player && map[1][1] === player && map[2][0] === player) // Check anti-diagonal
     )
 }

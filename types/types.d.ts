@@ -123,12 +123,7 @@ type LitecanvasInstance = {
      * @param t - the amount
      * @param fn - the periodic function (which default to `Math.sin`)
      */
-    wave(
-        from: number,
-        to: number,
-        t: number,
-        fn?: (n: number) => number
-    ): number
+    wave(from: number, to: number, t: number, fn?: (n: number) => number): number
     /**
      * Returns the sine of a number in radians
      */
@@ -320,13 +315,7 @@ type LitecanvasInstance = {
      * @param [color=3] the color index
      * @param [fontStyle="normal"] can be "normal" (default), "italic" and/or "bold"
      */
-    text(
-        x: number,
-        y: number,
-        message: string,
-        color?: number,
-        fontStyle?: string
-    ): void
+    text(x: number, y: number, message: string, color?: number, fontStyle?: string): void
     /**
      * Set the font family
      *
@@ -472,11 +461,7 @@ type LitecanvasInstance = {
      *
      * @see https://github.com/KilledByAPixel/ZzFX
      */
-    sfx(
-        zzfxParams?: number[],
-        pitchSlide?: number,
-        volumeFactor?: number
-    ): number[] | boolean
+    sfx(zzfxParams?: number[], pitchSlide?: number, volumeFactor?: number): number[] | boolean
     /**
      * Set the ZzFX's global volume factor.
      * Note: use 0 to mute all sound effects.
@@ -660,8 +645,6 @@ type LitecanvasGameLoop = {
     tapping?: (tapX: number, tapY: number, tapId: number) => void
 }
 
-type drawCallback = (
-    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
-) => void
+type drawCallback = (context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void
 
 type pluginCallback = (instance: LitecanvasInstance, config?: any) => any

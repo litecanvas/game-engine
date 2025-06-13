@@ -5,13 +5,14 @@ import { _listeners } from './_mocks/events.js'
 
 test('removes all browser event listeners', (t) => {
     const expected = _listeners.length
+
     const engine = litecanvas({
         animate: false,
     })
 
     engine.quit()
 
-    t.true(_listeners.length === expected)
+    t.is(_listeners.length, expected)
 })
 
 test('deletes all exposed methods and props', (t) => {
@@ -22,8 +23,8 @@ test('deletes all exposed methods and props', (t) => {
     engine.quit()
 
     t.plan(2)
-    t.true(globalThis.circfill === undefined)
-    t.true(globalThis.ENGINE === undefined)
+    t.is(globalThis.circfill, undefined)
+    t.is(globalThis.ENGINE, undefined)
 })
 
 test('deletes exposed methods and props only when is global', (t) => {
@@ -40,8 +41,8 @@ test('deletes exposed methods and props only when is global', (t) => {
     notglobal.quit()
 
     t.plan(2)
-    t.true(globalThis.circfill !== undefined)
-    t.true(globalThis.ENGINE !== undefined)
+    t.not(globalThis.circfill, undefined)
+    t.not(globalThis.ENGINE, undefined)
 
     quit()
 })
