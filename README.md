@@ -41,6 +41,8 @@ If you prefer, you can manually install via [NPM](https://www.npmjs.com/package/
 npm install litecanvas
 ```
 
+### Show me the code!
+
 ```js
 // import the package or put a script tag in your HTML
 // CDN: https://unpkg.com/litecanvas/dist/dist.dev.js
@@ -82,6 +84,8 @@ function draw() {
     text(10, 10, 'Tap anywhere') // draw a text
 }
 ```
+
+[Play with this code in the playground](https://litecanvas.js.org?c=eJx9k91u4yAQhe%2F9FCP1ovauFZL2LlKu9hFaadtLDBNDQwDBeOOoyrsv4KR2V9FasuSfjzNnDgNj8EI8EHArISINHkghoO21xYoxMMiDhaMLuAVF5OOWMaMJBbd%2FeFx9xJULPeOdG2il6Ggekghp28dqpurPCtJlnPNb%2BARtNbUweMkJW5CBn1og7j1KuLTVpalyXVI6wn6wgrSzEAYbwVmBwKkY7DAZtKlO9cVk2bqBqVbXww7WUIQQhDMuwMMa6s5wcWgKMn3cwfM%2F1DPUJ5W8T1TgUg8xYb%2BBwWZWLI3BSUtSbLMuqHdxTOCvtwwJtIQB3qBOmt%2Fop%2BZGnzP9vqDf79KXO4FITOESCKPFITJyg1AY5yymOOuxhfMtkVxFcdtjnBrQQRjMLnRecUM6HtM2ZAU1%2FwS3L%2B9JddnouOzjfLXph2mDen7EtOO9FmljvpufbU4zUEtamDzyAy4d7rkxMSW%2FBq9HTI8%2BBRVROCvn%2Bj938JSIHyDpno%2BAVmJI0%2FIfL3kOv8ZHmFh3fVNCyyegSEUREKeksre9NqbOUbTFQ3sdlXaao7I2awK%2FdlIWEo5Ub9Yt5Pvxlft08M4nhQEflysyVl3%2BAgslJEg%3D)
 
 https://github.com/user-attachments/assets/854ac6bd-724f-4da8-bb3c-bc04dba5d8c8
 
