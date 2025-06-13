@@ -6,7 +6,7 @@ test('event names are case insensitive', async (t) => {
     const expected = 1
 
     await new Promise((resolve) => {
-        let current
+        let actual
 
         const local = litecanvas({
             animate: false,
@@ -14,12 +14,12 @@ test('event names are case insensitive', async (t) => {
         })
 
         local.listen('myevent', (data) => {
-            current = 1
+            actual = 1
         })
 
         local.listen('init', () => {
             local.emit('MyEvent')
-            t.is(current, expected)
+            t.is(actual, expected)
             local.quit()
             resolve()
         })
@@ -30,7 +30,7 @@ test('No event is emitted before the "init" event', async (t) => {
     const expected = 1
 
     await new Promise((resolve) => {
-        let current = 0
+        let actual = 0
 
         const local = litecanvas({
             animate: false,
@@ -38,12 +38,12 @@ test('No event is emitted before the "init" event', async (t) => {
         })
 
         local.listen('never', (data) => {
-            current = 1
+            actual = 1
         })
 
         // runs outside the "init" event
         local.emit('never')
-        t.not(current, expected)
+        t.not(actual, expected)
         local.quit()
         resolve()
     })

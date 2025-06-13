@@ -281,10 +281,19 @@ export default function litecanvas(settings = {}) {
          *
          * @param {number} from - the lower bound
          * @param {number} to - the higher bound
-         * @param {number} t - the amount
-         * @param {(n: number) => number} fn - the periodic function (which default to `Math.sin`)
+         * @param {number} t - value passed to the periodic function
+         * @param {(n: number) => number} [fn] - the periodic function (which default to `Math.sin`)
          */
-        wave: (from, to, t, fn = Math.sin) => from + ((fn(t) + 1) / 2) * (to - from),
+        wave: (from, to, t, fn = Math.sin) => {
+            DEV: assert(isNumber(from), 'wave: 1st param must be a number')
+            DEV: assert(isNumber(to), 'wave: 2nd param must be a number')
+            DEV: assert(isNumber(t), 'wave: 3rd param must be a number')
+            DEV: assert(
+                'function' === typeof fn,
+                'wave: 4rd param must be a function (n: number) => number'
+            )
+            return from + ((fn(t) + 1) / 2) * (to - from)
+        },
 
         /** RNG API */
         /**

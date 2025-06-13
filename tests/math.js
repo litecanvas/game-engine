@@ -87,3 +87,24 @@ test('round', (t) => {
     t.is(g.round(n, 2), 9.88)
     t.is(g.round(n, 5), 9.87654)
 })
+
+test('wave', (t) => {
+    t.plan(2)
+
+    {
+        // interpolate from 0 to 100 using Math.sin (default)
+        const amount = 0
+        const expected = 50
+        const actual = g.wave(0, 100, amount)
+        t.is(actual, expected)
+    }
+
+    {
+        // interpolate from 0 to 100 using a custom periodic function
+        const amount = 0
+        const fn = (x) => -Math.cos(x)
+        const expected = 0
+        const actual = g.wave(0, 100, amount, fn)
+        t.is(actual, expected)
+    }
+})

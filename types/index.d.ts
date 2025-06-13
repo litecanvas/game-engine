@@ -129,8 +129,8 @@ declare global {
      *
      * @param from - the lower bound
      * @param to - the higher bound
-     * @param t - the amount
-     * @param fn - the periodic function (which default to `Math.sin`)
+     * @param t - the value passed to the periodic function
+     * @param fn= - the periodic function (which default to `Math.sin`)
      */
     function wave(from: number, to: number, t: number, fn?: (n: number) => number): number
     /**

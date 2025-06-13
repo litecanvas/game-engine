@@ -120,7 +120,7 @@ type LitecanvasInstance = {
      *
      * @param from - the lower bound
      * @param to - the higher bound
-     * @param t - the amount
+     * @param t - the value passed to the periodic function
      * @param fn - the periodic function (which default to `Math.sin`)
      */
     wave(from: number, to: number, t: number, fn?: (n: number) => number): number
