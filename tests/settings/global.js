@@ -6,7 +6,7 @@ test('globally by default', (t) => {
     const g = litecanvas({
         animate: false,
     })
-    t.true(globalThis.ENGINE === g)
+    t.is(globalThis.ENGINE, g)
 })
 
 test('throws error if instantiated globally more than once', (t) => {

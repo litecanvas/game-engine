@@ -43,10 +43,7 @@ function init() {
     for (let i = 0; i < state.count; i++) {
         const x = rand() * state.width - state.size
         const y = rand() * state.height - state.size
-        const [dx, dy] = [
-            rand(1, 3) * dir[randi(0, 1)],
-            rand(1, 3) * dir[randi(0, 1)],
-        ]
+        const [dx, dy] = [rand(1, 3) * dir[randi(0, 1)], rand(1, 3) * dir[randi(0, 1)]]
         particles[i] = { x, y, dx, dy }
     }
 

@@ -63,9 +63,7 @@ function draw() {
     text(
         0,
         0,
-        'drawing ' +
-            (useImage ? 'images (fast)' : 'shapes (slow)') +
-            ' / tap to toggle',
+        'drawing ' + (useImage ? 'images (fast)' : 'shapes (slow)') + ' / tap to toggle',
         3,
         'italic bold'
     )

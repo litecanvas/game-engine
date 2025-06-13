@@ -19,9 +19,9 @@ const map = {
         this.size = 64 // tile size
         this.length = 8 // grid size
         this.grid = [
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0,
-            1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1,
-            0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0,
+            0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+            1, 1, 1, 1, 1, 1,
         ]
     },
 
@@ -94,13 +94,7 @@ function draw() {
                 offsetX = x * map.size
                 offsetY = y * map.size
 
-                rectfill(
-                    offsetX + 1,
-                    offsetY + 1,
-                    map.size - 1,
-                    map.size - 1,
-                    color
-                )
+                rectfill(offsetX + 1, offsetY + 1, map.size - 1, map.size - 1, color)
             }
         }
     }
@@ -153,19 +147,10 @@ function draw() {
                 mp = my * map.length + mx
 
                 // hit wall
-                if (
-                    mp > 0 &&
-                    mp < map.length * map.length &&
-                    map.grid[mp] === 1
-                ) {
+                if (mp > 0 && mp < map.length * map.length && map.grid[mp] === 1) {
                     hx = rayX
                     hy = rayY
-                    distH = rayLength(
-                        player.position.x,
-                        player.position.y,
-                        hx,
-                        hy
-                    )
+                    distH = rayLength(player.position.x, player.position.y, hx, hy)
 
                     depthOfFieldX = 8
                 } else {
@@ -210,19 +195,10 @@ function draw() {
                 mp = my * map.length + mx
 
                 // hit wall
-                if (
-                    mp > 0 &&
-                    mp < map.length * map.length &&
-                    map.grid[mp] === 1
-                ) {
+                if (mp > 0 && mp < map.length * map.length && map.grid[mp] === 1) {
                     vx = rayX
                     vy = rayY
-                    distV = rayLength(
-                        player.position.x,
-                        player.position.y,
-                        vx,
-                        vy
-                    )
+                    distV = rayLength(player.position.x, player.position.y, vx, vy)
 
                     depthOfFieldV = 8
                 } else {
@@ -268,13 +244,7 @@ function draw() {
 
             alpha(transparency)
             linewidth(8)
-            line(
-                MIDPOINT + r * 8,
-                0,
-                MIDPOINT + r * 8,
-                lineHeight + lineOffset,
-                wallColor
-            )
+            line(MIDPOINT + r * 8, 0, MIDPOINT + r * 8, lineHeight + lineOffset, wallColor)
 
             rayAngle = rayNormalize(rayAngle + Math.PI / 180)
             alpha(1)

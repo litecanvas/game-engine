@@ -3,9 +3,7 @@ import './types.d.ts'
 /**
  * The litecanvas constructor
  */
-export default function litecanvas(
-    settings?: LitecanvasOptions
-): LitecanvasInstance
+export default function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
 
 declare global {
     function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
@@ -134,12 +132,7 @@ declare global {
      * @param t - the amount
      * @param fn - the periodic function (which default to `Math.sin`)
      */
-    function wave(
-        from: number,
-        to: number,
-        t: number,
-        fn?: (n: number) => number
-    ): number
+    function wave(from: number, to: number, t: number, fn?: (n: number) => number): number
     /**
      * Returns the sine of a number in radians
      */
@@ -293,12 +286,7 @@ declare global {
      * @param radius
      * @param [color=0] the color index
      */
-    function circfill(
-        x: number,
-        y: number,
-        radius: number,
-        color?: number
-    ): void
+    function circfill(x: number, y: number, radius: number, color?: number): void
     /**
      * Draw a line
      *
@@ -308,13 +296,7 @@ declare global {
      * @param y2
      * @param [color=0] the color index
      */
-    function line(
-        x1: number,
-        y1: number,
-        x2: number,
-        y2: number,
-        color?: number
-    ): void
+    function line(x1: number, y1: number, x2: number, y2: number, color?: number): void
     /**
      * Sets the thickness of lines
      *
@@ -342,13 +324,7 @@ declare global {
      * @param [color=3] the color index
      * @param [fontStyle="normal"] can be "normal" (default), "italic" and/or "bold"
      */
-    function text(
-        x: number,
-        y: number,
-        message: string,
-        color?: number,
-        fontStyle?: string
-    ): void
+    function text(x: number, y: number, message: string, color?: number, fontStyle?: string): void
     /**
      * Set the font family
      *
@@ -369,10 +345,7 @@ declare global {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
-    function textalign(
-        align: CanvasTextAlign,
-        baseline: CanvasTextBaseline
-    ): void
+    function textalign(align: CanvasTextAlign, baseline: CanvasTextBaseline): void
 
     /** IMAGE GRAPHICS API */
     /**
@@ -552,13 +525,7 @@ declare global {
      * @param [arg3] any data to be passed over the listeners
      * @param [arg4] any data to be passed over the listeners
      */
-    function emit(
-        event: string,
-        arg1?: any,
-        arg2?: any,
-        arg3?: any,
-        arg4?: any
-    ): void
+    function emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
     /**
      * Set or reset the color palette
      *
