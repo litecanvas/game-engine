@@ -83,7 +83,7 @@ function draw() {
 }
 ```
 
-Learn more in our [Cheatsheet](https://litecanvas.js.org/about.html).
+https://github.com/user-attachments/assets/854ac6bd-724f-4da8-bb3c-bc04dba5d8c8
 
 ## Demos
 
