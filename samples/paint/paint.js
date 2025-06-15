@@ -25,15 +25,7 @@ function init() {
     }
 
     // fps meter
-    if (Stats) {
-        const stats = new Stats()
-        stats.dom.style = 'position: absolute; right: 0; top: 0;'
-        document.body.appendChild(stats.dom)
-        listen('before:update', (_, i = 1) => {
-            if (i === 1) stats.begin()
-        })
-        listen('after:draw', () => stats.end())
-    }
+    use(pluginFrameRateMeter)
 }
 
 // Tap to toggle between draw all circles or just draw images

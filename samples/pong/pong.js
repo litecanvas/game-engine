@@ -30,18 +30,11 @@ let padW = 120,
     started = false
 
 function init() {
+    use(pluginFrameRateMeter)
+
     ballX = CX
     ballY = CY - H / 4
     textSize = W / 12
-
-    if (Stats) {
-        const stats = new Stats()
-        document.body.appendChild(stats.dom)
-        listen('before:update', (_, i = 1) => {
-            if (i === 1) stats.begin()
-        })
-        listen('after:draw', () => stats.end())
-    }
 }
 
 function tapped(x, y) {

@@ -1,19 +1,22 @@
-const url = new URL(location),
+let url = new URL(location),
     state = {
         count: +url.searchParams.get('amount') || 1000,
         width: 1024,
         height: 480,
-        statsWrapper: document.querySelector('#stats'),
     }
 
 litecanvas({
     width: state.width,
     height: state.height,
-    canvas: '#canvas',
-    // autoscale: false,
+    canvas: '#c',
+    autoscale: false,
 })
 
+use(pluginFrameRateMeter)
+
 function init() {
+    FPS_METER.display(true)
+
     state.sprite = paint(
         12,
         12,
@@ -49,20 +52,9 @@ function init() {
 
     state.particles = particles
 
-    const link = document.querySelector(`[data-amount="${state.count}"]`)
+    const link = document.querySelector(`[href="?amount=${state.count}"]`)
     if (link) {
-        link.classList.add('active')
-    }
-    console.log(`Rendering ${state.count} sprites...`)
-
-    if (Stats) {
-        const stats = new Stats()
-        stats.dom.style.position = 'absolute'
-        state.statsWrapper.appendChild(stats.dom)
-        listen('before:update', (_, i = 1) => {
-            if (i === 1) stats.begin()
-        })
-        listen('after:draw', () => stats.end())
+        link.style.fontWeight = 'bold'
     }
 }
 

@@ -7,15 +7,9 @@ litecanvas({
 function init() {
     const url = new URL(location)
     framerate(~~url.searchParams.get('fps') || 60)
-    if (Stats) {
-        let stats = new Stats()
-        stats.dom.style.position = 'static'
-        document.querySelector('#game').prepend(stats.dom)
-        listen('before:update', (_, i = 1) => {
-            if (i === 1) stats.begin()
-        })
-        listen('after:draw', () => stats.end())
-    }
+    use(pluginFrameRateMeter, {
+        css: { position: 'static' },
+    })
 }
 
 function update() {}
