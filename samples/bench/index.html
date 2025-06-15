@@ -13,10 +13,6 @@
                 font-family: sans-serif;
                 margin: 0;
             }
-
-            a.active {
-                font-weight: bold;
-            }
         </style>
     </head>
     <body>
@@ -31,12 +27,12 @@
             <a href="?amount=16000" data-amount="16000">16k</a>
             <a href="?amount=32000" data-amount="32000">32k</a>
         </p>
-        <div style="position: relative">
-            <div id="stats"></div>
-            <canvas id="canvas"></canvas>
+        <div style="position: relative; display: inline-flex">
+            <canvas id="c"></canvas>
         </div>
+
+        <script src="https://unpkg.com/@litecanvas/plugin-frame-rate-meter/dist/dist.js"></script>
         <!-- <script src="https://unpkg.com/litecanvas/dist/dist.js"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/stats-js@1.0.1/build/stats.min.js"></script>
         <script src="../../dist/dist.dev.js"></script>
         <script src="bench.js"></script>
     </body>
