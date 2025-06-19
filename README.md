@@ -6,11 +6,13 @@
 
 Litecanvas is a lightweight HTML5 canvas 2D engine suitable for small web games, prototypes, game jams, animations, creative coding, learning game programming and game design, etc.
 
-:warning: **This project is still under development. All feedback is appreciated!** :warning:
 
 [![Itch](https://flat.badgen.net/static/FOLLOW/ON%20ITCH.IO/fa5c5c?scale=1.25)](https://bills.itch.io/litecanvas)
 [![Discord Server](https://flat.badgen.net/static/CHAT/ON%20DISCORD/5865f2?scale=1.25&icon=discord)](https://discord.com/invite/r2c3rGsvH3)
 [![Playground](https://flat.badgen.net/static/CODE/ON%20PLAYGROUND/5f3dc4?scale=1.25)](https://litecanvas.js.org/)
+
+> [!WARNING]  
+> **This project is still in the "alpha" stage. Break changes may occur frequently. All feedback is welcome and appreciated.**
 
 ### Features
 
