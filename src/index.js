@@ -1401,29 +1401,26 @@ export default function litecanvas(settings = {}) {
      * @param {DOMHighResTimeStamp} now
      */
     function drawFrame(now) {
-        let updated = 0,
-            frameTime = (now - _lastFrameTime) / 1000
-
-        _lastFrameTime = now
+        let updated = 0
 
         if (settings.animate) {
-            if (frameTime > 0.3) {
-                console.warn('skipping too long frame')
-            } else {
-                _accumulated += frameTime
+            // prevents too long frames
+            _accumulated += math.min(0.2, (now - _lastFrameTime) / 1000)
+            _lastFrameTime = now
 
-                while (_accumulated >= _deltaTime) {
-                    updated++
-                    instance.emit('update', _deltaTime * _timeScale, updated)
-                    instance.def('T', instance.T + _deltaTime * _timeScale)
-                    _accumulated -= _deltaTime
-                }
+            while (_accumulated >= _deltaTime) {
+                updated++
+                instance.emit('update', _deltaTime * _timeScale, updated)
+                instance.def('T', instance.T + _deltaTime * _timeScale)
+                _accumulated -= _deltaTime
             }
 
             // request the next frame
             // check if the last ID exists, because
             // quit() delete it (sets to zero)
-            if (_rafid) _rafid = raf(drawFrame)
+            if (_rafid) {
+                _rafid = raf(drawFrame)
+            }
         } else {
             // when the canvas is not animated
             // we force one frame when redraws are triggered
