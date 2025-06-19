@@ -1403,10 +1403,10 @@ export default function litecanvas(settings = {}) {
     function drawFrame(now) {
         let updated = 0
 
-        _lastFrameTime = now
-
         if (settings.animate) {
+            // prevents too long frames
             _accumulated += math.min(0.2, (now - _lastFrameTime) / 1000)
+            _lastFrameTime = now
 
             while (_accumulated >= _deltaTime) {
                 updated++
