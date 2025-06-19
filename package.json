@@ -6,7 +6,7 @@
     "author": "Luiz Bills <luizbills@pm.me>",
     "contributors": [],
     "devDependencies": {
-        "@swc/core": "^1.12.1",
+        "@swc/core": "^1.12.3",
         "ava": "^6.4.0",
         "esbuild": "^0.25.5",
         "gzip-size": "^7.0.0",
