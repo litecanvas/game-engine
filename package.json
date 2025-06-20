@@ -1,12 +1,12 @@
 {
     "name": "litecanvas",
-    "version": "0.83.4",
+    "version": "0.83.5",
     "description": "Lightweight HTML5 canvas 2D game engine suitable for small projects and creative coding. Inspired by PICO-8 and P5/Processing.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
     "contributors": [],
     "devDependencies": {
-        "@swc/core": "^1.12.3",
+        "@swc/core": "^1.12.4",
         "ava": "^6.4.0",
         "esbuild": "^0.25.5",
         "gzip-size": "^7.0.0",
