@@ -2,10 +2,10 @@
 
 # Litecanvas
 
-[![NPM Version](https://flat.badgen.net/npm/v/litecanvas?scale=1&label=NPM)](https://www.npmjs.com/package/litecanvas/)
+[![NPM Version](https://flat.badgen.net/npm/v/litecanvas?scale=1&label=NPM&color=blue&cache=3600)](https://www.npmjs.com/package/litecanvas/)
+[![License](https://flat.badgen.net/npm/license/litecanvas)](LICENSE)
 
 Litecanvas is a lightweight HTML5 canvas 2D engine suitable for small web games, prototypes, game jams, animations, creative coding, learning game programming and game design, etc.
-
 
 [![Itch](https://flat.badgen.net/static/FOLLOW/ON%20ITCH.IO/fa5c5c?scale=1.25)](https://bills.itch.io/litecanvas)
 [![Discord Server](https://flat.badgen.net/static/CHAT/ON%20DISCORD/5865f2?scale=1.25&icon=discord)](https://discord.com/invite/r2c3rGsvH3)
