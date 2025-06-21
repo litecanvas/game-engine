@@ -75,7 +75,7 @@ function tapped(x, y) {
 
 // put the game logic in this function
 function update(dt) {
-    // make the circle falls 100 pixels per second
+    // make the circle falls 200 pixels per second
     posy += 200 * dt
 }
 
