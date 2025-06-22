@@ -16,5 +16,5 @@ function update() {}
 
 function draw() {
     cls(0)
-    circfill(CX, CY, wrap(T * 50, 0, 128), 2)
+    circfill(W / 2, H / 2, wrap(T * 50, 0, 128), 2)
 }

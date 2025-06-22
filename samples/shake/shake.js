@@ -42,8 +42,8 @@ function untap() {
 function update(dt) {
     T += dt
 
-    ball.x = CX
-    ball.y = CY - ball.radius
+    ball.x = W / 2
+    ball.y = H / 2 - ball.radius
 
     shake.update(dt)
 }

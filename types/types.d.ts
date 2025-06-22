@@ -1,16 +1,10 @@
 type LitecanvasInstance = {
-    /** The game canvas HTML element */
-    CANVAS: HTMLCanvasElement
     /** The game screen width */
     W: number
     /** The game screen height */
     H: number
     /** the amount of time (in seconds) since the game started */
     T: number
-    /** the center X of the game screen */
-    CX: number
-    /** the center Y of the game screen */
-    CY: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
     MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
@@ -491,6 +485,10 @@ type LitecanvasInstance = {
     iskeypressed(key: string): boolean
 
     /** PLUGINS API */
+    /**
+     * Returns the canvas
+     */
+    canvas(): HTMLCanvasElement
     /**
      * Prepares a plugin to be loaded
      *

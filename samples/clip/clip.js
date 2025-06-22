@@ -3,8 +3,8 @@ litecanvas()
 function init() {
     resized()
 
-    x = CX
-    y = CY
+    x = W / 2
+    y = H / 2
     state = 0
 
     boxes = []

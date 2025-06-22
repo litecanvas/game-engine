@@ -21,7 +21,7 @@ function init() {
 
     // create many balls
     for (let i = 0; i < 50; i++) {
-        entities.push(ball(CX, CY))
+        entities.push(ball(W / 2, H / 2))
     }
 
     // fps meter

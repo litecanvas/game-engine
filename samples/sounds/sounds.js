@@ -55,10 +55,10 @@ for (const key in sounds) {
 function draw() {
     cls(0)
     if (last !== null) {
-        circfill(CX, CY, 75, 3)
+        circfill(W / 2, H / 2, 75, 3)
 
         textalign('center', 'middle')
         textsize(20)
-        text(CX, CY, `sfx(${'default' === last ? '' : '[ ... ]'});`, 0)
+        text(W / 2, H / 2, `sfx(${'default' === last ? '' : '[ ... ]'});`, 0)
     }
 }

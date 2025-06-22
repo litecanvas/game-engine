@@ -5,7 +5,7 @@ let prevx, prevy, x, y, dirty
 
 function init() {
     const colors = stat(5)
-    CANVAS.style.background = colors[0]
+    canvas().style.background = colors[0]
 }
 
 function tapping(tapx, tapy) {

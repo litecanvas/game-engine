@@ -17,7 +17,7 @@ function draw() {
     linewidth(lw)
 
     // dynamic line
-    line(CX, CY, CX + (cos(T) * W) / 2, CY + (sin(T) * H) / 2, 5)
+    line(W / 2, H / 2, W / 2 + (cos(T) * W) / 2, H / 2 + (sin(T) * H) / 2, 5)
 
     // static lines
     line(0, 0, 0, H, 4)
