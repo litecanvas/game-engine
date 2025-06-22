@@ -1,7 +1,11 @@
 import test from 'ava'
-import './_mocks/browser.js'
+import { setupDOM } from './_mocks/dom.js'
 import litecanvas from '../src/index.js'
 import { defaultPalette } from '../src/palette.js'
+
+test.before(() => {
+    setupDOM()
+})
 
 test('stat(0) returns the instance settings', (t) => {
     const expected = 'bar'
@@ -74,8 +78,8 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
         const scaled = litecanvas({
             global: false,
             animate: false,
-            width: innerWidth / 2,
-            height: innerHeight / 2,
+            width: window.innerWidth / 2,
+            height: window.innerHeight / 2,
             autoscale: true,
         })
         const actual = scaled.stat(3)

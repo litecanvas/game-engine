@@ -1,14 +1,21 @@
 import test from 'ava'
-import './_mocks/browser.js'
+import { setupDOM } from './_mocks/dom.js'
 import litecanvas from '../src/index.js'
 
-let g = litecanvas({
-    animate: false,
+test.before(() => {
+    setupDOM()
 })
 
 test('changes the global variable `zzfxV`', (t) => {
-    const expected = 10
-    g.volume(expected)
+    const local = litecanvas({
+        animate: false,
+    })
 
-    t.is(globalThis.zzfxV, expected)
+    const expected = 10
+
+    local.volume(expected)
+
+    const actual = globalThis.zzfxV
+
+    t.is(actual, expected)
 })

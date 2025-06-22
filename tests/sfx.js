@@ -1,9 +1,15 @@
 import test from 'ava'
-import './_mocks/browser.js'
+import { setupDOM } from './_mocks/dom.js'
 import litecanvas from '../src/index.js'
 
-let g = litecanvas({
-    animate: false,
+let g
+
+test.before(() => {
+    setupDOM()
+
+    g = litecanvas({
+        animate: false,
+    })
 })
 
 // prettier-ignore

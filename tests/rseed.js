@@ -1,6 +1,10 @@
 import test from 'ava'
-import './_mocks/browser.js'
+import { setupDOM } from './_mocks/dom.js'
 import litecanvas from '../src/index.js'
+
+test.before(() => {
+    setupDOM()
+})
 
 test('produces random numbers based on initial seed', (t) => {
     t.plan(2)

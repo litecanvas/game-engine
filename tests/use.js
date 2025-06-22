@@ -1,6 +1,10 @@
 import test from 'ava'
-import './_mocks/browser.js'
+import { setupDOM } from './_mocks/dom.js'
 import litecanvas from '../src/index.js'
+
+test.before(() => {
+    setupDOM()
+})
 
 let testPlugin = (engine, config) => {
     return {
