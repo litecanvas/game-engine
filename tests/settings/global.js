@@ -1,5 +1,5 @@
 import test from 'ava'
-import { setupDOM } from '../_mocks/dom.js'
+import { setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../../src/index.js'
 
 test.before(() => {

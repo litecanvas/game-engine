@@ -1,29 +1,19 @@
 import test from 'ava'
-import { setupDOM } from '../_mocks/dom.js'
+import { setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../../src/index.js'
 
 test.before(() => {
     setupDOM()
 })
 
-test('returns the canvas', (t) => {
-    const local = litecanvas({
-        animate: false,
-        global: false,
-    })
-    const c = local.canvas()
-    t.is(c.tagName, 'CANVAS')
-    local.quit()
-})
+test('custom canvas', (t) => {
+    t.plan(2)
 
-test('returns the custom canvas', (t) => {
     const customCanvas = document.createElement('canvas')
 
     customCanvas.id = 'my-custom-canvas'
 
     window.document.body.appendChild(customCanvas)
-
-    const expected = customCanvas
 
     const local = litecanvas({
         animate: false,
@@ -31,9 +21,17 @@ test('returns the custom canvas', (t) => {
         global: false,
     })
 
-    const current = local.canvas()
+    const expected = customCanvas
 
-    t.is(expected, current)
+    {
+        const current = local.canvas()
+        t.is(expected, current)
+    }
+
+    {
+        const current = local.ctx().canvas
+        t.is(expected, current)
+    }
 
     local.quit()
 })
