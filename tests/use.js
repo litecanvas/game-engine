@@ -1,6 +1,10 @@
 import test from 'ava'
-import './_mocks/browser.js'
+import { setupDOM } from './_mocks/dom.js'
 import litecanvas from '../src/index.js'
+
+test.before(() => {
+    setupDOM()
+})
 
 let testPlugin = (engine, config) => {
     return {
@@ -8,7 +12,7 @@ let testPlugin = (engine, config) => {
     }
 }
 
-test('plugins can be loaded before "init" event', (t) => {
+test('plugins can be loaded before "init" event', async (t) => {
     return new Promise((resolve) => {
         let g = litecanvas({
             loop: { init },
@@ -26,7 +30,7 @@ test('plugins can be loaded before "init" event', (t) => {
     })
 })
 
-test('plugins can be loaded after "init" event', (t) => {
+test('plugins can be loaded after "init" event', async (t) => {
     return new Promise((resolve) => {
         let g = litecanvas({
             loop: { init },
@@ -44,7 +48,7 @@ test('plugins can be loaded after "init" event', (t) => {
     })
 })
 
-test('plugins can be used for multiple engine instances', (t) => {
+test('plugins can be used for multiple engine instances', async (t) => {
     let done = 0
     let foo1, foo2
     return new Promise((resolve) => {

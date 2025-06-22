@@ -11,7 +11,8 @@ Litecanvas is a lightweight HTML5 canvas 2D engine suitable for small web games,
 [![Discord Server](https://flat.badgen.net/static/CHAT/ON%20DISCORD/5865f2?scale=1.25&icon=discord)](https://discord.com/invite/r2c3rGsvH3)
 [![Playground](https://flat.badgen.net/static/CODE/ON%20PLAYGROUND/5f3dc4?scale=1.25)](https://litecanvas.js.org/)
 
-> [!WARNING]  
+<!-- prettier-ignore -->
+> [!WARNING]
 > **This project is still in the "alpha" stage. Break changes may occur frequently. All feedback is welcome and appreciated.**
 
 ### Features
@@ -60,9 +61,9 @@ litecanvas({
 function init() {
     bg = 0 // the color #0 (black)
     color = 3 // the color #3 (white)
-    radius = W / 10 // the canvas width/10
-    posx = CX // center X (or canvas width/2)
-    posy = CY // center Y (or canvas width/2)
+    radius = W / 10 // the canvas Width/10
+    posx = W / 2 // center X (or canvas Width/2)
+    posy = H / 2 // center Y (or canvas Height/2)
 }
 
 // this function detect clicks/touches

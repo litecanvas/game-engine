@@ -1,9 +1,16 @@
 import test from 'ava'
-import './_mocks/browser.js'
+import { setupDOM } from './_mocks/dom.js'
 import litecanvas from '../src/index.js'
+import { defaultPalette } from '../src/palette.js'
 
-let g = litecanvas({
-    animate: false,
+let g
+
+test.before(() => {
+    setupDOM()
+
+    g = litecanvas({
+        animate: false,
+    })
 })
 
 test('PI', (t) => {

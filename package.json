@@ -6,12 +6,14 @@
     "author": "Luiz Bills <luizbills@pm.me>",
     "contributors": [],
     "devDependencies": {
-        "@swc/core": "^1.12.4",
+        "@swc/core": "^1.12.5",
         "ava": "^6.4.0",
         "esbuild": "^0.25.5",
         "gzip-size": "^7.0.0",
         "prettier": "^3.5.3",
-        "tap-min": "^3.0.0"
+        "tap-min": "^3.0.0",
+        "@types/jsdom": "^21.1.7",
+        "jsdom": "^26.1.0"
     },
     "homepage": "https://litecanvas.github.io/about.html",
     "repository": {
@@ -26,7 +28,7 @@
     "types": "types/index.d.ts",
     "scripts": {
         "test": "ava --tap | tap-min",
-        "dev:test": "ava --watch",
+        "test:watch": "ava --watch",
         "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.dev.js --servedir=.",
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",

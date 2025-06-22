@@ -1,5 +1,5 @@
 // @ts-check
-import { zzfx } from './zzfx.js'
+import { setupZzFX } from './zzfx.js'
 import { defaultPalette } from './palette.js'
 import { assert } from './dev.js'
 
@@ -22,6 +22,7 @@ export default function litecanvas(settings = {}) {
             elem.addEventListener(evt, callback, false)
             _browserEventListeners.push(() => elem.removeEventListener(evt, callback, false))
         },
+        zzfx = setupZzFX(root),
         isNumber = Number.isFinite,
         /** @type {LitecanvasOptions} */
         defaults = {
@@ -251,7 +252,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(stop1), 'map: 3rd param must be a number')
             DEV: assert(isNumber(start2), 'map: 4th param must be a number')
             DEV: assert(isNumber(stop2), 'map: 5th param must be a number')
-            DEV: assert(max !== min, 'map: the 3rd param must be different than the 2nd param')
+            DEV: assert(stop1 !== start1, 'map: the 2nd param must be different than the 3rd param')
 
             // prettier-ignore
             const result = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2
