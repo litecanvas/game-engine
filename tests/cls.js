@@ -21,10 +21,10 @@ test('clear screen with color', (t) => {
     local.cls(colorIndex)
 
     const expected = [
-        'beginPath',
-        `rect 0,0,${local.W},${local.H}`,
+        'beginPath()',
+        `rect(0,0,${local.W},${local.H},undefined)`,
         `set fillStyle ${colorValue}`,
-        'fill',
+        'fill()',
     ]
     const actual = local.ctx()._calls.slice(-expected.length)
 
@@ -39,7 +39,7 @@ test('clear screen without 1st argument', (t) => {
 
     local.cls()
 
-    const expected = [`clearRect 0,0,${local.W},${local.H}`]
+    const expected = [`clearRect(0,0,${local.W},${local.H})`]
 
     t.deepEqual(local.ctx()._calls.slice(-expected.length), expected)
 })

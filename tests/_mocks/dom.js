@@ -27,6 +27,7 @@ export function setupDOM() {
  * @param {Window} window
  */
 function setupOtherStuffs(window) {
+    // add AudioContext
     global.AudioContext = class {
         createBuffer() {
             return {
@@ -44,19 +45,22 @@ function setupOtherStuffs(window) {
         }
     }
 
+    // add AudioBuffer
     global.AudioBuffer = class {}
 
+    // add requestAnimationFrame
     global.requestAnimationFrame = (callback) => {
         return setTimeout(() => {
             callback(performance.now())
         }, 1000 / 60)
     }
 
+    // add cancelAnimationFrame
     global.cancelAnimationFrame = (id) => {
         clearTimeout(id)
     }
 
-    // fake canvas element
+    // add canvas element
     createCanvasTag(window)
 }
 
@@ -76,7 +80,7 @@ function createCanvasTag(window) {
         if ('canvas' === tagName.toLowerCase()) {
             el.getContext = function (type) {
                 if (!this.context) {
-                    this.context = new CanvasRenderingContextMock(type, this)
+                    this.context = createContext2d(this)
                 }
                 return this.context
             }
@@ -87,40 +91,60 @@ function createCanvasTag(window) {
     }
 }
 
-class CanvasRenderingContextMock {
-    width = 300
-    height = 150
+function createContext2d(canvas) {
+    const ctx = {
+        _calls: [],
 
-    canvas = null
-    _type = null
+        canvas,
 
-    _calls = []
-
-    constructor(type, canvas) {
-        this._type = type
-        this.canvas = canvas
+        fillStyle: '#000000',
+        font: '10px sans-serif',
+        globalAlpha: 1,
+        globalCompositeOperation: 'source-over',
+        imageSmoothingEnabled: true,
+        lineDashOffset: 0,
+        lineWidth: 1,
+        strokeStyle: '#000000',
+        textAlign: 'start',
+        textBaseline: 'alphabetic',
+        textRendering: 'auto',
     }
 
-    beginPath() {
-        this._calls.push('beginPath')
-    }
+    return new Proxy(ctx, {
+        set(target, prop, value) {
+            target._calls.push(`set ${prop} ${value}`)
+            target[prop] = value
+            return true
+        },
+        get(target, prop, receiver) {
+            const value = target[prop]
+            if (value === undefined || value instanceof Function) {
+                return function (...args) {
+                    target._calls.push(`${prop}(${formatArgs(args).join(',')})`)
+                    return value ? value.apply(this === receiver ? target : this, args) : true
+                }
+            }
+            return value
+        },
+    })
+}
 
-    rect(x, y, width, height) {
-        this._calls.push(`rect ${x},${y},${width},${height}`)
+function formatArgs(args) {
+    const result = []
+    const literals = ['number', 'string']
+    for (const arg of args) {
+        const type = typeof arg
+        if (literals.indexOf(type) >= 0) {
+            result.push(arg)
+        } else if ('boolean' === type) {
+            result.push(`bool(${arg ? 'true' : 'false'})`)
+        } else if ('undefined' === type) {
+            result.push('undefined')
+        } else if (null === arg) {
+            result.push('null')
+        } else {
+            result.push(arg.toString())
+        }
     }
-
-    clearRect(x, y, width, height) {
-        this._calls.push(`clearRect ${x},${y},${width},${height}`)
-    }
-
-    fill() {
-        this._calls.push('fill')
-    }
-
-    /**
-     * @param {string} value
-     */
-    set fillStyle(value) {
-        this._calls.push(`set fillStyle ${value}`)
-    }
+    return result
 }

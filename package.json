@@ -28,7 +28,7 @@
     "types": "types/index.d.ts",
     "scripts": {
         "test": "ava --tap | tap-min",
-        "dev:test": "ava --watch",
+        "test:watch": "ava --watch",
         "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.dev.js --servedir=.",
         "build": "node script/build.js",
         "gzip-size": "gzip -c dist/dist.min.js | wc -c | xargs printf \"  Gzip size: %s bytes\n\"",
