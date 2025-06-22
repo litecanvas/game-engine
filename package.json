@@ -60,5 +60,8 @@
             "tests/**/*",
             "!tests/_mocks"
         ]
-    }
+    },
+    "trustedDependencies": [
+        "@swc/core"
+    ]
 }
