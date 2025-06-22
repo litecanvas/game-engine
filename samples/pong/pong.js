@@ -32,8 +32,8 @@ let padW = 120,
 function init() {
     use(pluginFrameRateMeter)
 
-    ballX = CX
-    ballY = CY - H / 4
+    ballX = W / 2
+    ballY = H / 2 - H / 4
     textSize = W / 12
 }
 
@@ -94,7 +94,7 @@ function draw() {
     if (!started) {
         textalign('center', 'middle')
         textsize(textSize)
-        text(CX, CY, 'TAP TO START', 3)
+        text(W / 2, H / 2, 'TAP TO START', 3)
     } else if (lifes > 0) {
         rectfill(padX, padY, padW, padH, 3)
         circfill(ballX, ballY, ballSize, 5)
@@ -109,8 +109,8 @@ function draw() {
     } else {
         textalign('center', 'middle')
         textsize(textSize)
-        text(CX, CY - 25, 'GAME OVER', 3)
+        text(W / 2, H / 2 - 25, 'GAME OVER', 3)
         textsize(textSize * 0.85)
-        text(CX, CY + 10, 'SCORE: ' + ('' + score).padStart(6, 0), 3)
+        text(W / 2, H / 2 + 10, 'SCORE: ' + ('' + score).padStart(6, 0), 3)
     }
 }

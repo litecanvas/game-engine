@@ -9,8 +9,8 @@ function resized() {
     minutesRadius = radius * 0.65
     hoursRadius = radius * 0.48
     clockDiameter = radius * 1.8
-    cx = CX
-    cy = CY
+    cx = W / 2
+    cy = H / 2
 }
 
 function init() {

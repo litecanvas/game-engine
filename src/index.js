@@ -92,9 +92,6 @@ export default function litecanvas(settings = {}) {
 
     /** @type {Omit<LitecanvasInstance,'PI'|'sin'|'cos'|'atan2'|'hypot'|'tan'|'abs'|'ceil'|'floor'|'trunc'|'min'|'max'|'pow'|'sqrt'|'sign'|'exp'|'iskeydown'|'iskeypressed'>} */
     const instance = {
-        /** @type {HTMLCanvasElement} */
-        CANVAS: null,
-
         /** @type {number} */
         W: 0,
 
@@ -103,12 +100,6 @@ export default function litecanvas(settings = {}) {
 
         /** @type {number} */
         T: 0,
-
-        /** @type {number} */
-        CX: 0,
-
-        /** @type {number} */
-        CY: 0,
 
         /** @type {number} */
         MX: -1,
@@ -922,6 +913,14 @@ export default function litecanvas(settings = {}) {
         },
 
         /** PLUGINS API */
+        /**
+         * Returns the canvas
+         *
+         * @returns {HTMLCanvasElement}
+         */
+        canvas() {
+            return _canvas
+        },
         /**
          * Prepares a plugin to be loaded
          *

@@ -38,8 +38,8 @@ function draw() {
 }
 
 function resized() {
-    x = CX
-    y = CY
+    x = W / 2
+    y = H / 2
 }
 
 // here's where the magic happens!
@@ -52,13 +52,12 @@ function pluginResize(engine, config) {
 
     return {
         resize: (width, height) => {
-            CANVAS.width = width
+            const _canvas = canvas()
+            _canvas.width = width
             def('W', width)
-            def('CX', width / 2)
 
-            CANVAS.height = height
+            _canvas.height = height
             def('H', height)
-            def('CY', height / 2)
 
             emit('resized', 1)
         },

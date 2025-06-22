@@ -105,7 +105,7 @@ function draw() {
         textfont('monospace')
         textalign('center', 'middle')
         textsize(28)
-        text(CX, CY, 'GAME OVER', 4, 'bold')
+        text(W / 2, H / 2, 'GAME OVER', 4, 'bold')
     }
 }
 

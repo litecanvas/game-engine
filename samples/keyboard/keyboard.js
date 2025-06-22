@@ -3,8 +3,8 @@ let x, y, color
 litecanvas()
 
 function init() {
-    x = CX
-    y = CY
+    x = W / 2
+    y = H / 2
     color = 0
 }
 

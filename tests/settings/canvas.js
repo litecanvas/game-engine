@@ -11,27 +11,27 @@ test('returns the canvas', (t) => {
         animate: false,
         global: false,
     })
-    const c = local.CANVAS
+    const c = local.canvas()
     t.is(c.tagName, 'CANVAS')
     local.quit()
 })
 
 test('returns the custom canvas', (t) => {
-    const c = document.createElement('canvas')
+    const customCanvas = document.createElement('canvas')
 
-    c.id = 'my-custom-canvas'
+    customCanvas.id = 'my-custom-canvas'
 
-    window.document.body.appendChild(c)
+    window.document.body.appendChild(customCanvas)
 
-    const expected = c
+    const expected = customCanvas
 
     const local = litecanvas({
         animate: false,
-        canvas: '#' + c.id,
+        canvas: '#' + customCanvas.id,
         global: false,
     })
 
-    const current = local.CANVAS
+    const current = local.canvas()
 
     t.is(expected, current)
 

@@ -14,9 +14,9 @@ function init() {
 
 function draw() {
     textalign('center', 'middle')
-    text(CX, CY - 50, 'Open your browser console', 3)
-    text(CX, CY, 'FOO = ' + FOO, 3)
-    text(CX, CY + 50, sayhello('Everyone'), 3)
+    text(W / 2, H / 2 - 50, 'Open your browser console', 3)
+    text(W / 2, H / 2, 'FOO = ' + FOO, 3)
+    text(W / 2, H / 2 + 50, sayhello('Everyone'), 3)
 }
 
 function pluginTest(engine, config) {

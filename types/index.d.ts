@@ -8,18 +8,12 @@ export default function litecanvas(settings?: LitecanvasOptions): LitecanvasInst
 declare global {
     function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
 
-    /** The game canvas HTML element */
-    var CANVAS: HTMLCanvasElement
     /** The game screen width */
     var W: number
     /** The game screen height */
     var H: number
     /** the amount of time (in seconds) since the game started */
     var T: number
-    /** the center X of the game screen */
-    var CX: number
-    /** the center Y of the game screen */
-    var CY: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
     var MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
@@ -504,6 +498,10 @@ declare global {
     function iskeypressed(key: string): boolean
 
     /** PLUGINS API */
+    /**
+     * Returns the canvas
+     */
+    function canvas(): HTMLCanvasElement
     /**
      * Prepares a plugin to be loaded
      *

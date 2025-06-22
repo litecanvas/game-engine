@@ -2,7 +2,7 @@ litecanvas()
 
 function init() {
     x = 0
-    y = CY
+    y = H / 2
     vel = 500
     ts = 1
     timescale(ts)

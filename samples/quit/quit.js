@@ -2,7 +2,7 @@ const e = litecanvas()
 
 function init() {
     x = 0
-    y = CY
+    y = H / 2
     vel = 2000
 
     listen('quit', () => {

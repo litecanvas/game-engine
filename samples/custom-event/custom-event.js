@@ -6,7 +6,7 @@ litecanvas({
 function init() {
     player = {
         x: 0,
-        y: CY,
+        y: H / 2,
         size: 64,
         color: 4,
     }

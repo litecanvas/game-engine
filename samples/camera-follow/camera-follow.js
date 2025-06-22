@@ -1,19 +1,19 @@
 litecanvas()
 
 function init() {
-    actor = { x: 0, y: CY }
+    actor = { x: 0, y: H / 2 }
 }
 
 function update(dt) {
     // animate the actor
-    actor.x = wave(CX - 200, CX + 200, T)
+    actor.x = wave(W / 2 - 200, W / 2 + 200, T)
 }
 
 function draw() {
     push()
 
     // setup the camera viewport to follow the actor position
-    translate(CX - actor.x, CY - actor.y)
+    translate(W / 2 - actor.x, H / 2 - actor.y)
 
     // draw the scene objects
     background()
