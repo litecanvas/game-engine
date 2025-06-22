@@ -1448,7 +1448,6 @@ export default function litecanvas(settings = {}) {
 
         DEV: assert(_canvas && _canvas.tagName === 'CANVAS', 'Invalid canvas element')
 
-        instance.def('CANVAS', _canvas)
         _ctx = _canvas.getContext('2d')
 
         on(_canvas, 'click', () => root.focus())
@@ -1482,9 +1481,6 @@ export default function litecanvas(settings = {}) {
 
         instance.def('W', (_canvas.width = width))
         instance.def('H', (_canvas.height = height))
-
-        instance.def('CX', instance.W / 2)
-        instance.def('CY', instance.H / 2)
 
         if (settings.autoscale) {
             if (!_canvas.style.display) {
