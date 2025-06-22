@@ -11,7 +11,7 @@ test('returns the canvas', (t) => {
         animate: false,
         global: false,
     })
-    const c = local.canvas()
+    const c = local.CANVAS
     t.is(c.tagName, 'CANVAS')
     local.quit()
 })
@@ -31,7 +31,7 @@ test('returns the custom canvas', (t) => {
         global: false,
     })
 
-    const current = local.canvas()
+    const current = local.CANVAS
 
     t.is(expected, current)
 
