@@ -502,7 +502,7 @@ type LitecanvasInstance = {
      * @param callback the function that is called when the event occurs
      * @returns a function to remove the listener
      */
-    listen(event: string, callback: Function): Function | null
+    listen(event: string, callback: Function): Function
     /**
      * Call all listeners attached to a game event
      *
