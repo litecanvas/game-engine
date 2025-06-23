@@ -2,36 +2,35 @@ import test from 'ava'
 import { setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
 
-let g
+/** @type {LitecanvasInstance} */
+let local
+
+const N = 1000
+const MIN = 50
+const MAX = 100
 
 test.before(() => {
     setupDOM()
 
-    g = litecanvas({
+    local = litecanvas({
         animate: false,
     })
 })
 
+test.after(() => {
+    local.quit()
+})
+
 test('produces random integer numbers between MIN and MAX', (t) => {
-    const times = 1000
-    const min = 25
-    const max = 100
-
-    t.plan(times)
-
-    for (let i = 0; i < times; i++) {
-        const randomNumber = g.randi(min, max)
-        t.true(randomNumber >= min && randomNumber <= max)
+    for (let i = 0; i < N; i++) {
+        const randomNumber = local.randi(MIN, MAX)
+        t.true(randomNumber >= MIN && randomNumber <= MAX)
     }
 })
 
-test('by default, produces random integer numbers between 0 and 1', (t) => {
-    const times = 1000
-
-    t.plan(times)
-
-    for (let i = 0; i < times; i++) {
-        const randomNumber = g.randi()
-        t.true(randomNumber >= 0 && randomNumber <= 1.0)
+test('by default, produces 0 or 1', (t) => {
+    for (let i = 0; i < N; i++) {
+        const randomNumber = local.randi()
+        t.true(randomNumber === 0 || randomNumber === 1)
     }
 })

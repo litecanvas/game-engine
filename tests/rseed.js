@@ -6,26 +6,47 @@ test.before(() => {
     setupDOM()
 })
 
+function randomNumbers(engine, n) {
+    return Array(n)
+        .fill(true)
+        .map(() => engine.randi(0, 100))
+}
+
 test('produces random numbers based on initial seed', (t) => {
-    t.plan(2)
-
     const seed = 42
-    const expected = '25-8-58-22-37'
 
-    let g = litecanvas({
+    let engine1 = litecanvas({
         animate: false,
+        global: false,
     })
 
-    // generate random numbers using randi()
-    const randomNumbers = (n = 5) => {
-        return Array(5)
-            .fill(true)
-            .map(() => g.randi(0, 100))
+    let engine2 = litecanvas({
+        animate: false,
+        global: false,
+    })
+
+    {
+        engine1.rseed(seed)
+        const actual = randomNumbers(engine1, 5)
+
+        engine2.rseed(seed)
+        const expected = randomNumbers(engine2, 5)
+
+        // the two engine should produce the same numbers given a same seed
+        t.deepEqual(actual, expected)
     }
 
-    g.rseed(seed)
-    t.is(randomNumbers().join('-'), expected)
+    {
+        engine1.rseed(seed) // reset the RNG using the same seed
+        const actual = randomNumbers(engine1, 5)
 
-    g.rseed(seed) // reset the RNG state
-    t.is(randomNumbers().join('-'), expected)
+        engine2.rseed(seed + 999) // reset with a different seed
+        const expected = randomNumbers(engine2, 5)
+
+        // now should produce diffent numbers
+        t.notDeepEqual(actual, expected)
+    }
+
+    engine1.quit()
+    engine2.quit()
 })

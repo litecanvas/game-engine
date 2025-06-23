@@ -38,7 +38,7 @@
 
     "@isaacs/fs-minipass": ["@isaacs/fs-minipass@4.0.1", "", { "dependencies": { "minipass": "^7.0.4" } }, ""],
 
-    "@litecanvas/jsdom-extras": ["@litecanvas/jsdom-extras@1.0.0", "", { "dependencies": { "jsdom": "^26.1.0" } }, "sha512-RY1LpKZvxdoV4nhBmU+UxJclZZW9owKO0fJiAHASnXCEZcxqalUvfzi0i4+yDGWEN/hNcL4Slw4aycIq4w8Trw=="],
+    "@litecanvas/jsdom-extras": ["@litecanvas/jsdom-extras@1.1.0", "", { "dependencies": { "jsdom": "^26.1.0" }, "peerDependencies": { "litecanvas": "latest" } }, "sha512-rY0l2Z/QetxNObGuRBPqbK3HQbgozQgpt3yfGcOEiMCrqd0IBW2m1FtxGFvWwZdlbXENgSbQRHWuTbirNWebiA=="],
 
     "@mapbox/node-pre-gyp": ["@mapbox/node-pre-gyp@2.0.0", "", { "dependencies": { "consola": "^3.2.3", "detect-libc": "^2.0.0", "https-proxy-agent": "^7.0.5", "node-fetch": "^2.6.7", "nopt": "^8.0.0", "semver": "^7.5.3", "tar": "^7.4.0" }, "bin": { "node-pre-gyp": "bin/node-pre-gyp" } }, ""],
 
@@ -276,6 +276,8 @@
 
     "jsdom": ["jsdom@26.1.0", "", { "dependencies": { "cssstyle": "^4.2.1", "data-urls": "^5.0.0", "decimal.js": "^10.5.0", "html-encoding-sniffer": "^4.0.0", "http-proxy-agent": "^7.0.2", "https-proxy-agent": "^7.0.6", "is-potential-custom-element-name": "^1.0.1", "nwsapi": "^2.2.16", "parse5": "^7.2.1", "rrweb-cssom": "^0.8.0", "saxes": "^6.0.0", "symbol-tree": "^3.2.4", "tough-cookie": "^5.1.1", "w3c-xmlserializer": "^5.0.0", "webidl-conversions": "^7.0.0", "whatwg-encoding": "^3.1.1", "whatwg-mimetype": "^4.0.0", "whatwg-url": "^14.1.1", "ws": "^8.18.0", "xml-name-validator": "^5.0.0" }, "peerDependencies": { "canvas": "^3.0.0" }, "optionalPeers": ["canvas"] }, "sha512-Cvc9WUhxSMEo4McES3P7oK3QaXldCfNWp7pl2NNeiIFlCoLr3kfq9kb1fxftiwk1FLV7CvpvDfonxtzUDeSOPg=="],
 
+    "litecanvas": ["litecanvas@0.84.1", "", {}, "sha512-nvViyrm54YMNeY4gnKBDNXouE5jC5vPNuubPRQwLAR8Fs3Npp9jOXJTb8ZyroMuP8KHUxn7k0XepiK8F5xoj8g=="],
+
     "load-json-file": ["load-json-file@7.0.1", "", {}, ""],
 
     "lodash": ["lodash@4.17.21", "", {}, ""],
@@ -334,7 +336,7 @@
 
     "plur": ["plur@5.1.0", "", { "dependencies": { "irregular-plurals": "^3.3.0" } }, ""],
 
-    "prettier": ["prettier@3.5.3", "", { "bin": "bin/prettier.cjs" }, ""],
+    "prettier": ["prettier@3.6.0", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-ujSB9uXHJKzM/2GBuE0hBOUgC77CN3Bnpqa+g80bkv3T3A93wL/xlzDATHhnhkzifz/UE2SNOvmbTz5hSkDlHw=="],
 
     "pretty-ms": ["pretty-ms@9.2.0", "", { "dependencies": { "parse-ms": "^4.0.0" } }, ""],
 
