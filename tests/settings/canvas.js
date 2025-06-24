@@ -6,7 +6,7 @@ test.before(() => {
     setupDOM()
 })
 
-test('custom canvas', (t) => {
+test('custom canvas', async (t) => {
     t.plan(2)
 
     const customCanvas = document.createElement('canvas')

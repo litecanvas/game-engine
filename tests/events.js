@@ -19,12 +19,14 @@ test.after(() => {
 
 test('event names are case insensitive', async (t) => {
     await onLitecanvas(local, 'init', () => {
+        const expected = 1
         local.listen('myevent', (data) => {
-            t.pass()
+            const actual = data
+            t.is(actual, expected)
         })
 
         // "MyEvent" should trigger "myevent"
-        local.emit('MyEvent')
+        local.emit('MyEvent', expected)
     })
 })
 

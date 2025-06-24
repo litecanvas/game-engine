@@ -10,40 +10,41 @@ test.before(() => {
 
     local = litecanvas({
         animate: false,
+        global: false,
     })
 })
 
 // prettier-ignore
 const zzfxSound = [1.2,,498,.01,.05,.17,,,,100,281,.05,,,6.4,,,.93,.04,,-1484]
 
-test('plays a ZzFX array of params', (t) => {
+test('plays a ZzFX array of params', async (t) => {
     const result = local.sfx(zzfxSound)
 
     t.is(result, zzfxSound)
 })
 
-test('plays a default sound if the first argument is omitted', (t) => {
+test('plays a default sound if the first argument is omitted', async (t) => {
     const DEFAULT_SFX = local.stat(6)
     const result = local.sfx()
 
     t.is(DEFAULT_SFX, result)
 })
 
-test('the second argument increments the pitch', (t) => {
+test('the second argument increments the pitch', async (t) => {
     const pitchSlide = 150
     const result = local.sfx(zzfxSound, pitchSlide)
 
     t.is(zzfxSound[10] + pitchSlide, result[10])
 })
 
-test('the second argument changes the sound volume', (t) => {
+test('the second argument changes the sound volume', async (t) => {
     const volumeFactor = 2
     const result = local.sfx(zzfxSound, 0, volumeFactor)
 
     t.is(zzfxSound[0] * volumeFactor, result[0])
 })
 
-test('returns false if the global volume is muted', (t) => {
+test('returns false if the global volume is muted', async (t) => {
     local.volume(0) // mute
 
     const result = local.sfx()
@@ -51,7 +52,7 @@ test('returns false if the global volume is muted', (t) => {
     t.false(result)
 })
 
-test('only plays sounds if some interaction has been made on the page', (t) => {
+test('only plays sounds if some interaction has been made on the page', async (t) => {
     navigator.userActivation.hasBeenActive = false
 
     const result = local.sfx()

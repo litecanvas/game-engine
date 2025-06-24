@@ -6,7 +6,7 @@ test.before(() => {
     setupDOM()
 })
 
-test('deletes exposed methods and props only when is global', (t) => {
+test('deletes exposed methods and props only when is global', async (t) => {
     const global = litecanvas({
         global: true,
         animate: false,

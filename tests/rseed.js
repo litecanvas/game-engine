@@ -12,7 +12,7 @@ function randomNumbers(engine, n) {
         .map(() => engine.randi(0, 100))
 }
 
-test('produces random numbers based on initial seed', (t) => {
+test('produces random numbers based on initial seed', async (t) => {
     const seed = 42
 
     let engine1 = litecanvas({

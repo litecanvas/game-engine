@@ -21,14 +21,14 @@ test.after(() => {
     local.quit()
 })
 
-test('produces random float numbers between MIN and MAX', (t) => {
+test('produces random float numbers between MIN and MAX', async (t) => {
     for (let i = 0; i < N; i++) {
         const randomNumber = local.rand(MIN, MAX)
         t.true(randomNumber >= MIN && randomNumber <= MAX)
     }
 })
 
-test('by default, produces random float numbers between 0 and 1.0', (t) => {
+test('by default, produces random float numbers between 0 and 1.0', async (t) => {
     for (let i = 0; i < N; i++) {
         const randomNumber = local.rand()
         t.true(randomNumber >= 0 && randomNumber < 1.0)

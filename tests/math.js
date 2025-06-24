@@ -11,6 +11,7 @@ test.before(() => {
 
     local = litecanvas({
         animate: false,
+        global: false,
     })
 })
 
@@ -18,62 +19,62 @@ test.after(() => {
     local.quit()
 })
 
-test('PI', (t) => {
+test('PI', async (t) => {
     t.is(local.PI, Math.PI)
 })
 
-test('TWO_PI', (t) => {
+test('TWO_PI', async (t) => {
     t.is(local.TWO_PI, Math.PI * 2)
 })
 
-test('HALF_PI', (t) => {
+test('HALF_PI', async (t) => {
     t.is(local.HALF_PI, Math.PI / 2)
 })
 
-test('lerp', (t) => {
+test('lerp', async (t) => {
     t.is(local.lerp(10, 20, 0), 10)
     t.is(local.lerp(10, 20, 0.5), 15)
     t.is(local.lerp(10, 20, 1), 20)
     t.is(local.lerp(10, 20, 2), 30)
 })
 
-test('deg2rad', (t) => {
+test('deg2rad', async (t) => {
     t.is(local.deg2rad(180), local.PI)
     t.is(local.deg2rad(360), local.TWO_PI)
 })
 
-test('rad2deg', (t) => {
+test('rad2deg', async (t) => {
     t.is(local.rad2deg(local.PI), 180)
     t.is(local.rad2deg(local.HALF_PI), 90)
 })
 
-test('clamp', (t) => {
+test('clamp', async (t) => {
     t.is(local.clamp(-10, 0, 100), 0)
     t.is(local.clamp(50, 0, 100), 50)
     t.is(local.clamp(999999, 0, 100), 100)
 })
 
-test('wrap', (t) => {
+test('wrap', async (t) => {
     t.is(local.wrap(5, 0, 10), 5)
     t.is(local.wrap(-1, 0, 10), 9)
     t.is(local.wrap(11, 0, 10), 1)
 })
 
-test('map', (t) => {
+test('map', async (t) => {
     // without contrains (default behavior)
     t.is(local.map(150, 0, 100, 0, 1), 1.5)
     // with contrains
     t.is(local.map(150, 0, 100, 0, 1, true), 1)
 })
 
-test('norm', (t) => {
+test('norm', async (t) => {
     // without contrains
     t.is(local.norm(50, 0, 100), 0.5)
     // with contrains
     t.is(local.norm(150, 0, 100), 1.5)
 })
 
-test('round', (t) => {
+test('round', async (t) => {
     const n = 9.87654321
 
     // without precision
@@ -84,7 +85,7 @@ test('round', (t) => {
     t.is(local.round(n, 5), 9.87654)
 })
 
-test('wave', (t) => {
+test('wave', async (t) => {
     {
         // interpolate from 0 to 100 using Math.sin (default)
         const amount = 0
