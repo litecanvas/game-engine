@@ -3,106 +3,94 @@ import { setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
 import { defaultPalette } from '../src/palette.js'
 
-let g
+/** @type {LitecanvasInstance} */
+let local
 
 test.before(() => {
     setupDOM()
 
-    g = litecanvas({
+    local = litecanvas({
         animate: false,
+        global: false,
     })
 })
 
-test('PI', (t) => {
-    t.is(g.PI, Math.PI)
+test.after(() => {
+    local.quit()
 })
 
-test('TWO_PI', (t) => {
-    t.is(g.TWO_PI, Math.PI * 2)
+test('PI', async (t) => {
+    t.is(local.PI, Math.PI)
 })
 
-test('HALF_PI', (t) => {
-    t.is(g.HALF_PI, Math.PI / 2)
+test('TWO_PI', async (t) => {
+    t.is(local.TWO_PI, Math.PI * 2)
 })
 
-test('lerp', (t) => {
-    t.plan(4)
-
-    t.is(g.lerp(10, 20, 0), 10)
-    t.is(g.lerp(10, 20, 0.5), 15)
-    t.is(g.lerp(10, 20, 1), 20)
-    t.is(g.lerp(10, 20, 2), 30)
+test('HALF_PI', async (t) => {
+    t.is(local.HALF_PI, Math.PI / 2)
 })
 
-test('deg2rad', (t) => {
-    t.plan(2)
-
-    t.is(g.deg2rad(180), g.PI)
-    t.is(g.deg2rad(360), g.TWO_PI)
+test('lerp', async (t) => {
+    t.is(local.lerp(10, 20, 0), 10)
+    t.is(local.lerp(10, 20, 0.5), 15)
+    t.is(local.lerp(10, 20, 1), 20)
+    t.is(local.lerp(10, 20, 2), 30)
 })
 
-test('rad2deg', (t) => {
-    t.plan(2)
-
-    t.is(g.rad2deg(g.PI), 180)
-    t.is(g.rad2deg(g.HALF_PI), 90)
+test('deg2rad', async (t) => {
+    t.is(local.deg2rad(180), local.PI)
+    t.is(local.deg2rad(360), local.TWO_PI)
 })
 
-test('clamp', (t) => {
-    t.plan(3)
-
-    t.is(g.clamp(-10, 0, 100), 0)
-    t.is(g.clamp(50, 0, 100), 50)
-    t.is(g.clamp(999999, 0, 100), 100)
+test('rad2deg', async (t) => {
+    t.is(local.rad2deg(local.PI), 180)
+    t.is(local.rad2deg(local.HALF_PI), 90)
 })
 
-test('wrap', (t) => {
-    t.plan(3)
-
-    t.is(g.wrap(5, 0, 10), 5)
-    t.is(g.wrap(-1, 0, 10), 9)
-    t.is(g.wrap(11, 0, 10), 1)
+test('clamp', async (t) => {
+    t.is(local.clamp(-10, 0, 100), 0)
+    t.is(local.clamp(50, 0, 100), 50)
+    t.is(local.clamp(999999, 0, 100), 100)
 })
 
-test('map', (t) => {
-    t.plan(2)
+test('wrap', async (t) => {
+    t.is(local.wrap(5, 0, 10), 5)
+    t.is(local.wrap(-1, 0, 10), 9)
+    t.is(local.wrap(11, 0, 10), 1)
+})
 
+test('map', async (t) => {
     // without contrains (default behavior)
-    t.is(g.map(150, 0, 100, 0, 1), 1.5)
+    t.is(local.map(150, 0, 100, 0, 1), 1.5)
     // with contrains
-    t.is(g.map(150, 0, 100, 0, 1, true), 1)
+    t.is(local.map(150, 0, 100, 0, 1, true), 1)
 })
 
-test('norm', (t) => {
-    t.plan(2)
-
+test('norm', async (t) => {
     // without contrains
-    t.is(g.norm(50, 0, 100), 0.5)
+    t.is(local.norm(50, 0, 100), 0.5)
     // with contrains
-    t.is(g.norm(150, 0, 100), 1.5)
+    t.is(local.norm(150, 0, 100), 1.5)
 })
 
-test('round', (t) => {
+test('round', async (t) => {
     const n = 9.87654321
 
-    t.plan(3)
-
     // without precision
-    t.is(g.round(n), 10)
+    t.is(local.round(n), 10)
 
     // with precision
-    t.is(g.round(n, 2), 9.88)
-    t.is(g.round(n, 5), 9.87654)
+    t.is(local.round(n, 2), 9.88)
+    t.is(local.round(n, 5), 9.87654)
 })
 
-test('wave', (t) => {
-    t.plan(2)
-
+test('wave', async (t) => {
     {
         // interpolate from 0 to 100 using Math.sin (default)
         const amount = 0
         const expected = 50
-        const actual = g.wave(0, 100, amount)
+        const actual = local.wave(0, 100, amount)
         t.is(actual, expected)
     }
 
@@ -111,7 +99,7 @@ test('wave', (t) => {
         const amount = 0
         const fn = (x) => -Math.cos(x)
         const expected = 0
-        const actual = g.wave(0, 100, amount, fn)
+        const actual = local.wave(0, 100, amount, fn)
         t.is(actual, expected)
     }
 })

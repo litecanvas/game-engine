@@ -6,9 +6,10 @@ test.before(() => {
     setupDOM()
 })
 
-test('changes the global variable `zzfxV`', (t) => {
+test('changes the global variable `zzfxV`', async (t) => {
     const local = litecanvas({
         animate: false,
+        global: false,
     })
 
     const expected = 10

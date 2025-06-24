@@ -1,54 +1,45 @@
 import test from 'ava'
-import { setupDOM } from '@litecanvas/jsdom-extras'
+import { setupDOM, onLitecanvas } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
+
+/** @type {LitecanvasInstance} */
+let local
 
 test.before(() => {
     setupDOM()
+
+    local = litecanvas({
+        global: false,
+    })
+})
+
+test.after(() => {
+    local.quit()
 })
 
 test('event names are case insensitive', async (t) => {
-    const expected = 1
-
-    await new Promise((resolve) => {
-        let actual
-
-        const local = litecanvas({
-            animate: false,
-            global: false,
-        })
-
+    await onLitecanvas(local, 'init', () => {
+        const expected = 1
         local.listen('myevent', (data) => {
-            actual = 1
+            const actual = data
+            t.is(actual, expected)
         })
 
-        local.listen('init', () => {
-            local.emit('MyEvent')
-            t.is(actual, expected)
-            local.quit()
-            resolve()
-        })
+        // "MyEvent" should trigger "myevent"
+        local.emit('MyEvent', expected)
     })
 })
 
 test('No event is emitted before the "init" event', async (t) => {
-    const expected = 1
+    t.plan(1)
 
-    await new Promise((resolve) => {
-        let actual = 0
-
-        const local = litecanvas({
-            animate: false,
-            global: false,
-        })
-
-        local.listen('never', (data) => {
-            actual = 1
-        })
-
-        // runs outside the "init" event
-        local.emit('never')
-        t.not(actual, expected)
-        local.quit()
-        resolve()
+    local.listen('my-another-event', (data) => {
+        t.fail()
     })
+
+    // triggering that event before the "init" event
+    // nothing should happens
+    local.emit('my-another-event')
+
+    t.pass()
 })

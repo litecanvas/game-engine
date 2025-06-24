@@ -6,20 +6,8 @@ test.before(() => {
     setupDOM()
 })
 
-test('deletes all exposed methods and props', (t) => {
-    const engine = litecanvas({
-        animate: false,
-    })
-
-    engine.quit()
-
-    t.plan(2)
-    t.is(globalThis.circfill, undefined)
-    t.is(globalThis.ENGINE, undefined)
-})
-
-test('deletes exposed methods and props only when is global', (t) => {
-    litecanvas({
+test('deletes exposed methods and props only when is global', async (t) => {
+    const global = litecanvas({
         global: true,
         animate: false,
     })
@@ -31,26 +19,35 @@ test('deletes exposed methods and props only when is global', (t) => {
 
     notglobal.quit()
 
-    t.plan(2)
     t.not(globalThis.circfill, undefined)
     t.not(globalThis.ENGINE, undefined)
+
+    global.quit()
+
+    t.is(globalThis.circfill, undefined)
+    t.is(globalThis.ENGINE, undefined)
 })
 
 test('remove all engine event listeners', async (t) => {
-    let value = 0
-    const expected = 1
+    t.plan(1)
 
     await new Promise((resolve) => {
-        const instance = litecanvas({
+        const local = litecanvas({
             global: false,
         })
 
-        instance.listen('update', () => {
-            value++
-            instance.quit()
+        local.listen('draw', () => {
+            t.fail()
+        })
+
+        local.listen('update', () => {
+            // "update" runs before the "draw" event
+            // so destroy lets destroy that engine instance
+            // and the "draw" event will never happens
+            local.quit()
             resolve()
         })
     })
 
-    t.is(value, expected)
+    t.pass()
 })

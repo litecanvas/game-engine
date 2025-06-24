@@ -6,16 +6,23 @@ test.before(() => {
     setupDOM()
 })
 
-test('globally by default', (t) => {
-    const g = litecanvas({
+test('globally by default', async (t) => {
+    const local = litecanvas({
+        // global: true // default
         animate: false,
     })
-    t.is(globalThis.ENGINE, g)
+    t.is(globalThis.ENGINE, local)
+    local.quit()
 })
 
-test('throws error if instantiated globally more than once', (t) => {
+test('throws error if instantiated globally more than once', async (t) => {
     try {
         litecanvas({
+            global: true,
+            animate: false,
+        })
+        litecanvas({
+            global: true,
             animate: false,
         })
         t.fail() // fail if not throws
@@ -24,8 +31,12 @@ test('throws error if instantiated globally more than once', (t) => {
     }
 })
 
-test('settings.global = false not throws errors', (t) => {
+test('settings.global = false not throws errors', async (t) => {
     try {
+        litecanvas({
+            global: false,
+            animate: false,
+        })
         litecanvas({
             global: false,
             animate: false,

@@ -1,93 +1,83 @@
 import test from 'ava'
-import { setupDOM } from '@litecanvas/jsdom-extras'
+import { setupDOM, onLitecanvas } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
 
 test.before(() => {
     setupDOM()
 })
 
-let testPlugin = (engine, config) => {
+let pluginFoo = (engine, config) => {
     return {
         foo: () => config.foo || 1,
     }
 }
 
 test('plugins can be loaded before "init" event', async (t) => {
-    return new Promise((resolve) => {
-        let g = litecanvas({
-            loop: { init },
-            global: false,
-            animate: false,
-        })
-
-        g.use(testPlugin)
-
-        function init() {
-            resolve(g.foo())
-        }
-    }).then((result) => {
-        t.is(result, 1)
+    const local = litecanvas({
+        global: false,
     })
+
+    local.use(pluginFoo)
+
+    await onLitecanvas(local, 'init', () => {
+        const expected = 1
+        const actual = local.foo()
+        t.is(actual, expected)
+    })
+
+    local.quit()
 })
 
-test('plugins can be loaded after "init" event', async (t) => {
-    return new Promise((resolve) => {
-        let g = litecanvas({
-            loop: { init },
-            global: false,
-            animate: false,
-        })
-
-        function init() {
-            g.use(testPlugin)
-
-            resolve(g.foo())
-        }
-    }).then((result) => {
-        t.is(result, 1)
+test('plugins can be loaded on "init" event', async (t) => {
+    const local = litecanvas({
+        global: false,
     })
+
+    await onLitecanvas(local, 'init', () => {
+        local.use(pluginFoo)
+
+        const expected = 1
+        const actual = local.foo()
+        t.is(actual, expected)
+    })
+
+    local.quit()
 })
 
 test('plugins can be used for multiple engine instances', async (t) => {
-    let done = 0
-    let foo1, foo2
-    return new Promise((resolve) => {
-        let g1 = litecanvas({
-            loop: {
-                init() {
-                    g1.use(testPlugin)
-                    foo1 = g1.foo()
-                    done++
-                },
-            },
-            global: false,
-            animate: false,
-        })
-
-        let g2 = litecanvas({
-            loop: {
-                init() {
-                    g2.use(testPlugin, {
-                        foo: 5,
-                    })
-                    foo2 = g2.foo()
-                    done++
-                },
-            },
-            global: false,
-            animate: false,
-        })
-
-        const check = () => {
-            if (2 === done) {
-                resolve(true)
-            } else {
-                setTimeout(check)
-            }
-        }
-        setTimeout(check, 10)
-    }).then((result) => {
-        t.is(foo1, 1)
-        t.is(foo2, 5)
+    const local = litecanvas({
+        global: false,
     })
+
+    await onLitecanvas(local, 'init', () => {
+        const expected = 3
+
+        local.use(pluginFoo, {
+            foo: expected,
+        })
+
+        const actual = local.foo()
+
+        t.is(actual, expected)
+    })
+
+    local.quit()
+
+    const local2 = litecanvas({
+        global: false,
+    })
+
+    await onLitecanvas(local2, 'init', () => {
+        const expected = 5
+
+        local2.use(pluginFoo, {
+            foo: expected,
+        })
+
+        const actual = local2.foo()
+
+        t.is(actual, expected)
+    })
+
+    local2.quit()
 })

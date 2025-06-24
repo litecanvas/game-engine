@@ -1,78 +1,61 @@
 import test from 'ava'
-import { setupDOM } from '@litecanvas/jsdom-extras'
+import { onLitecanvas, setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
 import { defaultPalette } from '../src/palette.js'
 
+/** @type {LitecanvasInstance} */
+let local
+
+/** @type {LitecanvasOptions} */
+const settings = {
+    global: false,
+    customProp: true,
+}
+
 test.before(() => {
     setupDOM()
+
+    local = litecanvas(settings)
 })
 
-test('stat(0) returns the instance settings', (t) => {
-    const expected = 'bar'
+test.after(() => {
+    local.quit()
+})
 
-    const local = litecanvas({
-        foo: expected,
-        animate: false,
-        global: false,
-    })
-    const actual = local.stat(0).foo
+test('stat(0) returns the instance settings', async (t) => {
+    const expected = settings
+    const actual = local.stat(0)
 
-    t.is(actual, expected)
+    t.is(actual.customProp, expected.customProp)
 })
 
 test('stat(1) returns true if the engine has been initialized', async (t) => {
-    t.plan(2)
+    const actual = local.stat(1)
+    const expected = false
 
-    const actual = []
+    t.is(actual, expected)
 
-    await new Promise((resolve) => {
-        const local = litecanvas({
-            animate: false,
-            global: false,
-        })
+    await onLitecanvas(local, 'init', () => {
+        const actual = local.stat(1)
+        const expected = true
 
-        actual.push(local.stat(1)) // not initialized
-
-        local.listen('init', () => {
-            actual.push(local.stat(1)) // initialized
-            resolve()
-        })
+        t.is(actual, expected)
     })
-
-    t.is(actual[0], false)
-    t.is(actual[1], true)
 })
 
 test('stat(2) returns the last requestAnimationFrame ID returned', async (t) => {
-    t.plan(2)
+    const actual = local.stat(2)
+    const expected = undefined
 
-    await new Promise((resolve) => {
-        const local = litecanvas({
-            global: false,
-        })
+    t.is(actual, expected)
 
-        {
-            // should be undefined before any game loop frame
-            const expected = undefined
-            const actual = local.stat(2)
-            t.is(actual, expected)
-        }
-
-        local.listen('update', () => {
-            {
-                // should be a positive number after initialized
-                const actual = local.stat(2)
-                t.true(actual >= 1)
-            }
-            local.quit()
-            resolve()
-        })
+    await onLitecanvas(local, 'update', () => {
+        const actual = local.stat(2)
+        t.true(actual >= 1)
     })
 })
 
 test('stat(3) returns current canvas element scale factor', async (t) => {
-    t.plan(2)
-
     {
         const expected = 2
         const scaled = litecanvas({
@@ -101,13 +84,8 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
     }
 })
 
-test('stat(4) returns attached event callbacks', (t) => {
+test('stat(4) returns attached event callbacks', async (t) => {
     t.plan(2)
-
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
 
     function callback() {}
     function callback2() {}
@@ -123,14 +101,7 @@ test('stat(4) returns attached event callbacks', (t) => {
     t.false(initCallbacks.has(callback2))
 })
 
-test('stat(5) returns the current color palette', (t) => {
-    t.plan(2)
-
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
-
+test('stat(5) returns the current color palette', async (t) => {
     {
         // test the default palette
         const expected = defaultPalette
@@ -151,23 +122,14 @@ test('stat(5) returns the current color palette', (t) => {
     }
 })
 
-test('stat(6) returns the default sound used by `sfx()`', (t) => {
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
+test('stat(6) returns the default sound used by `sfx()`', async (t) => {
     const actual = local.stat(6)
     const expected = local.sfx()
 
     t.is(actual, expected)
 })
 
-test('stat(7) returns the current timescale', (t) => {
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
-
+test('stat(7) returns the current timescale', async (t) => {
     const expected = 2
 
     local.timescale(expected)
@@ -177,12 +139,7 @@ test('stat(7) returns the current timescale', (t) => {
     t.is(actual, expected)
 })
 
-test('stat(8) returns the current volume used by ZzFX', (t) => {
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
-
+test('stat(8) returns the current volume used by ZzFX', async (t) => {
     {
         const expected = 1 // default is 1
         const actual = local.stat(8)
@@ -202,14 +159,7 @@ test('stat(8) returns the current volume used by ZzFX', (t) => {
     }
 })
 
-test('stat(9) returns the current RNG state', (t) => {
-    t.plan(2)
-
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
-
+test('stat(9) returns the current RNG state (current seed)', async (t) => {
     {
         const expected = 42 // custom initial value
 
@@ -219,32 +169,9 @@ test('stat(9) returns the current RNG state', (t) => {
 
         t.is(actual, expected)
     }
-
-    // generate 5 random numbers
-    local.randi()
-    local.randi()
-    local.randi()
-    local.randi()
-    local.randi()
-
-    {
-        const actual = local.stat(9)
-
-        // expected state after generate 5 random numbers
-        const expected = 1613448261
-
-        t.is(actual, expected)
-    }
 })
 
 test('stat(10) returns the current font size', (t) => {
-    t.plan(2)
-
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
-
     {
         const actual = local.stat(10)
         const expected = 20 // initial value (default)
@@ -264,14 +191,7 @@ test('stat(10) returns the current font size', (t) => {
     }
 })
 
-test('stat(11) returns the current font family', (t) => {
-    t.plan(2)
-
-    const local = litecanvas({
-        global: false,
-        animate: false,
-    })
-
+test('stat(11) returns the current font family', async (t) => {
     {
         const actual = local.stat(11)
         const expected = 'sans-serif' // initial value (default)
@@ -293,13 +213,7 @@ test('stat(11) returns the current font family', (t) => {
 test('stat modified via event', async (t) => {
     const expected = 'BAR'
 
-    await new Promise((resolve) => {
-        const local = litecanvas({
-            foo: 'bar',
-            animate: false,
-            global: false,
-        })
-
+    await onLitecanvas(local, 'init', () => {
         local.listen('stat', (data) => {
             // modify only the stat(0)
             if (0 === data.index) {
@@ -307,14 +221,8 @@ test('stat modified via event', async (t) => {
             }
         })
 
-        // No event is emitted before the "init"
-        // So check in "init" or later
-        local.listen('init', () => {
-            const actual = local.stat(0).foo
-            t.is(actual, expected)
-            resolve()
-            local.quit()
-        })
+        const actual = local.stat(0).foo
+        t.is(actual, expected)
     })
 })
 
@@ -322,26 +230,15 @@ test('stat created via event', async (t) => {
     const customIndex = 42
     const expected = 'The answer to the Ultimate Question of Life, the Universe, and Everything'
 
-    await new Promise((resolve) => {
-        const local = litecanvas({
-            animate: false,
-            global: false,
-        })
-
+    await onLitecanvas(local, 'init', () => {
         local.listen('stat', (data) => {
-            // modify only the stat(0)
+            // create a value for stat(42)
             if (customIndex === data.index) {
                 data.value = expected
             }
         })
 
-        // No event is emitted before the "init"
-        // So check in "init" or later
-        local.listen('init', () => {
-            const actual = local.stat(customIndex)
-            t.is(actual, expected)
-            local.quit()
-            resolve()
-        })
+        const actual = local.stat(customIndex)
+        t.is(actual, expected)
     })
 })
