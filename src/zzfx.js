@@ -1,7 +1,7 @@
 // ZzFXMicro - Zuper Zmall Zound Zynth - v1.3.0 by Frank Force | https://github.com/KilledByAPixel/ZzFX
 // prettier-ignore
 /**
- * @param {typeof globalThis} global
+ * @param {Window} global
  * @returns {Function} the `zzfx()` function
  */
 export const setupZzFX = (global) => {

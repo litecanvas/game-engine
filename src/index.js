@@ -10,20 +10,20 @@ import { assert } from './dev.js'
  * @returns {LitecanvasInstance}
  */
 export default function litecanvas(settings = {}) {
-    const /** @type {typeof globalThis} */
-        root = globalThis,
+    const /** @type {Window} */
+        root = window,
         math = Math,
         TWO_PI = math.PI * 2,
         raf = requestAnimationFrame,
         /** @type {Function[]} */
         _browserEventListeners = [],
-        /** @type {(elem:HTMLElement, evt:string, callback:(event:Event)=>void)=>void} */
+        /** @type {(elem: EventTarget, evt: string, callback: (event: Event) => void) => void} */
         on = (elem, evt, callback) => {
             elem.addEventListener(evt, callback, false)
             _browserEventListeners.push(() => elem.removeEventListener(evt, callback, false))
         },
-        zzfx = setupZzFX(root),
         isNumber = Number.isFinite,
+        zzfx = setupZzFX(root),
         /** @type {LitecanvasOptions} */
         defaults = {
             width: null,
@@ -649,8 +649,11 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, drawing, options = {}) {
-            DEV: assert(isNumber(width), 'paint: 1st param must be a number')
-            DEV: assert(isNumber(height), 'paint: 2nd param must be a number')
+            DEV: assert(isNumber(width) && width >= 1, 'paint: 1st param must be a positive number')
+            DEV: assert(
+                isNumber(height) && height >= 1,
+                'paint: 2nd param must be a positive number'
+            )
             DEV: assert(
                 'function' === typeof drawing || Array.isArray(drawing),
                 'paint: 3rd param must be a function or array'
@@ -658,6 +661,10 @@ export default function litecanvas(settings = {}) {
             DEV: assert(
                 (options && !options.scale) || isNumber(options.scale),
                 'paint: 4th param (options.scale) must be a number'
+            )
+            DEV: assert(
+                (options && !options.canvas) || options.canvas instanceof OffscreenCanvas,
+                'paint: 4th param (options.canvas) must be an OffscreenCanvas'
             )
 
             const /** @type {OffscreenCanvas} */
@@ -667,19 +674,17 @@ export default function litecanvas(settings = {}) {
 
             canvas.width = width * scale
             canvas.height = height * scale
-            _ctx = canvas.getContext('2d')
 
+            _ctx = canvas.getContext('2d')
             _ctx.scale(scale, scale)
 
             // draw pixel art if `draw` is a array
-            // @ts-ignore
-            if (drawing.push) {
+            if (Array.isArray(drawing)) {
                 let x = 0,
                     y = 0
 
                 _ctx.imageSmoothingEnabled = false
 
-                // @ts-ignore
                 for (const str of drawing) {
                     for (const color of str) {
                         if (' ' !== color && '.' !== color) {
@@ -692,7 +697,6 @@ export default function litecanvas(settings = {}) {
                     x = 0
                 }
             } else {
-                // @ts-ignore
                 drawing(_ctx)
             }
 
@@ -880,6 +884,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(volumeFactor), 'sfx: 3rd param must be a number')
 
             if (
+                // @ts-ignore
                 root.zzfxV <= 0 ||
                 (navigator.userActivation && !navigator.userActivation.hasBeenActive)
             ) {
@@ -909,6 +914,7 @@ export default function litecanvas(settings = {}) {
         volume(value) {
             DEV: assert(isNumber(value), 'volume: 1st param must be a number')
 
+            // @ts-ignore
             root.zzfxV = value
         },
 
@@ -918,9 +924,7 @@ export default function litecanvas(settings = {}) {
          *
          * @returns {HTMLCanvasElement}
          */
-        canvas() {
-            return _canvas
-        },
+        canvas: () => _canvas,
         /**
          * Prepares a plugin to be loaded
          *
@@ -1047,7 +1051,7 @@ export default function litecanvas(settings = {}) {
          * @returns {any}
          */
         stat(n) {
-            DEV: assert(isNumber(n) && n >= 0, 'stat: 1st param must be a positive number')
+            DEV: assert(isNumber(n) && n >= 0, 'stat: 1st param must be a number')
 
             const list = [
                 // 0
@@ -1067,6 +1071,7 @@ export default function litecanvas(settings = {}) {
                 // 7
                 _timeScale,
                 // 8
+                // @ts-ignore
                 root.zzfxV || 1,
                 // 9
                 _rngSeed,
@@ -1090,6 +1095,7 @@ export default function litecanvas(settings = {}) {
         quit() {
             // stop the game loop (update & draw)
             cancelAnimationFrame(_rafid)
+
             _rafid = 0
 
             // emit "quit" event to manual clean ups
@@ -1108,8 +1114,12 @@ export default function litecanvas(settings = {}) {
                 for (const key in instance) {
                     delete root[key]
                 }
+                // @ts-ignore
                 delete root.ENGINE
             }
+
+            // unset that flag
+            _initialized = false
         },
     }
 
@@ -1133,7 +1143,6 @@ export default function litecanvas(settings = {}) {
 
         // listen window resize event when "autoscale" is enabled
         if (settings.autoscale) {
-            // @ts-ignore
             on(root, 'resize', resizeCanvas)
         }
 
@@ -1306,7 +1315,6 @@ export default function litecanvas(settings = {}) {
             on(_canvas, 'touchend', _touchEndHandler)
             on(_canvas, 'touchcancel', _touchEndHandler)
 
-            // @ts-ignore
             on(root, 'blur', () => {
                 _pressingMouse = false
                 for (const [id, tap] of _taps) {
@@ -1333,7 +1341,6 @@ export default function litecanvas(settings = {}) {
                 return !key ? keySet.size > 0 : keySet.has('space' === key ? ' ' : key)
             }
 
-            // @ts-ignore
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
                 const key = event.key.toLowerCase()
                 if (!_keysDown.has(key)) {
@@ -1342,12 +1349,10 @@ export default function litecanvas(settings = {}) {
                 }
             })
 
-            // @ts-ignore
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
                 _keysDown.delete(event.key.toLowerCase())
             })
 
-            // @ts-ignore
             on(root, 'blur', () => _keysDown.clear())
             instance.listen('after:update', () => _keysPress.clear())
 
@@ -1521,7 +1526,6 @@ export default function litecanvas(settings = {}) {
      */
     function triggerEvent(eventName, arg1, arg2, arg3, arg4) {
         if (!_events[eventName]) return
-        // @ts-ignore
         for (const callback of _events[eventName]) {
             callback(arg1, arg2, arg3, arg4)
         }
@@ -1546,17 +1550,18 @@ export default function litecanvas(settings = {}) {
     }
 
     if (settings.global) {
+        // @ts-ignore
         if (root.ENGINE) {
             throw new Error('two global litecanvas detected')
         }
         Object.assign(root, instance)
+        // @ts-ignore
         root.ENGINE = instance
     }
 
     setupCanvas()
 
     if ('loading' === document.readyState) {
-        // @ts-ignore
         on(root, 'DOMContentLoaded', () => raf(init))
     } else {
         raf(init)
