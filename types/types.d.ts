@@ -645,6 +645,6 @@ type LitecanvasGameLoop = {
     tapping?: (tapX: number, tapY: number, tapId: number) => void
 }
 
-type drawCallback = (context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void
+type drawCallback = (context: OffscreenCanvasRenderingContext2D) => void
 
 type pluginCallback = (instance: LitecanvasInstance, config?: any) => any
