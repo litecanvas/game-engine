@@ -85,8 +85,6 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
 })
 
 test('stat(4) returns attached event callbacks', async (t) => {
-    t.plan(2)
-
     function callback() {}
     function callback2() {}
 

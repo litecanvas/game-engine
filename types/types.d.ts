@@ -578,7 +578,7 @@ type LitecanvasOptions = {
     /**
      * Used to specify the selector of a custom canvas element
      */
-    canvas?: string
+    canvas?: HTMLCanvasElement | string
     /**
      * If `true` (default) scales the canvas to fill the screen, but preserving the aspect ratio.
      * Only works if a game screen width was specified.
@@ -592,7 +592,6 @@ type LitecanvasOptions = {
      * If `false` (default), disable the canvas antialias.
      */
     antialias?: boolean
-
     /**
      * If `true` (default), all methods and properties of the engine will be exposed to the global scope (window).
      */
