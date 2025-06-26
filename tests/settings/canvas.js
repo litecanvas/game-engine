@@ -6,19 +6,43 @@ test.before(() => {
     setupDOM()
 })
 
-test('custom canvas', async (t) => {
-    t.plan(2)
-
+test('custom canvas (html element)', async (t) => {
     const customCanvas = document.createElement('canvas')
-
-    customCanvas.id = 'my-custom-canvas'
 
     window.document.body.appendChild(customCanvas)
 
     const local = litecanvas({
         animate: false,
-        canvas: '#' + customCanvas.id,
+        canvas: customCanvas,
         global: false,
+    })
+
+    const expected = customCanvas
+
+    {
+        const current = local.canvas()
+        t.is(expected, current)
+    }
+
+    {
+        const current = local.ctx().canvas
+        t.is(expected, current)
+    }
+
+    local.quit()
+})
+
+test('custom canvas (CSS selector)', async (t) => {
+    const customCanvas = document.createElement('canvas')
+
+    window.document.body.appendChild(customCanvas)
+
+    customCanvas.id = 'custom-canvas'
+
+    const local = litecanvas({
+        canvas: `#${customCanvas.id}`, // the canvas selector
+        global: false,
+        animate: false,
     })
 
     const expected = customCanvas
