@@ -74,21 +74,15 @@ export default function litecanvas(settings = {}) {
         _colors = defaultPalette,
         /** @type {number[]} */
         _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
+        /** @type {string} */
+        _coreEvents = 'init,update,draw,tap,untap,tapping,tapped,resized',
+        /** @type {string} list of functions copied from `Math` module*/
+        _mathFunctions =
+            'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp',
         /**
-         * default game events
-         *
-         * @type {Object<string,Set<Function>>}
+         * @type {Object<string,Set<Function>>} game event listeners
          */
-        _events = {
-            init: null,
-            update: null,
-            draw: null,
-            resized: null,
-            tap: null,
-            untap: null,
-            tapping: null,
-            tapped: null,
-        }
+        _eventListeners = {}
 
     /** @type {Omit<LitecanvasInstance,'PI'|'sin'|'cos'|'atan2'|'hypot'|'tan'|'abs'|'ceil'|'floor'|'trunc'|'min'|'max'|'pow'|'sqrt'|'sign'|'exp'|'iskeydown'|'iskeypressed'>} */
     const instance = {
@@ -956,11 +950,11 @@ export default function litecanvas(settings = {}) {
 
             eventName = eventName.toLowerCase()
 
-            _events[eventName] = _events[eventName] || new Set()
-            _events[eventName].add(callback)
+            _eventListeners[eventName] = _eventListeners[eventName] || new Set()
+            _eventListeners[eventName].add(callback)
 
             // return a function to remove this event listener
-            return () => _events[eventName].delete(callback)
+            return () => _eventListeners && _eventListeners[eventName].delete(callback)
         },
 
         /**
@@ -1063,7 +1057,7 @@ export default function litecanvas(settings = {}) {
                 // 3
                 _scale,
                 // 4
-                _events,
+                _eventListeners,
                 // 5
                 _colors,
                 // 6
@@ -1101,13 +1095,13 @@ export default function litecanvas(settings = {}) {
             // emit "quit" event to manual clean ups
             instance.emit('quit')
 
+            // clear all engine event listeners
+            _eventListeners = {}
+
             // clear all browser event listeners
             for (const removeListener of _browserEventListeners) {
                 removeListener()
             }
-
-            // clear all engine event listeners
-            _events = {}
 
             // maybe clear global context
             if (settings.global) {
@@ -1124,7 +1118,7 @@ export default function litecanvas(settings = {}) {
     }
 
     // prettier-ignore
-    for (const k of 'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp'.split(',')) {
+    for (const k of _mathFunctions.split(',')) {
         // import native Math functions
         instance[k] = math[k]
     }
@@ -1132,7 +1126,7 @@ export default function litecanvas(settings = {}) {
     function init() {
         // setup default event listeners
         const source = settings.loop ? settings.loop : root
-        for (const event in _events) {
+        for (const event of _coreEvents.split(',')) {
             if (source[event]) instance.listen(event, source[event])
         }
 
@@ -1527,8 +1521,8 @@ export default function litecanvas(settings = {}) {
      * @param {*} arg4
      */
     function triggerEvent(eventName, arg1, arg2, arg3, arg4) {
-        if (!_events[eventName]) return
-        for (const callback of _events[eventName]) {
+        if (!_eventListeners[eventName]) return
+        for (const callback of _eventListeners[eventName]) {
             callback(arg1, arg2, arg3, arg4)
         }
     }
