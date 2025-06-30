@@ -275,6 +275,26 @@ type LitecanvasInstance = {
      */
     circfill(x: number, y: number, radius: number, color?: number): void
     /**
+     * Draw a ellipse outline
+     *
+     * @param x
+     * @param y
+     * @param radiusX
+     * @param radiusY
+     * @param [color=0] the color index
+     */
+    oval(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    /**
+     * Draw a color-filled ellipse
+     *
+     * @param x
+     * @param y
+     * @param radiusX
+     * @param radiusY
+     * @param [color=0] the color index
+     */
+    ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    /**
      * Draw a line
      *
      * @param x1

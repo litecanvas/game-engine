@@ -284,6 +284,26 @@ declare global {
      */
     function circfill(x: number, y: number, radius: number, color?: number): void
     /**
+     * Draw a ellipse outline
+     *
+     * @param x
+     * @param y
+     * @param radiusX
+     * @param radiusY
+     * @param [color=0] the color index
+     */
+    function oval(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    /**
+     * Draw a color-filled ellipse
+     *
+     * @param x
+     * @param y
+     * @param radiusX
+     * @param radiusY
+     * @param [color=0] the color index
+     */
+    function ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    /**
      * Draw a line
      *
      * @param x1
