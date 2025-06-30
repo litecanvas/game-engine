@@ -258,6 +258,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(value), 'norm: 1st param must be a number')
             DEV: assert(isNumber(start), 'norm: 2nd param must be a number')
             DEV: assert(isNumber(stop), 'norm: 3rd param must be a number')
+            DEV: assert(start !== stop, 'norm: the 2nd param must be different than the 3rd param')
 
             return instance.map(value, start, stop, 0, 1)
         },
@@ -476,6 +477,66 @@ export default function litecanvas(settings = {}) {
 
             _ctx.beginPath()
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
+            instance.fill(color)
+        },
+
+        /**
+         * Draw a ellipse outline
+         *
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radiusX
+         * @param {number} radiusY
+         * @param {number} [color=0] the color index
+         */
+        oval(x, y, radiusX, radiusY, color) {
+            DEV: assert(isNumber(x), 'oval: 1st param must be a number')
+            DEV: assert(isNumber(y), 'oval: 2nd param must be a number')
+            DEV: assert(
+                isNumber(radiusX) && radiusX >= 0,
+                'oval: 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                isNumber(radiusY) && radiusY >= 0,
+                'oval: 4th param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isNumber(color) && color >= 0),
+                'oval: 5th param must be a positive number or zero'
+            )
+
+            _ctx.beginPath()
+            _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TWO_PI)
+            instance.stroke(color)
+        },
+
+        /**
+         * Draw a color-filled ellipse
+         *
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radiusX
+         * @param {number} radiusY
+         * @param {number} [color=0] the color index
+         */
+        ovalfill(x, y, radiusX, radiusY, color) {
+            DEV: assert(isNumber(x), 'ovalfill: 1st param must be a number')
+            DEV: assert(isNumber(y), 'ovalfill: 2nd param must be a number')
+            DEV: assert(
+                isNumber(radiusX) && radiusX >= 0,
+                'ovalfill: 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                isNumber(radiusY) && radiusY >= 0,
+                'ovalfill: 4th param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isNumber(color) && color >= 0),
+                'ovalfill: 5th param must be a positive number or zero'
+            )
+
+            _ctx.beginPath()
+            _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TWO_PI)
             instance.fill(color)
         },
 
@@ -1480,8 +1541,11 @@ export default function litecanvas(settings = {}) {
         const width = settings.width || root.innerWidth,
             height = settings.height || settings.width || root.innerHeight
 
-        instance.def('W', (_canvas.width = width))
-        instance.def('H', (_canvas.height = height))
+        instance.def('W', width)
+        instance.def('H', height)
+
+        _canvas.width = width
+        _canvas.height = height
 
         if (settings.autoscale) {
             if (!_canvas.style.display) {
@@ -1489,11 +1553,11 @@ export default function litecanvas(settings = {}) {
                 _canvas.style.margin = 'auto'
             }
 
-            _scale = math.min(root.innerWidth / instance.W, root.innerHeight / instance.H)
+            _scale = math.min(root.innerWidth / width, root.innerHeight / height)
             _scale = (settings.pixelart ? ~~_scale : _scale) || 1
 
-            _canvas.style.width = instance.W * _scale + 'px'
-            _canvas.style.height = instance.H * _scale + 'px'
+            _canvas.style.width = width * _scale + 'px'
+            _canvas.style.height = height * _scale + 'px'
         }
 
         // restore canvas image rendering properties
