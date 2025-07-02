@@ -1,6 +1,7 @@
 import test from 'ava'
 import { setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
+import * as sinon from 'sinon'
 
 /** @type {LitecanvasInstance} */
 let local
@@ -11,6 +12,7 @@ const MAX = 100
 
 test.before(() => {
     setupDOM()
+    sinon.stub(console) // silent console
 
     local = litecanvas({
         animate: false,

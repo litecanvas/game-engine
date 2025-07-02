@@ -1,9 +1,11 @@
 import test from 'ava'
 import { setupDOM, onLitecanvas } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
+import * as sinon from 'sinon'
 
 test.before(() => {
     setupDOM()
+    sinon.stub(console) // silent console
 })
 
 let pluginFoo = (engine, config) => {

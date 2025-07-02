@@ -1,13 +1,14 @@
 import test from 'ava'
 import { setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
-import { defaultPalette } from '../src/palette.js'
+import * as sinon from 'sinon'
 
 /** @type {LitecanvasInstance} */
 let local
 
 test.before(() => {
     setupDOM()
+    sinon.stub(console) // silent console
 
     local = litecanvas({
         animate: false,

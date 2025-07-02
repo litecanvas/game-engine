@@ -2,16 +2,24 @@ import test from 'ava'
 import { setupDOM, onLitecanvas } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
 import { defaultPalette as colors } from '../src/palette.js'
+import * as sinon from 'sinon'
 
-/** @type {LitecanvasInstance} */
-let local
+let /** @type {LitecanvasInstance} */
+    local,
+    /** @type {sinon.SinonSpiedInstance<CanvasRenderingContext2D>} */
+    contextSpy,
+    /** @type {sinon.SinonSpiedInstance<Console>} */
+    consoleSpy
 
 test.before(() => {
     setupDOM()
+    sinon.stub(console) // silent console
 
     local = litecanvas({
         global: false,
     })
+
+    contextSpy = sinon.spy(local.ctx())
 })
 
 test.after(() => {
@@ -20,20 +28,16 @@ test.after(() => {
 
 test('clear screen with color', async (t) => {
     await onLitecanvas(local, 'draw', () => {
-        const colorIndex = 5
-        const colorValue = colors[colorIndex]
+        const color = 5
 
-        local.cls(colorIndex)
+        local.cls(color)
 
-        const expected = [
-            'beginPath()',
-            `rect(0,0,${local.W},${local.H},undefined)`,
-            `set fillStyle ${colorValue}`,
-            'fill()',
-        ]
-        const actual = local.ctx()._calls.slice(-expected.length)
+        t.true(contextSpy.beginPath.called)
+        t.true(contextSpy.rect.calledWith(0, 0, local.W, local.H, undefined))
+        t.is(contextSpy.fillStyle, colors[color])
+        t.true(contextSpy.fill.called)
 
-        t.deepEqual(actual, expected)
+        sinon.resetHistory(contextSpy)
     })
 })
 
@@ -41,9 +45,9 @@ test('clear screen without 1st argument', async (t) => {
     await onLitecanvas(local, 'draw', () => {
         local.cls()
 
-        const expected = [`clearRect(0,0,${local.W},${local.H})`]
-        const actual = local.ctx()._calls.slice(-expected.length)
+        t.true(contextSpy.clearRect.calledWith(0, 0, local.W, local.H))
+        t.false(contextSpy.beginPath.called)
 
-        t.deepEqual(actual, expected)
+        sinon.resetHistory(contextSpy)
     })
 })
