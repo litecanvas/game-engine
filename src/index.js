@@ -4,8 +4,6 @@ import { defaultPalette } from './palette.js'
 import { assert } from './dev.js'
 import { version } from '../version.js'
 
-DEV: console.info(`[litecanvas] version ${version} loaded`)
-
 /**
  * The litecanvas constructor
  *
@@ -1245,6 +1243,9 @@ export default function litecanvas(settings = {}) {
         // setup default event listeners
         const source = settings.loop ? settings.loop : root
         for (const event of _coreEvents.split(',')) {
+            DEV: if (root === source && source[event]) {
+                console.info(`[litecanvas] using window.${event}()`)
+            }
             if (source[event]) instance.listen(event, source[event])
         }
 
@@ -1678,6 +1679,9 @@ export default function litecanvas(settings = {}) {
         // @ts-ignore
         root.ENGINE = instance
     }
+
+    DEV: console.info(`[litecanvas] version ${version} started`)
+    DEV: console.debug(`[litecanvas] litecanvas() options =`, settings)
 
     setupCanvas()
 
