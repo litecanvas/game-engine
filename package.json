@@ -6,7 +6,7 @@
     "author": "Luiz Bills <luizbills@pm.me>",
     "contributors": [],
     "devDependencies": {
-        "@litecanvas/jsdom-extras": "^1.1.0",
+        "@litecanvas/jsdom-extras": "^2.0.0",
         "@swc/core": "^1.12.9",
         "@types/jsdom": "^21.1.7",
         "ava": "^6.4.0",
@@ -15,6 +15,7 @@
         "gzip-size": "^7.0.0",
         "jsdom": "^26.1.0",
         "prettier": "^3.6.2",
+        "sinon": "^21.0.0",
         "tap-min": "^3.0.0"
     },
     "homepage": "https://litecanvas.github.io/about.html",
