@@ -27,7 +27,7 @@ test('throws error if instantiated globally more than once', async (t) => {
         })
         t.fail() // fail if not throws
     } catch (e) {
-        t.is(e.message, 'two global litecanvas detected')
+        t.is(e.message, 'only one global litecanvas is allowed')
     }
 })
 
