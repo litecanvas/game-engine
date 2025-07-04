@@ -2,7 +2,7 @@
 import { setupZzFX } from './zzfx.js'
 import { defaultPalette } from './palette.js'
 import { assert } from './dev.js'
-import { version } from '../version.js'
+import { version } from './version.js'
 
 /**
  * The litecanvas constructor
