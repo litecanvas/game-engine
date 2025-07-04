@@ -23,6 +23,8 @@ export default function litecanvas(settings = {}) {
             elem.addEventListener(evt, callback, false)
             _browserEventListeners.push(() => elem.removeEventListener(evt, callback, false))
         },
+        /** @type {(c: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void} */
+        beginPath = (c) => c.beginPath(),
         isNumber = Number.isFinite,
         zzfx = setupZzFX(root),
         /** @type {LitecanvasOptions} */
@@ -63,7 +65,7 @@ export default function litecanvas(settings = {}) {
         _deltaTime = 1 / 60,
         /** @type {number} */
         _accumulated = 0,
-        /** @type {number|null} */
+        /** @type {number?} */
         _rafid,
         /** @type {string} */
         _fontFamily = 'sans-serif',
@@ -406,7 +408,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] rect() 6th param must be a number or array of numbers'
             )
 
-            _ctx.beginPath()
+            beginPath(_ctx)
             _ctx[radii ? 'roundRect' : 'rect'](
                 ~~x - _outline_fix,
                 ~~y - _outline_fix,
@@ -447,7 +449,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] rectfill() 6th param must be a number or array of at least 2 numbers'
             )
 
-            _ctx.beginPath()
+            beginPath(_ctx)
             _ctx[radii ? 'roundRect' : 'rect'](~~x, ~~y, ~~width, ~~height, radii)
             instance.fill(color)
         },
@@ -472,7 +474,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] circ() 4th param must be a positive number or zero'
             )
 
-            _ctx.beginPath()
+            beginPath(_ctx)
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             instance.stroke(color)
         },
@@ -497,7 +499,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] circfill() 4th param must be a positive number or zero'
             )
 
-            _ctx.beginPath()
+            beginPath(_ctx)
             _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
             instance.fill(color)
         },
@@ -527,7 +529,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] oval() 5th param must be a positive number or zero'
             )
 
-            _ctx.beginPath()
+            beginPath(_ctx)
             _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TWO_PI)
             instance.stroke(color)
         },
@@ -557,7 +559,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] ovalfill() 5th param must be a positive number or zero'
             )
 
-            _ctx.beginPath()
+            beginPath(_ctx)
             _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TWO_PI)
             instance.fill(color)
         },
@@ -587,7 +589,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] line() 5th param must be a positive number or zero'
             )
 
-            _ctx.beginPath()
+            beginPath(_ctx)
 
             let xfix = _outline_fix !== 0 && ~~x1 === ~~x2 ? 0.5 : 0
             let yfix = _outline_fix !== 0 && ~~y1 === ~~y2 ? 0.5 : 0
@@ -876,86 +878,50 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Returns a newly instantiated Path2D object, optionally with another
-         * path as an argument (creates a copy), or optionally with a string
-         * consisting of SVG path data.
-         *
-         * @param {Path2D|string} [arg]
-         * @returns Path2D
-         * @see https://developer.mozilla.org/en-US/docs/Web/API/Path2D/Path2D
-         */
-        path: (arg) => {
-            DEV: assert(
-                null == arg || 'string' === typeof arg || arg instanceof Path2D,
-                '[litecanvas] path() 1st param must be a string or a Path2D instance'
-            )
-
-            return new Path2D(arg)
-        },
-
-        /**
-         * Fills the current or given path with a given color.
+         * Fills the current path with a given color.
          *
          * @param {number} [color=0]
-         * @param {Path2D} [path]
          */
-        fill(color, path) {
+        fill(color) {
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
                 '[litecanvas] fill() 1st param must be a positive number or zero'
             )
-            DEV: assert(
-                null == path || path instanceof Path2D,
-                '[litecanvas] fill() 2nd param must be a Path2D instance'
-            )
 
             _ctx.fillStyle = _colors[~~color % _colors.length]
-            if (path) {
-                _ctx.fill(path)
-            } else {
-                _ctx.fill()
-            }
+            _ctx.fill()
         },
 
         /**
-         * Outlines the current or given path with a given color.
+         * Outlines the current path with a given color.
          *
          * @param {number} [color=0]
-         * @param {Path2D} [path]
          */
-        stroke(color, path) {
+        stroke(color) {
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
                 '[litecanvas] stroke() 1st param must be a positive number or zero'
             )
-            DEV: assert(
-                null == path || path instanceof Path2D,
-                '[litecanvas] stroke() 2nd param must be a Path2D instance'
-            )
 
             _ctx.strokeStyle = _colors[~~color % _colors.length]
-            if (path) {
-                _ctx.stroke(path)
-            } else {
-                _ctx.stroke()
-            }
+            _ctx.stroke()
         },
 
         /**
-         * Turn given path into a clipping region.
+         * Turns a path (in the callback) into the current clipping region.
          *
-         * Note: always call `push()` before and `pop()` after.
-         *
-         * @param {Path2D} path
+         * @param {clipCallback} callback
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
          */
-        clip(path) {
+        clip(callback) {
             DEV: assert(
-                path instanceof Path2D,
-                '[litecanvas] clip() 1st param must be a Path2D instance'
+                'function' === typeof callback,
+                '[litecanvas] clip() 1st param must be a function'
             )
 
-            _ctx.clip(path)
+            beginPath(_ctx)
+            callback(_ctx)
+            _ctx.clip()
         },
 
         /** SOUND API */
@@ -1020,6 +986,7 @@ export default function litecanvas(settings = {}) {
          * @returns {HTMLCanvasElement}
          */
         canvas: () => _canvas,
+
         /**
          * Prepares a plugin to be loaded
          *
@@ -1169,7 +1136,7 @@ export default function litecanvas(settings = {}) {
                 // 1
                 _initialized,
                 // 2
-                _rafid,
+                _deltaTime,
                 // 3
                 _scale,
                 // 4
@@ -1204,9 +1171,7 @@ export default function litecanvas(settings = {}) {
          */
         quit() {
             // stop the game loop (update & draw)
-            cancelAnimationFrame(_rafid)
-
-            _rafid = 0
+            instance.pause()
 
             // emit "quit" event to manual clean ups
             instance.emit('quit')
@@ -1230,6 +1195,32 @@ export default function litecanvas(settings = {}) {
 
             // unset that flag
             _initialized = false
+        },
+
+        /**
+         * Pauses the engine loop (update & draw).
+         */
+        pause() {
+            cancelAnimationFrame(_rafid)
+            _rafid = 0
+        },
+
+        /**
+         * Resumes (if paused) the engine loop.
+         */
+        resume() {
+            if (!_rafid && _initialized) {
+                _rafid = raf(drawFrame)
+            }
+        },
+
+        /**
+         * Returns `true` if the engine loop is paused.
+         *
+         * @returns {boolean}
+         */
+        paused() {
+            return !_rafid
         },
     }
 
@@ -1506,50 +1497,48 @@ export default function litecanvas(settings = {}) {
             )
         }
 
+        // start the engine
         _initialized = true
-
-        // start the game loop
         instance.emit('init', instance)
 
+        // set the default text align and baseline
+        instance.textalign('start', 'top')
+
         _lastFrameTime = performance.now()
-        _rafid = raf(drawFrame)
+        instance.resume()
     }
 
     /**
      * @param {DOMHighResTimeStamp} now
      */
     function drawFrame(now) {
+        if (!settings.animate) {
+            return instance.emit('draw')
+        }
+
         let updated = 0
+        let frameTime = (now - _lastFrameTime) / 1000
 
-        if (settings.animate) {
-            // prevents too long frames
-            _accumulated += math.min(0.1, (now - _lastFrameTime) / 1000)
-            _lastFrameTime = now
+        _lastFrameTime = now
 
+        if (frameTime < 0.1) {
+            _accumulated += frameTime
             while (_accumulated >= _deltaTime) {
                 updated++
                 instance.emit('update', _deltaTime * _timeScale, updated)
                 instance.def('T', instance.T + _deltaTime * _timeScale)
                 _accumulated -= _deltaTime
             }
-
-            // request the next frame
-            // check if the last ID exists, because
-            // quit() delete it (sets to zero)
-            if (_rafid) {
-                _rafid = raf(drawFrame)
-            }
-        } else {
-            // when the canvas is not animated
-            // we force one frame when redraws are triggered
-            updated = 1
         }
 
         if (updated) {
-            // always set default values for
-            // _ctx.textAlign and _ctx.textBaseline before draw
-            instance.textalign('start', 'top')
             instance.emit('draw')
+        }
+
+        // request the next frame
+        // only when the engine loop are not paused (_rafid >= 1)
+        if (_rafid) {
+            _rafid = raf(drawFrame)
         }
     }
 

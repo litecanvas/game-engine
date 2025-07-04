@@ -5,6 +5,13 @@ litecanvas({
 
 let fullscreen
 
+function resized() {
+    // fix: HTML canvas reset the text align and baseline
+    // when the canvas resizes
+    textalign('start', 'top')
+    console.log('resized')
+}
+
 function update() {
     if (iskeypressed('f')) {
         fullscreen = !document.fullscreenElement

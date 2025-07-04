@@ -435,35 +435,24 @@ type LitecanvasInstance = {
      */
     alpha(value: number): void
     /**
-     * Returns a newly instantiated Path2D object, optionally with another
-     * path as an argument (creates a copy), or optionally with a string
-     * consisting of SVG path data.
-     *
-     * @param [arg]
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/Path2D/Path2D
-     */
-    path(arg?: Path2D | string): Path2D
-    /**
-     * Fills the current or given path with a given color.
+     * Fills the current path with a given color.
      *
      * @param color
-     * @param [path]
      */
-    fill(color: number, path?: Path2D): void
+    fill(color: number): void
     /**
-     * Outlines the current or given path with a given color.
+     * Outlines the current path with a given color.
      *
      * @param color
-     * @param [path]
      */
-    stroke(color: number, path?: Path2D): void
+    stroke(color: number): void
     /**
-     * Turn given path into a clipping region.
+     * Turns a path (in the callback) into the current clipping region.
      *
-     * @param path
+     * @param callback
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
      */
-    clip(path: Path2D): void
+    clip(callback: clipCallback): void
 
     /** SOUND API */
     /**
@@ -565,7 +554,7 @@ type LitecanvasInstance = {
      *
      * - n = 0: the settings passed to that instance
      * - n = 1: returns true if the "init" event has already been emitted
-     * - n = 2: the current ID returned by last requestAnimationFrame
+     * - n = 2: the current delta time (dt)
      * - n = 3: the current canvas element scale (not the context 2D scale)
      * - n = 4: the attached event callbacks
      * - n = 5: the current color palette
@@ -575,7 +564,7 @@ type LitecanvasInstance = {
      * - n = 9: the current RNG state
      * - n = 10: the current font size
      * - n = 11: the current font family
-     * - n = *any other value*: returns undefined
+     * - n = *any other value*: probably returns undefined
      *
      * @param n
      */
@@ -584,6 +573,18 @@ type LitecanvasInstance = {
      * Stops the litecanvas instance and remove all event listeners.
      */
     quit(): void
+    /**
+     * Pauses the engine loop (update & draw).
+     */
+    pause(): void
+    /**
+     * Resumes (if paused) the engine loop.
+     */
+    resume(): void
+    /**
+     * Returns `true` if the engine loop is paused.
+     */
+    paused(): boolean
 }
 
 type LitecanvasOptions = {
@@ -667,3 +668,5 @@ type LitecanvasGameLoop = {
 type drawCallback = (context: OffscreenCanvasRenderingContext2D) => void
 
 type pluginCallback = (instance: LitecanvasInstance, config?: any) => any
+
+type clipCallback = (ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void

@@ -45,15 +45,16 @@ test('stat(1) returns true if the engine has been initialized', async (t) => {
     })
 })
 
-test('stat(2) returns the last requestAnimationFrame ID returned', async (t) => {
-    const actual = local.stat(2)
-    const expected = undefined
+test('stat(2) returns the current delta time (dt) value', async (t) => {
+    await onLitecanvas(local, 'init', () => {
+        const fps = 30
 
-    t.is(actual, expected)
+        local.framerate(fps)
 
-    await onLitecanvas(local, 'update', () => {
         const actual = local.stat(2)
-        t.true(actual >= 1)
+        const expected = 1 / fps
+
+        t.true(actual === expected)
     })
 })
 

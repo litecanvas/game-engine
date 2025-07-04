@@ -444,35 +444,24 @@ declare global {
      */
     function alpha(value: number): void
     /**
-     * Returns a newly instantiated Path2D object, optionally with another
-     * path as an argument (creates a copy), or optionally with a string
-     * consisting of SVG path data.
-     *
-     * @param [arg]
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/Path2D/Path2D
-     */
-    function path(arg?: Path2D | string): Path2D
-    /**
-     * Fills the current or given path with a given color.
+     * Fills the current path with a given color.
      *
      * @param color
-     * @param [path]
      */
-    function fill(color: number, path?: Path2D): void
+    function fill(color: number): void
     /**
-     * Outlines the current or given path with a given color.
+     * Outlines the current path with a given color.
      *
      * @param color
-     * @param [path]
      */
-    function stroke(color: number, path?: Path2D): void
+    function stroke(color: number): void
     /**
-     * Turn given path into a clipping region.
+     * Turns a path (in the callback) into the current clipping region.
      *
-     * @param path
+     * @param callback
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
      */
-    function clip(path: Path2D): void
+    function clip(callback: clipCallback): void
 
     /** SOUND API */
     /**
@@ -578,7 +567,7 @@ declare global {
      *
      * - n = 0: the settings passed to that instance
      * - n = 1: returns true if the "init" event has already been emitted
-     * - n = 2: the current ID returned by last requestAnimationFrame
+     * - n = 2: the current delta time (dt)
      * - n = 3: the current canvas element scale (not the context 2D scale)
      * - n = 4: the attached event callbacks
      * - n = 5: the current color palette
@@ -588,13 +577,25 @@ declare global {
      * - n = 9: the current RNG state
      * - n = 10: the current font size
      * - n = 11: the current font family
-     * - n = *any other value*: returns undefined
+     * - n = *any other value*: probably returns undefined
      *
      * @param n
      */
     function stat(n: number): any
     /**
-     * Stops the litecanvas instance and remove all event listeners.
+     * Shutdown the litecanvas instance and remove all event listeners.
      */
     function quit(): void
+    /**
+     * Pauses the engine loop (update & draw).
+     */
+    function pause(): void
+    /**
+     * Resumes (if paused) the engine loop.
+     */
+    function resume(): void
+    /**
+     * Returns `true` if the engine loop is paused.
+     */
+    function paused(): boolean
 }
