@@ -51,39 +51,37 @@ function draw() {
 }
 
 function clipcirc(x, y, radius) {
-    const region = path()
-    region.arc(x, y, radius, 0, TWO_PI)
-    clip(region)
+    clip((_ctx) => _ctx.arc(x, y, radius, 0, TWO_PI))
 }
 
 function cliprect(x, y, width, height) {
-    const region = path()
-    region.rect(x, y, width, height)
-    clip(region)
+    clip((_ctx) => _ctx.rect(x, y, width, height))
 }
 
 function clipheart(x, y, width, height) {
-    /** @type {Path2D} */
-    const region = path()
-    var topCurveHeight = height * 0.3
-    region.moveTo(x, y + topCurveHeight)
-    region.bezierCurveTo(x, y, x - width / 2, y, x - width / 2, y + topCurveHeight)
-    region.bezierCurveTo(
-        x - width / 2,
-        y + (height + topCurveHeight) / 2,
-        x,
-        y + (height + topCurveHeight) / 2,
-        x,
-        y + height
-    )
-    region.bezierCurveTo(
-        x,
-        y + (height + topCurveHeight) / 2,
-        x + width / 2,
-        y + (height + topCurveHeight) / 2,
-        x + width / 2,
-        y + topCurveHeight
-    )
-    region.bezierCurveTo(x + width / 2, y, x, y, x, y + topCurveHeight)
-    clip(region)
+    clip((_ctx) => {
+        const topCurveHeight = height * 0.3
+
+        _ctx.beginPath()
+
+        _ctx.moveTo(x, y + topCurveHeight)
+        _ctx.bezierCurveTo(x, y, x - width / 2, y, x - width / 2, y + topCurveHeight)
+        _ctx.bezierCurveTo(
+            x - width / 2,
+            y + (height + topCurveHeight) / 2,
+            x,
+            y + (height + topCurveHeight) / 2,
+            x,
+            y + height
+        )
+        _ctx.bezierCurveTo(
+            x,
+            y + (height + topCurveHeight) / 2,
+            x + width / 2,
+            y + (height + topCurveHeight) / 2,
+            x + width / 2,
+            y + topCurveHeight
+        )
+        _ctx.bezierCurveTo(x + width / 2, y, x, y, x, y + topCurveHeight)
+    })
 }
