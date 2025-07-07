@@ -1270,12 +1270,16 @@ export default function litecanvas(settings = {}) {
                      */
                     (id, x, y) => {
                         const tap = {
+                            // current x
                             x,
+                            // current y
                             y,
-                            startX: x,
-                            startY: y,
+                            // initial x
+                            xi: x,
+                            // initial y
+                            yi: y,
                             // timestamp
-                            ts: performance.now(),
+                            t: performance.now(),
                         }
                         _taps.set(id, tap)
                         return tap
@@ -1293,10 +1297,14 @@ export default function litecanvas(settings = {}) {
                     },
                 _checkTapped =
                     /**
-                     * @param {{ts: number}} tap
+                     * @param {{t: number}} tap
                      */
-                    (tap) => tap && performance.now() - tap.ts <= 300,
-                preventDefault = (ev) => ev.preventDefault()
+                    (tap) => tap && performance.now() - tap.t <= 300,
+                preventDefault =
+                    /**
+                     * @param {Event} ev
+                     */
+                    (ev) => ev.preventDefault()
 
             let _pressingMouse = false
 
@@ -1329,7 +1337,7 @@ export default function litecanvas(settings = {}) {
                         const tap = _taps.get(0)
                         const [x, y] = _getXY(ev.pageX, ev.pageY)
                         if (_checkTapped(tap)) {
-                            instance.emit('tapped', tap.startX, tap.startY, 0)
+                            instance.emit('tapped', tap.xi, tap.yi, 0)
                         }
                         instance.emit('untap', x, y, 0)
                         _taps.delete(0)
@@ -1409,7 +1417,7 @@ export default function litecanvas(settings = {}) {
                 for (const [id, tap] of _taps) {
                     if (existing.includes(id)) continue
                     if (_checkTapped(tap)) {
-                        instance.emit('tapped', tap.startX, tap.startY, id)
+                        instance.emit('tapped', tap.xi, tap.yi, id)
                     }
                     instance.emit('untap', tap.x, tap.y, id)
                     _taps.delete(id)
@@ -1572,6 +1580,8 @@ export default function litecanvas(settings = {}) {
         if (!_canvas.parentNode) {
             document.body.appendChild(_canvas)
         }
+
+        _canvas.oncontextmenu = () => false
     }
 
     function resizeCanvas() {
