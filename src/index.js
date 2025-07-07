@@ -1509,9 +1509,6 @@ export default function litecanvas(settings = {}) {
         _initialized = true
         instance.emit('init', instance)
 
-        // set the default text align and baseline
-        instance.textalign('start', 'top')
-
         _lastFrameTime = performance.now()
         instance.resume()
     }
@@ -1625,6 +1622,9 @@ export default function litecanvas(settings = {}) {
             _ctx.imageSmoothingEnabled = false
             _canvas.style.imageRendering = 'pixelated'
         }
+
+        // reset the default text align and baseline
+        instance.textalign('start', 'top')
 
         // trigger "resized" event
         instance.emit('resized', _scale)
