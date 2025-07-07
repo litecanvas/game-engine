@@ -147,10 +147,6 @@ type LitecanvasInstance = {
      */
     ceil(n: number): number
     /**
-     * Returns the value of a number rounded to the nearest integer.
-     */
-    round(n: number): number
-    /**
      * Always rounds down and returns the largest integer less than or equal to a given number.
      */
     floor(n: number): number
