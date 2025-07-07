@@ -1580,6 +1580,8 @@ export default function litecanvas(settings = {}) {
         if (!_canvas.parentNode) {
             document.body.appendChild(_canvas)
         }
+
+        _canvas.oncontextmenu = () => false
     }
 
     function resizeCanvas() {
