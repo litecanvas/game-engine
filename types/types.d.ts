@@ -598,9 +598,11 @@ type LitecanvasOptions = {
     canvas?: HTMLCanvasElement | string
     /**
      * If `true` (default) scales the canvas to fill the screen, but preserving the aspect ratio.
-     * Only works if a game screen width was specified.
+     * Instead of `true`, you can pass a number to limit the maximum scale factor of the canvas.
+     *
+     * Note: Only works if the option "width" was specified.
      */
-    autoscale?: boolean
+    autoscale?: boolean | number
     /**
      * If `true`, the pixel art images won't look blurry.
      */
