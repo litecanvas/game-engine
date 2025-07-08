@@ -1605,12 +1605,14 @@ export default function litecanvas(settings = {}) {
         _canvas.height = height
 
         if (settings.autoscale) {
+            let maxScale = +settings.autoscale
             if (!_canvas.style.display) {
                 _canvas.style.display = 'block'
                 _canvas.style.margin = 'auto'
             }
 
             _scale = math.min(root.innerWidth / width, root.innerHeight / height)
+            _scale = maxScale > 1 && _scale > maxScale ? maxScale : _scale
             _scale = (settings.pixelart ? ~~_scale : _scale) || 1
 
             _canvas.style.width = width * _scale + 'px'
