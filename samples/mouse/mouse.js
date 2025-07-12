@@ -1,4 +1,6 @@
-litecanvas()
+litecanvas({
+    width: 600,
+})
 
 function draw() {
     cls(0)
