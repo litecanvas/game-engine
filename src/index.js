@@ -1254,12 +1254,11 @@ export default function litecanvas(settings = {}) {
         if (settings.tapEvents) {
             const _getXY =
                     /**
-                     * @param {number} pageX
-                     * @param {number} pageY
+                     * @param {MouseEvent | Touch} ev
                      */
-                    (pageX, pageY) => [
-                        (pageX - _canvas.offsetLeft) / _scale,
-                        (pageY - _canvas.offsetTop) / _scale,
+                    (ev) => [
+                        (ev.pageX - _canvas.offsetLeft) / _scale,
+                        (ev.pageY - _canvas.offsetTop) / _scale,
                     ],
                 _taps = new Map(),
                 _registerTap =
@@ -1317,7 +1316,7 @@ export default function litecanvas(settings = {}) {
                 (ev) => {
                     if (ev.button === 0) {
                         preventDefault(ev)
-                        const [x, y] = _getXY(ev.pageX, ev.pageY)
+                        const [x, y] = _getXY(ev)
                         instance.emit('tap', x, y, 0)
                         _registerTap(0, x, y)
                         _pressingMouse = true
@@ -1335,7 +1334,7 @@ export default function litecanvas(settings = {}) {
                     if (ev.button === 0) {
                         preventDefault(ev)
                         const tap = _taps.get(0)
-                        const [x, y] = _getXY(ev.pageX, ev.pageY)
+                        const [x, y] = _getXY(ev)
                         if (_checkTapped(tap)) {
                             instance.emit('tapped', tap.xi, tap.yi, 0)
                         }
@@ -1347,7 +1346,7 @@ export default function litecanvas(settings = {}) {
             )
 
             on(
-                _canvas,
+                root,
                 'mousemove',
                 /**
                  * @param {MouseEvent} ev
@@ -1355,7 +1354,7 @@ export default function litecanvas(settings = {}) {
                 (ev) => {
                     preventDefault(ev)
 
-                    const [x, y] = _getXY(ev.pageX, ev.pageY)
+                    const [x, y] = _getXY(ev)
                     instance.def('MX', x)
                     instance.def('MY', y)
 
@@ -1377,7 +1376,7 @@ export default function litecanvas(settings = {}) {
                     /** @type {TouchList} touches */
                     const touches = ev.changedTouches
                     for (const touch of touches) {
-                        const [x, y] = _getXY(touch.pageX, touch.pageY)
+                        const [x, y] = _getXY(touch)
                         instance.emit('tap', x, y, touch.identifier + 1)
                         _registerTap(touch.identifier + 1, x, y)
                     }
@@ -1394,7 +1393,7 @@ export default function litecanvas(settings = {}) {
                     preventDefault(ev)
                     const touches = ev.changedTouches
                     for (const touch of touches) {
-                        const [x, y] = _getXY(touch.pageX, touch.pageY)
+                        const [x, y] = _getXY(touch)
                         instance.emit('tapping', x, y, touch.identifier + 1)
                         _updateTap(touch.identifier + 1, x, y)
                     }
