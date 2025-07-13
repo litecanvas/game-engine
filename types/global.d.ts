@@ -1,21 +1,27 @@
-type LitecanvasInstance = {
+import './types'
+
+export default function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
+
+declare global {
+    function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
+
     /** The game screen width */
-    W: number
+    var W: number
     /** The game screen height */
-    H: number
+    var H: number
     /** the amount of time (in seconds) since the game started */
-    T: number
+    var T: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
-    MX: number
+    var MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
-    MY: number
+    var MY: number
 
     /** MATH API */
     /**
      * The value of the mathematical constant PI (π).
      * Approximately 3.14159
      */
-    PI?: number
+    var PI: number
     /**
      * Twice the value of the mathematical constant PI (π).
      * Approximately 6.28318
@@ -23,12 +29,12 @@ type LitecanvasInstance = {
      * Note: TWO_PI radians equals 360°, PI radians equals 180°,
      * HALF_PI radians equals 90°, and HALF_PI/2 radians equals 45°.
      */
-    TWO_PI: number
+    var TWO_PI: number
     /**
      * Half the value of the mathematical constant PI (π).
      * Approximately 1.57079
      */
-    HALF_PI: number
+    var HALF_PI: number
     /**
      * Calculates a linear (interpolation) value over t%.
      *
@@ -38,21 +44,21 @@ type LitecanvasInstance = {
      * @returns The unterpolated value
      * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
      */
-    lerp(start: number, end: number, t: number): number
+    function lerp(start: number, end: number, t: number): number
     /**
      * Convert degrees to radians
      *
      * @param degs
      * @returns the value in radians
      */
-    deg2rad(degs: number): number
+    function deg2rad(degs: number): number
     /**
      * Convert radians to degrees
      *
      * @param rads
      * @returns the value in degrees
      */
-    rad2deg(rads: number): number
+    function rad2deg(rads: number): number
     /**
      * Returns the rounded value of an number to optional precision (number of digits after the decimal point).
      *
@@ -60,7 +66,7 @@ type LitecanvasInstance = {
      * @param [precision] number of decimal digits to round to, default is 0.
      * @returns the rounded number.
      */
-    round(n: number, precision?: number): number
+    function round(n: number, precision?: number): number
     /**
      * Constrains a number between `min` and `max`.
      *
@@ -69,7 +75,7 @@ type LitecanvasInstance = {
      * @param max
      * @returns
      */
-    clamp(value: number, min: number, max: number): number
+    function clamp(value: number, min: number, max: number): number
     /**
      * Wraps a number between `min` (inclusive) and `max` (exclusive).
      *
@@ -78,7 +84,7 @@ type LitecanvasInstance = {
      * @param max
      * @returns the wrapped number
      */
-    wrap(value: number, min: number, max: number): number
+    function wrap(value: number, min: number, max: number): number
     /**
      * Re-maps a number from one range to another.
      *
@@ -90,7 +96,7 @@ type LitecanvasInstance = {
      * @param [withinBounds=false] constrain the value to the newly mapped range
      * @returns the remapped number
      */
-    map(
+    function map(
         value: number,
         start1: number,
         stop1: number,
@@ -108,77 +114,77 @@ type LitecanvasInstance = {
      * @param stop
      * @returns the normalized number.
      */
-    norm(value: number, start: number, stop: number): number
+    function norm(value: number, start: number, stop: number): number
     /**
      * Interpolate between 2 values using a periodic function.
      *
      * @param from - the lower bound
      * @param to - the higher bound
      * @param t - the value passed to the periodic function
-     * @param fn - the periodic function (which default to `Math.sin`)
+     * @param fn= - the periodic function (which default to `Math.sin`)
      */
-    wave(from: number, to: number, t: number, fn?: (n: number) => number): number
+    function wave(from: number, to: number, t: number, fn?: (n: number) => number): number
     /**
      * Returns the sine of a number in radians
      */
-    sin?(n: number): number
+    function sin(n: number): number
     /**
      * Returns the cosine of a number in radians
      */
-    cos?(n: number): number
+    function cos(n: number): number
     /**
      * Returns the angle in the plane (in radians) between the positive x-axis and the ray from (0, 0) to the point (x, y)
      */
-    atan2?(y: number, x: number): number
+    function atan2(y: number, x: number): number
     /**
      * Returns the square root of the sum of squares of its arguments.
      */
-    hypot?(...ns: number[]): number
+    function hypot(...ns: number[]): number
     /**
      * Returns the tangent of a number in radians.
      */
-    tan?(n: number): number
+    function tan(n: number): number
     /**
      * Returns the absolute value of a number.
      */
-    abs?(n: number): number
+    function abs(n: number): number
     /**
      * Always rounds up and returns the smallest integer greater than or equal to a given number.
      */
-    ceil?(n: number): number
+    function ceil(n: number): number
     /**
      * Always rounds down and returns the largest integer less than or equal to a given number.
      */
-    floor?(n: number): number
+    function floor(n: number): number
     /**
      * Returns the integer part of a number by removing any fractional digits.
      */
-    trunc?(n: number): number
+    function trunc(n: number): number
     /**
      * Returns the smallest of the numbers given as input parameters, or `Infinity` if there are no parameters.
      */
-    min?(...ns: number[]): number
+    function min(...ns: number[]): number
     /**
      * Returns the largest of the numbers given as input parameters, or `-Infinity` if there are no parameters.
      */
-    max?(...ns: number[]): number
+    function max(...ns: number[]): number
     /**
      * Returns the value of a base raised to a power.
      */
-    pow?(base: number, exponent: number): number
+    function pow(base: number, exponent: number): number
     /**
      * Returns the square root of a number.
      */
-    sqrt?(n: number): number
+    function sqrt(n: number): number
     /**
      * Returns 1 or -1, indicating the sign of the number passed as argument.
      * If the input is 0 or -0, it will be returned as-is.
      */
-    sign?(n: number): number
+    function sign(n: number): number
     /**
      * Returns the Euler's number raised to the power of a number.
      */
-    exp?(exponent: number): number
+    function exp(exponent: number): number
 
     /** RNG API */
     /**
@@ -188,7 +194,7 @@ type LitecanvasInstance = {
      * @param [max=1.0]
      * @returns the random number
      */
-    rand(min?: number, max?: number): number
+    function rand(min?: number, max?: number): number
     /**
      * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
      *
@@ -196,7 +202,7 @@ type LitecanvasInstance = {
      * @param [max=1]
      * @returns the random number
      */
-    randi(min?: number, max?: number): number
+    function randi(min?: number, max?: number): number
     /**
      * Initializes the random number generator with an explicit seed value.
      *
@@ -204,7 +210,7 @@ type LitecanvasInstance = {
      *
      * @param value
      */
-    rseed(value: number): void
+    function rseed(value: number): void
 
     /** BASIC GRAPHICS API */
     /**
@@ -212,7 +218,7 @@ type LitecanvasInstance = {
      *
      * @param color The background color index or `null`
      */
-    cls(color: number | null): void
+    function cls(color: number | null): void
 
     /**
      * Draw a rectangle outline
@@ -226,7 +232,7 @@ type LitecanvasInstance = {
      *
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect
      */
-    rect(
+    function rect(
         x: number,
         y: number,
         width: number,
@@ -244,7 +250,7 @@ type LitecanvasInstance = {
      * @param [color=0] the color index
      * @param [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
      */
-    rectfill(
+    function rectfill(
         x: number,
         y: number,
         width: number,
@@ -260,7 +266,7 @@ type LitecanvasInstance = {
      * @param radius
      * @param [color=0] the color index
      */
-    circ(x: number, y: number, radius: number, color?: number): void
+    function circ(x: number, y: number, radius: number, color?: number): void
     /**
      * Draw a color-filled circle
      *
@@ -269,7 +275,7 @@ type LitecanvasInstance = {
      * @param radius
      * @param [color=0] the color index
      */
-    circfill(x: number, y: number, radius: number, color?: number): void
+    function circfill(x: number, y: number, radius: number, color?: number): void
     /**
      * Draw a ellipse outline
      *
@@ -279,7 +285,7 @@ type LitecanvasInstance = {
      * @param radiusY
      * @param [color=0] the color index
      */
-    oval(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    function oval(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
     /**
      * Draw a color-filled ellipse
      *
@@ -289,7 +295,7 @@ type LitecanvasInstance = {
      * @param radiusY
      * @param [color=0] the color index
      */
-    ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    function ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
     /**
      * Draw a line
      *
@@ -299,14 +305,14 @@ type LitecanvasInstance = {
      * @param y2
      * @param [color=0] the color index
      */
-    line(x1: number, y1: number, x2: number, y2: number, color?: number): void
+    function line(x1: number, y1: number, x2: number, y2: number, color?: number): void
     /**
      * Sets the thickness of lines
      *
      * @param value
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
      */
-    linewidth(value: number): void
+    function linewidth(value: number): void
     /**
      * Sets the line dash pattern used when drawing lines
      *
@@ -315,7 +321,7 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset
      */
-    linedash(segments: number[], offset?: number): void
+    function linedash(segments: number[], offset?: number): void
 
     /** TEXT RENDERING API */
     /**
@@ -327,19 +333,19 @@ type LitecanvasInstance = {
      * @param [color=3] the color index
      * @param [fontStyle="normal"] can be "normal" (default), "italic" and/or "bold"
      */
-    text(x: number, y: number, message: string, color?: number, fontStyle?: string): void
+    function text(x: number, y: number, message: string, color?: number, fontStyle?: string): void
     /**
      * Set the font family
      *
      * @param fontFamily
      */
-    textfont(fontFamily: string): void
+    function textfont(fontFamily: string): void
     /**
      * Set the font size
      *
      * @param size
      */
-    textsize(size: number): void
+    function textsize(size: number): void
     /**
      * Sets the alignment used when drawing texts
      *
@@ -348,7 +354,7 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
-    textalign(align: CanvasTextAlign, baseline: CanvasTextBaseline): void
+    function textalign(align: CanvasTextAlign, baseline: CanvasTextBaseline): void
 
     /** IMAGE GRAPHICS API */
     /**
@@ -358,7 +364,7 @@ type LitecanvasInstance = {
      * @param y
      * @param source
      */
-    image(
+    function image(
         x: number,
         y: number,
         source: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
@@ -372,7 +378,7 @@ type LitecanvasInstance = {
      * @param [options]
      * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
      */
-    paint(
+    function paint(
         width: number,
         height: number,
         drawing: string[] | drawCallback,
@@ -390,65 +396,65 @@ type LitecanvasInstance = {
      * @returns the current canvas context
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
      */
-    ctx(
+    function ctx(
         context?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
     ): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
     /**
      * saves the current drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
      */
-    push(): void
+    function push(): void
     /**
      * restores the drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore
      */
-    pop(): void
+    function pop(): void
     /**
      * Adds a translation transformation to the current matrix
      *
      * @param x
      * @param y
      */
-    translate(x: number, y: number): void
+    function translate(x: number, y: number): void
     /**
      * Adds a scaling transformation to the canvas units horizontally and/or vertically.
      *
      * @param x
      * @param [y]
      */
-    scale(x: number, y?: number): void
+    function scale(x: number, y?: number): void
     /**
      * Adds a rotation to the transformation matrix
      *
      * @param radians
      */
-    rotate(radians: number): void
+    function rotate(radians: number): void
     /**
      * Sets the alpha (transparency) value to apply when drawing new shapes and images
      *
      * @param value float from 0 to 1 (e.g: 0.5 = 50% transparent)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
      */
-    alpha(value: number): void
+    function alpha(value: number): void
     /**
      * Fills the current path with a given color.
      *
      * @param color
      */
-    fill(color: number): void
+    function fill(color: number): void
     /**
      * Outlines the current path with a given color.
      *
      * @param color
      */
-    stroke(color: number): void
+    function stroke(color: number): void
     /**
      * Turns a path (in the callback) into the current clipping region.
      *
      * @param callback
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
      */
-    clip(callback: clipCallback): void
+    function clip(callback: clipCallback): void
 
     /** SOUND API */
     /**
@@ -462,14 +468,18 @@ type LitecanvasInstance = {
      *
      * @see https://github.com/KilledByAPixel/ZzFX
      */
-    sfx(zzfxParams?: number[], pitchSlide?: number, volumeFactor?: number): number[] | boolean
+    function sfx(
+        zzfxParams?: number[],
+        pitchSlide?: number,
+        volumeFactor?: number
+    ): number[] | boolean
     /**
      * Set the ZzFX's global volume factor.
      * Note: use 0 to mute all sound effects.
      *
      * @param value
      */
-    volume(value: number): void
+    function volume(value: number): void
 
     /** UTILS API */
     /**
@@ -479,7 +489,7 @@ type LitecanvasInstance = {
      * @param key
      * @returns `true` if the which key is down
      */
-    iskeydown?(key: string): boolean
+    function iskeydown(key: string): boolean
     /**
      * Checks if a which key just got pressed on the keyboard.
      * Note: use `iskeypressed()` to check for any key.
@@ -487,19 +497,19 @@ type LitecanvasInstance = {
      * @param [key]
      * @returns `true` if the which key was pressed
      */
-    iskeypressed?(key: string): boolean
+    function iskeypressed(key: string): boolean
 
     /** PLUGINS API */
     /**
      * Returns the canvas
      */
-    canvas(): HTMLCanvasElement
+    function canvas(): HTMLCanvasElement
     /**
      * Prepares a plugin to be loaded
      *
      * @param callback
      */
-    use(callback: pluginCallback): void
+    function use(callback: pluginCallback): void
     /**
      * Add a game loop event listener
      *
@@ -507,7 +517,7 @@ type LitecanvasInstance = {
      * @param callback the function that is called when the event occurs
      * @returns a function to remove the listener
      */
-    listen(event: string, callback: Function): Function
+    function listen(event: string, callback: Function): Function
     /**
      * Call all listeners attached to a game event
      *
@@ -517,20 +527,20 @@ type LitecanvasInstance = {
      * @param [arg3] any data to be passed over the listeners
      * @param [arg4] any data to be passed over the listeners
      */
-    emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
+    function emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
+    /**
+     * Set or reset the color palette
+     *
+     * @param [colors]
+     */
+    function pal(colors?: string[]): void
     /**
      * Define or update a instance property
      *
      * @param key
      * @param value
      */
-    def(key: string, value: any): void
-    /**
-     * Set or reset the color palette
-     *
-     * @param [colors]
-     */
-    pal(colors?: string[]): void
+    function def(key: string, value: any): void
     /**
      * The scale of the game's delta time (dt).
      * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
@@ -538,13 +548,13 @@ type LitecanvasInstance = {
      *
      * @param value
      */
-    timescale(value: number): void
+    function timescale(value: number): void
     /**
      * Set the target FPS (frames per second).
      *
      * @param fps
      */
-    framerate(fps: number): void
+    function framerate(fps: number): void
     /**
      * Returns information about that engine instance.
      *
@@ -564,112 +574,21 @@ type LitecanvasInstance = {
      *
      * @param n
      */
-    stat(n: number): any
+    function stat(n: number): any
     /**
-     * Stops the litecanvas instance and remove all event listeners.
+     * Shutdown the litecanvas instance and remove all event listeners.
      */
-    quit(): void
+    function quit(): void
     /**
      * Pauses the engine loop (update & draw).
      */
-    pause(): void
+    function pause(): void
     /**
      * Resumes (if paused) the engine loop.
      */
-    resume(): void
+    function resume(): void
     /**
      * Returns `true` if the engine loop is paused.
      */
-    paused(): boolean
-}
-
-type LitecanvasOptions = {
-    /**
-     * The game screen width. If not set, the canvas will have the size of the webpage.
-     */
-    width?: number
-    /**
-     * The game screen height.
-     */
-    height?: number
-    /**
-     * Used to specify the selector of a custom canvas element
-     */
-    canvas?: HTMLCanvasElement | string
-    /**
-     * If `true` (default) scales the canvas to fill the screen, but preserving the aspect ratio.
-     * Instead of `true`, you can pass a number to limit the maximum scale factor of the canvas.
-     *
-     * Note: Only works if the option "width" was specified.
-     */
-    autoscale?: boolean | number
-    /**
-     * If `true`, the pixel art images won't look blurry.
-     */
-    pixelart?: boolean
-    /**
-     * If `false` (default), disable the canvas antialias.
-     */
-    antialias?: boolean
-    /**
-     * If `true` (default), all methods and properties of the engine will be exposed to the global scope (window).
-     */
-    global?: boolean
-    /**
-     * Specify your game loop callbacks.
-     * By default use that global functions (if they exist):
-     * - `window.init(): void`
-     * - `window.update(dt: number): void`
-     * - `window.draw(): void`
-     * - `window.resized(): void`
-     * - `window.tap(tapX: number, tapY: number, tapId: number): void`
-     * - `window.untap(tapX: number, tapY: number, tapId: number): void`
-     * - `window.tapped(tapX: number, tapY: number, tapId: number): void`
-     * - `window.tapping(tapX: number, tapY: number, tapId: number): void`
-     */
-    loop?: LitecanvasGameLoop
-    /**
-     * default: `true`
-     *
-     * if `false` disable the click/touch events handling.
-     *
-     * Useful when you want to implement your own input handler.
-     */
-    tapEvents?: boolean
-    /**
-     * default: `true`
-     *
-     * if `false` disable the `iskeydown()` method.
-     *
-     * Useful when you want to implement your keyboard handler.
-     */
-    keyboardEvents?: boolean
-    /**
-     * default: `true`
-     *
-     * if `false` stops the code in `update()` and `draw()` from running repeatedly. By default, tries to run these functions 60 times per second.
-     */
-    animate?: boolean
-}
-
-type LitecanvasGameLoop = {
-    init?: () => void
-    update?: (dt: number) => void
-    draw?: () => void
-    resized?: () => void
-    tap?: (tapX: number, tapY: number, tapId: number) => void
-    untap?: (tapX: number, tapY: number, tapId: number) => void
-    tapped?: (tapX: number, tapY: number, tapId: number) => void
-    tapping?: (tapX: number, tapY: number, tapId: number) => void
-}
-
-type drawCallback = (context: OffscreenCanvasRenderingContext2D) => void
-
-type pluginCallback = (instance: LitecanvasInstance, config?: any) => any
-
-type clipCallback = (ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void
-
-interface Window {
-    zzfxV: number
-    ENGINE: LitecanvasInstance | undefined
+    function paused(): boolean
 }

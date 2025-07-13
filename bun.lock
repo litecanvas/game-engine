@@ -8,7 +8,7 @@
         "@size-limit/preset-small-lib": "^11.2.0",
         "@swc/core": "^1.12.11",
         "@types/jsdom": "^21.1.7",
-        "ava": "^6.4.0",
+        "ava": "^6.4.1",
         "esbuild": "^0.25.6",
         "genversion": "^3.2.0",
         "gzip-size": "^7.0.0",
@@ -158,7 +158,7 @@
 
     "abbrev": ["abbrev@3.0.0", "", {}, ""],
 
-    "acorn": ["acorn@8.14.1", "", { "bin": "bin/acorn" }, ""],
+    "acorn": ["acorn@8.15.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg=="],
 
     "acorn-import-attributes": ["acorn-import-attributes@1.9.5", "", { "peerDependencies": { "acorn": "^8" } }, ""],
 
@@ -182,7 +182,7 @@
 
     "async-sema": ["async-sema@3.1.1", "", {}, ""],
 
-    "ava": ["ava@6.4.0", "", { "dependencies": { "@vercel/nft": "^0.29.4", "acorn": "^8.14.1", "acorn-walk": "^8.3.4", "ansi-styles": "^6.2.1", "arrgv": "^1.0.2", "arrify": "^3.0.0", "callsites": "^4.2.0", "cbor": "^10.0.3", "chalk": "^5.4.1", "chunkd": "^2.0.1", "ci-info": "^4.2.0", "ci-parallel-vars": "^1.0.1", "cli-truncate": "^4.0.0", "code-excerpt": "^4.0.0", "common-path-prefix": "^3.0.0", "concordance": "^5.0.4", "currently-unhandled": "^0.4.1", "debug": "^4.4.1", "emittery": "^1.1.0", "figures": "^6.1.0", "globby": "^14.1.0", "ignore-by-default": "^2.1.0", "indent-string": "^5.0.0", "is-plain-object": "^5.0.0", "is-promise": "^4.0.0", "matcher": "^5.0.0", "memoize": "^10.1.0", "ms": "^2.1.3", "p-map": "^7.0.3", "package-config": "^5.0.0", "picomatch": "^4.0.2", "plur": "^5.1.0", "pretty-ms": "^9.2.0", "resolve-cwd": "^3.0.0", "stack-utils": "^2.0.6", "strip-ansi": "^7.1.0", "supertap": "^3.0.1", "temp-dir": "^3.0.0", "write-file-atomic": "^6.0.0", "yargs": "^17.7.2" }, "peerDependencies": { "@ava/typescript": "*" }, "optionalPeers": ["@ava/typescript"], "bin": "entrypoints/cli.mjs" }, ""],
+    "ava": ["ava@6.4.1", "", { "dependencies": { "@vercel/nft": "^0.29.4", "acorn": "^8.15.0", "acorn-walk": "^8.3.4", "ansi-styles": "^6.2.1", "arrgv": "^1.0.2", "arrify": "^3.0.0", "callsites": "^4.2.0", "cbor": "^10.0.9", "chalk": "^5.4.1", "chunkd": "^2.0.1", "ci-info": "^4.3.0", "ci-parallel-vars": "^1.0.1", "cli-truncate": "^4.0.0", "code-excerpt": "^4.0.0", "common-path-prefix": "^3.0.0", "concordance": "^5.0.4", "currently-unhandled": "^0.4.1", "debug": "^4.4.1", "emittery": "^1.2.0", "figures": "^6.1.0", "globby": "^14.1.0", "ignore-by-default": "^2.1.0", "indent-string": "^5.0.0", "is-plain-object": "^5.0.0", "is-promise": "^4.0.0", "matcher": "^5.0.0", "memoize": "^10.1.0", "ms": "^2.1.3", "p-map": "^7.0.3", "package-config": "^5.0.0", "picomatch": "^4.0.2", "plur": "^5.1.0", "pretty-ms": "^9.2.0", "resolve-cwd": "^3.0.0", "stack-utils": "^2.0.6", "strip-ansi": "^7.1.0", "supertap": "^3.0.1", "temp-dir": "^3.0.0", "write-file-atomic": "^6.0.0", "yargs": "^17.7.2" }, "peerDependencies": { "@ava/typescript": "*" }, "optionalPeers": ["@ava/typescript"], "bin": { "ava": "entrypoints/cli.mjs" } }, "sha512-vxmPbi1gZx9zhAjHBgw81w/iEDKcrokeRk/fqDTyA2DQygZ0o+dUGRHFOtX8RA5N0heGJTTsIk7+xYxitDb61Q=="],
 
     "balanced-match": ["balanced-match@1.0.2", "", {}, ""],
 
@@ -198,7 +198,7 @@
 
     "callsites": ["callsites@4.2.0", "", {}, ""],
 
-    "cbor": ["cbor@10.0.3", "", { "dependencies": { "nofilter": "^3.0.2" } }, ""],
+    "cbor": ["cbor@10.0.9", "", { "dependencies": { "nofilter": "^3.0.2" } }, "sha512-KEWYehb/vJkRmigctVQLsz73Us2RNnITo/wOwQV5AtZpLGH1r2PPlsNHdsX460YuHZCyhLklbYzAOuJfOeg34Q=="],
 
     "chalk": ["chalk@5.4.1", "", {}, ""],
 
@@ -208,7 +208,7 @@
 
     "chunkd": ["chunkd@2.0.1", "", {}, ""],
 
-    "ci-info": ["ci-info@4.2.0", "", {}, ""],
+    "ci-info": ["ci-info@4.3.0", "", {}, "sha512-l+2bNRMiQgcfILUi33labAZYIWlH1kWDp+ecNo5iisRKrbm0xcRyCww71/YU0Fkw0mAFpz9bJayXPjey6vkmaQ=="],
 
     "ci-parallel-vars": ["ci-parallel-vars@1.0.1", "", {}, ""],
 
@@ -260,7 +260,7 @@
 
     "ejs": ["ejs@3.1.10", "", { "dependencies": { "jake": "^10.8.5" }, "bin": { "ejs": "bin/cli.js" } }, "sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA=="],
 
-    "emittery": ["emittery@1.1.0", "", {}, ""],
+    "emittery": ["emittery@1.2.0", "", {}, "sha512-KxdRyyFcS85pH3dnU8Y5yFUm2YJdaHwcBZWrfG8o89ZY9a13/f9itbN+YG3ELbBo9Pg5zvIozstmuV8bX13q6g=="],
 
     "emoji-regex": ["emoji-regex@10.4.0", "", {}, ""],
 
@@ -585,6 +585,8 @@
     "@sinonjs/samsam/type-detect": ["type-detect@4.1.0", "", {}, "sha512-Acylog8/luQ8L7il+geoSxhEkazvkslg7PSNKOX59mbB9cOveP5aq9h74Y7YU8yDpJwetzQQrfIwtf4Wp4LKcw=="],
 
     "@size-limit/esbuild/esbuild": ["esbuild@0.25.5", "", { "optionalDependencies": { "@esbuild/linux-x64": "0.25.5" }, "bin": "bin/esbuild" }, ""],
+
+    "@vercel/nft/acorn": ["acorn@8.14.1", "", { "bin": "bin/acorn" }, ""],
 
     "acorn-walk/acorn": ["acorn@8.14.0", "", { "bin": "bin/acorn" }, ""],
 
