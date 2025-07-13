@@ -87,7 +87,7 @@ export default function litecanvas(settings = {}) {
          */
         _eventListeners = {}
 
-    /** @type {Omit<LitecanvasInstance,'PI'|'sin'|'cos'|'atan2'|'hypot'|'tan'|'abs'|'ceil'|'floor'|'trunc'|'min'|'max'|'pow'|'sqrt'|'sign'|'exp'|'iskeydown'|'iskeypressed'>} */
+    /** @type {LitecanvasInstance} */
     const instance = {
         /** @type {number} */
         W: 0,
@@ -945,7 +945,6 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(volumeFactor), '[litecanvas] sfx() 3rd param must be a number')
 
             if (
-                // @ts-ignore
                 root.zzfxV <= 0 ||
                 (navigator.userActivation && !navigator.userActivation.hasBeenActive)
             ) {
@@ -975,7 +974,6 @@ export default function litecanvas(settings = {}) {
         volume(value) {
             DEV: assert(isNumber(value), '[litecanvas] volume() 1st param must be a number')
 
-            // @ts-ignore
             root.zzfxV = value
         },
 
@@ -1082,7 +1080,9 @@ export default function litecanvas(settings = {}) {
         def(key, value) {
             DEV: assert('string' === typeof key, '[litecanvas] def() 1st param must be a string')
             DEV: if (null == value) {
-                console.warn(`def: key "${key}" was defined as ${value} but now is null`)
+                console.warn(
+                    `[litecanvas] def() changed the key "${key}" to null (previous value was ${instance[key]})`
+                )
             }
 
             instance[key] = value
@@ -1148,8 +1148,7 @@ export default function litecanvas(settings = {}) {
                 // 7
                 _timeScale,
                 // 8
-                // @ts-ignore
-                root.zzfxV || 1,
+                root.zzfxV,
                 // 9
                 _rngSeed,
                 // 10
@@ -1189,7 +1188,6 @@ export default function litecanvas(settings = {}) {
                 for (const key in instance) {
                     delete root[key]
                 }
-                // @ts-ignore
                 delete root.ENGINE
             }
 
@@ -1568,7 +1566,7 @@ export default function litecanvas(settings = {}) {
 
         on(_canvas, 'click', () => root.focus())
 
-        // @ts-ignore
+        /** @ts-ignore */
         _canvas.style = ''
 
         resizeCanvas()
@@ -1657,7 +1655,6 @@ export default function litecanvas(settings = {}) {
      * @param {*} config
      */
     function loadPlugin(callback, config) {
-        // @ts-ignore
         const pluginData = callback(instance, config)
 
         DEV: assert(
@@ -1671,12 +1668,10 @@ export default function litecanvas(settings = {}) {
     }
 
     if (settings.global) {
-        // @ts-ignore
         if (root.ENGINE) {
             throw new Error('only one global litecanvas is allowed')
         }
         Object.assign(root, instance)
-        // @ts-ignore
         root.ENGINE = instance
     }
 
@@ -1691,6 +1686,5 @@ export default function litecanvas(settings = {}) {
         raf(init)
     }
 
-    // @ts-ignore
     return instance
 }

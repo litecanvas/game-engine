@@ -1,9 +1,14 @@
 {
     "compilerOptions": {
-        "target": "es2016",
-        "lib": ["es2016", "dom", "dom.iterable"],
+        "target": "es2017",
+        "lib": ["ES2017", "DOM", "DOM.Iterable"],
         "allowJs": true,
-        "noEmit": true
-    },
-    "files": ["types/index.d.ts", "src/index.js"]
+        "noEmit": true,
+        "baseUrl": "src",
+        "paths": {
+            "*": ["types/*"]
+        },
+        "moduleResolution": "nodenext",
+        "module": "nodenext"
+    }
 }
