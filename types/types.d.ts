@@ -358,11 +358,7 @@ type LitecanvasInstance = {
      * @param y
      * @param source
      */
-    image(
-        x: number,
-        y: number,
-        source: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
-    ): void
+    image(x: number, y: number, source: CanvasImageSource): void
     /**
      * Draw in an OffscreenCanvas and returns its image.
      *

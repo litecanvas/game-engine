@@ -718,7 +718,7 @@ export default function litecanvas(settings = {}) {
          *
          * @param {number} x
          * @param {number} y
-         * @param {OffscreenCanvas|HTMLImageElement|HTMLCanvasElement} source
+         * @param {CanvasImageSource} source
          */
         image(x, y, source) {
             DEV: assert(isNumber(x), '[litecanvas] image() 1st param must be a number')
