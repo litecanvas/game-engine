@@ -364,11 +364,7 @@ declare global {
      * @param y
      * @param source
      */
-    function image(
-        x: number,
-        y: number,
-        source: OffscreenCanvas | HTMLImageElement | HTMLCanvasElement
-    ): void
+    function image(x: number, y: number, source: CanvasImageSource): void
     /**
      * Draw in an OffscreenCanvas and returns its image.
      *
