@@ -971,7 +971,10 @@ export default function litecanvas(settings = {}) {
          * @param {number} value
          */
         volume(value) {
-            DEV: assert(isNumber(value), '[litecanvas] volume() 1st param must be a number')
+            DEV: assert(
+                isNumber(value) && value >= 0,
+                '[litecanvas] volume() 1st param must be a positive number or zero'
+            )
 
             root.zzfxV = value
         },
