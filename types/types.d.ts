@@ -594,19 +594,18 @@ type LitecanvasOptions = {
     canvas?: HTMLCanvasElement | string
     /**
      * If `true` (default) scales the canvas to fill the screen, but preserving the aspect ratio.
-     * Instead of `true`, you can pass a number to limit the maximum scale factor of the canvas.
+     * Instead of `true`, you can pass a number to determine the maximum scale.
      *
      * Note: Only works if the option "width" was specified.
      */
     autoscale?: boolean | number
     /**
      * If `true`, the pixel art images won't look blurry.
+     * Also, disables canvas built-in antialias.
+     *
+     * Default: `false`
      */
     pixelart?: boolean
-    /**
-     * If `false` (default), disable the canvas antialias.
-     */
-    antialias?: boolean
     /**
      * If `true` (default), all methods and properties of the engine will be exposed to the global scope (window).
      */
