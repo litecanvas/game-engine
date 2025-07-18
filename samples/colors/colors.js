@@ -9,6 +9,7 @@ litecanvas({
     height: tile * rows,
     autoscale: false,
     animate: false,
+    canvas: 'canvas',
 })
 
 // draw the color palette
@@ -24,7 +25,7 @@ function draw() {
 
             if (showLabel) {
                 const label = c
-                text(i * tile + tile / 2, 2 + j * tile + tile / 2, label, fg)
+                // text(i * tile + tile / 2, 2 + j * tile + tile / 2, label, fg)
             }
         }
     }
@@ -33,4 +34,12 @@ function draw() {
 function tapped() {
     showLabel = !showLabel
     draw()
+}
+
+// download button
+document.querySelector('#download').onclick = () => {
+    var link = document.createElement('a')
+    link.download = 'litecanvas-colors.png'
+    link.href = canvas().toDataURL()
+    link.click()
 }
