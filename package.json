@@ -19,15 +19,16 @@
     "types": "./types/index.d.ts",
     "unpkg": "./dist/dist.dev.js",
     "keywords": [
-        "game engine",
-        "game development",
-        "2d",
+        "tiny",
+        "micro",
+        "javascript",
+        "html5",
         "canvas",
+        "2d",
+        "game",
         "gamedev",
         "js13k",
-        "creative-coding",
-        "pico-8",
-        "p5"
+        "creative coding"
     ],
     "devDependencies": {
         "@litecanvas/jsdom-extras": "^2.0.0",
