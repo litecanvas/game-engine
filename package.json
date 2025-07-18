@@ -31,9 +31,9 @@
         "creative coding"
     ],
     "devDependencies": {
-        "@litecanvas/jsdom-extras": "^2.0.0",
+        "@litecanvas/jsdom-extras": "^2.0.1",
         "@size-limit/preset-small-lib": "^11.2.0",
-        "@swc/core": "^1.12.11",
+        "@swc/core": "^1.13.0",
         "@types/jsdom": "^21.1.7",
         "ava": "^6.4.1",
         "esbuild": "^0.25.6",
