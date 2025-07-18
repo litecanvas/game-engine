@@ -53,7 +53,7 @@
         "prepublishOnly": "npm test",
         "test": "ava --timeout=1s --fast-fail --tap | tap-min",
         "test:watch": "ava --watch",
-        "dev": "esbuild src/web.js --bundle --watch --outfile=dist/dist.dev.js --servedir=.",
+        "dev": "esbuild src/web.js --bundle --watch --outfile=samples/dist.js --servedir=samples",
         "build": "npm run genversion && node script/build.js && size-limit",
         "format": "prettier -w src/* samples/* types/* script/* types/*",
         "check-types": "npx ts types/*",
