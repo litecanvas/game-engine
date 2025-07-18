@@ -33,7 +33,6 @@ export default function litecanvas(settings = {}) {
             height: null,
             autoscale: true,
             pixelart: false,
-            antialias: false,
             canvas: null,
             global: true,
             loop: null,
@@ -945,7 +944,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(volumeFactor), '[litecanvas] sfx() 3rd param must be a number')
 
             if (
-                root.zzfxV <= 0 ||
+                !root.zzfxV ||
                 (navigator.userActivation && !navigator.userActivation.hasBeenActive)
             ) {
                 return false
@@ -1564,7 +1563,7 @@ export default function litecanvas(settings = {}) {
 
         _ctx = _canvas.getContext('2d')
 
-        on(_canvas, 'click', () => root.focus())
+        on(_canvas, 'click', () => focus())
 
         /** @ts-ignore */
         _canvas.style = ''
@@ -1592,8 +1591,8 @@ export default function litecanvas(settings = {}) {
             '[litecanvas] litecanvas() option "width" is required when the option "height" is defined'
         )
 
-        const width = settings.width || root.innerWidth,
-            height = settings.height || settings.width || root.innerHeight
+        const width = settings.width > 0 ? settings.width : innerWidth,
+            height = settings.width > 0 ? settings.height || settings.width : innerHeight
 
         instance.def('W', width)
         instance.def('H', height)
@@ -1608,29 +1607,30 @@ export default function litecanvas(settings = {}) {
                 _canvas.style.margin = 'auto'
             }
 
-            _scale = math.min(root.innerWidth / width, root.innerHeight / height)
+            _scale = math.min(innerWidth / width, innerHeight / height)
             _scale = maxScale > 1 && _scale > maxScale ? maxScale : _scale
-            _scale = (settings.pixelart ? ~~_scale : _scale) || 1
 
             _canvas.style.width = width * _scale + 'px'
             _canvas.style.height = height * _scale + 'px'
         }
 
-        // restore canvas image rendering properties
-        if (!settings.antialias || settings.pixelart) {
+        // set canvas image rendering properties
+        if (settings.pixelart) {
             _ctx.imageSmoothingEnabled = false
             _canvas.style.imageRendering = 'pixelated'
         }
 
-        // reset the default text align and baseline
+        // set the default text align and baseline
         instance.textalign('start', 'top')
 
         // trigger "resized" event
+        // note: not triggered before the "init" event
         instance.emit('resized', _scale)
 
+        // paint a temporary background
         instance.cls(0)
 
-        // force redraw
+        // force redraw when the canvas is not animated
         if (!settings.animate) {
             raf(drawFrame)
         }
