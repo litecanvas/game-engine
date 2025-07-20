@@ -63,7 +63,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} duration of a frame at 60 FPS (default) */
         _deltaTime = 1 / 60,
         /** @type {number} */
-        _accumulated = 0,
+        _accumulated,
         /** @type {number?} */
         _rafid,
         /** @type {string} */
@@ -1209,7 +1209,9 @@ export default function litecanvas(settings = {}) {
          * Resumes (if paused) the engine loop.
          */
         resume() {
-            if (!_rafid && _initialized) {
+            if (_initialized && !_rafid) {
+                _accumulated = 0
+                _lastFrameTime = performance.now()
                 _rafid = raf(drawFrame)
             }
         },
@@ -1504,11 +1506,17 @@ export default function litecanvas(settings = {}) {
             )
         }
 
+        // this seems to solve a strange bug that drop the FPS
+        // when switching tabs in the browser
+        on(root, 'focus', () => {
+            DEV: console.warn('[litecanvas] engine loop restarted on "focus" event')
+            instance.pause()
+            instance.resume()
+        })
+
         // start the engine
         _initialized = true
         instance.emit('init', instance)
-
-        _lastFrameTime = performance.now()
         instance.resume()
     }
 
@@ -1518,6 +1526,11 @@ export default function litecanvas(settings = {}) {
     function drawFrame(now) {
         if (!settings.animate) {
             return instance.emit('draw')
+        }
+        // request the next frame
+        // only when the engine loop are not paused (_rafid >= 1)
+        else if (_rafid) {
+            _rafid = raf(drawFrame)
         }
 
         let updated = 0
@@ -1537,12 +1550,6 @@ export default function litecanvas(settings = {}) {
 
         if (updated) {
             instance.emit('draw')
-        }
-
-        // request the next frame
-        // only when the engine loop are not paused (_rafid >= 1)
-        if (_rafid) {
-            _rafid = raf(drawFrame)
         }
     }
 
