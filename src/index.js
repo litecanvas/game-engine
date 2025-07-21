@@ -1526,7 +1526,7 @@ export default function litecanvas(settings = {}) {
      */
     function drawFrame(now) {
         if (!settings.animate) {
-            return instance.emit('draw')
+            return instance.emit('draw', _ctx)
         }
         // request the next frame
         // only when the engine loop are not paused (_rafid >= 1)
@@ -1550,7 +1550,7 @@ export default function litecanvas(settings = {}) {
         }
 
         if (updated) {
-            instance.emit('draw')
+            instance.emit('draw', _ctx)
         }
     }
 
@@ -1637,9 +1637,6 @@ export default function litecanvas(settings = {}) {
         // trigger "resized" event
         // note: not triggered before the "init" event
         instance.emit('resized', _scale)
-
-        // paint a temporary background
-        instance.cls(0)
 
         // force redraw when the canvas is not animated
         if (!settings.animate) {
