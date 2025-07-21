@@ -61,7 +61,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _lastFrameTime,
         /** @type {number} duration of a frame at 60 FPS (default) */
-        _deltaTime = 1 / 60,
+        _fpsInterval = 1000 / 60,
         /** @type {number} */
         _accumulated,
         /** @type {number?} */
@@ -1120,7 +1120,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] framerate() 1st param must be a positive number'
             )
 
-            _deltaTime = 1 / ~~value
+            _fpsInterval = 1000 / ~~value
         },
 
         /**
@@ -1138,7 +1138,7 @@ export default function litecanvas(settings = {}) {
                 // 1
                 _initialized,
                 // 2
-                _deltaTime,
+                _fpsInterval / 1000,
                 // 3
                 _scale,
                 // 4
@@ -1210,8 +1210,8 @@ export default function litecanvas(settings = {}) {
          */
         resume() {
             if (_initialized && !_rafid) {
-                _accumulated = _deltaTime
-                _lastFrameTime = performance.now()
+                _accumulated = _fpsInterval
+                _lastFrameTime = Date.now()
                 _rafid = raf(drawFrame)
             }
         },
@@ -1280,7 +1280,7 @@ export default function litecanvas(settings = {}) {
                             // initial y
                             yi: y,
                             // timestamp
-                            t: performance.now(),
+                            t: Date.now(),
                         }
                         _taps.set(id, tap)
                         return tap
@@ -1300,7 +1300,7 @@ export default function litecanvas(settings = {}) {
                     /**
                      * @param {{t: number}} tap
                      */
-                    (tap) => tap && performance.now() - tap.t <= 300,
+                    (tap) => tap && Date.now() - tap.t <= 300,
                 preventDefault =
                     /**
                      * @param {Event} ev
@@ -1506,52 +1506,48 @@ export default function litecanvas(settings = {}) {
             )
         }
 
-        // this seems to solve a wierd bug that drop the FPS
-        // when switching tabs in the browser
-        setInterval(() => {
-            if (_rafid) {
-                instance.pause()
-                instance.resume()
-            }
-        }, 5000)
-
         // start the engine
         _initialized = true
         instance.emit('init', instance)
         instance.resume()
     }
 
-    /**
-     * @param {DOMHighResTimeStamp} now
-     */
-    function drawFrame(now) {
+    function drawFrame() {
         if (!settings.animate) {
             return instance.emit('draw', _ctx)
         }
-        // request the next frame
-        // only when the engine loop are not paused (_rafid >= 1)
-        else if (_rafid) {
-            _rafid = raf(drawFrame)
-        }
 
+        let now = Date.now()
         let updated = 0
-        let frameTime = (now - _lastFrameTime) / 1000
+        let frameTime = now - _lastFrameTime
 
         _lastFrameTime = now
+        _accumulated += frameTime < 100 ? frameTime : _fpsInterval
 
-        if (frameTime < 0.1) {
-            _accumulated += frameTime
-            while (_accumulated >= _deltaTime) {
-                updated++
-                instance.emit('update', _deltaTime * _timeScale, updated)
-                instance.def('T', instance.T + _deltaTime * _timeScale)
-                _accumulated -= _deltaTime
-            }
+        while (_accumulated >= _fpsInterval) {
+            updated++
+            _accumulated -= _fpsInterval
+
+            let dt = (_fpsInterval / 1000) * _timeScale
+
+            instance.emit('update', dt, updated)
+            instance.def('T', instance.T + dt)
         }
 
         if (updated) {
             instance.emit('draw', _ctx)
+            if (updated > 1) {
+                _accumulated = 0
+                DEV: console.warn(
+                    '[litecanvas] the last frame updated ' +
+                        updated +
+                        ' times. This can drop the FPS if it keeps happening.'
+                )
+            }
         }
+
+        // request the next frame
+        _rafid = raf(drawFrame)
     }
 
     function setupCanvas() {

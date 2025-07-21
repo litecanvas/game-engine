@@ -15,8 +15,6 @@ litecanvas({
 use(pluginFrameRateMeter)
 
 function init() {
-    FPS_METER.display(true)
-
     state.sprite = paint(
         12,
         12,
