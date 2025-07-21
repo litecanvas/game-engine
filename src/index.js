@@ -1210,7 +1210,7 @@ export default function litecanvas(settings = {}) {
          */
         resume() {
             if (_initialized && !_rafid) {
-                _accumulated = 0
+                _accumulated = _deltaTime
                 _lastFrameTime = performance.now()
                 _rafid = raf(drawFrame)
             }
@@ -1506,13 +1506,14 @@ export default function litecanvas(settings = {}) {
             )
         }
 
-        // this seems to solve a strange bug that drop the FPS
+        // this seems to solve a wierd bug that drop the FPS
         // when switching tabs in the browser
-        on(root, 'focus', () => {
-            DEV: console.warn('[litecanvas] engine loop restarted on "focus" event')
-            instance.pause()
-            instance.resume()
-        })
+        setInterval(() => {
+            if (_rafid) {
+                instance.pause()
+                instance.resume()
+            }
+        }, 5000)
 
         // start the engine
         _initialized = true
