@@ -613,16 +613,17 @@ type LitecanvasOptions = {
     /**
      * Specify your game loop callbacks.
      * By default use that global functions (if they exist):
-     * - `window.init(): void`
+     * - `window.init(instance: LitecanvasInstance): void`
      * - `window.update(dt: number): void`
-     * - `window.draw(): void`
-     * - `window.resized(): void`
-     * - `window.tap(tapX: number, tapY: number, tapId: number): void`
-     * - `window.untap(tapX: number, tapY: number, tapId: number): void`
-     * - `window.tapped(tapX: number, tapY: number, tapId: number): void`
-     * - `window.tapping(tapX: number, tapY: number, tapId: number): void`
+     * - `window.draw(ctx: CanvasRenderingContext2D): void`
+     * - `window.resized(scale: number): void`
+     * - `window.tap(tapX: number, tapY: number, touchId: number): void`
+     * - `window.untap(tapX: number, tapY: number, touchId: number): void`
+     * - `window.tapped(tapX: number, tapY: number, touchId: number): void`
+     * - `window.tapping(tapX: number, tapY: number, touchId: number): void`
      */
     loop?: LitecanvasGameLoop
+
     /**
      * default: `true`
      *
@@ -652,10 +653,10 @@ type LitecanvasGameLoop = {
     update?: (dt: number) => void
     draw?: () => void
     resized?: () => void
-    tap?: (tapX: number, tapY: number, tapId: number) => void
-    untap?: (tapX: number, tapY: number, tapId: number) => void
-    tapped?: (tapX: number, tapY: number, tapId: number) => void
-    tapping?: (tapX: number, tapY: number, tapId: number) => void
+    tap?: (tapX: number, tapY: number, touchId: number) => void
+    untap?: (tapX: number, tapY: number, touchId: number) => void
+    tapped?: (tapX: number, tapY: number, touchId: number) => void
+    tapping?: (tapX: number, tapY: number, touchId: number) => void
 }
 
 type drawCallback = (context: OffscreenCanvasRenderingContext2D) => void
