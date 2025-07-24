@@ -1462,7 +1462,7 @@ export default function litecanvas(settings = {}) {
                 const key = event.key.toLowerCase()
                 _keysDown.add(key)
                 _keysPress.add(key)
-                _lastKey = key
+                _lastKey = key === ' ' ? 'space' : key
             })
 
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
