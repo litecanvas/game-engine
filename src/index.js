@@ -1454,12 +1454,15 @@ export default function litecanvas(settings = {}) {
                 return !key ? keySet.size > 0 : keySet.has('space' === key ? ' ' : key)
             }
 
+            /** @type {string} */
+            let _lastKey = ''
+
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
+                if (event.repeat) return
                 const key = event.key.toLowerCase()
-                if (!_keysDown.has(key)) {
-                    _keysDown.add(key)
-                    _keysPress.add(key)
-                }
+                _keysDown.add(key)
+                _keysPress.add(key)
+                _lastKey = key
             })
 
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
@@ -1503,6 +1506,16 @@ export default function litecanvas(settings = {}) {
                     )
                     return keyCheck(_keysPress, key)
                 }
+            )
+
+            instance.def(
+                'lastkey',
+                /**
+                 * Returns the last pressed
+                 *
+                 * @returns {string}
+                 */
+                () => _lastKey
             )
         }
 
