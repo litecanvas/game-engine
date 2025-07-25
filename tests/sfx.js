@@ -26,10 +26,10 @@ test('plays a ZzFX array of params', async (t) => {
 })
 
 test('plays a default sound if the first argument is omitted', async (t) => {
-    const DEFAULT_SFX = local.stat(6)
+    const defaultSound = local.stat(6)
     const result = local.sfx()
 
-    t.is(DEFAULT_SFX, result)
+    t.is(defaultSound, result)
 })
 
 test('the second argument increments the pitch', async (t) => {

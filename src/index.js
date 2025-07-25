@@ -23,6 +23,8 @@ export default function litecanvas(settings = {}) {
             elem.addEventListener(evt, callback, false)
             _browserEventListeners.push(() => elem.removeEventListener(evt, callback, false))
         },
+        /** @type {(ev: Event) => void} */
+        preventDefault = (ev) => ev.preventDefault(),
         /** @type {(c: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void} */
         beginPath = (c) => c.beginPath(),
         isNumber = Number.isFinite,
@@ -1300,12 +1302,7 @@ export default function litecanvas(settings = {}) {
                     /**
                      * @param {{t: number}} tap
                      */
-                    (tap) => tap && Date.now() - tap.t <= 300,
-                preventDefault =
-                    /**
-                     * @param {Event} ev
-                     */
-                    (ev) => ev.preventDefault()
+                    (tap) => tap && Date.now() - tap.t <= 300
 
             let _pressingMouse = false
 
@@ -1454,15 +1451,21 @@ export default function litecanvas(settings = {}) {
                 return !key ? keySet.size > 0 : keySet.has('space' === key ? ' ' : key)
             }
 
+            /** @type {string} */
+            let _lastKey = ''
+
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
+                preventDefault(event)
                 const key = event.key.toLowerCase()
                 if (!_keysDown.has(key)) {
                     _keysDown.add(key)
                     _keysPress.add(key)
+                    _lastKey = key === ' ' ? 'space' : key
                 }
             })
 
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
+                preventDefault(event)
                 _keysDown.delete(event.key.toLowerCase())
             })
 
@@ -1472,9 +1475,6 @@ export default function litecanvas(settings = {}) {
             instance.def(
                 'iskeydown',
                 /**
-                 * Checks if a which key is pressed (down) on the keyboard.
-                 * Note: use `iskeydown()` to check for any key.
-                 *
                  * @param {string} [key]
                  * @returns {boolean}
                  */
@@ -1490,9 +1490,6 @@ export default function litecanvas(settings = {}) {
             instance.def(
                 'iskeypressed',
                 /**
-                 * Checks if a which key just got pressed on the keyboard.
-                 * Note: use `iskeypressed()` to check for any key.
-                 *
                  * @param {string} [key]
                  * @returns {boolean}
                  */
@@ -1503,6 +1500,14 @@ export default function litecanvas(settings = {}) {
                     )
                     return keyCheck(_keysPress, key)
                 }
+            )
+
+            instance.def(
+                'lastkey',
+                /**
+                 * @returns {string}
+                 */
+                () => _lastKey
             )
         }
 

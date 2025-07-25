@@ -477,7 +477,7 @@ declare global {
      */
     function volume(value: number): void
 
-    /** UTILS API */
+    /** KEYBOARD API */
     /**
      * Checks if a which key is pressed on the keyboard.
      * Note: use `iskeydown()` to check for any key pressed.
@@ -494,6 +494,12 @@ declare global {
      * @returns `true` if the which key was pressed
      */
     function iskeypressed(key: string): boolean
+    /**
+     * Returns the last pressed.
+     *
+     * @returns {string}
+     */
+    function lastkey(): string
 
     /** PLUGINS API */
     /**
