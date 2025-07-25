@@ -609,7 +609,7 @@ type LitecanvasOptions = {
      * If `true`, the pixel art images won't look blurry.
      * Also, disables canvas built-in antialias.
      *
-     * Default: `false`
+     * Default: `true`
      */
     pixelart?: boolean
     /**
