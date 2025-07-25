@@ -34,7 +34,7 @@ export default function litecanvas(settings = {}) {
             width: null,
             height: null,
             autoscale: true,
-            pixelart: false,
+            pixelart: true,
             canvas: null,
             global: true,
             loop: null,
@@ -1455,7 +1455,6 @@ export default function litecanvas(settings = {}) {
             let _lastKey = ''
 
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
-                preventDefault(event)
                 const key = event.key.toLowerCase()
                 if (!_keysDown.has(key)) {
                     _keysDown.add(key)
@@ -1465,7 +1464,6 @@ export default function litecanvas(settings = {}) {
             })
 
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
-                preventDefault(event)
                 _keysDown.delete(event.key.toLowerCase())
             })
 

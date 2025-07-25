@@ -1,6 +1,5 @@
 litecanvas({
     width: 5,
-    pixelart: true,
     animate: false,
 })
 

@@ -1,7 +1,6 @@
 litecanvas({
     width: 64,
     height: 64,
-    pixelart: true,
     autoscale: 4, // auto scale by until 4x
 })
 
