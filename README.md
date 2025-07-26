@@ -1,15 +1,19 @@
+<div align="center">
+
 ![logo](https://github.com/user-attachments/assets/cbff543a-17be-44e4-b4ce-f9ff0a0581bb)
 
 # Litecanvas
 
-[![NPM Version](https://flat.badgen.net/npm/v/litecanvas?scale=1&label=NPM&color=2f9e44&cache=3600)](https://www.npmjs.com/package/litecanvas/)
-[![License](https://flat.badgen.net/npm/license/litecanvas)](LICENSE)
+[![NPM Version](https://badgen.net/npm/v/litecanvas?scale=1.1&label=NPM&color=2f9e44&cache=3600)](https://www.npmjs.com/package/litecanvas/) &nbsp;
+[![License](https://badgen.net/npm/license/litecanvas?scale=1.1)](LICENSE)
 
 Litecanvas is a lightweight HTML5 canvas 2D engine suitable for small web games, prototypes, game jams, animations, creative coding, learning game programming and game design, etc.
 
-[![Itch](https://flat.badgen.net/static/FOLLOW/ON%20ITCH.IO/fa5c5c?scale=1.25)](https://bills.itch.io/litecanvas)
-[![Discord Server](https://flat.badgen.net/static/CHAT/ON%20DISCORD/5865f2?scale=1.25&icon=discord)](https://discord.com/invite/r2c3rGsvH3)
-[![Playground](https://flat.badgen.net/static/CODE/ON%20PLAYGROUND/5f3dc4?scale=1.25)](https://litecanvas.js.org/)
+[![Discord Server](https://badgen.net/static/CHAT/ON%20DISCORD/5865f2?scale=1.25&icon=discord)](https://discord.com/invite/r2c3rGsvH3) &nbsp;
+[![Itch](https://badgen.net/static/FOLLOW/ON%20ITCH.IO/fa5c5c?scale=1.25)](https://bills.itch.io/litecanvas) &nbsp;
+[![Playground](https://badgen.net/static/CODE/ON%20PLAYGROUND/5f3dc4?scale=1.25)](https://litecanvas.js.org/)
+
+</div>
 
 <!-- prettier-ignore -->
 > [!WARNING]
@@ -38,11 +42,16 @@ npm install
 npm run dev
 ```
 
+or just use add a `<script>` tag with our CDN link:
+
+```html
+<script src="https://unpkg.com/litecanvas"></script>
+```
+
 ### Show me the code!
 
 ```js
-// import the package or put a script tag in your HTML
-// CDN: https://unpkg.com/litecanvas/dist/dist.dev.js
+// import the package if you installed via NPM
 import litecanvas from 'litecanvas'
 
 // Start and setup the engine
