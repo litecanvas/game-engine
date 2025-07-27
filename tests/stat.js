@@ -227,11 +227,28 @@ test('stat modified via event', async (t) => {
     })
 })
 
-test('stat created via event', async (t) => {
-    const customIndex = 42
-    const expected = 'The answer to the Ultimate Question of Life, the Universe, and Everything'
-
+test('number stat created via event', async (t) => {
     await onLitecanvas(local, 'init', () => {
+        const customIndex = 42
+        const expected = 'The answer to the Ultimate Question of Life, the Universe, and Everything'
+
+        local.listen('stat', (data) => {
+            // create a value for stat(42)
+            if (customIndex === data.index) {
+                data.value = expected
+            }
+        })
+
+        const actual = local.stat(customIndex)
+        t.is(actual, expected)
+    })
+})
+
+test('string stat created via event', async (t) => {
+    await onLitecanvas(local, 'init', () => {
+        const customIndex = 'forty-two'
+        const expected = 'The answer to the Ultimate Question of Life, the Universe, and Everything'
+
         local.listen('stat', (data) => {
             // create a value for stat(42)
             if (customIndex === data.index) {
