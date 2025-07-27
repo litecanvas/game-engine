@@ -178,7 +178,7 @@ export default function litecanvas(settings = {}) {
         round: (n, precision = 0) => {
             DEV: assert(isNumber(n), '[litecanvas] round() 1st param must be a number')
             DEV: assert(
-                null == precision || (isNumber(precision) && precision >= 0),
+                isNumber(precision) && precision >= 0,
                 '[litecanvas] round() 2nd param must be a positive number or zero'
             )
             if (!precision) {
@@ -602,15 +602,15 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Sets the thickness of lines
+         * Sets the thickness of the lines
          *
          * @param {number} value
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
          */
         linewidth(value) {
             DEV: assert(
-                isNumber(value) && ~~value > 0,
-                '[litecanvas] linewidth() 1st param must be a positive number'
+                isNumber(value) && value >= 0,
+                '[litecanvas] linewidth() 1st param must be a positive number or zero'
             )
 
             _ctx.lineWidth = ~~value
@@ -820,14 +820,18 @@ export default function litecanvas(settings = {}) {
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
          */
-        push: () => _ctx.save(),
+        push() {
+            _ctx.save()
+        },
 
         /**
          * restores the drawing style settings and transformations
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore
          */
-        pop: () => _ctx.restore(),
+        pop() {
+            _ctx.restore()
+        },
 
         /**
          * Adds a translation to the transformation matrix.
@@ -835,11 +839,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          */
-        translate: (x, y) => {
+        translate(x, y) {
             DEV: assert(isNumber(x), '[litecanvas] translate() 1st param must be a number')
             DEV: assert(isNumber(y), '[litecanvas] translate() 2nd param must be a number')
 
-            return _ctx.translate(~~x, ~~y)
+            _ctx.translate(~~x, ~~y)
         },
 
         /**
@@ -848,11 +852,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} [y]
          */
-        scale: (x, y) => {
+        scale(x, y) {
             DEV: assert(isNumber(x), '[litecanvas] scale() 1st param must be a number')
             DEV: assert(null == y || isNumber(y), '[litecanvas] scale() 2nd param must be a number')
 
-            return _ctx.scale(x, y || x)
+            _ctx.scale(x, y || x)
         },
 
         /**
@@ -860,10 +864,10 @@ export default function litecanvas(settings = {}) {
          *
          * @param {number} radians
          */
-        rotate: (radians) => {
+        rotate(radians) {
             DEV: assert(isNumber(radians), '[litecanvas] rotate() 1st param must be a number')
 
-            return _ctx.rotate(radians)
+            _ctx.rotate(radians)
         },
 
         /**
@@ -1128,13 +1132,16 @@ export default function litecanvas(settings = {}) {
         /**
          * Returns information about that engine instance.
          *
-         * @param {number} n
+         * @param {number|string} index
          * @returns {any}
          */
-        stat(n) {
-            DEV: assert(isNumber(n) && n >= 0, '[litecanvas] stat() 1st param must be a number')
+        stat(index) {
+            DEV: assert(
+                isNumber(index) || 'string' === typeof index,
+                '[litecanvas] stat() 1st param must be a number or string'
+            )
 
-            const list = [
+            const internals = [
                 // 0
                 settings,
                 // 1
@@ -1161,9 +1168,9 @@ export default function litecanvas(settings = {}) {
                 _fontFamily,
             ]
 
-            const data = { index: n, value: list[n] }
+            const data = { index, value: internals[index] }
 
-            // plugins can modify or create stat values
+            // plugins can modify or create new stats
             instance.emit('stat', data)
 
             return data.value
