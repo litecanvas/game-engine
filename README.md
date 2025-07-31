@@ -32,14 +32,10 @@ Litecanvas is a lightweight HTML5 canvas 2D engine suitable for small web games,
 
 ## Getting Started
 
-You can try our [online playground](https://litecanvas.github.io) or install the [basic template](https://github.com/litecanvas/template):
+You can try our [online playground](https://litecanvas.github.io) or install the NPM package:
 
 ```sh
-# requires Node.js & NPM
-npx tiged litecanvas/template my-game
-cd my-game
-npm install
-npm run dev
+npm i litecanvas
 ```
 
 or just use add a `<script>` tag with our CDN link:
