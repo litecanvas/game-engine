@@ -4,13 +4,13 @@ export const defaultPalette = [
     '#aec2c2',
     '#FFF1E8',
 
-    '#e83b3b',
-    '#fabc20',
+    '#e85757',
+    '#facf63',
     '#155fd9',
-    '#3cbcfc',
+    '#70c9eb',
 
     '#327345',
-    '#63c64d',
+    '#54d986',
     '#6c2c1f',
     '#ac7c00',
 ]
