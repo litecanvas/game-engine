@@ -542,13 +542,13 @@ type LitecanvasInstance = {
      */
     def(key: string, value: any): void
     /**
-     * Set or reset the color palette.
+     * Set new palette colors or restore the default palette.
      *
      * @param [colors]
      */
     pal(colors?: string[]): void
     /**
-     * Swap two colors of the current palette.
+     * Replace the color "a" with color "b".
      *
      * If called without arguments, reset the current palette.
      *

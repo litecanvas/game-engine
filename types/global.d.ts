@@ -545,13 +545,13 @@ declare global {
      */
     function emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
     /**
-     * Set or reset the color palette.
+     * Set new palette colors or restore the default palette.
      *
      * @param [colors]
      */
     function pal(colors?: string[]): void
     /**
-     * Swap two colors of the current palette.
+     * Replace the color "a" with color "b".
      *
      * If called without arguments, reset the current palette.
      *
