@@ -11,7 +11,6 @@ test.before(() => {
     sinon.stub(console) // silent console
 
     local = litecanvas({
-        animate: false,
         global: false,
     })
 })

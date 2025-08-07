@@ -55,8 +55,8 @@
         "test:watch": "ava --watch",
         "dev": "esbuild src/web.js --bundle --watch --outfile=samples/dist.js --servedir=samples",
         "build": "npm run genversion && node script/build.js && size-limit",
-        "format": "prettier -w src/* samples/* types/* script/* types/*",
-        "check-types": "npx ts types/*",
+        "format": "prettier -w src/* samples/* types/* script/* tests/*",
+        "check-types": "npx tsc ./types/*",
         "genversion": "genversion --es6 src/version.js"
     },
     "files": [

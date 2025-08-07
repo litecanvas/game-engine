@@ -10,7 +10,6 @@ test.before(() => {
 
 test('changes the global variable `zzfxV`', async (t) => {
     const local = litecanvas({
-        animate: false,
         global: false,
     })
 

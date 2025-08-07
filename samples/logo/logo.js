@@ -5,7 +5,6 @@ const url = new URL(location),
 litecanvas({
     width: size,
     autoscale: false,
-    animate: false,
 })
 
 let scale = floor(size / minsize)
@@ -43,6 +42,13 @@ logo = paint(
     }
 )
 
-// just draw once
-// function draw() is not necessary with `animate=false`
+// just draw once outside of the `draw()` function
 image(0, 0, logo)
+
+// we don't need the game loop here, so lets pause it.
+// but we can immediately pause it, because the game loop has not started yet
+// so we pause the game loop in the first "update" event
+listen('before:update', pause)
+
+// another alternative would be to leave the game with only 1 FPS
+// framerate(1)

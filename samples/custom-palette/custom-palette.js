@@ -1,6 +1,5 @@
 litecanvas({
     width: 5,
-    animate: false,
 })
 
 function init() {
@@ -40,4 +39,5 @@ function draw() {
         .b7d.
         ..c..`
     )
+    pause() // draw only once
 }

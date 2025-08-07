@@ -14,7 +14,6 @@ test('custom canvas (html element)', async (t) => {
     window.document.body.appendChild(customCanvas)
 
     const local = litecanvas({
-        animate: false,
         canvas: customCanvas,
         global: false,
     })
@@ -44,7 +43,6 @@ test('custom canvas (CSS selector)', async (t) => {
     const local = litecanvas({
         canvas: `#${customCanvas.id}`, // the canvas selector
         global: false,
-        animate: false,
     })
 
     const expected = customCanvas

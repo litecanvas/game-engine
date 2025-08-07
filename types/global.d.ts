@@ -545,11 +545,22 @@ declare global {
      */
     function emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
     /**
-     * Set or reset the color palette
+     * Set or reset the color palette.
      *
      * @param [colors]
      */
     function pal(colors?: string[]): void
+    /**
+     * Swap two colors of the current palette.
+     *
+     * If called without arguments, reset the current palette.
+     *
+     * Note: `palc()` don't affect drawings made with `image()`.
+     *
+     * @param a
+     * @param b
+     */
+    function palc(a?: number, b?: number): void
     /**
      * Define or update a instance property
      *

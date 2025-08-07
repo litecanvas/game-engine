@@ -18,12 +18,10 @@ test('produces random numbers based on initial seed', async (t) => {
     const seed = 42
 
     let engine1 = litecanvas({
-        animate: false,
         global: false,
     })
 
     let engine2 = litecanvas({
-        animate: false,
         global: false,
     })
 

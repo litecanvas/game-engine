@@ -34,21 +34,22 @@ const palKulepu = [
     '#306645',
 ]
 
-let usingAltPal = false
+let swapColors = false
 
 function tapped() {
-    if (usingAltPal) {
-        pal()
-    } else {
-        pal(palKulepu)
-    }
-    usingAltPal = !usingAltPal
+    swapColors = !swapColors
 }
 
 function draw() {
-    cls(3)
+    cls(1)
     push()
     scale(2)
+    if (swapColors) {
+        palc(0, 3) // swap the black with white
+    }
     spr(0, 0, 8, 8, smile)
+    if (swapColors) {
+        palc(3, 0) // undo the swap
+    }
     pop()
 }

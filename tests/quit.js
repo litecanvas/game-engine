@@ -11,12 +11,10 @@ test.before(() => {
 test('deletes exposed methods and props only when is global', async (t) => {
     const global = litecanvas({
         global: true,
-        animate: false,
     })
 
     const notglobal = litecanvas({
         global: false,
-        animate: false,
     })
 
     notglobal.quit()
