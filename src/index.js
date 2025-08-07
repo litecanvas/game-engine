@@ -73,9 +73,9 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _rngSeed = Date.now(),
         /** @type {string[]} */
-        _currentPalette,
-        /** @type {string[]} */
-        _colors,
+        _colorPalette = defaultPalette,
+        /** @type {number[]} */
+        _colorPaletteState = [],
         /** @type {number[]} */
         _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
         /** @type {string} */
@@ -659,7 +659,7 @@ export default function litecanvas(settings = {}) {
             )
 
             _ctx.font = `${fontStyle} ${_fontSize}px ${_fontFamily}`
-            _ctx.fillStyle = _colors[~~color % _colors.length]
+            _ctx.fillStyle = getColor(color)
             _ctx.fillText(message, ~~x, ~~y)
         },
 
@@ -899,7 +899,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] fill() 1st param must be a positive number or zero'
             )
 
-            _ctx.fillStyle = _colors[~~color % _colors.length]
+            _ctx.fillStyle = getColor(color)
             _ctx.fill()
         },
 
@@ -914,7 +914,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] stroke() 1st param must be a positive number or zero'
             )
 
-            _ctx.strokeStyle = _colors[~~color % _colors.length]
+            _ctx.strokeStyle = getColor(color)
             _ctx.stroke()
         },
 
@@ -1067,7 +1067,7 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Set or reset the color palette.
+         * Set new palette colors or restore the default palette.
          *
          * @param {string[]} [colors]
          */
@@ -1076,14 +1076,16 @@ export default function litecanvas(settings = {}) {
                 Array.isArray(colors) && colors.length > 0,
                 '[litecanvas] pal() 1st param must be a array of strings'
             )
-            _colors = colors
-            _currentPalette = [...colors]
+            _colorPalette = colors
+            _colorPaletteState = []
         },
 
         /**
-         * Swap two colors of the current palette.
+         * Replace the color "a" with color "b".
          *
          * If called without arguments, reset the current palette.
+         *
+         * Note: `palc()` don't affect drawings made with `image()`.
          *
          * @param {number?} a
          * @param {number?} b
@@ -1098,9 +1100,9 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] palc() 2nd param must be a positive number'
             )
             if (a == null) {
-                _colors = [..._currentPalette]
+                _colorPaletteState = []
             } else {
-                ;[_colors[a], _colors[b]] = [_colors[b], _colors[a]]
+                _colorPaletteState[a] = b
             }
         },
 
@@ -1178,7 +1180,7 @@ export default function litecanvas(settings = {}) {
                 // 4
                 _eventListeners,
                 // 5
-                _colors,
+                _colorPalette,
                 // 6
                 _defaultSound,
                 // 7
@@ -1687,6 +1689,15 @@ export default function litecanvas(settings = {}) {
         }
     }
 
+    /**
+     * @param {number} index
+     * @returns {string}
+     */
+    function getColor(index) {
+        const i = _colorPaletteState[index] ?? index
+        return _colorPalette[~~i % _colorPalette.length]
+    }
+
     if (settings.global) {
         if (root.ENGINE) {
             throw new Error('only one global litecanvas is allowed')
@@ -1699,9 +1710,6 @@ export default function litecanvas(settings = {}) {
     DEV: console.debug(`[litecanvas] litecanvas() options =`, settings)
 
     setupCanvas()
-
-    // init the color palette
-    instance.pal()
 
     if ('loading' === document.readyState) {
         on(root, 'DOMContentLoaded', () => raf(init))

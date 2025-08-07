@@ -34,22 +34,26 @@ const palKulepu = [
     '#306645',
 ]
 
-let swapColors = false
+let blinkFrames = 0
 
-function tapped() {
-    swapColors = !swapColors
+function update(dt) {
+    // blink every 2 seconds
+    if (T % 1 < dt) {
+        blinkFrames = 15
+    }
 }
 
 function draw() {
     cls(1)
     push()
     scale(2)
-    if (swapColors) {
-        palc(0, 3) // swap the black with white
+
+    palc() // reset the palette
+    if (blinkFrames > 0) {
+        palc(0, 3) // replace the black with white
+        blinkFrames--
     }
+
     spr(0, 0, 8, 8, smile)
-    if (swapColors) {
-        palc(3, 0) // undo the swap
-    }
     pop()
 }
