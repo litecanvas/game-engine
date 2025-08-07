@@ -48,8 +48,6 @@ export default function litecanvas(settings = {}) {
 
     let /** @type {boolean} */
         _initialized = false,
-        /** @type {any[]} */
-        _plugins = [],
         /** @type {HTMLCanvasElement} _canvas */
         _canvas,
         /** @type {number} */
@@ -1016,13 +1014,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] use() 2nd param must be an object'
             )
 
-            if (_initialized) {
-                // load the plugin now
-                loadPlugin(callback, config)
-            } else {
-                // schedule to load the plugin right before the "init" event
-                _plugins.push([callback, config])
-            }
+            loadPlugin(callback, config)
         },
 
         /**
@@ -1282,11 +1274,6 @@ export default function litecanvas(settings = {}) {
                 console.info(`[litecanvas] using window.${event}()`)
             }
             if (source[event]) instance.listen(event, source[event])
-        }
-
-        // load plugins
-        for (const [callback, config] of _plugins) {
-            loadPlugin(callback, config)
         }
 
         // listen window resize event when "autoscale" is enabled
