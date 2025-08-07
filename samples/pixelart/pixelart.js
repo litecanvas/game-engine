@@ -4,28 +4,51 @@ litecanvas({
     autoscale: 4, // auto scale by until 4x
 })
 
-const art = paint(
-    8, // the pixel art width
-    8, // the pixelart height
-    [
-        // the pixelart pixels:
-        // each number is a pixel color
-        // note: use space or dots to make a pixel 100% transparent
-        '  0000  ',
-        ' 055550 ',
-        '05505050',
-        '05555550',
-        '05500050',
-        '05555550',
-        '.055550.',
-        '..0000..',
-    ],
-    {
-        scale: 2, // this pixelart is twice bigger
+const smile = `
+    ..0000..
+    .055550.
+    05505050
+    05555550
+    05500050
+    05555550
+    .055550.
+    ..0000..`
+
+// https://lospec.com/palette-list/kulepu
+const palKulepu = [
+    '#180c10',
+    '#3d4249',
+    '#798890',
+    '#a6cbc4',
+    '#43a6c7',
+    '#2d488c',
+    '#8f74e8',
+    '#e7aac7',
+    '#f0f5dc',
+    '#f0b886',
+    '#d87f5c',
+    '#8b3e34',
+    '#f0933b',
+    '#f1cc46',
+    '#89ab3e',
+    '#306645',
+]
+
+let usingAltPal = false
+
+function tapped() {
+    if (usingAltPal) {
+        pal()
+    } else {
+        pal(palKulepu)
     }
-)
+    usingAltPal = !usingAltPal
+}
 
 function draw() {
     cls(3)
-    image(0, 0, art)
+    push()
+    scale(2)
+    spr(0, 0, 8, 8, smile)
+    pop()
 }

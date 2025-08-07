@@ -729,18 +729,45 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * Draw a sprite pxiel by pixel represented by a string. Each pixel must be a base 36 number (0-9 or a-z) or a dot.
+         *
+         * @param {number} x
+         * @param {number} y
+         * @param {number} width
+         * @param {number} height
+         * @param {string} pixels
+         */
+        spr(x, y, width, height, pixels) {
+            DEV: assert(isNumber(x), '[litecanvas] spr() 1st param must be a number')
+            DEV: assert(isNumber(y), '[litecanvas] spr() 2nd param must be a number')
+            DEV: assert(isNumber(width), '[litecanvas] spr() 3rd param must be a number')
+            DEV: assert(isNumber(height), '[litecanvas] spr() 4th param must be a number')
+            DEV: assert('string' === typeof pixels, '[litecanvas] spr() 5th param must be a string')
+
+            const chars = pixels.replace(/\s/g, '')
+            for (let gridx = 0; gridx < width; gridx++) {
+                for (let gridy = 0; gridy < height; gridy++) {
+                    const char = chars[height * gridy + gridx] || '.'
+                    if (char !== '.') {
+                        instance.rectfill(x + gridx, y + gridy, 1, 1, parseInt(char, 16) || 0)
+                    }
+                }
+            }
+        },
+
+        /**
          * Draw in an OffscreenCanvas and returns its image.
          *
          * @param {number} width
          * @param {number} height
-         * @param {string[]|drawCallback} drawing
+         * @param {drawCallback} callback
          * @param {object} [options]
          * @param {number} [options.scale=1]
          * @param {OffscreenCanvas} [options.canvas]
          * @returns {ImageBitmap}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
-        paint(width, height, drawing, options = {}) {
+        paint(width, height, callback, options = {}) {
             DEV: assert(
                 isNumber(width) && width >= 1,
                 '[litecanvas] paint() 1st param must be a positive number'
@@ -750,7 +777,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] paint() 2nd param must be a positive number'
             )
             DEV: assert(
-                'function' === typeof drawing || Array.isArray(drawing),
+                'function' === typeof callback,
                 '[litecanvas] paint() 3rd param must be a function or array'
             )
             DEV: assert(
@@ -765,37 +792,16 @@ export default function litecanvas(settings = {}) {
             const /** @type {OffscreenCanvas} */
                 canvas = options.canvas || new OffscreenCanvas(1, 1),
                 scale = options.scale || 1,
-                contextOriginal = _ctx
+                currentContext = _ctx // context backup
 
             canvas.width = width * scale
             canvas.height = height * scale
 
             _ctx = canvas.getContext('2d')
             _ctx.scale(scale, scale)
+            callback(_ctx)
 
-            // draw pixel art if `draw` is a array
-            if (Array.isArray(drawing)) {
-                let x = 0,
-                    y = 0
-
-                _ctx.imageSmoothingEnabled = false
-
-                for (const str of drawing) {
-                    for (const color of str) {
-                        if (' ' !== color && '.' !== color) {
-                            // support for 16-color palette using hex (from 0 to f)
-                            instance.rectfill(x, y, 1, 1, parseInt(color, 16))
-                        }
-                        x++
-                    }
-                    y++
-                    x = 0
-                }
-            } else {
-                drawing(_ctx)
-            }
-
-            _ctx = contextOriginal // restore the context
+            _ctx = currentContext // restore the context
 
             return canvas.transferToImageBitmap()
         },

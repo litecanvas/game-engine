@@ -23,19 +23,21 @@ function init() {
         '#FF77A8',
         '#FFCCAA',
     ])
-
-    // create a PICO-8 logo image
-    pico8logo = paint(5, 5, [
-        // prettier-ignore
-        '..8..',
-        '.97f.',
-        'a777e',
-        '.b7d.',
-        '..c..',
-    ])
 }
 
 function draw() {
+    console.log('drawing...')
     cls(0)
-    image(0, 0, pico8logo)
+    spr(
+        0,
+        0,
+        5,
+        5,
+        `
+        ..8..
+        .97f.
+        a777e
+        .b7d.
+        ..c..`
+    )
 }
