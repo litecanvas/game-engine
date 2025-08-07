@@ -1,7 +1,6 @@
 litecanvas({
     width: innerWidth,
     height: innerWidth * 0.75,
-    animate: false,
 })
 
 function init() {

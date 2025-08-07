@@ -63,7 +63,7 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
         const expected = 2
         const scaled = litecanvas({
             global: false,
-            animate: false,
+
             width: window.innerWidth / 2,
             height: window.innerHeight / 2,
             autoscale: true,
@@ -77,7 +77,7 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
         const expected = 1
         const notScaled = litecanvas({
             global: false,
-            animate: false,
+
             width: 320,
             autoscale: false,
         })

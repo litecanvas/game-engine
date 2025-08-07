@@ -14,9 +14,7 @@ test.before(() => {
     setupDOM()
     sinon.stub(console) // silent console
 
-    local = litecanvas({
-        animate: false,
-    })
+    local = litecanvas({})
 })
 
 test.after(() => {

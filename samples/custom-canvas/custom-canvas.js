@@ -1,6 +1,5 @@
 litecanvas({
     canvas: '#game-canvas',
-    animate: false,
 })
 
 function draw() {

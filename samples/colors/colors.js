@@ -8,7 +8,6 @@ litecanvas({
     width: tile * cols,
     height: tile * rows,
     autoscale: false,
-    animate: false,
     canvas: 'canvas',
 })
 
@@ -25,10 +24,11 @@ function draw() {
 
             if (showLabel) {
                 const label = c
-                // text(i * tile + tile / 2, 2 + j * tile + tile / 2, label, fg)
+                text(i * tile + tile / 2, 2 + j * tile + tile / 2, label, fg)
             }
         }
     }
+    pause() // draw only once
 }
 
 function tapped() {

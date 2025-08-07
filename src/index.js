@@ -23,6 +23,8 @@ export default function litecanvas(settings = {}) {
             elem.addEventListener(evt, callback, false)
             _browserEventListeners.push(() => elem.removeEventListener(evt, callback, false))
         },
+        /** @type {(str: string) => string} */
+        lowerCase = (str) => str.toLowerCase(),
         /** @type {(ev: Event) => void} */
         preventDefault = (ev) => ev.preventDefault(),
         /** @type {(c: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void} */
@@ -34,13 +36,11 @@ export default function litecanvas(settings = {}) {
             width: null,
             height: null,
             autoscale: true,
-            pixelart: true,
             canvas: null,
             global: true,
             loop: null,
             tapEvents: true,
             keyboardEvents: true,
-            animate: true,
         }
 
     // setup the settings default values
@@ -75,7 +75,9 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _rngSeed = Date.now(),
         /** @type {string[]} */
-        _colors = defaultPalette,
+        _currentPalette,
+        /** @type {string[]} */
+        _colors,
         /** @type {number[]} */
         _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
         /** @type {string} */
@@ -729,18 +731,45 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * Draw a sprite pxiel by pixel represented by a string. Each pixel must be a base 36 number (0-9 or a-z) or a dot.
+         *
+         * @param {number} x
+         * @param {number} y
+         * @param {number} width
+         * @param {number} height
+         * @param {string} pixels
+         */
+        spr(x, y, width, height, pixels) {
+            DEV: assert(isNumber(x), '[litecanvas] spr() 1st param must be a number')
+            DEV: assert(isNumber(y), '[litecanvas] spr() 2nd param must be a number')
+            DEV: assert(isNumber(width), '[litecanvas] spr() 3rd param must be a number')
+            DEV: assert(isNumber(height), '[litecanvas] spr() 4th param must be a number')
+            DEV: assert('string' === typeof pixels, '[litecanvas] spr() 5th param must be a string')
+
+            const chars = pixels.replace(/\s/g, '')
+            for (let gridx = 0; gridx < width; gridx++) {
+                for (let gridy = 0; gridy < height; gridy++) {
+                    const char = chars[height * gridy + gridx] || '.'
+                    if (char !== '.') {
+                        instance.rectfill(x + gridx, y + gridy, 1, 1, parseInt(char, 16) || 0)
+                    }
+                }
+            }
+        },
+
+        /**
          * Draw in an OffscreenCanvas and returns its image.
          *
          * @param {number} width
          * @param {number} height
-         * @param {string[]|drawCallback} drawing
+         * @param {drawCallback} callback
          * @param {object} [options]
          * @param {number} [options.scale=1]
          * @param {OffscreenCanvas} [options.canvas]
          * @returns {ImageBitmap}
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
-        paint(width, height, drawing, options = {}) {
+        paint(width, height, callback, options = {}) {
             DEV: assert(
                 isNumber(width) && width >= 1,
                 '[litecanvas] paint() 1st param must be a positive number'
@@ -750,7 +779,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] paint() 2nd param must be a positive number'
             )
             DEV: assert(
-                'function' === typeof drawing || Array.isArray(drawing),
+                'function' === typeof callback,
                 '[litecanvas] paint() 3rd param must be a function or array'
             )
             DEV: assert(
@@ -765,37 +794,16 @@ export default function litecanvas(settings = {}) {
             const /** @type {OffscreenCanvas} */
                 canvas = options.canvas || new OffscreenCanvas(1, 1),
                 scale = options.scale || 1,
-                contextOriginal = _ctx
+                currentContext = _ctx // context backup
 
             canvas.width = width * scale
             canvas.height = height * scale
 
             _ctx = canvas.getContext('2d')
             _ctx.scale(scale, scale)
+            callback(_ctx)
 
-            // draw pixel art if `draw` is a array
-            if (Array.isArray(drawing)) {
-                let x = 0,
-                    y = 0
-
-                _ctx.imageSmoothingEnabled = false
-
-                for (const str of drawing) {
-                    for (const color of str) {
-                        if (' ' !== color && '.' !== color) {
-                            // support for 16-color palette using hex (from 0 to f)
-                            instance.rectfill(x, y, 1, 1, parseInt(color, 16))
-                        }
-                        x++
-                    }
-                    y++
-                    x = 0
-                }
-            } else {
-                drawing(_ctx)
-            }
-
-            _ctx = contextOriginal // restore the context
+            _ctx = currentContext // restore the context
 
             return canvas.transferToImageBitmap()
         },
@@ -1034,7 +1042,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] listen() 2nd param must be a function'
             )
 
-            eventName = eventName.toLowerCase()
+            eventName = lowerCase(eventName)
 
             _eventListeners[eventName] = _eventListeners[eventName] || new Set()
             _eventListeners[eventName].add(callback)
@@ -1058,7 +1066,7 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] emit() 1st param must be a string'
             )
             if (_initialized) {
-                eventName = eventName.toLowerCase()
+                eventName = lowerCase(eventName)
 
                 triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
                 triggerEvent(eventName, arg1, arg2, arg3, arg4)
@@ -1067,7 +1075,7 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Set or reset the color palette
+         * Set or reset the color palette.
          *
          * @param {string[]} [colors]
          */
@@ -1077,6 +1085,31 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] pal() 1st param must be a array of strings'
             )
             _colors = colors
+            _currentPalette = [...colors]
+        },
+
+        /**
+         * Swap two colors of the current palette.
+         *
+         * If called without arguments, reset the current palette.
+         *
+         * @param {number?} a
+         * @param {number?} b
+         */
+        palc(a, b) {
+            DEV: assert(
+                null == a || (isNumber(a) && a >= 0),
+                '[litecanvas] palc() 1st param must be a positive number'
+            )
+            DEV: assert(
+                isNumber(a) ? isNumber(b) && b >= 0 : null == b,
+                '[litecanvas] palc() 2nd param must be a positive number'
+            )
+            if (a == null) {
+                _colors = [..._currentPalette]
+            } else {
+                ;[_colors[a], _colors[b]] = [_colors[b], _colors[a]]
+            }
         },
 
         /**
@@ -1454,7 +1487,7 @@ export default function litecanvas(settings = {}) {
              * @returns {boolean}
              */
             const keyCheck = (keySet, key = '') => {
-                key = key.toLowerCase()
+                key = lowerCase(key)
                 return !key ? keySet.size > 0 : keySet.has('space' === key ? ' ' : key)
             }
 
@@ -1462,7 +1495,7 @@ export default function litecanvas(settings = {}) {
             let _lastKey = ''
 
             on(root, 'keydown', (/** @type {KeyboardEvent} */ event) => {
-                const key = event.key.toLowerCase()
+                const key = lowerCase(event.key)
                 if (!_keysDown.has(key)) {
                     _keysDown.add(key)
                     _keysPress.add(key)
@@ -1471,7 +1504,7 @@ export default function litecanvas(settings = {}) {
             })
 
             on(root, 'keyup', (/** @type {KeyboardEvent} */ event) => {
-                _keysDown.delete(event.key.toLowerCase())
+                _keysDown.delete(lowerCase(event.key))
             })
 
             on(root, 'blur', () => _keysDown.clear())
@@ -1523,9 +1556,8 @@ export default function litecanvas(settings = {}) {
     }
 
     function drawFrame() {
-        if (!settings.animate) {
-            return instance.emit('draw', _ctx)
-        }
+        // request the next frame
+        _rafid = raf(drawFrame)
 
         let now = Date.now()
         let updated = 0
@@ -1555,9 +1587,6 @@ export default function litecanvas(settings = {}) {
                 )
             }
         }
-
-        // request the next frame
-        _rafid = raf(drawFrame)
     }
 
     function setupCanvas() {
@@ -1632,10 +1661,8 @@ export default function litecanvas(settings = {}) {
         }
 
         // set canvas image rendering properties
-        if (settings.pixelart) {
-            _ctx.imageSmoothingEnabled = false
-            _canvas.style.imageRendering = 'pixelated'
-        }
+        _ctx.imageSmoothingEnabled = false
+        _canvas.style.imageRendering = 'pixelated'
 
         // set the default text align and baseline
         instance.textalign('start', 'top')
@@ -1643,11 +1670,6 @@ export default function litecanvas(settings = {}) {
         // trigger "resized" event
         // note: not triggered before the "init" event
         instance.emit('resized', _scale)
-
-        // force redraw when the canvas is not animated
-        if (!settings.animate) {
-            raf(drawFrame)
-        }
     }
 
     /**
@@ -1693,6 +1715,9 @@ export default function litecanvas(settings = {}) {
     DEV: console.debug(`[litecanvas] litecanvas() options =`, settings)
 
     setupCanvas()
+
+    // init the color palette
+    instance.pal()
 
     if ('loading' === document.readyState) {
         on(root, 'DOMContentLoaded', () => raf(init))

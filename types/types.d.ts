@@ -350,7 +350,7 @@ type LitecanvasInstance = {
      */
     textalign(align: CanvasTextAlign, baseline: CanvasTextBaseline): void
 
-    /** IMAGE GRAPHICS API */
+    /** BASIC GRAPHICS API */
     /**
      * Draw an image
      *
@@ -360,18 +360,32 @@ type LitecanvasInstance = {
      */
     image(x: number, y: number, source: CanvasImageSource): void
     /**
+     * Draw a sprite pxiel by pixel represented by a string. Each pixel must be a base 36 number or a dot:
+     *
+     * - A base 36 number (`0-9` or `a-z`) represent a pixel color (supporting color palettes with max 36 colors).
+     * - A dot (`.`) represent a transparent pixel.
+     * - Spaces and lines breaks are ignored and can be used to improve the visualization.
+     *
+     * @param x the position X of the first pixel
+     * @param y the position Y of the first pixel
+     * @param width the width of the sprite
+     * @param height the height of the sprite
+     * @param pixels
+     */
+    spr(x: number, y: number, width: number, height: number, pixels: string): void
+    /**
      * Draw in an OffscreenCanvas and returns its image.
      *
      * @param width
      * @param height
-     * @param drawing
+     * @param callback
      * @param [options]
      * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
      */
     paint(
         width: number,
         height: number,
-        drawing: string[] | drawCallback,
+        callback: drawCallback,
         options?: {
             scale?: number
             canvas?: OffscreenCanvas
@@ -528,11 +542,22 @@ type LitecanvasInstance = {
      */
     def(key: string, value: any): void
     /**
-     * Set or reset the color palette
+     * Set or reset the color palette.
      *
      * @param [colors]
      */
     pal(colors?: string[]): void
+    /**
+     * Swap two colors of the current palette.
+     *
+     * If called without arguments, reset the current palette.
+     *
+     * Note: `palc()` don't affect drawings made with `image()`.
+     *
+     * @param a
+     * @param b
+     */
+    palc(a?: number, b?: number): void
     /**
      * The scale of the game's delta time (dt).
      * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
@@ -606,13 +631,6 @@ type LitecanvasOptions = {
      */
     autoscale?: boolean | number
     /**
-     * If `true`, the pixel art images won't look blurry.
-     * Also, disables canvas built-in antialias.
-     *
-     * Default: `true`
-     */
-    pixelart?: boolean
-    /**
      * If `true` (default), all methods and properties of the engine will be exposed to the global scope (window).
      */
     global?: boolean
@@ -646,12 +664,6 @@ type LitecanvasOptions = {
      * Useful when you want to implement your keyboard handler.
      */
     keyboardEvents?: boolean
-    /**
-     * default: `true`
-     *
-     * if `false` stops the code in `update()` and `draw()` from running repeatedly. By default, tries to run these functions 60 times per second.
-     */
-    animate?: boolean
 }
 
 type LitecanvasGameLoop = {

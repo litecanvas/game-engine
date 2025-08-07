@@ -5,7 +5,6 @@ const size = 12
 const cols = 12
 
 litecanvas({
-    animate: false,
     width: size * cols,
     height: size * (cols - 1),
     autoscale: zoomed,
@@ -13,6 +12,7 @@ litecanvas({
 })
 
 function init() {
+    framerate(1)
     combinations = []
     for (let y = 0; y < cols; y++) {
         for (let x = 0; x < cols; x++) {
