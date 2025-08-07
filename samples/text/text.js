@@ -27,4 +27,10 @@ function draw() {
     textfont('serif')
     text(padding, padding + margin * 2, 'OLÁ, MUNDO!', 3, 'bold')
     text(padding, padding + margin * 3, '世界您好!', 3, 'bold italic')
+
+    pause()
+}
+
+function resized() {
+    emit('draw')
 }
