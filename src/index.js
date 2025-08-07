@@ -1611,15 +1611,13 @@ export default function litecanvas(settings = {}) {
 
         on(_canvas, 'click', () => focus())
 
-        /** @ts-ignore */
-        _canvas.style = ''
-
         resizeCanvas()
 
         if (!_canvas.parentNode) {
             document.body.appendChild(_canvas)
         }
 
+        _canvas.style.imageRendering = 'pixelated'
         _canvas.oncontextmenu = () => false
     }
 
@@ -1662,7 +1660,6 @@ export default function litecanvas(settings = {}) {
 
         // set canvas image rendering properties
         _ctx.imageSmoothingEnabled = false
-        _canvas.style.imageRendering = 'pixelated'
 
         // set the default text align and baseline
         instance.textalign('start', 'top')
