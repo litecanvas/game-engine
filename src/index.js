@@ -780,7 +780,7 @@ export default function litecanvas(settings = {}) {
             )
             DEV: assert(
                 'function' === typeof callback,
-                '[litecanvas] paint() 3rd param must be a function or array'
+                '[litecanvas] paint() 3rd param must be a function'
             )
             DEV: assert(
                 (options && null == options.scale) || isNumber(options.scale),
