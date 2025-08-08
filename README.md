@@ -46,7 +46,7 @@ Or just create a HTML file and add a `<script>` tag with our CDN link:
 <script src="https://unpkg.com/litecanvas"></script>
 ```
 
-### Hello World
+### Basic game structure
 
 ```js
 litecanvas()
