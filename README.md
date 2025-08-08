@@ -205,6 +205,7 @@ const japan = paint(
 
 function draw() {
     cls(0)
+
     // now the japan variable holds a image
     image(W/2 - japan.width/2, H/2 - japan.height/2, japan)
 }
@@ -212,7 +213,7 @@ function draw() {
 
 It's very useful when you need to draw something the same way every time. This way, you create an image of that drawing, working as a kind of cache.
 
-You can also use the image() function to draw PNG/JPG images, but you'll need to load them first:
+You can also use the `image()` function to draw PNG/JPG images, but you'll need to load them first:
 
 ```js
 litecanvas()
