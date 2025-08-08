@@ -747,9 +747,9 @@ export default function litecanvas(settings = {}) {
             const chars = pixels.replace(/\s/g, '')
             for (let gridx = 0; gridx < width; gridx++) {
                 for (let gridy = 0; gridy < height; gridy++) {
-                    const char = chars[height * gridy + gridx] || '.'
+                    const char = chars[width * gridy + gridx] || '.'
                     if (char !== '.') {
-                        instance.rectfill(x + gridx, y + gridy, 1, 1, parseInt(char, 16) || 0)
+                        instance.rectfill(x + gridx, y + gridy, 1, 1, parseInt(char, 36) || 0)
                     }
                 }
             }
