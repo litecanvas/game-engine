@@ -187,7 +187,7 @@ function draw() {
     cls(0)
 
     if (x != null) {
-        // draw a red circle
+        // Draw a red circle wherever you tap
         circfill(x, y, 32, 4)
     }
 }
