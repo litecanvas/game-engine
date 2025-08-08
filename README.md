@@ -49,7 +49,12 @@ Or just create a HTML file and add a `<script>` tag with our CDN link:
 ### Basic game structure
 
 ```js
-litecanvas()
+litecanvas({
+    // This is required only in ESM format.
+    // Note: the next examples will assume that you are
+    // testing through the playground or the CDN
+    loop: { init, update, draw },
+})
 
 function init() {
     // this functions is called one time only
