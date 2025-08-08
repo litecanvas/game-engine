@@ -351,10 +351,9 @@ export default function litecanvas(settings = {}) {
          */
         rseed(value) {
             DEV: assert(
-                null == value || (isNumber(value) && value >= 0),
-                '[litecanvas] rseed() 1st param must be a positive number or zero'
+                isNumber(value) && value >= 0,
+                '[litecanvas] rseed() 1st param must be a positive integer or zero'
             )
-
             _rngSeed = ~~value
         },
 
