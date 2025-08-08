@@ -136,12 +136,12 @@ function draw() {
 
     // draw a color filled rectangle at x=0 and y=0
     // with width=32 and height=32
-    // with color=3 (white)
+    // and color=3 (white)
     rectfill(0, 0, 32, 32, 3)
 
     // draw a circle outline at x=64 and y=32
     // with radius=40
-    // with color=5 (yellow)
+    // and color=5 (yellow)
     circ(64, 32, 40, 5)
 }
 ```
