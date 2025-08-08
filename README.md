@@ -151,6 +151,96 @@ function draw() {
 }
 ```
 
+### Drawing sprites
+
+```js
+litecanvas({
+  width: 128
+})
+
+// you can create sprites with strings
+// each visible char is a pixel
+// numbers are colors
+// dots are transparent pixels
+const smile = `
+    .555555.
+    55555555
+    55055055
+    55055055
+    55555555
+    50555505
+    55000055
+    .555555.`
+
+function draw() {
+    cls(0)
+
+    spr(
+        0, 0, // position X Y
+        8, 8, // sprite Width and Height
+        smile // the pixels
+    )
+}
+```
+
+### Creating and drawing images
+
+```js
+litecanvas()
+
+// lets create the flag of the Japan
+const japan = paint(
+    48, 32, // image width and height
+    function () {
+        // the result of this drawings
+        // goes to an offscreen canvas
+        rectfill(0, 0, 48, 32, 3)
+        circfill(24, 16, 8, 4)
+    }, {
+        // you can scale your image
+        // by default, scale=1
+        scale: 4
+    }
+)
+
+function draw() {
+    cls(0)
+    // now the japan variable holds a image
+    image(W/2 - japan.width/2, H/2 - japan.height/2, japan)
+}
+```
+
+It's very useful when you need to draw something the same way every time. This way, you create an image of that drawing, working as a kind of cache.
+
+You can also use the image() function to draw PNG/JPG images, but you'll need to load them first:
+
+```js
+litecanvas()
+
+let PngImage
+
+function init() {
+    // load a image from its URL
+    const img = new Image()
+    img.onload = () => {
+        PngImage = img
+    }
+    img.src = 'https://litecanvas.js.org/icons/icon-128.png'
+}
+
+function draw() {
+    cls(0)
+
+    if (!PngImage) {
+        // if not loaded, show this message
+        text(10, 10, 'Loading image...')
+    } else {
+        // when loaded, draw the image file
+        image(0, 0, PngImage)
+    }
+}
+```
+
 ### Keyboard
 
 ```js
