@@ -1,20 +1,8 @@
-litecanvas({
-    // width: 640,
-    // autoscale: false,
-})
-
-let fullscreen
-
-function resized() {
-    // the canvas resets the text align
-    // and baseline when the canvas resizes
-    textalign('start', 'top')
-}
+litecanvas()
 
 function update() {
     if (iskeypressed('f')) {
-        fullscreen = !document.fullscreenElement
-        if (fullscreen) {
+        if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen()
         } else if (document.fullscreenElement) {
             document.exitFullscreen()
