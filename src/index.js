@@ -1268,6 +1268,8 @@ export default function litecanvas(settings = {}) {
                 }
                 delete root.ENGINE
             }
+
+            DEV: console.warn('[litecanvas] quit() terminated a Litecanvas instance.')
         },
     }
 
@@ -1665,8 +1667,6 @@ export default function litecanvas(settings = {}) {
         // trigger "resized" event
         // note: not triggered before the "init" event
         instance.emit('resized', _scale)
-
-        DEV: console.warn('[litecanvas] quit() terminated a Litecanvas instance.')
     }
 
     /**
