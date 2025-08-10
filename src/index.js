@@ -1723,9 +1723,7 @@ export default function litecanvas(settings = {}) {
     setupCanvas()
 
     if ('loading' === document.readyState) {
-        on(root, 'DOMContentLoaded', () => {
-            raf(init)
-        })
+        on(root, 'DOMContentLoaded', () => raf(init))
     } else {
         _rafid = raf(init)
     }
