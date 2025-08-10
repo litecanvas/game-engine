@@ -36,16 +36,17 @@ test('remove all engine event listeners', async (t) => {
             global: false,
         })
 
-        local.listen('draw', () => {
-            t.fail()
-        })
-
         local.listen('update', () => {
+            resolve()
+
             // "update" runs before the "draw" event
-            // so destroy lets destroy that engine instance
+            // so lets destroy that engine instance
             // and the "draw" event will never happens
             local.quit()
-            resolve()
+        })
+
+        local.listen('draw', () => {
+            t.fail()
         })
     })
 
