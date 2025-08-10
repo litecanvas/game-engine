@@ -7,9 +7,7 @@ import * as sinon from 'sinon'
 let /** @type {LitecanvasInstance} */
     local,
     /** @type {sinon.SinonSpiedInstance<CanvasRenderingContext2D>} */
-    contextSpy,
-    /** @type {sinon.SinonSpiedInstance<Console>} */
-    consoleSpy
+    contextSpy
 
 test.before(() => {
     setupDOM()

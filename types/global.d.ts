@@ -583,9 +583,9 @@ declare global {
      */
     function framerate(fps: number): void
     /**
-     * Returns information about that engine instance.
+     * Returns information about the engine instance.
      *
-     * - n = 0: the settings passed to that instance
+     * - n = 0: the settings passed to this instance
      * - n = 1: returns true if the "init" event has already been emitted
      * - n = 2: the current delta time (dt)
      * - n = 3: the current canvas element scale (not the context 2D scale)
@@ -597,15 +597,12 @@ declare global {
      * - n = 9: the current RNG state
      * - n = 10: the current font size
      * - n = 11: the current font family
+     * - n = 12: the current state of the color palette
      * - n = *any other value*: probably returns undefined
      *
-     * @param n
+     * @param index
      */
-    function stat(n: number): any
-    /**
-     * Shutdown the litecanvas instance and remove all event listeners.
-     */
-    function quit(): void
+    function stat(index: number | string): any
     /**
      * Pauses the engine loop (update & draw).
      */
@@ -618,4 +615,8 @@ declare global {
      * Returns `true` if the engine loop is paused.
      */
     function paused(): boolean
+    /**
+     * Shutdown the litecanvas instance and remove all event listeners.
+     */
+    function quit(): void
 }

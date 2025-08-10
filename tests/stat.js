@@ -211,6 +211,28 @@ test('stat(11) returns the current font family', async (t) => {
     }
 })
 
+test('stat(12) returns the current color palette state modified by palc()', (t) => {
+    {
+        const expected = [] // initial value (default)
+        const actual = local.stat(12)
+        t.deepEqual(actual, expected)
+    }
+
+    {
+        // prettier-ignore
+        const expected = [3, , , 5,]
+
+        local.palc(0, 3)
+        local.palc(3, 5)
+
+        const actual = local.stat(12)
+
+        t.deepEqual(actual, expected)
+
+        local.palc() // reset
+    }
+})
+
 test('stat modified via event', async (t) => {
     const expected = 'BAR'
 

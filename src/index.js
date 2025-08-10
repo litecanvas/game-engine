@@ -48,6 +48,8 @@ export default function litecanvas(settings = {}) {
 
     let /** @type {boolean} */
         _initialized = false,
+        /** @type {boolean} */
+        _paused = true,
         /** @type {HTMLCanvasElement} _canvas */
         _canvas,
         /** @type {number} */
@@ -1056,6 +1058,7 @@ export default function litecanvas(settings = {}) {
                 'string' === typeof eventName,
                 '[litecanvas] emit() 1st param must be a string'
             )
+
             if (_initialized) {
                 eventName = lowerCase(eventName)
 
@@ -1156,7 +1159,7 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Returns information about that engine instance.
+         * Returns information about the engine instance.
          *
          * @param {number|string} index
          * @returns {any}
@@ -1190,8 +1193,10 @@ export default function litecanvas(settings = {}) {
                 _rngSeed,
                 // 10
                 _fontSize,
-                //  11
+                // 11
                 _fontFamily,
+                // 12
+                _colorPaletteState,
             ]
 
             const data = { index, value: internals[index] }
@@ -1203,14 +1208,50 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Stops the litecanvas instance and remove all event listeners.
+         * Pauses the engine loop (update & draw).
+         */
+        pause() {
+            _paused = true
+            cancelAnimationFrame(_rafid)
+        },
+
+        /**
+         * Resumes (if paused) the engine loop.
+         */
+        resume() {
+            DEV: assert(
+                _initialized,
+                '[litecanvas] resume() cannot be called before the "init" event and neither after the quit() function'
+            )
+            if (_initialized && _paused) {
+                _paused = false
+                _accumulated = _fpsInterval
+                _lastFrameTime = Date.now()
+                _rafid = raf(drawFrame)
+            }
+        },
+
+        /**
+         * Returns `true` if the engine loop is paused.
+         *
+         * @returns {boolean}
+         */
+        paused() {
+            return _paused
+        },
+
+        /**
+         * Shutdown the litecanvas instance and remove all event listeners.
          */
         quit() {
+            // emit "quit" event to manual clean ups
+            instance.emit('quit')
+
             // stop the game loop (update & draw)
             instance.pause()
 
-            // emit "quit" event to manual clean ups
-            instance.emit('quit')
+            // deinitialize the engine
+            _initialized = false
 
             // clear all engine event listeners
             _eventListeners = {}
@@ -1228,36 +1269,7 @@ export default function litecanvas(settings = {}) {
                 delete root.ENGINE
             }
 
-            // unset that flag
-            _initialized = false
-        },
-
-        /**
-         * Pauses the engine loop (update & draw).
-         */
-        pause() {
-            cancelAnimationFrame(_rafid)
-            _rafid = 0
-        },
-
-        /**
-         * Resumes (if paused) the engine loop.
-         */
-        resume() {
-            if (_initialized && !_rafid) {
-                _accumulated = _fpsInterval
-                _lastFrameTime = Date.now()
-                _rafid = raf(drawFrame)
-            }
-        },
-
-        /**
-         * Returns `true` if the engine loop is paused.
-         *
-         * @returns {boolean}
-         */
-        paused() {
-            return !_rafid
+            DEV: console.warn('[litecanvas] quit() terminated a Litecanvas instance.')
         },
     }
 
@@ -1713,7 +1725,7 @@ export default function litecanvas(settings = {}) {
     if ('loading' === document.readyState) {
         on(root, 'DOMContentLoaded', () => raf(init))
     } else {
-        raf(init)
+        _rafid = raf(init)
     }
 
     return instance
