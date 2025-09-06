@@ -1,10 +1,8 @@
 import test from 'ava'
-import { setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../../src/index.js'
 import * as sinon from 'sinon'
 
 test.before(() => {
-    setupDOM()
     sinon.stub(console) // silent console
 })
 
@@ -17,27 +15,33 @@ test('globally by default', async (t) => {
 })
 
 test('throws error if instantiated globally more than once', async (t) => {
+    let local1, local2
     try {
-        litecanvas({
+        local1 = litecanvas({
             global: true,
         })
-        litecanvas({
+        local2 = litecanvas({
             global: true,
         })
         t.fail() // fail if not throws
     } catch (e) {
+        local1.quit()
         t.is(e.message, 'only one global litecanvas is allowed')
     }
 })
 
 test('settings.global = false not throws errors', async (t) => {
     try {
-        litecanvas({
+        const local1 = litecanvas({
             global: false,
         })
-        litecanvas({
+        const local2 = litecanvas({
             global: false,
         })
+
+        local1.quit()
+        local2.quit()
+
         t.pass()
     } catch (e) {
         // fail if throws

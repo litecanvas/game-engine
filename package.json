@@ -31,7 +31,7 @@
         "creative coding"
     ],
     "devDependencies": {
-        "@litecanvas/jsdom-extras": "^2.0.1",
+        "@happy-dom/global-registrator": "^18.0.1",
         "@size-limit/preset-small-lib": "^11.2.0",
         "@swc/core": "^1.13.3",
         "@types/jsdom": "^21.1.7",
@@ -51,7 +51,7 @@
     "scripts": {
         "prepare": "npm run build",
         "prepublishOnly": "npm test",
-        "test": "ava --timeout=1s --fast-fail --tap | tap-min",
+        "test": "ava --tap | tap-min",
         "test:watch": "ava --watch",
         "dev": "esbuild src/web.js --bundle --watch --outfile=samples/dist.js --servedir=samples",
         "build": "npm run genversion && node script/build.js && size-limit",
@@ -66,8 +66,14 @@
     ],
     "ava": {
         "files": [
-            "tests/**/*.js"
-        ]
+            "tests/**/*.js",
+            "!tests/_preload/**/*.js"
+        ],
+        "require": [
+            "./tests/_preload/happy-dom.js"
+        ],
+        "failFast": true,
+        "timeout": "10s"
     },
     "size-limit": [
         {
