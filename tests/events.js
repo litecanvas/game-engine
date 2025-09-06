@@ -1,5 +1,4 @@
 import test from 'ava'
-import { setupDOM, onLitecanvas } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
 import * as sinon from 'sinon'
 
@@ -7,7 +6,6 @@ import * as sinon from 'sinon'
 let local
 
 test.before(() => {
-    setupDOM()
     sinon.stub(console) // silent console
 
     local = litecanvas({

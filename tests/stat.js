@@ -1,5 +1,4 @@
 import test from 'ava'
-import { onLitecanvas, setupDOM } from '@litecanvas/jsdom-extras'
 import litecanvas from '../src/index.js'
 import { defaultPalette } from '../src/palette.js'
 import * as sinon from 'sinon'
@@ -14,7 +13,6 @@ const settings = {
 }
 
 test.before(() => {
-    setupDOM()
     sinon.stub(console) // silent console
 
     local = litecanvas(settings)
@@ -71,6 +69,7 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
         const actual = scaled.stat(3)
 
         t.is(actual, expected)
+        scaled.quit()
     }
 
     {
@@ -84,6 +83,7 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
         const actual = notScaled.stat(3)
 
         t.is(actual, expected)
+        notScaled.quit()
     }
 })
 
