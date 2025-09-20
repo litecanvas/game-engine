@@ -143,19 +143,19 @@ litecanvas()
 function draw() {
     cls(0)
 
-    // draw a color filled rectangle at x=0 and y=0
+    // draw a color filled rectangle at x=10 and y=20
     // with width=32 and height=32
     // and color=3 (white)
-    rectfill(0, 0, 32, 32, 3)
+    rectfill(10, 20, 32, 32, 3)
 
-    // draw a circle outline at x=64 and y=32
-    // with radius=40
+    // draw a circle outline at x=64 and y=96
+    // with radius=50
     // and color=5 (yellow)
-    circ(64, 64, 40, 5)
+    circ(64, 96, 50, 5)
 }
 ```
 
-[Live Demo](https://litecanvas.js.org?c=eJxljkEKwyAQRfeeYpYKgUpisvMwoiYKg4IxTUPp3as2oYuII6Pf%2Bf%2Bhz1ar8FQrZYTMW9DZxwAmqZ0yeBMoS%2BNKeVFr%2F3g0DRToiDHB7BGtgWR1VmFBCyrDS3JQwcAh%2BTWz%2B%2BzKYbKTQ99EZ%2F3icrldX%2Bpj85QD0N0VLtakal1TKO%2Bg7KE%2F6w7kky4AccvowwkyiZPkn9NQkjJ%2BW6Xg9%2FQR6GER4%2F6Lr650Eh3UEgVgZOTzBZepVrE%3D)
+[Live Demo](https://litecanvas.js.org?c=eJxljk0KwyAQhfc5xSwNBGJ%2BFLrwMKImCoOCMU1D6d2rabIoGZhBfeN7H7pklPRPuZC6qqbVq%2BSCBx3lRmp4V5BL4UJoVsu5bQ8NJKiAIcLkEI2GaFSSfkYDMsFLdBSk17CLnl6%2FNpdsHjpZMfSHao2bbcq3a6U8Hq5iALLZTFYfUjEvOaSjDfS5h%2F7sO5SLKkOENaHzJwwfT5gH%2F4OJUrt1EYze8xmQ3SCG7QdQXAkfG3jwBlgGYHX1%2BQLFaFeI)
 
 ### Drawing sprites
 
@@ -168,7 +168,7 @@ litecanvas({
 // each visible char is a pixel
 // numbers are colors
 // dots are transparent pixels
-let smile = `
+let smile8x8 = `
     .555555.
     55555555
     55055055
@@ -182,9 +182,9 @@ function draw() {
     cls(0)
 
     spr(
-        0, 0, // position X Y
-        8, 8, // sprite Width and Height
-        smile // the pixels
+        0, 0,    // position X Y
+        8, 8,    // the sprite Width and Height
+        smile8x8 // the sprite Pixels
     )
 }
 ```
@@ -214,9 +214,9 @@ function draw() {
 
     // draw the japanFlag image
     image(
-        W/2 - japan.width/2,  // game screen center X
-        H/2 - japan.height/2, // game screen center Y
-        japanFlag             // the image
+        W/2 - japanFlag.width/2,  // game screen center X
+        H/2 - japanFlag.height/2, // game screen center Y
+        japanFlag                 // the image
     )
 }
 ```
@@ -272,8 +272,6 @@ function update() {
 
     // Returns the last key pressed in your keyboard.
     let key = lastkey()
-
-    console.log(key)
 }
 ```
 
