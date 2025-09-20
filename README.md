@@ -254,7 +254,9 @@ function draw() {
 }
 ```
 
-To help you load multiple assets (images, fonts, music, etc.), you can I recommend you the [Asset Loader Plugin](https://github.com/litecanvas/plugin-asset-loader).
+[Live Demo](https://litecanvas.js.org?c=eJxVkMFOwzAMhu95CnNqKo1044SQyh1pJyQeIGrTNih1ptpQEOq742RtGVGSg%2F37s38Hz66x%2BGlJl0oFxzB%2Bv4y2d0p1H9iwjwgePesSfhTIqSoI0bZgwScZdFMcwTPB2%2Bs5CxLDjz3UgG6GzBJ0ykjURMzVNQiwfl6Z6axtJSOyHF32IpoaiRcD84WeqirsM5t3MnHqK99EpPzfnx4ezQX7Qi03DtrJzruDJpA%2BitlM70Dfra3Lm2nEpaQwcjbr2gPQEGfgwROMjigtaNOy%2B2J9Oh4gveIseo%2F9dTvGmOLqfQEXyP3vMA8Od34aUfhuW6sPfx1ySAtd7jbsuqLlFwWNf7A%3D)
+
+If you need to load multiple assets (images, fonts, music, etc.), I recommend you the [Asset Loader Plugin](https://github.com/litecanvas/plugin-asset-loader).
 
 ### Keyboard
 
