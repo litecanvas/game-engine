@@ -106,7 +106,7 @@ Each time a Litecanvas' function ask for a color, you should use an of theses co
 
 ```js
 // example: draw a white rectangle
-color = 3
+let color = 3
 rectfill(0, 0, 32, 32, color)
 ```
 
@@ -119,10 +119,12 @@ function draw() {
     // clear and fill the game screen with color #0 (black)
     cls(0)
 
-    // print a red "Hello" text at x=0, y=0
-    text(0, 0, 'Hello', 4)
+    // print a red text at x=0, y=0
+    text(0, 0, 'Hello!!!', 4)
 }
 ```
+
+[Live Demo](https://litecanvas.js.org?c=eJwtTDEOwjAQ2%2FMKVwxNpErNwNqdbxzXK404EpQGWoT4O6HC8mBbtjUUYYpPWqwzZnpELiFFjJlW6%2FA2qOh7sAplUBwxBVWUWXChm2DhLBKxhjKDk6aMg4c9K%2FHV7VvWxfr6%2FP%2B55xALCFlGFNmqLNgG3%2BE1%2BL3zC231le1JVFPTNG2HozOfL6wIMU0%3D)
 
 ### Drawing shapes
 
@@ -141,17 +143,19 @@ litecanvas()
 function draw() {
     cls(0)
 
-    // draw a color filled rectangle at x=0 and y=0
+    // draw a color filled rectangle at x=10 and y=20
     // with width=32 and height=32
     // and color=3 (white)
-    rectfill(0, 0, 32, 32, 3)
+    rectfill(10, 20, 32, 32, 3)
 
-    // draw a circle outline at x=64 and y=32
-    // with radius=40
+    // draw a circle outline at x=64 and y=96
+    // with radius=50
     // and color=5 (yellow)
-    circ(64, 32, 40, 5)
+    circ(64, 96, 50, 5)
 }
 ```
+
+[Live Demo](https://litecanvas.js.org?c=eJxljk0KwyAQhfc5xSwNBGJ%2BFLrwMKImCoOCMU1D6d2rabIoGZhBfeN7H7pklPRPuZC6qqbVq%2BSCBx3lRmp4V5BL4UJoVsu5bQ8NJKiAIcLkEI2GaFSSfkYDMsFLdBSk17CLnl6%2FNpdsHjpZMfSHao2bbcq3a6U8Hq5iALLZTFYfUjEvOaSjDfS5h%2F7sO5SLKkOENaHzJwwfT5gH%2F4OJUrt1EYze8xmQ3SCG7QdQXAkfG3jwBlgGYHX1%2BQLFaFeI)
 
 ### Drawing sprites
 
@@ -164,7 +168,7 @@ litecanvas({
 // each visible char is a pixel
 // numbers are colors
 // dots are transparent pixels
-const smile = `
+let smile8x8 = `
     .555555.
     55555555
     55055055
@@ -178,26 +182,26 @@ function draw() {
     cls(0)
 
     spr(
-        0, 0, // position X Y
-        8, 8, // sprite Width and Height
-        smile // the pixels
+        0, 0,    // position X Y
+        8, 8,    // the sprite Width and Height
+        smile8x8 // the sprite Pixels
     )
 }
 ```
+
+[Live Demo](https://litecanvas.js.org?c=eJxtUMtqwzAQvOsr5mhDSNxCIBR67x%2B0vUWR1UigSEa7zoOQf%2B9KdkwPHfawuzOzSBM8W6PjWVNzV8DF9%2Bze8PK6U49Wqc0GtzRCBDDZaragIYuDRMgOxNnHIxWZ1cbh7MkfgoVxOsMTNAZ%2FtaHwcTwdbJZVFjqFlKurTzytOOtIg3SRJw%2BpYBl08nLuHXt5GrDeVqzrsJ0xD12t%2F4a%2Fsq603SITzMzz9F6pnzEa9imiz%2FrStLhXgQnUdJJI6SWDpjYF3aqU%2FGVI5KvvC98Lu1uVEnbKDZ8lX%2BjY48P6o%2BNFOP1UhOzsM4Gyb9XjF0Vyb7o%3D)
 
 ### Creating and drawing images
 
 ```js
 litecanvas()
 
-// lets create the flag of the Japan
-const japan = paint(
-    48, 32, // image width and height
+// lets create flag of Japan
+let japanFlag = paint(
+    48, 32, // the image width and height
     function () {
-        // the result of this drawings
-        // goes to an offscreen canvas
-        rectfill(0, 0, 48, 32, 3)
-        circfill(24, 16, 8, 4)
+        cls(3) // white background
+        circfill(24, 16, 8, 4) // red circle
     }, {
         // you can scale your image
         // by default, scale=1
@@ -208,25 +212,31 @@ const japan = paint(
 function draw() {
     cls(0)
 
-    // now the japan variable holds a image
-    image(W/2 - japan.width/2, H/2 - japan.height/2, japan)
+    // draw the japanFlag image
+    image(
+        W/2 - japanFlag.width/2,  // game screen center X
+        H/2 - japanFlag.height/2, // game screen center Y
+        japanFlag                 // the image
+    )
 }
 ```
 
-It's very useful when you need to draw something the same way every time. This way, you create an image of that drawing, working as a kind of cache.
+[Live Demo](https://litecanvas.js.org?c=eJxtUctOwzAQvPsr5phIgdA0QgipV4T4AeC4dTaJi%2BtUjkNUof47toOcqmJPXs%2FMPma1cizJfNOY5UKUJTS7EdIyOUarqcPQ4o1OZIRHcAivl%2FC9w4mUcZmAj%2FqpwLYq4PWuZ6gjdYxZNa4HmQY9q653kdlORjo1GGQ5fuJPCKnHbJsH%2Bdz7gbAn%2BdXZYTLNSlFWtkrrrKoLbB4L%2BJZ1lFhuIqo5ki%2FFVWEPn4cJfkOMkjSHzC7zXXP2ZzTc0qRdsfB2mwTH%2FBn1Ulx4l9IOjaU57RF2ePDoX8mARTNWy9a28ZWlFu9lhbuVeB%2BdK72foVBHR%2FZDWGYDycaxxUdSvt4oF6fL5RT%2FKD%2BTch3rNq6PGOm5uPwCs6aXUg%3D%3D)
 
-You can also use the `image()` function to draw PNG/JPG images, but you'll need to load them first:
+> Note: It's very useful when you need to draw something the same way every time. This way, you create an image of that drawing, working as a kind of cache.
+
+You can also draw PNG/JPG image files, but you'll need to load them first:
 
 ```js
 litecanvas()
 
-let PngImage
+let myImage
 
 function init() {
     // load a image from its URL
-    const img = new Image()
+    let img = new Image()
     img.onload = () => {
-        PngImage = img
+        myImage = img
     }
     img.src = 'https://litecanvas.js.org/icons/icon-128.png'
 }
@@ -234,17 +244,19 @@ function init() {
 function draw() {
     cls(0)
 
-    if (!PngImage) {
+    if (!myImage) {
         // if not loaded, show this message
         text(10, 10, 'Loading image...')
     } else {
         // when loaded, draw the image file
-        image(0, 0, PngImage)
+        image(0, 0, myImage)
     }
 }
 ```
 
-To help you load multiple assets (images, fonts, music, etc.), you can I recommend you the [Asset Loader Plugin](https://github.com/litecanvas/plugin-asset-loader).
+[Live Demo](https://litecanvas.js.org?c=eJxVkMFOwzAMhu95CnNqKo1044SQyh1pJyQeIGrTNih1ptpQEOq742RtGVGSg%2F37s38Hz66x%2BGlJl0oFxzB%2Bv4y2d0p1H9iwjwgePesSfhTIqSoI0bZgwScZdFMcwTPB2%2Bs5CxLDjz3UgG6GzBJ0ykjURMzVNQiwfl6Z6axtJSOyHF32IpoaiRcD84WeqirsM5t3MnHqK99EpPzfnx4ezQX7Qi03DtrJzruDJpA%2BitlM70Dfra3Lm2nEpaQwcjbr2gPQEGfgwROMjigtaNOy%2B2J9Oh4gveIseo%2F9dTvGmOLqfQEXyP3vMA8Od34aUfhuW6sPfx1ySAtd7jbsuqLlFwWNf7A%3D)
+
+If you need to load multiple assets (images, fonts, music, etc.), I recommend you the [Asset Loader Plugin](https://github.com/litecanvas/plugin-asset-loader).
 
 ### Keyboard
 
@@ -261,9 +273,7 @@ function update() {
     }
 
     // Returns the last key pressed in your keyboard.
-    const key = lastkey()
-
-    console.log(key)
+    let key = lastkey()
 }
 ```
 
