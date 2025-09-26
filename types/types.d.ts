@@ -319,7 +319,7 @@ type LitecanvasInstance = {
 
     /** TEXT RENDERING API */
     /**
-     * Draw text
+     * Draw text. You can use `\n` to break lines.
      *
      * @param x
      * @param y
@@ -349,6 +349,14 @@ type LitecanvasInstance = {
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign
      */
     textalign(align: CanvasTextAlign, baseline: CanvasTextBaseline): void
+    /**
+     * Sets the height ratio of the text lines based on current text size.
+     *
+     * Default = `1.2`
+     *
+     * @param value
+     */
+    textgap(value: number): void
 
     /** BASIC GRAPHICS API */
     /**
@@ -588,6 +596,7 @@ type LitecanvasInstance = {
      * - n = 10: the current font size
      * - n = 11: the current font family
      * - n = 12: the current state of the color palette
+     * - n = 13: the current font gap
      * - n = *any other value*: probably returns undefined
      *
      * @param index

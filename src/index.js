@@ -73,6 +73,8 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _fontSize = 20,
         /** @type {number} */
+        _fontLineHeight = 1.2,
+        /** @type {number} */
         _rngSeed = Date.now(),
         /** @type {string[]} */
         _colorPalette = defaultPalette,
@@ -639,7 +641,7 @@ export default function litecanvas(settings = {}) {
 
         /** TEXT RENDERING API */
         /**
-         * Draw text
+         * Draw text. You can use `\n` to break lines.
          *
          * @param {number} x
          * @param {number} y
@@ -661,7 +663,22 @@ export default function litecanvas(settings = {}) {
 
             _ctx.font = `${fontStyle} ${_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = getColor(color)
-            _ctx.fillText(message, ~~x, ~~y)
+
+            const messages = ('' + message).split('\n')
+            for (let i = 0; i < messages.length; i++) {
+                _ctx.fillText(messages[i], ~~x, ~~y + _fontSize * _fontLineHeight * i)
+            }
+        },
+
+        /**
+         * Sets the height ratio of the text lines based on current text size.
+         *
+         * Default = `1.2`
+         *
+         * @param value
+         */
+        textgap(value) {
+            _fontLineHeight = value
         },
 
         /**
@@ -1197,6 +1214,8 @@ export default function litecanvas(settings = {}) {
                 _fontFamily,
                 // 12
                 _colorPaletteState,
+                // 13
+                _fontLineHeight,
             ]
 
             const data = { index, value: internals[index] }
