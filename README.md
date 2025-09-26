@@ -121,10 +121,14 @@ function draw() {
 
     // print a red text at x=0, y=0
     text(0, 0, 'Hello!!!', 4)
+
+    // use \n to break text lines
+    text(0, 30, 'multi\nline\ntext')
 }
 ```
 
-[Live Demo](https://litecanvas.js.org?c=eJwtTDEOwjAQ2%2FMKVwxNpErNwNqdbxzXK404EpQGWoT4O6HC8mBbtjUUYYpPWqwzZnpELiFFjJlW6%2FA2qOh7sAplUBwxBVWUWXChm2DhLBKxhjKDk6aMg4c9K%2FHV7VvWxfr6%2FP%2B55xALCFlGFNmqLNgG3%2BE1%2BL3zC231le1JVFPTNG2HozOfL6wIMU0%3D)
+[Live Demo](https://litecanvas.js.org?c=eJxVzEsKwkAMBuB9T%2FEXF52CYEG37j1EN3EadTBmZCb1gXh3pyqIIYs8PwnGnvRC2bVVtRvVW4iKIdHVtXhUKLFYwAtTAumAXRCBHRh7OjGyT8yKa7ADfJSYMOvgtkL%2B2L5%2FvWTXFfnrnFNQAyHxAONbKQ23dTfHfd29b6ahK33JZsMisa7rZo7Vjxgzo1dYxDYxHT%2BMBOX8Bywn4TSKhV6nba%2FTpmmr5wtwJEcj)
+
 
 ### Drawing shapes
 
