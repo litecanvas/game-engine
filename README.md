@@ -4,7 +4,7 @@
 
 # Litecanvas
 
-[![NPM Version](https://badgen.net/npm/v/litecanvas?cache=300&scale=1.1&label=NPM&color=2f9e44)](https://www.npmjs.com/package/litecanvas/) &nbsp;
+[![NPM Version](https://badgen.net/npm/v/litecanvas?scale=1.1&label=NPM&color=2f9e44)](https://www.npmjs.com/package/litecanvas/) &nbsp;
 [![License](https://badgen.net/npm/license/litecanvas?scale=1.1)](LICENSE)
 
 Litecanvas is a lightweight HTML5 canvas 2D engine suitable for small web games, prototypes, game jams, animations, creative coding, learning game programming and game design, etc.
