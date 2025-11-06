@@ -1299,15 +1299,6 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
-        // setup default event listeners
-        const source = settings.loop ? settings.loop : root
-        for (const event of _coreEvents.split(',')) {
-            DEV: if (root === source && source[event]) {
-                console.info(`[litecanvas] using window.${event}()`)
-            }
-            if (source[event]) instance.listen(event, source[event])
-        }
-
         // listen window resize event when "autoscale" is enabled
         if (settings.autoscale) {
             on(root, 'resize', resizeCanvas)
@@ -1739,8 +1730,19 @@ export default function litecanvas(settings = {}) {
     DEV: console.info(`[litecanvas] version ${version} started`)
     DEV: console.debug(`[litecanvas] litecanvas() options =`, settings)
 
+    // setup the canvas
     setupCanvas()
 
+    // setup default event listeners
+    const source = settings.loop ? settings.loop : root
+    for (const event of _coreEvents.split(',')) {
+        DEV: if (root === source && source[event]) {
+            console.info(`[litecanvas] using window.${event}()`)
+        }
+        if (source[event]) instance.listen(event, source[event])
+    }
+
+    // init the engine (async)
     if ('loading' === document.readyState) {
         on(root, 'DOMContentLoaded', () => raf(init))
     } else {
