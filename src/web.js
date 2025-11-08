@@ -1,3 +1,3 @@
 import litecanvas from './index.js'
 
-globalThis.litecanvas = litecanvas
+window.litecanvas = litecanvas
