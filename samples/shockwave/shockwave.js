@@ -36,7 +36,7 @@ const shockwave = {
     y: 0,
     radius: 0,
     borderWidth: 30,
-    color: 5,
+    color: 2,
     speed: 1000,
     pos(x, y) {
         this.x = x

@@ -16,30 +16,27 @@ use(pluginFrameRateMeter)
 
 function init() {
     state.sprite = paint(
+        10,
         12,
-        12,
-        () => {
+        () =>
             spr(
                 0,
                 0,
-                12,
-                12,
-                [
-                    '....4444....',
-                    '....4aa4....',
-                    '..004aa400..',
-                    '..02444420..',
-                    '777733335555',
-                    '766731135bb5',
-                    '766731135bb5',
-                    '777733335555',
-                    '..02999920..',
-                    '..00988900..',
-                    '....9889....',
-                    '....9999....',
-                ].join('')
-            )
-        },
+                `
+                .00....00.
+                0220..0220
+                0230..0230
+                0230..0230
+                0230..0230
+                0230000230
+                0222222220
+                0220220220
+                0220220220
+                0222232220
+                0222222220
+                .00000000.
+            `
+            ),
         {
             scale: 3,
         }
@@ -52,7 +49,7 @@ function init() {
     for (let i = 0; i < state.count; i++) {
         const x = rand() * state.width - state.size
         const y = rand() * state.height - state.size
-        const [dx, dy] = [rand(1, 3) * dir[randi(0, 1)], rand(1, 3) * dir[randi(0, 1)]]
+        const [dx, dy] = [rand(1, 5) * dir[randi(0, 1)], rand(1, 5) * dir[randi(0, 1)]]
         particles[i] = { x, y, dx, dy }
     }
 

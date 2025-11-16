@@ -7,8 +7,8 @@ function init() {
 
     listen('quit', () => {
         cls()
-        text(10, 10, 'Refresh the page to restart', 4)
-        text(10, 40, 'Note: quit() do not remove the canvas', 4)
+        text(10, 10, 'Refresh the page to restart', 1)
+        text(10, 40, 'Note: quit() do not remove the canvas', 1)
     })
 }
 

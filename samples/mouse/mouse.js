@@ -3,12 +3,12 @@ litecanvas({
 })
 
 function draw() {
-    cls(0)
+    cls(1)
 
     // -1
     if (MX === -1) {
-        return text(20, 20, 'move your mouse', 3)
+        return text(20, 20, 'move your mouse', 2)
     }
 
-    circfill(MX, MY, 32, 4)
+    circfill(MX, MY, 32, 0)
 }

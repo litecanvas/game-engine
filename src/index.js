@@ -68,6 +68,8 @@ export default function litecanvas(settings = {}) {
         _accumulated,
         /** @type {number?} */
         _rafid,
+        /** @type {number} */
+        _defaultTextColor = 3,
         /** @type {string} */
         _fontFamily = 'sans-serif',
         /** @type {number} */
@@ -646,10 +648,10 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          * @param {string} message the text message
-         * @param {number} [color=3] the color index
+         * @param {number} [color] the color index
          * @param {string} [fontStyle] can be "normal" (default), "italic" and/or "bold".
          */
-        text(x, y, message, color = 3, fontStyle = 'normal') {
+        text(x, y, message, color = _defaultTextColor, fontStyle = 'normal') {
             DEV: assert(isNumber(x), '[litecanvas] text() 1st param must be a number')
             DEV: assert(isNumber(y), '[litecanvas] text() 2nd param must be a number')
             DEV: assert(
@@ -747,27 +749,25 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Draw a sprite pxiel by pixel represented by a string. Each pixel must be a base 36 number (0-9 or a-z) or a dot.
+         * Draw a sprite pixel by pixel represented by a string. Each pixel must be a base 36 number (0-9 or a-z) or a dot.
          *
          * @param {number} x
          * @param {number} y
-         * @param {number} width
-         * @param {number} height
          * @param {string} pixels
          */
-        spr(x, y, width, height, pixels) {
+        spr(x, y, pixels) {
             DEV: assert(isNumber(x), '[litecanvas] spr() 1st param must be a number')
             DEV: assert(isNumber(y), '[litecanvas] spr() 2nd param must be a number')
-            DEV: assert(isNumber(width), '[litecanvas] spr() 3rd param must be a number')
-            DEV: assert(isNumber(height), '[litecanvas] spr() 4th param must be a number')
-            DEV: assert('string' === typeof pixels, '[litecanvas] spr() 5th param must be a string')
+            DEV: assert('string' === typeof pixels, '[litecanvas] spr() 3rd param must be a string')
 
-            const chars = pixels.replace(/\s/g, '')
-            for (let gridx = 0; gridx < width; gridx++) {
-                for (let gridy = 0; gridy < height; gridy++) {
-                    const char = chars[width * gridy + gridx] || '.'
-                    if (char !== '.') {
-                        instance.rectfill(x + gridx, y + gridy, 1, 1, parseInt(char, 36) || 0)
+            const rows = pixels.trim().split('\n')
+
+            for (let row = 0; row < rows.length; row++) {
+                const chars = rows[row].trim()
+                for (let col = 0; col < chars.length; col++) {
+                    const char = chars[col]
+                    if (char !== '.' && char !== ' ') {
+                        instance.rectfill(x + col, y + row, 1, 1, parseInt(char, 36) || 0)
                     }
                 }
             }
@@ -1088,15 +1088,22 @@ export default function litecanvas(settings = {}) {
         /**
          * Set new palette colors or restore the default palette.
          *
-         * @param {string[]} [colors]
+         * @param {string[]} [colors] an array of colors
+         * @param {number} [textColor] the default text color this palette
          */
-        pal(colors = defaultPalette) {
+        pal(colors, textColor = 1) {
             DEV: assert(
                 Array.isArray(colors) && colors.length > 0,
-                '[litecanvas] pal() 1st param must be a array of strings'
+                '[litecanvas] pal() 1st param must be a array of color strings'
             )
-            _colorPalette = colors
+            DEV: assert(
+                isNumber(textColor) && textColor >= 0,
+                '[litecanvas] pal() 2nd param must be a positive number or zero'
+            )
+
+            _colorPalette = colors || defaultPalette
             _colorPaletteState = []
+            _defaultTextColor = textColor
         },
 
         /**
@@ -1118,6 +1125,7 @@ export default function litecanvas(settings = {}) {
                 isNumber(a) ? isNumber(b) && b >= 0 : null == b,
                 '[litecanvas] palc() 2nd param must be a positive number'
             )
+
             if (a == null) {
                 _colorPaletteState = []
             } else {

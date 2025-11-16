@@ -1,10 +1,14 @@
+/**
+ * Raycast example by @Add00 https://github.com/Add00
+ */
+
 litecanvas()
 
-const GREY = 2
-const RED = 4
-const GOLD = 5
-const WHITE = 3
-const BLUE = 6
+// const 2 = 2
+// const 3 = 4
+// const 1 = 5
+// const 3 = 3
+// const 2 = 2
 
 const ONE_AND_HALF_PI = (3 * Math.PI) / 2
 
@@ -40,16 +44,11 @@ const player = {
         x: null, // number
         y: null, // number
     },
-    acceleration: {
-        x: null, // number
-        y: null, // number
-    },
 
     init: function () {
         this.heading = Math.PI / 2 // player angle
         this.position = { x: 100, y: 100 }
         this.velocity = { x: 0, y: 0 }
-        this.acceleration = { x: 0, y: 0 }
     },
 }
 
@@ -73,7 +72,7 @@ function init() {
 }
 
 function draw() {
-    rectfill(0, 0, W, H, WHITE)
+    rectfill(0, 0, W, H, 3)
 
     {
         // map
@@ -84,11 +83,11 @@ function draw() {
                 let color = null
 
                 if (map.at(x, y) == 1) {
-                    color = GOLD
+                    color = 1
                 } else if (map.at(x, y) == 2) {
-                    color = BLUE
+                    color = 2
                 } else {
-                    color = GREY
+                    color = 2
                 }
 
                 offsetX = x * map.size
@@ -226,7 +225,7 @@ function draw() {
             // draw ray
 
             linewidth(2)
-            line(player.position.x, player.position.y, rayX, rayY, RED)
+            line(player.position.x, player.position.y, rayX, rayY, 3)
 
             // ray wall
 
@@ -240,7 +239,7 @@ function draw() {
 
             let lineOffset = 256 - lineHeight / 2
 
-            let wallColor = GOLD
+            let wallColor = 1
 
             alpha(transparency)
             linewidth(8)
@@ -253,7 +252,7 @@ function draw() {
 
     // player body
     {
-        rectfill(player.position.x, player.position.y, 8, 8, GOLD)
+        rectfill(player.position.x, player.position.y, 8, 8, 1)
     }
 
     // interaction
@@ -266,7 +265,9 @@ function draw() {
             player.heading += 0.05
             player.velocity.x = Math.cos(player.heading) * 5
             player.velocity.y = Math.sin(player.heading) * 5
-        } else if (iskeydown('w') || iskeydown('ArrowUp')) {
+        }
+
+        if (iskeydown('w') || iskeydown('ArrowUp')) {
             player.position.x += player.velocity.x
             player.position.y += player.velocity.y
         } else if (iskeydown('s') || iskeydown('ArrowDown')) {

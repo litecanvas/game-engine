@@ -20,7 +20,7 @@ function init() {
     )
 
     // create many balls
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
         entities.push(ball(W / 2, H / 2))
     }
 
@@ -56,7 +56,7 @@ function draw() {
         0,
         0,
         'drawing ' + (useImage ? 'images (fast)' : 'shapes (slow)') + ' / tap to toggle',
-        3,
+        2,
         'italic bold'
     )
 }
@@ -66,7 +66,7 @@ function ball(x, y) {
         x: ~~x,
         y: ~~y,
         dx: randi(100, 1000) * (rand() >= 0.5 ? 1 : -1),
-        dy: randi(100, 1000) * (rand() >= 0.5 ? 1 : -1),
+        dy: randi(10, 500) * (rand() >= 0.5 ? 1 : -1),
         r: 128,
 
         update(dt) {
@@ -83,8 +83,8 @@ function ball(x, y) {
         },
 
         draw() {
-            for (let c = 2; c < 128; c++) {
-                circfill(this.x, this.y, this.r - c, c)
+            for (let c = 0; c < 32; c++) {
+                circfill(this.x, this.y, this.r - 4 * c, c % 2 === 0 ? 2 : 1)
             }
         },
     }

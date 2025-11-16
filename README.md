@@ -129,7 +129,6 @@ function draw() {
 
 [Live Demo](https://litecanvas.js.org?c=eJxVzEsKwkAMBuB9T%2FEXF52CYEG37j1EN3EadTBmZCb1gXh3pyqIIYs8PwnGnvRC2bVVtRvVW4iKIdHVtXhUKLFYwAtTAumAXRCBHRh7OjGyT8yKa7ADfJSYMOvgtkL%2B2L5%2FvWTXFfnrnFNQAyHxAONbKQ23dTfHfd29b6ahK33JZsMisa7rZo7Vjxgzo1dYxDYxHT%2BMBOX8Bywn4TSKhV6nba%2FTpmmr5wtwJEcj)
 
-
 ### Drawing shapes
 
 You can use the following functions to draw shapes:
@@ -165,7 +164,7 @@ function draw() {
 
 ```js
 litecanvas({
-  width: 128
+    width: 128,
 })
 
 // you can create sprites with strings
@@ -186,8 +185,8 @@ function draw() {
     cls(0)
 
     spr(
-        0, 0,    // position X Y
-        8, 8,    // the sprite Width and Height
+        0,
+        0, // the sprite Position X Y
         smile8x8 // the sprite Pixels
     )
 }
@@ -202,14 +201,16 @@ litecanvas()
 
 // lets create flag of Japan
 let japanFlag = paint(
-    48, 32, // the image width and height
+    48,
+    32, // the image width and height
     function () {
         cls(3) // white background
         circfill(24, 16, 8, 4) // red circle
-    }, {
+    },
+    {
         // you can scale your image
         // by default, scale=1
-        scale: 4
+        scale: 4,
     }
 )
 
@@ -218,9 +219,9 @@ function draw() {
 
     // draw the japanFlag image
     image(
-        W/2 - japanFlag.width/2,  // game screen center X
-        H/2 - japanFlag.height/2, // game screen center Y
-        japanFlag                 // the image
+        W / 2 - japanFlag.width / 2, // game screen center X
+        H / 2 - japanFlag.height / 2, // game screen center Y
+        japanFlag // the image
     )
 }
 ```

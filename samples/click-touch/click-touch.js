@@ -4,7 +4,7 @@ function init() {
     // this function run once
     // before the game starts
     bg = 0
-    color = 3
+    color = 2
     radius = 32
     posx = W / 2
     posy = H / 2

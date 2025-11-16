@@ -19,7 +19,6 @@ let padW = 120,
     ballX,
     ballY,
     ballSize = 15,
-    ballAngle = 0,
     dirX = 1,
     dirY = 1,
     speed = 200,
@@ -93,23 +92,23 @@ function draw() {
     if (!started) {
         textalign('center', 'middle')
         textsize(textSize)
-        text(W / 2, H / 2, 'TAP TO START', 3)
+        text(W / 2, H / 2, 'TAP TO START')
     } else if (lifes > 0) {
-        rectfill(padX, padY, padW, padH, 3)
-        circfill(ballX, ballY, ballSize, 5)
+        rectfill(padX, padY, padW, padH, 2)
+        circfill(ballX, ballY, ballSize, 2)
 
         textsize(textSize)
 
         textalign('start', 'hanging')
-        text(10, 10, '❤️ '.repeat(lifes), 4)
+        text(10, 10, 'Lifes: ' + lifes)
 
         textalign('end', 'hanging')
-        text(W - 10, 10, ('' + score).padStart(6, 0), 3)
+        text(W - 10, 10, ('' + score).padStart(6, 0))
     } else {
         textalign('center', 'middle')
         textsize(textSize)
-        text(W / 2, H / 2 - 25, 'GAME OVER', 3)
+        text(W / 2, H / 2 - 25, 'GAME OVER', 2, 'bold')
         textsize(textSize * 0.85)
-        text(W / 2, H / 2 + 10, 'SCORE: ' + ('' + score).padStart(6, 0), 3)
+        text(W / 2, H / 2 + 10, 'SCORE: ' + ('' + score).padStart(6, 0))
     }
 }

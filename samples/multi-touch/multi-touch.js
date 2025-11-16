@@ -33,7 +33,7 @@ function draw() {
     for (let id in obj) {
         const o = obj[id]
         if (!o) continue
-        circ(o.x, o.y, 64, max(1, o.c % 12))
+        circ(o.x, o.y, 64, max(1, o.c % 3))
     }
 
     textsize(20)

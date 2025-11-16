@@ -29,6 +29,6 @@ function draw() {
     rect(-size / 2, -size / 2, size, size, 1)
     pop()
 
-    circfill(size * 3, H / 2, size / 2, 4)
-    circ(gap + size * 4, H / 2, size / 2, 5)
+    circfill(size * 3, H / 2, size / 2, 2)
+    circ(gap + size * 4, H / 2, size / 2, 1)
 }
