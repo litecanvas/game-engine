@@ -24,7 +24,7 @@ test.after(() => {
 
 test('clear screen with color', async (t) => {
     await onLitecanvas(local, 'draw', () => {
-        const color = 5
+        const color = 1
 
         local.cls(color)
 
