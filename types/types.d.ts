@@ -551,7 +551,7 @@ type LitecanvasInstance = {
      * Set new palette colors or restore the default palette.
      *
      * @param colors an array of colors
-     * @param textColor the new default text color
+     * @param textColor the new default text color (default: 3)
      */
     pal(colors?: string[], textColor?: number): void
     /**

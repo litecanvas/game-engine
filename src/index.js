@@ -1091,7 +1091,7 @@ export default function litecanvas(settings = {}) {
          * @param {string[]} [colors] an array of colors
          * @param {number} [textColor] the default text color this palette
          */
-        pal(colors, textColor = 1) {
+        pal(colors, textColor = 3) {
             DEV: assert(
                 Array.isArray(colors) && colors.length > 0,
                 '[litecanvas] pal() 1st param must be a array of color strings'
