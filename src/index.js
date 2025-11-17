@@ -582,8 +582,8 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] shape() 1st param must be an array of numbers'
             )
             DEV: assert(
-                points.length >= 4,
-                '[litecanvas] shape() 1st param must be an array with at least 4 numbers'
+                points.length >= 6,
+                '[litecanvas] shape() 1st param must be an array with at least 6 numbers (3 points)'
             )
             beginPath(_ctx)
             for (let i = 0; i < points.length; i++) {
