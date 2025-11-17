@@ -571,6 +571,32 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * Make a custom shape in the canvas context.
+         * Then, just use `fill` or `stroke` to draw the shape.
+         *
+         * @param {number[]} points an array of Xs and Ys coordinates
+         */
+        shape(points) {
+            DEV: assert(
+                Array.isArray(points),
+                '[litecanvas] shape() 1st param must be an array of numbers'
+            )
+            DEV: assert(
+                points.length >= 4,
+                '[litecanvas] shape() 1st param must be an array with at least 4 numbers'
+            )
+            beginPath(_ctx)
+            for (let i = 0; i < points.length; i++) {
+                if (0 === i) {
+                    _ctx.moveTo(~~points[i][0], ~~points[i][1])
+                } else {
+                    _ctx.lineTo(~~points[i][0], ~~points[i][1])
+                }
+            }
+            _ctx.lineTo(~~points[0][0], ~~points[0][1])
+        },
+
+        /**
          * Draw a line
          *
          * @param {number} x1

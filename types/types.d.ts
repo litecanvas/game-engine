@@ -291,6 +291,13 @@ type LitecanvasInstance = {
      */
     ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
     /**
+     * Make a custom shape in the canvas context.
+     * Then, just use `fill` or `stroke` to draw the shape.
+     *
+     * @param points an array of Xs and Ys coordinates
+     */
+    shape(points: number[]): void
+    /**
      * Draw a line
      *
      * @param x1
