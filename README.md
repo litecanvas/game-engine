@@ -1,6 +1,7 @@
 <div align="center">
 
-![logo](https://github.com/user-attachments/assets/cbff543a-17be-44e4-b4ce-f9ff0a0581bb)
+<img width="128" height="128" alt="icon-128" src="https://github.com/user-attachments/assets/9dc09b77-6538-4fe9-8bc7-66204b57cf6e" />
+
 
 # Litecanvas
 
