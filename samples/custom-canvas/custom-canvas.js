@@ -4,5 +4,5 @@ litecanvas({
 
 function draw() {
     cls(0)
-    text(20, 20, canvas().id, 3)
+    text(20, 20, canvas().id)
 }

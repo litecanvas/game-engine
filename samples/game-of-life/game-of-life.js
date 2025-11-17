@@ -78,7 +78,7 @@ function init() {
 function update(dt) {
     currentTime += dt
 
-    if (currentTime - lastUpdated > 1) {
+    if (currentTime - lastUpdated >= 1) {
         lastUpdated = currentTime
 
         if (mode == 'play') {
@@ -97,17 +97,17 @@ function draw() {
             let sx = x * cellSize
             let sy = y * cellSize
 
-            let color = 0
-
-            rect(sx, sy, cellSize, cellSize, color)
+            if (mode == 'edit') {
+                rect(sx, sy, cellSize, cellSize, 2)
+            }
 
             if (board[y][x]) {
-                rectfill(sx, sy, cellSize, cellSize, color)
+                rectfill(sx + 1, sy + 1, cellSize - 2, cellSize - 2, 0)
             }
         }
     }
 
-    rect(136, H - 62, mode.length * 16 + 30, 52, 0)
+    rect(136, H - 62, mode.length * 16 + 30, 52, 1)
     textfont('monospace')
     text(18, H - 49, 'MODE: ', 0)
     text(144, H - 49, mode, 0)

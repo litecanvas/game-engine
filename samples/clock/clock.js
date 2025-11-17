@@ -21,7 +21,7 @@ function draw() {
     cls(0)
 
     linewidth(4)
-    circfill(cx, cy, clockDiameter / 2, 7)
+    circfill(cx, cy, clockDiameter / 2, 1)
 
     const date = new Date()
     const seconds = date.getSeconds()
@@ -36,15 +36,15 @@ function draw() {
     linewidth(1)
     line(cx, cy, cx + cos(s) * secondsRadius, cy + sin(s) * secondsRadius, 4)
     linewidth(3)
-    line(cx, cy, cx + cos(m) * minutesRadius, cy + sin(m) * minutesRadius, 3)
+    line(cx, cy, cx + cos(m) * minutesRadius, cy + sin(m) * minutesRadius, 0)
     linewidth(6)
-    line(cx, cy, cx + cos(h) * hoursRadius, cy + sin(h) * hoursRadius, 3)
+    line(cx, cy, cx + cos(h) * hoursRadius, cy + sin(h) * hoursRadius, 0)
 
     // Draw the minute ticks
     for (let a = 0; a < 360; a += 6) {
         let angle = deg2rad(a)
         let x = cx + cos(angle) * secondsRadius * 1.1
         let y = cy + sin(angle) * secondsRadius * 1.1
-        circfill(x, y, a % 30 ? 2 : 6, 3)
+        circfill(x, y, a % 30 ? 2 : 6, 0)
     }
 }

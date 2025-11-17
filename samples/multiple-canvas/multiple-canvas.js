@@ -5,7 +5,7 @@ const game1 = litecanvas({
     loop: null,
 })
 
-game1._state = { bg: 5 }
+game1._state = { bg: 2 }
 
 game1.listen('tapped', () => {
     game1._state.bg++
@@ -30,4 +30,4 @@ const game2 = litecanvas({
     },
 })
 
-game2._state = { bg: 3 }
+game2._state = { bg: 1 }

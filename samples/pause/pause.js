@@ -19,5 +19,5 @@ function update(dt) {
 function draw() {
     cls(0)
     text(10, 10, 'Tap to pause/resume')
-    line(0, y, W, y, 5) // draw the line
+    line(0, y, W, y, 2) // draw the line
 }

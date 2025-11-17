@@ -36,6 +36,8 @@ function init() {
     listen('after:player-moved', (x, y) => {
         // do something
     })
+
+    canvas().style.border = '1px solid #fff'
 }
 
 function draw() {
@@ -46,11 +48,11 @@ function draw() {
     line(finishLineX, 0, finishLineX, H, 2)
 
     if (!victory) {
-        text(10, 10, 'Tap to move and')
-        text(10, 40, 'try to cross the finish line')
+        text(10, 10, 'Tap to move and', 1)
+        text(10, 40, 'try to cross the finish line', 1)
     } else {
-        text(10, 10, 'Yeah! You won!!!', 4)
-        text(10, 40, 'Your time: ' + round(time, 2), 4)
+        text(10, 10, 'Yeah! You won!!!')
+        text(10, 40, 'Your time: ' + round(time, 2), 1)
     }
 }
 

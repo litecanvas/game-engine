@@ -1,12 +1,15 @@
-litecanvas()
+/**
+ * Tic Tac Toe example by @Add00 https://github.com/Add00
+ */
 
-const GREY = 2
-const RED = 4
-const GOLD = 5
+const GRAY = 1
 const WHITE = 3
-const BLUE = 6
-
 const CELL = 64
+
+litecanvas({
+    width: CELL * 3,
+    autoscale: 2,
+})
 
 function checkWin(row, col) {
     return (
@@ -36,14 +39,15 @@ function draw() {
     rectfill(0, 0, W, H)
 
     // draw grid
-    line(0, CELL, CELL * 3, CELL, RED)
-    line(0, CELL * 2, CELL * 3, CELL * 2, RED)
+    line(0, CELL, CELL * 3, CELL, GRAY)
+    line(0, CELL * 2, CELL * 3, CELL * 2, GRAY)
 
-    line(CELL, 0, CELL, CELL * 3, RED)
-    line(CELL * 2, 0, CELL * 2, CELL * 3, RED)
+    line(CELL, 0, CELL, CELL * 3, GRAY)
+    line(CELL * 2, 0, CELL * 2, CELL * 3, GRAY)
 
     // draw pieces
     textalign('center', 'middle')
+    textsize(30)
 
     for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
@@ -56,8 +60,14 @@ function draw() {
 
     // draw end game
     if (gameOver) {
-        text(W / 2, CELL * 3, `Game Over! ${player} wins!`, WHITE)
-        text(W / 2, CELL * 3 + CELL, 'Refresh to restart.', WHITE)
+        push()
+        alpha(0.9)
+        cls(0)
+        textsize(14)
+        alpha(1)
+        text(W / 2, H / 2, `Game Over! \n${player} wins! \nRefresh to restart.`)
+        pop()
+        pause()
     }
 }
 

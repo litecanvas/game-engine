@@ -25,5 +25,5 @@ function draw() {
     if (!dirty) return
     linewidth(10)
     ctx().lineCap = 'round'
-    line(x, y, prevx, prevy, 3)
+    line(x, y, prevx, prevy, 2)
 }

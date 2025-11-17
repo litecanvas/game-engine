@@ -1,16 +1,2 @@
-export const defaultPalette = [
-    '#111',
-    '#6a7799',
-    '#aec2c2',
-    '#FFF1E8',
-
-    '#e83b3b',
-    '#fabc20',
-    '#155fd9',
-    '#3cbcfc',
-
-    '#327345',
-    '#63c64d',
-    '#6c2c1f',
-    '#ac7c00',
-]
+/** colors based on https://lospec.com/palette-list/2bit-demichrome */
+export const defaultPalette = ['#211e20', '#555568', '#a0a08b', '#e9efec']

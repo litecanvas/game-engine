@@ -17,7 +17,7 @@ function draw() {
 
     // draw the scene objects
     background()
-    circfill(actor.x, actor.y, 64, 4)
+    circfill(actor.x, actor.y, 64, 0)
 
     pop()
 
@@ -28,7 +28,7 @@ function draw() {
 
 // draw a background
 // This helps you notice the camera movement
-function background(color1 = 1, color2 = 2) {
+function background(color1 = 2, color2 = 1) {
     const tileSize = 32
     const cols = (W * 2) / tileSize
     const rows = (H * 2) / tileSize

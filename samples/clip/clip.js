@@ -9,7 +9,7 @@ function init() {
 
     boxes = []
     for (let i = 0; i < W / 4; i++) {
-        boxes.push([randi(0, W), randi(0, H), randi(4, 11)])
+        boxes.push([randi(0, W), randi(0, H), 2])
     }
 }
 
@@ -41,7 +41,7 @@ function draw() {
     } else if (state === 2) {
         clipheart(x, y, size, size)
     }
-    cls(3)
+    cls(1)
     linewidth(2)
     for (let i = 0; i < boxes.length; i++) {
         rectfill(boxes[i][0], boxes[i][1], 25, 25, boxes[i][2])

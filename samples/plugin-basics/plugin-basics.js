@@ -34,7 +34,7 @@ function pluginTest(engine, config) {
         // the event callback
         function () {
             engine.cls(1)
-            engine.rectfill(0, 0, 100, 100, 5)
+            engine.rectfill(0, 0, 100, 100, 4)
         }
     )
 

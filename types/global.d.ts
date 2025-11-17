@@ -374,19 +374,17 @@ declare global {
      */
     function image(x: number, y: number, source: CanvasImageSource): void
     /**
-     * Draw a sprite pxiel by pixel represented by a string. Each pixel must be a base 36 number or a dot:
+     * Draw a sprite pixel by pixel represented by a string. Each pixel must be a base 36 number or a dot:
      *
      * - A base 36 number (`0-9` or `a-z`) represent a pixel color (supporting color palettes with max 36 colors).
      * - A dot (`.`) represent a transparent pixel.
-     * - Spaces and lines breaks are ignored and can be used to improve the visualization.
+     * - Spaces are ignored and can be used to improve the visualization.
      *
      * @param x the position X of the first pixel
      * @param y the position Y of the first pixel
-     * @param width the width of the sprite
-     * @param height the height of the sprite
      * @param pixels
      */
-    function spr(x: number, y: number, width: number, height: number, pixels: string): void
+    function spr(x: number, y: number, pixels: string): void
     /**
      * Draw in an OffscreenCanvas and returns its image.
      *
@@ -555,9 +553,10 @@ declare global {
     /**
      * Set new palette colors or restore the default palette.
      *
-     * @param [colors]
+     * @param colors an array of colors
+     * @param textColor the new default text color (default: 3)
      */
-    function pal(colors?: string[]): void
+    function pal(colors?: string[], textColor?: number): void
     /**
      * Replace the color "a" with color "b".
      *
