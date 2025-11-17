@@ -297,6 +297,19 @@ declare global {
      */
     function ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
     /**
+     * Make a custom shape in the canvas context.
+     * Then, just use `fill` or `stroke` to draw the shape.
+     *
+     * @param points an array of Xs and Ys coordinates
+     *
+     * @example ```
+     * // draw a 8x8 white triangle
+     * shape([4,0,8,8,0,8])
+     * fill(3)
+     * ```
+     */
+    function shape(points: number[]): void
+    /**
      * Draw a line
      *
      * @param x1

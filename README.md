@@ -23,7 +23,6 @@ Litecanvas is a lightweight HTML5 canvas 2D engine suitable for small web games,
 
 - **Tiny**: Only `~4KB` (minified + gzipped).
 - **Simple API**: Just few functions to draw shapes and some utilities.
-- **Predefined colors**: Just use a number (from 0 to 11) to choose a color in our 12-color palette.
 - **ZzFX**: Play or create sound effects with [ZzFX](https://killedbyapixel.github.io/ZzFX/).
 - **Extensible**: Use or create [plugins](https://www.npmjs.com/search?q=keywords:litecanvas) to add functionalities or change the engine.
 - **Playground**: Access or install the [playground](https://litecanvas.js.org/) webapp to code and share games (even offline).
@@ -89,18 +88,9 @@ litecanvas({
 
 ### Colors
 
-Litecanvas has a default palette with 12 colors:
+Litecanvas has a default palette with 4 colors:
 
-| #   | Color      | #   | Color       |
-| --- | ---------- | --- | ----------- |
-| 0   | Black      | 6   | Dark blue   |
-| 1   | Dark grey  | 7   | Light blue  |
-| 2   | Light grey | 8   | Dark green  |
-| 3   | White      | 9   | Light green |
-| 4   | Red        | 10  | Brown       |
-| 5   | Yellow     | 11  | Beige       |
-
-![The litecanvas color palette](.github/_assets/palette.png)
+<img src=".github/_assets/palette.png" src="The litecanvas color palette" style="2px solid #fff">
 
 Each time a Litecanvas' function ask for a color, you should use an of theses colors by its index.
 
@@ -109,6 +99,8 @@ Each time a Litecanvas' function ask for a color, you should use an of theses co
 let color = 3
 rectfill(0, 0, 32, 32, color)
 ```
+
+> Note: You can customize the color palette using the `pal()` function. [Example](samples/custom-palette/custom-palette.js)
 
 ### Printing messages
 
@@ -119,15 +111,17 @@ function draw() {
     // clear and fill the game screen with color #0 (black)
     cls(0)
 
-    // print a red text at x=0, y=0
-    text(0, 0, 'Hello!!!', 4)
+    // print a gray (color #1) text at x=0, y=0
+    text(0, 0, 'Hello!!!', 1)
 
     // use \n to break text lines
     text(0, 30, 'multi\nline\ntext')
 }
 ```
 
-[Live Demo](https://litecanvas.js.org?c=eJxVzEsKwkAMBuB9T%2FEXF52CYEG37j1EN3EadTBmZCb1gXh3pyqIIYs8PwnGnvRC2bVVtRvVW4iKIdHVtXhUKLFYwAtTAumAXRCBHRh7OjGyT8yKa7ADfJSYMOvgtkL%2B2L5%2FvWTXFfnrnFNQAyHxAONbKQ23dTfHfd29b6ahK33JZsMisa7rZo7Vjxgzo1dYxDYxHT%2BMBOX8Bywn4TSKhV6nba%2FTpmmr5wtwJEcj)
+> By default, the texts are white (color #3).
+
+[Live Demo](https://litecanvas.js.org?c=eJxVjM2OwjAMhO99iqn20ERCoogz932IXkxwIcI4q8TlRyvenbSLtGLky8x4PonGgfRKxfmmGScNFpPikOnmPH4bVK3XCMKUQXrAGEVgJ8aRLowSMrPiFu2EkCRlfPVwe6Fw9ss2SHF9Jb85PzmqgXDM9IB7LzYexvcaG%2B67foXHrl%2F%2B59BVX6%2F7ZpHUtm23wuYfNxXGoLCEfWY6%2F2EkKpcPwHYmXCaxOOjcDjo3nW%2BeL%2BleSpw%3D)
 
 ### Drawing shapes
 
@@ -153,12 +147,12 @@ function draw() {
 
     // draw a circle outline at x=64 and y=96
     // with radius=50
-    // and color=5 (yellow)
-    circ(64, 96, 50, 5)
+    // and color=1 (gray)
+    circ(64, 96, 50, 1)
 }
 ```
 
-[Live Demo](https://litecanvas.js.org?c=eJxljk0KwyAQhfc5xSwNBGJ%2BFLrwMKImCoOCMU1D6d2rabIoGZhBfeN7H7pklPRPuZC6qqbVq%2BSCBx3lRmp4V5BL4UJoVsu5bQ8NJKiAIcLkEI2GaFSSfkYDMsFLdBSk17CLnl6%2FNpdsHjpZMfSHao2bbcq3a6U8Hq5iALLZTFYfUjEvOaSjDfS5h%2F7sO5SLKkOENaHzJwwfT5gH%2F4OJUrt1EYze8xmQ3SCG7QdQXAkfG3jwBlgGYHX1%2BQLFaFeI)
+[Live Demo](https://litecanvas.js.org?c=eJxljk0KwyAQhfc5xSwNBKL5gy48zKAmCqJgTNNQeveqTRYlwogzb3zvsyYqge6JK6mrat6ciMY7kAF3UsO7gnSEXQlNan63bdEAQXjrA8zGWiUhKBHRLVYBRnhxRgGdhIN39Pq1m6jTJaPmfVdUrcyiY%2BqulTwsrrwHsutEVhcpm%2BccwmgDXaq%2BO%2BsOZYJIEH6L1rgTZhpOmMf0BxNQmm3lI73nMyBLwOMXnz3JNDTwmBoYUzyrq88XCIBWlw%3D%3D)
 
 ### Drawing sprites
 
@@ -171,41 +165,50 @@ litecanvas({
 // each visible char is a pixel
 // numbers are colors
 // dots are transparent pixels
-let smile8x8 = `
-    .555555.
-    55555555
-    55055055
-    55055055
-    55555555
-    50555505
-    55000055
-    .555555.`
+let smile = `
+    .333333.
+    33333333
+    33033033
+    33033033
+    33333333
+    30333303
+    33000033
+    .333333.`
 
 function draw() {
     cls(0)
 
     spr(
         0,
-        0, // the sprite Position X Y
-        smile8x8 // the sprite Pixels
+        0, // position X Y
+        smile // the pixels
     )
 }
 ```
 
-[Live Demo](https://litecanvas.js.org?c=eJxtUMtqwzAQvOsr5mhDSNxCIBR67x%2B0vUWR1UigSEa7zoOQf%2B9KdkwPHfawuzOzSBM8W6PjWVNzV8DF9%2Bze8PK6U49Wqc0GtzRCBDDZaragIYuDRMgOxNnHIxWZ1cbh7MkfgoVxOsMTNAZ%2FtaHwcTwdbJZVFjqFlKurTzytOOtIg3SRJw%2BpYBl08nLuHXt5GrDeVqzrsJ0xD12t%2F4a%2Fsq603SITzMzz9F6pnzEa9imiz%2FrStLhXgQnUdJJI6SWDpjYF3aqU%2FGVI5KvvC98Lu1uVEnbKDZ8lX%2BjY48P6o%2BNFOP1UhOzsM4Gyb9XjF0Vyb7o%3D)
+[Live Demo](https://litecanvas.js.org?c=eJxtUDFuwzAM3PWKG22gSNRmKQr0H80WRVZrAopkiHTSIsjfS8lO0KEHDkfeHSEqkgTv0tlxdzXAhQYZ3%2FD88mpuvTHbLX7yDDXAl%2BAkgKeiCVajjGAplL642oLzI87EdIwBfnQFxHCY6DvEqqf5dAxFR0XlHHNpqSHLMpLiEk%2FKkiwZNjEI%2BES67h0HfRqw2TVsWrNbsTa21X%2FNX5ut1D5silW5rz4Y8zknL5QThuIuXY9rM%2FjIndUfqVz%2FoGukwj7V0lumzNRyH9g%2F1OUAVWUM98PqvDe3Xw5%2FZEM%3D)
 
 ### Creating and drawing images
 
 ```js
 litecanvas()
 
-// lets create flag of Japan
+// lets create a flag of Japan
 let japanFlag = paint(
     48,
     32, // the image width and height
+
+    // we call theses operations once to create a image
     function () {
-        cls(3) // white background
-        circfill(24, 16, 8, 4) // red circle
+        // lets modify the litecanvas palette to white and red
+        pal(['#fff', '#bd0029'])
+
+        // lets draw the flag
+        cls(0) // the white
+        circfill(24, 16, 8, 1) // the sun
+
+        // reset the palette
+        pal()
     },
     {
         // you can scale your image
@@ -217,7 +220,7 @@ let japanFlag = paint(
 function draw() {
     cls(0)
 
-    // draw the japanFlag image
+    // draw the our generated japanFlag image
     image(
         W / 2 - japanFlag.width / 2, // game screen center X
         H / 2 - japanFlag.height / 2, // game screen center Y
@@ -226,7 +229,7 @@ function draw() {
 }
 ```
 
-[Live Demo](https://litecanvas.js.org?c=eJxtUctOwzAQvPsr5phIgdA0QgipV4T4AeC4dTaJi%2BtUjkNUof47toOcqmJPXs%2FMPma1cizJfNOY5UKUJTS7EdIyOUarqcPQ4o1OZIRHcAivl%2FC9w4mUcZmAj%2FqpwLYq4PWuZ6gjdYxZNa4HmQY9q653kdlORjo1GGQ5fuJPCKnHbJsH%2Bdz7gbAn%2BdXZYTLNSlFWtkrrrKoLbB4L%2BJZ1lFhuIqo5ki%2FFVWEPn4cJfkOMkjSHzC7zXXP2ZzTc0qRdsfB2mwTH%2FBn1Ulx4l9IOjaU57RF2ePDoX8mARTNWy9a28ZWlFu9lhbuVeB%2BdK72foVBHR%2FZDWGYDycaxxUdSvt4oF6fL5RT%2FKD%2BTch3rNq6PGOm5uPwCs6aXUg%3D%3D)
+[Live Demo](https://litecanvas.js.org?c=eJx9Uk1rwzAMvftXCHpIAtnaZmV0g17H2B%2FYxtjBdeTEw3WK4yyU0f8%2BRemclsJ88Yeenp6eZU1AJd23bNNMiPkcLIYWlEcZECRoKytoNLzIvXSCYvA1nJ6G5w3spXEhFUBrtc55vytyIJZQI5idrBB6U4YapCuhRlPVQTCMID2CktYO0BZbaPboZTCNo6NTCKGZVDAT5%2BnOqQEEaQY%2F%2FHJiY9m7pjT6wMVt7ItUUjAwY1%2BbgZDEeCxjOgHSj2SmtU5ySGbbcrEoHpLPTFwVKL3smX7wJUaVbdNF9tc215hixittrE2LVQ7L%2BxzWtEVs27mLIp6sCBw5ib7QmPHtOBp90f2h6chMBy05isPNn3l2wmwPUKKWnQ35iNssY5jvj7AaqY%2BCWo9ODz1Ht8dW4x9GP6apmOryKY01XmEOBdxM0NtxNOiVR6aSOzKE%2FhwdKHQBPbzF5Oer5HGa%2Fst%2Bj9mTuvPR5HAmjr8pYdU3)
 
 > Note: It's very useful when you need to draw something the same way every time. This way, you create an image of that drawing, working as a kind of cache.
 
@@ -302,8 +305,8 @@ function draw() {
     cls(0)
 
     if (x != null) {
-        // Draw a red circle wherever you tap
-        circfill(x, y, 32, 4)
+        // Draw a white circle wherever you tap
+        circfill(x, y, 32, 3)
     }
 }
 ```
@@ -318,8 +321,8 @@ litecanvas()
 function draw() {
     cls(0)
 
-    // draw a red circle in the mouse cursor's position
-    circfill(MX, MY, 32, 4)
+    // draw a white circle in the mouse cursor's position
+    circfill(MX, MY, 32, 3)
 }
 ```
 
@@ -343,9 +346,9 @@ You can find a complete list of everything litecanvas has to offer on our [cheat
 Try some demos in the playground:
 
 - [Bouncing Ball](https://litecanvas.js.org?c=eJxtksFygyAQhu8%2BxR7VmGjSdqZNag89%2BQaeGcAMM1QdRBsm8d27Co3Y9MAM7M%2F%2B%2By2L5BraphNaNDXkMHAa7rMswRUlAeBZNlRoM%2B3PigxuqwgTfYf3n1%2BDQArNKakH0oVREFR9TWczUQsdRnD1XDDhejmW8SExxyI9jKfF1UrZJGB49Hz6lhHNQ6at1y%2Fs7gKb%2FO6MpxiY9nWz0o3VPRhr4Mov%2BV6GJy%2FpaQqfDbJxaKoKODvzDqOignAh27j3%2BYASbjcPeeuEd8hsNyucOIft%2FvRPNNu9vcxhr%2FkcqCRfrVc1cWNJoHR1Ikwa%2F9JhX3DnKx4wzIzxWHGaUOF8Z1t%2FRkyRbzdrKrswi6YuqFC0ElL6iItd4mCfovW4px%2BIrRjrprjuVY1fAyNY8gdFptV%2F)
-- [Scroller](https://litecanvas.js.org?c=eJxVUM1SgzAQvvMU68FpAhFDLVpH%2BxbOcOj0ECGUzATSIYsyOn13NwXRHpJNvv1%2BkrUGdam6D%2BUZj6J66Eo0rgPTGQTG4TsCaLX36qhhB6tC29K1GtCBXYQ3KyKN1C6onpSl034jcvEonsRWPItMiiw7ROd%2F9sOpUqiBVThFePMV%2FIv7OSu1ujtiQ52G4FxeAu528CAlxFDhHNiqkY0C1pJfuVe9%2Bvx9fGk9ozZA7XpgViMYEsoXKq9wnUZYkkwqgMBEYr4lTKZZbPiC0kLdh%2FRZ7Yd3jz0zArI%2FVumsCySax762zvUM4%2FyWbnMYP1yoqEcMn2dh4wvExsTEAYpluhXQJGuZeNORx4bHjZjfIKaUIDvTAH4AEIGEgw%3D%3D)
+- [Scroller](https://litecanvas.js.org?c=eJxVUM1uhCAQvvsU00OzgNSi202atPsWTTxs9kAVVxKUjYytabPv3mG1tnuAgW%2B%2BHxhn0VS6%2F9CB8SRpxr5C63uwvUVgHL4TgM6EoE8G9rApjat8ZwA9uFV4tyHSRO2S6lk7Oh1yWcjtMbn8sxzPtUYDrMbZNtiv6Fk%2BLv6ZM%2F0JW%2Bq0BO%2FU1fRhD1ulQECNS0inJzZJKBS%2Fca8H%2Ffn74MoFRm2Axg%2FAnEGwJFQvVF7hNo2wNJ1VAJGJxHxLmcpyYfmK0kIzxPRFHcb3gAOzEvI%2FVuWdjySawaFx3g8Mxe6ebksYP16paCaMn2dx4yvEptSKCAmVPUto00Klwfbk8cRFK5c3yDklyi40gB98w4Iz)
 - [3D projection](https://litecanvas.js.org?c=eJyNVcuS2jAQvPsrJofUykE8wykJySlVyRckuy4fZGwWgZEpWQSWFP%2BeGUlgizVLqgyyprul1mgkl9IUc6H%2BiJrFUbTYqbmRlQKppGEx%2FI0AanksYAa%2F4Cv8gG%2F4G8IUPmEfW4S3uloVTjSDBAMAyZjDCJ%2BUuy6%2Bj8MuRWw3pREqqUzdqPs0I4d2k3IYDiE5cHjhcEwdr4vWRjqA%2Fj2kRQgHuwm8jvc7gbTJVZHTYikg1HNJyR1Fp1byd9tcmILlxm2AI%2FWQNRiNIwwsKg2sLAxIkn7G5otP4qAs1LNZYqjXc2KAeaVqgzhl2LImG2G0PLDBYOBUiUxjS6UxdWWEc4i0za5kNoC2fjNrJOY0luPf5D5euJ5yh%2F%2FUzb%2FkCx02oqbiAvopyGGuxd4X8Lys2SimxG139ZIRt5Sq2MvcLNmEukYLVZeUc6rqCbdFbpGuVE%2Bv06vQDZMcmIQejGN4D1PeeI9DGlIQZS1u7EK3BBxkB%2BFkD84WV9Ne9VkkOGTc14QzSitmfrtFmozoOTMoMA4C2TUjuzA%2BhjP6PaEJfbZtuYl5VVLBCdT4omwwXe0tdg1kXpR1iDIvys4AInIBzE30bjZzjBjMElvA7YXvWleaPfzEy62UObiqL%2BoHWwpuVF3U56PYtdPWabDbKHC1mLhL6KJaOdUKVXYZ%2BNqo3Mmqdxt71F3kolw75Zrmc8p1WwlW16NUyjRZp%2FAB87NOk1XqCSffOmsYx%2FFQEp2xEy1XF2anFXGC3WvOtha5xEPg5vXsm7f5vKovAns1qla3TQyRUDby12KXn8e3%2FFwNE85y45tz7TE084aTp%2F93cisP95Pw6qPYdhLc2f4LGJpJDngukxf6O6Yk%2FgdWEko3)
-- [Rendering Benchmark](https://litecanvas.js.org?c=eJylVVtP2zAUfs%2BvsLpJSSCkSS9QurYTQkx7AAkB0x6qariJ21q4See40Az633dsp8G9UNDmB1Kf853j71yJ0iQTKEoTwVOWoS6K02g%2BJYnwI06wIBeMyJtjx%2FTRdq0V0KdJQvj3u6tLMLm3OqDtWQhOJwN9Mu6dTdN5ItqdanHXSowmnIy6la9YqbthEFR68KdTxW8gmhLR3IcAc%2Bnk4W1ETSFqexANhWjsQbQUorUHER5rIsd7MHVNpV5w6VRV3mT2UCZyRrqVWZpRQdOkjThhWNBHUil8RTh5xBmicbcSVXqdqr6vnNxbZeGGaZz7eDYjSeys6uVaG3r1nB%2BlLOVQQftTGIb2TsgQRw9jDuzj8xI8Go1sy2JEoDlnIEnIE%2Fpxc%2BmwNMKSvOspypmABgL1s7rJE6mmQIdg5mcE82hyjTmeZv6YQIvpJNkuenlBUFWvNHuisZi0QVZrvAonhI4n4KzRKpBLoEQF0Xlx9KOFpWLiq4vGroy1Qt%2B0Rpu3IcrItpaQNw3JZpyqYGaYwjgoaFjz1r79kpvtw2nAkV%2Fb25BjvEMeBFIeBFvymvRT25CfwKnDacJZkx8fn9TDsN4cDj8mf8OPfPcUzua7kudpq3W6zdP3pXxXvNKPIR%2Foz2tTZBFmpI3qqypCzkfzJJKNhGhCheMW4G%2FXt7%2BuLu4ubvyYZjOGc0fwOQF42Wx%2BRv%2FIIpk102XXoGoVQcMJGjGC1H6DN3TV1RqcFbqs6OkzzuER7Uy1rmuAYyqHoR966CgcKPkIxsORU0FBEXyBTwcZxiA4PHTXpkH6WQCYY5hVFx2YjYqOjJg2bPJtG93D%2B4z68cJDcT6QrEuVPMoTxFGX3iCsvhRQJ%2FBQ6A68f4EOyl9lSvtUPvyMgEMONBQVKLYuuVFBswblb8vIO6PJg%2Fl%2F6vec8PyWMBKJlDv3%2FfWN%2B%2FnZqMCyMrjXJaQjqBQ4Mssh78XSG8Ha%2FKkTCvtumLLYLpgujeaMOX4qmxNa65zBSkNiQoolokmzzAnc7fbDCZ3u67%2BNbPxHg3Ezk1AGq9Rzf4GOoJP8eGHI8kKWvwJluiS4gwLT%2F8oHkNmQxQt00IXBKMVLRFhGCkf5bkf5Lkf5pqNtVofm8PfMGdpN9t0h%2B1gMO5%2FVY7g7tvcH9QMxT%2FGYyKg96dRb23Ru2aN%2FASaYns8%3D)
+- [Rendering Benchmark](https://litecanvas.js.org?c=eJylVFFv2jAQfs%2Bv8NikJAUCtLSqGDBVVadNaqWq7bQHhFbXMWDV2MwxLVnLf9%2FZDqlLKa22PAR8993lu7vvTKTINCJSaCV5hnoolWQ%2BpUInRFGs6Qmn5hSFKbsL42AFTJgQVH27OjuFkOugC95%2BgODpZuAX4%2F7RVM6F7nQbxdk5MZooOupVvmDr7rWazUofXt0GfgWxbxD72xAQbpLcvo7YtYjdLYi2RbS3IA4t4nALonXgiBxswew5KnsFl27D9s10D2U657RXmcmMaSZFBynKsWZ3tFLkIljc4QyxtFchlX634c6rJNdBObgbmeYJns2oSKPVvOJgzW8%2FlxDJpYIJhh9brVa4EXKDye1YAfv0uASPRqMwCDjVaK44WAS9Rz8uTiMuCTbk45qlnGkQELgf7Mk8xIoCVSEsyShWZHKOFZ5myZiCxFyTwhg9PiKYaq0Mu2epnnTAttt%2BMk4oG08gWfvQQ2bsD%2B2gg7Y1LIEj09Q1KnIsilSWWmIPLniVzTncyXlceAfKJmGwhEaO5oKYKhETTEdxUR6xi8TlWBYN%2BT7FYxrF1mnMiRRc4hS8ENPrl11xX8xmitlmGWjBvozMFDF9bzDzEfuuH7STmRiHFmNfX88vf52dXJ1cJCnLZhznkVZzCnSNs9FA0GjNCKfI7jXQ91jPCl9WUD9SCuIdMTuy2AOnzIhg0Kqhemto7SOQRWTUwMDR%2FAw%2FXeQFg6FajZ%2BpwORZAFhh0GiMdvx5oPqqJTDLtZj8ZYwb1bagQbqooTQfGtalyzw2E9SxZ7JBWQNjYFGzhlrxsPYv0GH5r2zpgJkPPyDgkAMNS6WY7TJ4WpPEn0H5P%2FClxcStfz%2F%2FnlOVX1JOiZYquh48v2k%2BPXgTWFaG126EbASTgkT%2BOMy5WPYRXBc%2FXUNBbzeSp2HBdOnpPlX4vtQ9SOuYwyojPaHFrjjSPIv2CvmZr37wdR7D7abnSrxUJxZsuk2ea836D%2F0pv9EwpaD0q2SB6iC0JF14tryw5U9AU5cBd1HTz7%2FKAWTWbOkC7fRgb0rzElGe0SJRvjlRvilRvp7oJauqtxKo76%2FYZrJv7uD7atj4Wbelm2t7e4%2FfUbO9bKGOmklae3apxqWE%2FwKDkIFn)
 
 > _See other demos in [samples](/samples) folder_
 
