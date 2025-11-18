@@ -586,14 +586,14 @@ export default function litecanvas(settings = {}) {
                 '[litecanvas] shape() 1st param must be an array with at least 6 numbers (3 points)'
             )
             beginPath(_ctx)
-            for (let i = 0; i < points.length; i++) {
+            for (let i = 0; i < points.length; i += 2) {
                 if (0 === i) {
-                    _ctx.moveTo(~~points[i][0], ~~points[i][1])
+                    _ctx.moveTo(~~points[i], ~~points[i + 1])
                 } else {
-                    _ctx.lineTo(~~points[i][0], ~~points[i][1])
+                    _ctx.lineTo(~~points[i], ~~points[i + 1])
                 }
             }
-            _ctx.lineTo(~~points[0][0], ~~points[0][1])
+            _ctx.lineTo(~~points[0], ~~points[1])
         },
 
         /**
