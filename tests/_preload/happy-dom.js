@@ -7,12 +7,16 @@ import { GlobalRegistrator } from '@happy-dom/global-registrator'
  * @returns {Promise<Function>}
  */
 global.onLitecanvas = function (instance, event, callback) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const removeListener = instance.listen(event, (...args) => {
-            const res = callback(...args)
-            if (false !== res) {
-                removeListener()
-                resolve()
+            try {
+                const res = callback(...args)
+                if (false !== res) {
+                    removeListener()
+                    resolve()
+                }
+            } catch (err) {
+                reject(err)
             }
         })
     })
