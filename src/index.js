@@ -1119,7 +1119,7 @@ export default function litecanvas(settings = {}) {
          */
         pal(colors, textColor = 3) {
             DEV: assert(
-                Array.isArray(colors) && colors.length > 0,
+                null == colors || (Array.isArray(colors) && colors.length > 0),
                 '[litecanvas] pal() 1st param must be a array of color strings'
             )
             DEV: assert(
