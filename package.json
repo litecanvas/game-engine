@@ -31,16 +31,16 @@
         "creative coding"
     ],
     "devDependencies": {
-        "@happy-dom/global-registrator": "^18.0.1",
-        "@size-limit/preset-small-lib": "^11.2.0",
+        "@happy-dom/global-registrator": "^20.0.11",
+        "@size-limit/preset-small-lib": "^12.0.0",
         "@swc/core": "^1.15.8",
         "ava": "^6.4.1",
-        "esbuild": "^0.25.12",
+        "esbuild": "^0.27.2",
         "genversion": "^3.2.0",
         "gzip-size": "^7.0.0",
         "prettier": "^3.7.4",
         "sinon": "^21.0.1",
-        "size-limit": "^11.2.0",
+        "size-limit": "^12.0.0",
         "tap-min": "^3.0.0"
     },
     "trustedDependencies": [
