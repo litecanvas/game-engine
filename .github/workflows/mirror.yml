@@ -20,6 +20,6 @@ jobs:
     - name: mirror-repository
       uses: spyoungtech/mirror-action@master
       with:
-        REMOTE: git@codeberg.org/litecanvas/game-engine.git
+        REMOTE: ssh://git@codeberg.org/litecanvas/game-engine.git
         GIT_SSH_PRIVATE_KEY: ${{ secrets.GIT_SSH_KEY }}
         GIT_SSH_KNOWN_HOSTS: ${{ secrets.GIT_SSH_KNOWN_HOSTS }}
