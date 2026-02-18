@@ -11,6 +11,8 @@ declare global {
     var H: number
     /** the amount of time (in seconds) since the game started */
     var T: number
+    /** the amount of rendered frames */
+    var F: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
     var MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */

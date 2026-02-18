@@ -106,6 +106,9 @@ export default function litecanvas(settings = {}) {
         T: 0,
 
         /** @type {number} */
+        F: 0,
+
+        /** @type {number} */
         MX: -1,
 
         /** @type {number} */
@@ -1622,6 +1625,7 @@ export default function litecanvas(settings = {}) {
 
         if (updated) {
             instance.emit('draw', _ctx)
+            instance.def('F', instance.F + 1)
             if (updated > 1) {
                 _accumulated = 0
                 DEV: console.warn(
