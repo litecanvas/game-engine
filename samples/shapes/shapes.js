@@ -25,7 +25,6 @@ function update(dt) {
 
 function draw() {
     cls(0)
-    linewidth(11 - wave(-10, 10, T * 10))
 
     for (let i = 0; i < 100; i++) {
         push()

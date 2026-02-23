@@ -6,7 +6,7 @@ function init() {
 
 function update(dt) {
     // animate the actor
-    actor.x = wave(W / 2 - 200, W / 2 + 200, T)
+    actor.x = W / 2 + sin(T) * 200
 }
 
 function draw() {
