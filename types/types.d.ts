@@ -110,14 +110,15 @@ type LitecanvasInstance = {
      */
     norm(value: number, start: number, stop: number): number
     /**
-     * Interpolate between 2 values using a periodic function.
+     * Calculates the distance between a point (x1, y1) to another (x2, y2).
      *
-     * @param from - the lower bound
-     * @param to - the higher bound
-     * @param t - the value passed to the periodic function
-     * @param fn - the periodic function (which default to `Math.sin`)
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @returns the distance
      */
-    wave(from: number, to: number, t: number, fn?: (n: number) => number): number
+    dist(x1: number, y1: number, x2: number, y2: number): number
     /**
      * Returns the sine of a number in radians
      */

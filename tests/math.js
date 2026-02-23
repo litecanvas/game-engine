@@ -11,6 +11,8 @@ test.before(() => {
     local = litecanvas({
         global: false,
     })
+
+    local.listen('init', () => local.pause())
 })
 
 test.after(() => {
@@ -83,21 +85,8 @@ test('round', async (t) => {
     t.is(local.round(n, 5), 9.87654)
 })
 
-test('wave', async (t) => {
-    {
-        // interpolate from 0 to 100 using Math.sin (default)
-        const amount = 0
-        const expected = 50
-        const actual = local.wave(0, 100, amount)
-        t.is(actual, expected)
-    }
-
-    {
-        // interpolate from 0 to 100 using a custom periodic function
-        const amount = 0
-        const fn = (x) => -Math.cos(x)
-        const expected = 0
-        const actual = local.wave(0, 100, amount, fn)
-        t.is(actual, expected)
-    }
+test('dist', async (t) => {
+    const expected = 100
+    const actual = local.dist(0, 0, 0, 100)
+    t.is(actual, expected)
 })
