@@ -94,7 +94,7 @@ function draw() {
         rectfill(pos[0] * tileSize, pos[1] * tileSize, tileSize - 1, tileSize - 1, i > 0 ? 2 : 3)
     }
 
-    rectfill(food[0] * tileSize, food[1] * tileSize, tileSize - 1, tileSize - 1, 4)
+    rectfill(food[0] * tileSize, food[1] * tileSize, tileSize - 1, tileSize - 1, 1)
 
     textfont('sans-serif')
     textalign('right', 'hanging')

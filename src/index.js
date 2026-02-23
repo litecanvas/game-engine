@@ -53,7 +53,7 @@ export default function litecanvas(settings = {}) {
         /** @type {HTMLCanvasElement} _canvas */
         _canvas,
         /** @type {number} */
-        _scale = 1,
+        _canvasScale = 1,
         /** @type {CanvasRenderingContext2D|OffscreenCanvasRenderingContext2D} */
         _ctx,
         /** @type {number} */
@@ -145,7 +145,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(end), '[litecanvas] lerp() 2nd param must be a number')
             DEV: assert(isNumber(t), '[litecanvas] lerp() 3rd param must be a number')
 
-            return t * (end - start) + start
+            return start + t * (end - start)
         },
 
         /**
@@ -187,6 +187,7 @@ export default function litecanvas(settings = {}) {
                 isNumber(precision) && precision >= 0,
                 '[litecanvas] round() 2nd param must be a positive number or zero'
             )
+
             if (!precision) {
                 return math.round(n)
             }
@@ -341,7 +342,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(min), '[litecanvas] randi() 1st param must be a number')
             DEV: assert(isNumber(max), '[litecanvas] randi() 2nd param must be a number')
             DEV: assert(
-                max > min,
+                min <= max,
                 '[litecanvas] randi() the 1st param must be less than the 2nd param'
             )
 
@@ -360,6 +361,7 @@ export default function litecanvas(settings = {}) {
                 isNumber(value) && value >= 0,
                 '[litecanvas] rseed() 1st param must be a positive integer or zero'
             )
+
             _rngSeed = ~~value
         },
 
@@ -1084,7 +1086,7 @@ export default function litecanvas(settings = {}) {
             _eventListeners[eventName].add(callback)
 
             // return a function to remove this event listener
-            return () => _eventListeners && _eventListeners[eventName].delete(callback)
+            return () => _eventListeners[eventName]?.delete(callback)
         },
 
         /**
@@ -1229,7 +1231,7 @@ export default function litecanvas(settings = {}) {
                 // 2
                 _fpsInterval / 1000,
                 // 3
-                _scale,
+                _canvasScale,
                 // 4
                 _eventListeners,
                 // 5
@@ -1345,8 +1347,8 @@ export default function litecanvas(settings = {}) {
                      * @param {MouseEvent | Touch} ev
                      */
                     (ev) => [
-                        (ev.pageX - _canvas.offsetLeft) / _scale,
-                        (ev.pageY - _canvas.offsetTop) / _scale,
+                        (ev.pageX - _canvas.offsetLeft) / _canvasScale,
+                        (ev.pageY - _canvas.offsetTop) / _canvasScale,
                     ],
                 _taps = new Map(),
                 _registerTap =
@@ -1595,8 +1597,8 @@ export default function litecanvas(settings = {}) {
 
         // start the engine
         _initialized = true
-        instance.emit('init', instance)
         instance.resume()
+        instance.emit('init', instance)
     }
 
     function drawFrame() {
@@ -1695,11 +1697,11 @@ export default function litecanvas(settings = {}) {
                 _canvas.style.margin = 'auto'
             }
 
-            _scale = math.min(innerWidth / width, innerHeight / height)
-            _scale = maxScale > 1 && _scale > maxScale ? maxScale : _scale
+            _canvasScale = math.min(innerWidth / width, innerHeight / height)
+            _canvasScale = maxScale > 1 && _canvasScale > maxScale ? maxScale : _canvasScale
 
-            _canvas.style.width = width * _scale + 'px'
-            _canvas.style.height = height * _scale + 'px'
+            _canvas.style.width = width * _canvasScale + 'px'
+            _canvas.style.height = height * _canvasScale + 'px'
         }
 
         // set canvas image rendering properties
@@ -1710,7 +1712,7 @@ export default function litecanvas(settings = {}) {
 
         // trigger "resized" event
         // note: not triggered before the "init" event
-        instance.emit('resized', _scale)
+        instance.emit('resized', _canvasScale)
     }
 
     /**
