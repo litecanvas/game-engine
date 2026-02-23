@@ -218,6 +218,24 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * Calculates the distance between a point (x1, y1) to another (x2, y2).
+         *
+         * @param {number} x1
+         * @param {number} y1
+         * @param {number} x2
+         * @param {number} y2
+         * @returns {number}
+         */
+        dist: (x1, y1, x2, y2) => {
+            DEV: assert(isNumber(x1), '[litecanvas] dist() 1st param must be a number')
+            DEV: assert(isNumber(y1), '[litecanvas] dist() 2nd param must be a number')
+            DEV: assert(isNumber(x2), '[litecanvas] dist() 3rd param must be a number')
+            DEV: assert(isNumber(y2), '[litecanvas] dist() 4th param must be a number')
+
+            return math.hypot(x2 - x1, y2 - y1)
+        },
+
+        /**
          * Wraps a number between `min` (inclusive) and `max` (exclusive).
          *
          * @param {number} value
@@ -284,25 +302,6 @@ export default function litecanvas(settings = {}) {
             )
 
             return instance.map(value, start, stop, 0, 1)
-        },
-
-        /**
-         * Interpolate between 2 values using a periodic function.
-         *
-         * @param {number} from - the lower bound
-         * @param {number} to - the higher bound
-         * @param {number} t - value passed to the periodic function
-         * @param {(n: number) => number} [fn] - the periodic function (which default to `Math.sin`)
-         */
-        wave: (from, to, t, fn = Math.sin) => {
-            DEV: assert(isNumber(from), '[litecanvas] wave() 1st param must be a number')
-            DEV: assert(isNumber(to), '[litecanvas] wave() 2nd param must be a number')
-            DEV: assert(isNumber(t), '[litecanvas] wave() 3rd param must be a number')
-            DEV: assert(
-                'function' === typeof fn,
-                '[litecanvas] wave() 4rd param must be a function (n: number) => number'
-            )
-            return from + ((fn(t) + 1) / 2) * (to - from)
         },
 
         /** RNG API */
