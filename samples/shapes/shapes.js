@@ -1,12 +1,20 @@
 litecanvas()
 
 function init() {
-    size = W / 6
+    size = W / 12
     angle = 0
     gap = 40
     lineDashPattern = [30, 15]
     lineDashOffset = 0
-    lineWidth = 2
+    lineWidth = 3
+    types = [
+        () => rectfill(0, 0, size, size, 2),
+        () => rect(0, 0, size, size, 1),
+        () => circfill(0, 0, size / 2, 3),
+        () => circ(0, 0, size / 2, 1),
+        () => ovalfill(0, 0, size * 1.5, size / 2, 2),
+        () => oval(0, 0, size * 1.5, size / 2, 1),
+    ]
 }
 
 function update(dt) {
@@ -19,16 +27,14 @@ function draw() {
     cls(0)
     linewidth(11 - wave(-10, 10, T * 10))
 
-    rectfill(gap, H / 2 - size / 2, size, size, 2)
+    for (let i = 0; i < 100; i++) {
+        push()
+        const x = rand() * W
+        const y = rand() * H * 0.9
+        translate(x, y)
+        types[randi(0, types.length - 1)]()
+        pop()
+    }
 
-    // rotate the second rect only
-    push()
-    translate(gap * 2 + size + 10 + size / 2, H / 2 - size / 2 + size / 2)
-    rotate(angle)
-    linedash(lineDashPattern, -lineDashOffset)
-    rect(-size / 2, -size / 2, size, size, 1)
-    pop()
-
-    circfill(size * 3, H / 2, size / 2, 2)
-    circ(gap + size * 4, H / 2, size / 2, 1)
+    pause()
 }

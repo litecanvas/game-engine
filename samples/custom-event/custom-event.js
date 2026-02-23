@@ -8,7 +8,7 @@ function init() {
         x: 0,
         y: H / 2,
         size: 64,
-        color: 4,
+        color: 3,
     }
     finishLineX = W * 0.7
     victory = false
@@ -21,7 +21,7 @@ function init() {
         if (x > finishLineX) {
             victory = true
             time = T
-            player.color = 5
+            player.color = 2
             // run until collision happens
             unlistenThisEvent()
         }
