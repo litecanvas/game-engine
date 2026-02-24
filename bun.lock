@@ -5,11 +5,11 @@
     "": {
       "name": "litecanvas",
       "devDependencies": {
-        "@happy-dom/global-registrator": "^20.4.0",
+        "@happy-dom/global-registrator": "^20.7.0",
         "@size-limit/preset-small-lib": "^12.0.0",
-        "@swc/core": "^1.15.11",
+        "@swc/core": "^1.15.13",
         "ava": "^6.4.1",
-        "esbuild": "^0.27.2",
+        "esbuild": "^0.27.3",
         "genversion": "^3.2.0",
         "gzip-size": "^7.0.0",
         "prettier": "^3.8.1",
