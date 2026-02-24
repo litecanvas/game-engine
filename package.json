@@ -1,6 +1,6 @@
 {
     "name": "litecanvas",
-    "version": "0.103.0",
+    "version": "0.103.1",
     "description": "Lightweight HTML5 canvas 2D game engine suitable for small projects and creative coding. Inspired by PICO-8 and p5.js/Processing.",
     "license": "MIT",
     "author": "Luiz Bills <luizbills@pm.me>",
@@ -18,6 +18,8 @@
     "module": "./src/index.js",
     "types": "./types/index.d.ts",
     "unpkg": "./dist/dist.dev.js",
+    "jsdelivr": "./dist/dist.dev.js",
+    "browser": "./dist/dist.dev.js",
     "keywords": [
         "tiny",
         "micro",
