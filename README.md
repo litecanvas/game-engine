@@ -2,7 +2,6 @@
 
 <img width="128" height="128" alt="icon-128" src="https://github.com/user-attachments/assets/9dc09b77-6538-4fe9-8bc7-66204b57cf6e" />
 
-
 # Litecanvas
 
 [![NPM Version](https://badgen.net/npm/v/litecanvas?scale=1.1&label=NPM&color=2f9e44)](https://www.npmjs.com/package/litecanvas/) &nbsp;
@@ -36,10 +35,14 @@ If you want to test locally, just use one of the installation options.
 
 ### HTML/CDN
 
-Create a HTML file and add a `<script>` tag with our CDN link:
+Create a HTML file and add a `<script>` tag with one of our CDN links:
 
 ```html
+// Unpkg
 <script src="https://unpkg.com/litecanvas"></script>
+
+// or jsDelivr
+<script src="https://cdn.jsdelivr.net/npm/litecanvas"></script>
 ```
 
 ### Template
