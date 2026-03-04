@@ -35,13 +35,17 @@ If you want to test locally, just use one of the installation options.
 
 ### HTML/CDN
 
-Create a HTML file and add a `<script>` tag with one of our CDN links:
+Create a HTML file and add a `<script>` tag with one of the following CDN links:
+
+#### Unpkg
 
 ```html
-// Unpkg
 <script src="https://unpkg.com/litecanvas"></script>
+```
 
-// or jsDelivr
+#### jsDelivr
+
+```html
 <script src="https://cdn.jsdelivr.net/npm/litecanvas"></script>
 ```
 
