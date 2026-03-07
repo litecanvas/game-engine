@@ -3,5 +3,5 @@
  * @param {string} message
  */
 export const assert = (condition, message = 'Assertion failed') => {
-    if (!condition) throw new Error(message)
+    if (!condition) throw new Error('[litecanvas] ' + message)
 }
