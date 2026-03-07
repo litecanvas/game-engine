@@ -6,6 +6,13 @@ import * as prettier from 'prettier'
 
 await fs.rm('dist', { recursive: true, force: true })
 
+const prettierOptions = {
+    parser: 'babel',
+    tabWidth: 2,
+    semi: true,
+    endOfLine: 'lf',
+}
+
 // build the dist.dev.js (for development)
 {
     const filepath = 'dist/dist.dev.js'
@@ -17,11 +24,7 @@ await fs.rm('dist', { recursive: true, force: true })
         minifyWhitespace: true,
         drop: ['debugger'],
     })
-    const formatted = await prettier.format(await fs.readFile(filepath, 'utf8'), {
-        parser: 'babel',
-        tabWidth: 2,
-        semi: false,
-    })
+    const formatted = await prettier.format(await fs.readFile(filepath, 'utf8'), prettierOptions)
     await fs.writeFile(filepath, formatted)
 
     console.log(`  📄 ${filepath} (${await filesize(filepath)})`)
@@ -40,11 +43,10 @@ await fs.rm('dist', { recursive: true, force: true })
             drop: ['debugger', 'console'],
             dropLabels: ['DEV'],
         })
-        const formatted = await prettier.format(await fs.readFile(filepath, 'utf8'), {
-            parser: 'babel',
-            tabWidth: 2,
-            semi: false,
-        })
+        const formatted = await prettier.format(
+            await fs.readFile(filepath, 'utf8'),
+            prettierOptions
+        )
         await fs.writeFile(filepath, formatted)
 
         console.log(`  📄 ${filepath} (${await filesize(filepath)})`)
