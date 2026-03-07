@@ -14,6 +14,7 @@ export default function litecanvas(settings = {}) {
     const /** @type {Window} */
         root = window,
         math = Math,
+        perf = performance,
         TWO_PI = math.PI * 2,
         raf = requestAnimationFrame,
         /** @type {Function[]} */
@@ -1280,7 +1281,7 @@ export default function litecanvas(settings = {}) {
             if (_initialized && _paused) {
                 _paused = false
                 _accumulated = _fpsInterval
-                _lastFrameTime = Date.now()
+                _lastFrameTime = perf.now()
                 _rafid = raf(drawFrame)
             }
         },
@@ -1367,7 +1368,7 @@ export default function litecanvas(settings = {}) {
                             // initial y
                             yi: y,
                             // timestamp
-                            t: Date.now(),
+                            t: perf.now(),
                         }
                         _taps.set(id, tap)
                         return tap
@@ -1387,7 +1388,7 @@ export default function litecanvas(settings = {}) {
                     /**
                      * @param {{t: number}} tap
                      */
-                    (tap) => tap && Date.now() - tap.t <= 300
+                    (tap) => tap && perf.now() - tap.t <= 300
 
             let _pressingMouse = false
 
@@ -1604,7 +1605,7 @@ export default function litecanvas(settings = {}) {
         // request the next frame
         _rafid = raf(drawFrame)
 
-        let now = Date.now()
+        let now = perf.now()
         let updated = 0
         let frameTime = now - _lastFrameTime
 
