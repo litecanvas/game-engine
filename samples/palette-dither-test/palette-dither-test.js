@@ -12,7 +12,6 @@ litecanvas({
 })
 
 function init() {
-    framerate(1)
     combinations = []
     for (let y = 0; y < cols; y++) {
         for (let x = 0; x < cols; x++) {
@@ -35,6 +34,8 @@ function draw() {
             }
         }
     }
+
+    pause()
 }
 
 function tapped() {
