@@ -377,9 +377,9 @@ export default function litecanvas(settings = {}) {
             )
 
             if (null == color) {
-                _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height)
+                _ctx.clearRect(0, 0, instance.W, instance.H)
             } else {
-                instance.rectfill(0, 0, _ctx.canvas.width, _ctx.canvas.height, color)
+                instance.rectfill(0, 0, instance.W, instance.H, color)
             }
         },
 
