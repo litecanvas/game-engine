@@ -32,3 +32,11 @@ test('by default, produces 0 or 1', async (t) => {
         t.true(randomNumber === 0 || randomNumber === 1)
     }
 })
+
+test('MIN and MAX with same input', async (t) => {
+    for (let i = 0; i < N; i++) {
+        const x = 10
+        const randomNumber = local.randi(x, x)
+        t.true(randomNumber === x)
+    }
+})

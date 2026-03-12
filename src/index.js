@@ -210,7 +210,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(min), loggerPrefix + 'clamp() 2nd param must be a number')
             DEV: assert(isNumber(max), loggerPrefix + 'clamp() 3rd param must be a number')
             DEV: assert(
-                max > min,
+                max >= min,
                 loggerPrefix + 'clamp() the 2nd param must be less than the 3rd param'
             )
 
@@ -319,7 +319,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(min), loggerPrefix + 'rand() 1st param must be a number')
             DEV: assert(isNumber(max), loggerPrefix + 'rand() 2nd param must be a number')
             DEV: assert(
-                max > min,
+                max >= min,
                 loggerPrefix + 'rand() the 1st param must be less than the 2nd param'
             )
 
@@ -343,7 +343,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(min), loggerPrefix + 'randi() 1st param must be a number')
             DEV: assert(isNumber(max), loggerPrefix + 'randi() 2nd param must be a number')
             DEV: assert(
-                min <= max,
+                max >= min,
                 loggerPrefix + 'randi() the 1st param must be less than the 2nd param'
             )
 

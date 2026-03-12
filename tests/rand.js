@@ -32,3 +32,11 @@ test('by default, produces random float numbers between 0 and 1.0', async (t) =>
         t.true(randomNumber >= 0 && randomNumber < 1.0)
     }
 })
+
+test('MIN and MAX with same input', async (t) => {
+    for (let i = 0; i < N; i++) {
+        const x = 10
+        const randomNumber = local.rand(x, x)
+        t.true(randomNumber === x)
+    }
+})
