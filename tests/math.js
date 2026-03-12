@@ -52,12 +52,21 @@ test('clamp', async (t) => {
     t.is(local.clamp(-10, 0, 100), 0)
     t.is(local.clamp(50, 0, 100), 50)
     t.is(local.clamp(999999, 0, 100), 100)
+    t.is(local.clamp(0, 33, 33), 33)
+
+    t.throws(() => {
+        local.clamp(1, 1000, 1)
+    })
 })
 
 test('wrap', async (t) => {
     t.is(local.wrap(5, 0, 10), 5)
     t.is(local.wrap(-1, 0, 10), 9)
     t.is(local.wrap(11, 0, 10), 1)
+
+    t.throws(() => {
+        local.wrap(1, 10, 10)
+    })
 })
 
 test('map', async (t) => {
