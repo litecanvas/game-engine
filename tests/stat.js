@@ -233,52 +233,23 @@ test('stat(12) returns the current color palette state modified by palc()', (t) 
     }
 })
 
-test('stat modified via event', async (t) => {
-    const expected = 'BAR'
+test('stat(13) returns the current font line height factor', (t) => {
+    const expected = 2
 
-    await onLitecanvas(local, 'init', () => {
-        local.listen('stat', (data) => {
-            // modify only the stat(0)
-            if (0 === data.index) {
-                data.value.foo = expected
-            }
-        })
+    local.textgap(expected)
 
-        const actual = local.stat(0).foo
-        t.is(actual, expected)
-    })
+    const actual = local.stat(13)
+    t.deepEqual(actual, expected)
 })
 
-test('number stat created via event', async (t) => {
-    await onLitecanvas(local, 'init', () => {
-        const customIndex = 42
-        const expected = 'The answer to the Ultimate Question of Life, the Universe, and Everything'
+test('stat with invalid indexes must throw error in dev mode', (t) => {
+    const last = 13
 
-        local.listen('stat', (data) => {
-            // create a value for stat(42)
-            if (customIndex === data.index) {
-                data.value = expected
-            }
-        })
-
-        const actual = local.stat(customIndex)
-        t.is(actual, expected)
+    t.throws(() => {
+        local.stat(last + 1)
     })
-})
 
-test('string stat created via event', async (t) => {
-    await onLitecanvas(local, 'init', () => {
-        const customIndex = 'forty-two'
-        const expected = 'The answer to the Ultimate Question of Life, the Universe, and Everything'
-
-        local.listen('stat', (data) => {
-            // create a value for stat(42)
-            if (customIndex === data.index) {
-                data.value = expected
-            }
-        })
-
-        const actual = local.stat(customIndex)
-        t.is(actual, expected)
+    t.throws(() => {
+        local.stat(-1)
     })
 })
