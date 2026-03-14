@@ -14,16 +14,16 @@ function init() {
     victory = false
     time = 0
 
-    // run a callback every time that event is triggered
-    // the `listen()` returns a function to unlisten your event
-    const unlistenThisEvent = listen('player-moved', (x, y) => {
+    // run a callback every time that "player-moved" event is triggered
+    listen('player-moved', function onPlayerMoved(x, y) {
         console.log(`player moved to (${x}, ${y})`)
         if (x > finishLineX) {
             victory = true
             time = T
             player.color = 2
-            // run until collision happens
-            unlistenThisEvent()
+
+            // use `unlisten()` to remove um event listener callback
+            unlisten('player-moved', onPlayerMoved)
         }
     })
 
@@ -32,7 +32,7 @@ function init() {
         // do something
     })
 
-    // or after
+    // or after an event
     listen('after:player-moved', (x, y) => {
         // do something
     })
