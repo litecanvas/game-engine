@@ -86,8 +86,6 @@ export default function litecanvas(settings = {}) {
         _colorPaletteState = [],
         /** @type {number[]} */
         _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
-        /** @type {string} */
-        _coreEvents = 'init,update,draw,tap,untap,tapping,tapped,resized',
         /** @type {string} list of functions copied from `Math` module*/
         _mathFunctions =
             'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp',
@@ -1075,7 +1073,7 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Add a game event listener
+         * Add a game event listener.
          *
          * @param {string} eventName the event type name
          * @param {Function} callback the function that is called when the event occurs
@@ -1097,7 +1095,7 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Remove a game event listener
+         * Remove a game event listener.
          *
          * @param {string} eventName the event type name
          * @param {Function} callback the function that is called when the event occurs
@@ -1120,13 +1118,17 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Call all listeners attached to a game event
+         * Call all listeners attached to a game event.
+         *
+         * Note: when the `litecanvas()` "loop" option is `null` (default),
+         * `emit()` will first call a global function matching the event name (if it exists).
+         * E.g: `emit("boom")` calls `window.boom()`.
          *
          * @param {string} eventName The event type name
-         * @param {*} [arg1] any data to be passed over the listeners
-         * @param {*} [arg2] any data to be passed over the listeners
-         * @param {*} [arg3] any data to be passed over the listeners
-         * @param {*} [arg4] any data to be passed over the listeners
+         * @param {any} [arg1] any data to be passed over the listeners
+         * @param {any} [arg2] any data to be passed over the listeners
+         * @param {any} [arg3] any data to be passed over the listeners
+         * @param {any} [arg4] any data to be passed over the listeners
          */
         emit(eventName, arg1, arg2, arg3, arg4) {
             DEV: assert(
@@ -1138,7 +1140,12 @@ export default function litecanvas(settings = {}) {
                 eventName = lowerCase(eventName)
 
                 triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
+
+                if (!settings.loop && 'function' === typeof root[eventName]) {
+                    root[eventName](arg1, arg2, arg3, arg4)
+                }
                 triggerEvent(eventName, arg1, arg2, arg3, arg4)
+
                 triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
             }
         },
@@ -1194,8 +1201,13 @@ export default function litecanvas(settings = {}) {
         /**
          * Define or update a instance property.
          *
-         * @param {string} key
-         * @param {*} value
+         * Note: when the `litecanvas()` option "global" is `true` (default),
+         * `def()` with set/update a global property.
+         *
+         * E.g: `def('ONE', 1)` do `window.ONE = 1`.
+         *
+         * @param {string} key the property name
+         * @param {any} value the property value
          */
         def(key, value) {
             DEV: assert('string' === typeof key, loggerPrefix + 'def() 1st param must be a string')
@@ -1682,9 +1694,9 @@ export default function litecanvas(settings = {}) {
         _canvas = _canvas || document.createElement('canvas')
 
         DEV: assert(
-            'CANVAS' === _canvas.tagName,
+            _canvas instanceof HTMLElement && 'CANVAS' === _canvas.tagName,
             loggerPrefix +
-                'litecanvas() option "canvas" should be a canvas element or string (CSS selector)'
+                'litecanvas() option "canvas" should be a canvas element or string (CSS selector of a canvas)'
         )
 
         _ctx = _canvas.getContext('2d')
@@ -1698,6 +1710,8 @@ export default function litecanvas(settings = {}) {
         }
 
         _canvas.style.imageRendering = 'pixelated'
+
+        // disable default browser's right click in canvas
         _canvas.oncontextmenu = () => false
     }
 
@@ -1752,21 +1766,22 @@ export default function litecanvas(settings = {}) {
 
     /**
      * @param {string} eventName
-     * @param {*} arg1
-     * @param {*} arg2
-     * @param {*} arg3
-     * @param {*} arg4
+     * @param {any} [arg1]
+     * @param {any} [arg2]
+     * @param {any} [arg3]
+     * @param {any} [arg4]
      */
     function triggerEvent(eventName, arg1, arg2, arg3, arg4) {
-        if (!_eventListeners[eventName]) return
-        for (const callback of _eventListeners[eventName]) {
-            callback(arg1, arg2, arg3, arg4)
+        if (_eventListeners[eventName]) {
+            for (const callback of _eventListeners[eventName]) {
+                callback(arg1, arg2, arg3, arg4)
+            }
         }
     }
 
     /**
      * @param {pluginCallback} callback
-     * @param {*} config
+     * @param {any} config
      */
     function loadPlugin(callback, config) {
         const pluginData = callback(instance, config)
@@ -1805,12 +1820,10 @@ export default function litecanvas(settings = {}) {
     setupCanvas()
 
     // setup default event listeners
-    const source = settings.loop ? settings.loop : root
-    for (const event of _coreEvents.split(',')) {
-        DEV: if (root === source && source[event]) {
-            console.info(loggerPrefix + `using window.${event}()`)
+    if (settings.loop) {
+        for (const eventName in settings.loop) {
+            if (settings.loop[eventName]) instance.listen(eventName, settings.loop[eventName])
         }
-        if (source[event]) instance.listen(event, source[event])
     }
 
     // init the engine (async)

@@ -531,21 +531,25 @@ type LitecanvasInstance = {
      */
     use(callback: pluginCallback): void
     /**
-     * Add a game loop event listener
+     * Add a game loop event listener.
      *
      * @param event The game event type
      * @param callback the function that is called when the event occurs
      */
     listen(event: string, callback: Function): void
     /**
-     * Remove a game loop event listener
+     * Remove a game loop event listener.
      *
      * @param event The game event type
      * @param callback the function that is called when the event occurs
      */
     unlisten(event: string, callback: Function): void
     /**
-     * Call all listeners attached to a game event
+     * Call all listeners attached to a game event.
+     *
+     * Note: when the `litecanvas()` "loop" option is `null` (default),
+     * `emit()` will first call a global function matching the event name (if it exists).
+     * E.g: `emit("boom", 10)` calls `window.boom(10)`.
      *
      * @param event The game event type
      * @param [arg1] any data to be passed over the listeners
@@ -555,10 +559,14 @@ type LitecanvasInstance = {
      */
     emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
     /**
-     * Define or update a instance property
+     * Define or update a instance property.
      *
-     * @param key
-     * @param value
+     * Note: when the `litecanvas()` option "global" is `true` (default),
+     * `def()` with set/update a global property.
+     * E.g: `def('ONE', 1)` also do `window.ONE = 1`.
+     *
+     * @param key the property name
+     * @param value the property value
      */
     def(key: string, value: any): void
     /**
@@ -658,19 +666,13 @@ type LitecanvasOptions = {
      */
     global?: boolean
     /**
-     * Specify your game loop callbacks.
-     * By default use that global functions (if they exist):
-     * - `window.init(instance: LitecanvasInstance): void`
-     * - `window.update(dt: number): void`
-     * - `window.draw(ctx: CanvasRenderingContext2D): void`
-     * - `window.resized(scale: number): void`
-     * - `window.tap(tapX: number, tapY: number, touchId: number): void`
-     * - `window.untap(tapX: number, tapY: number, touchId: number): void`
-     * - `window.tapped(tapX: number, tapY: number, touchId: number): void`
-     * - `window.tapping(tapX: number, tapY: number, touchId: number): void`
+     * Specify your game loop listener callbacks.
+     *
+     * By default, it uses global functions with the same name as the events (if they exist).
+     *
+     * Example: `window.init`, `window.update`, `window.draw`, etc
      */
     loop?: LitecanvasGameLoop
-
     /**
      * default: `true`
      *
