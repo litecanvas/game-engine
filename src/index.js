@@ -1257,14 +1257,11 @@ export default function litecanvas(settings = {}) {
         /**
          * Returns information about the engine instance.
          *
-         * @param {number|string} index
+         * @param {number} index
          * @returns {any}
          */
         stat(index) {
-            DEV: assert(
-                isNumber(index) || 'string' === typeof index,
-                loggerPrefix + 'stat() 1st param must be a number or string'
-            )
+            DEV: assert(isNumber(index), loggerPrefix + 'stat() 1st param must be a number')
 
             const internals = [
                 // 0
@@ -1297,12 +1294,14 @@ export default function litecanvas(settings = {}) {
                 _fontLineHeight,
             ]
 
-            const data = { index, value: internals[index] }
+            DEV: assert(
+                index >= 0 && index < internals.length,
+                loggerPrefix +
+                    'stat() 1st param must be a number between 0 and ' +
+                    (internals.length - 1)
+            )
 
-            // plugins can modify or create new stats
-            instance.emit('stat', data)
-
-            return data.value
+            return internals[index]
         },
 
         /**

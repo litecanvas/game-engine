@@ -634,11 +634,10 @@ declare global {
      * - n = 11: the current font family
      * - n = 12: the current state of the color palette
      * - n = 13: the current font gap
-     * - n = *any other value*: probably returns undefined
      *
      * @param index
      */
-    function stat(index: number | string): any
+    function stat(index: number): any
     /**
      * Pauses the engine loop (update & draw).
      */
