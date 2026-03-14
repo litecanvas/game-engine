@@ -8,11 +8,11 @@ import { GlobalRegistrator } from '@happy-dom/global-registrator'
  */
 global.onLitecanvas = function (instance, event, callback) {
     return new Promise((resolve, reject) => {
-        const removeListener = instance.listen(event, (...args) => {
+        instance.listen(event, (...args) => {
             try {
                 const res = callback(...args)
                 if (false !== res) {
-                    removeListener()
+                    instance.unlisten(event, callback)
                     resolve()
                 }
             } catch (err) {

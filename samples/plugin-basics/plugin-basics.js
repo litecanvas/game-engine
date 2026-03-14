@@ -44,12 +44,13 @@ function pluginTest(engine, config) {
         console.log(`Tap detected in X=${x} Y=${y}`)
     })
 
-    // the `listen()` returns a function that when called removes that listener
-    // example: call this listencer once and then remove it
-    let deleteListener = engine.listen('update', () => {
+    engine.listen('update', updateOnce)
+    function updateOnce() {
         console.log('JUST ONE TIME!')
-        deleteListener()
-    })
+
+        // the `unlisten()` removes a event listener
+        engine.unlisten('update', updateOnce)
+    }
 
     // use `def()` to create or update that instance properties
     // example: create a variable named FOO

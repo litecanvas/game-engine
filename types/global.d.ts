@@ -551,9 +551,15 @@ declare global {
      *
      * @param event The game event type
      * @param callback the function that is called when the event occurs
-     * @returns a function to remove the listener
      */
-    function listen(event: string, callback: Function): Function
+    function listen(event: string, callback: Function): void
+    /**
+     * Remove a game loop event listener
+     *
+     * @param event The game event type
+     * @param callback the function that is called when the event occurs
+     */
+    function unlisten(event: string, callback: Function): void
     /**
      * Call all listeners attached to a game event
      *
