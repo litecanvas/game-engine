@@ -1079,9 +1079,8 @@ export default function litecanvas(settings = {}) {
          *
          * @param {string} eventName the event type name
          * @param {Function} callback the function that is called when the event occurs
-         * @returns {Function} a function to remove the listener
          */
-        listen(eventName, callback) {
+        listen: (eventName, callback) => {
             DEV: assert(
                 'string' === typeof eventName,
                 loggerPrefix + 'listen() 1st param must be a string'
@@ -1095,9 +1094,29 @@ export default function litecanvas(settings = {}) {
 
             _eventListeners[eventName] = _eventListeners[eventName] || new Set()
             _eventListeners[eventName].add(callback)
+        },
 
-            // return a function to remove this event listener
-            return () => _eventListeners[eventName]?.delete(callback)
+        /**
+         * Remove a game event listener
+         *
+         * @param {string} eventName the event type name
+         * @param {Function} callback the function that is called when the event occurs
+         */
+        unlisten: (eventName, callback) => {
+            DEV: assert(
+                'string' === typeof eventName,
+                loggerPrefix + 'unlisten() 1st param must be a string'
+            )
+            DEV: assert(
+                'function' === typeof callback,
+                loggerPrefix + 'unlisten() 2nd param must be a function'
+            )
+
+            eventName = lowerCase(eventName)
+
+            if (_eventListeners[eventName]) {
+                _eventListeners[eventName].delete(callback)
+            }
         },
 
         /**
