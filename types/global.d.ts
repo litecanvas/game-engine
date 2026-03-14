@@ -547,21 +547,25 @@ declare global {
      */
     function use(callback: pluginCallback): void
     /**
-     * Add a game loop event listener
+     * Add a game loop event listener.
      *
      * @param event The game event type
      * @param callback the function that is called when the event occurs
      */
     function listen(event: string, callback: Function): void
     /**
-     * Remove a game loop event listener
+     * Remove a game loop event listener.
      *
      * @param event The game event type
      * @param callback the function that is called when the event occurs
      */
     function unlisten(event: string, callback: Function): void
     /**
-     * Call all listeners attached to a game event
+     * Call all listeners attached to a game event.
+     *
+     * Note: when the `litecanvas()` "loop" option is `null` (default),
+     * `emit()` will first call a global function matching the event name (if it exists).
+     * E.g: `emit("boom", 10)` calls `window.boom(10)`.
      *
      * @param event The game event type
      * @param [arg1] any data to be passed over the listeners
@@ -589,10 +593,14 @@ declare global {
      */
     function palc(a?: number, b?: number): void
     /**
-     * Define or update a instance property
+     * Define or update a instance property.
      *
-     * @param key
-     * @param value
+     * Note: when the `litecanvas()` option "global" is `true` (default),
+     * `def()` with set/update a global property.
+     * E.g: `def('ONE', 1)` also do `window.ONE = 1`.
+     *
+     * @param key the property name
+     * @param value the property value
      */
     function def(key: string, value: any): void
     /**
