@@ -7,7 +7,7 @@ function createGrid(w, h) {
         grid.push([])
 
         for (let x = 0; x < w; x++) {
-            grid[y].push(0)
+            grid[y].push(randi(0, 1))
         }
     }
 
@@ -62,6 +62,8 @@ function habitability(state, x, y) {
 }
 
 function init() {
+    framerate(1)
+
     rows = 20
     cols = 20
 
@@ -70,22 +72,15 @@ function init() {
     board = createGrid(cols, rows)
 
     lastUpdated = 0
-    currentTime = 0
 
-    mode = 'edit'
+    mode = 'play'
 }
 
 function update(dt) {
-    currentTime += dt
-
-    if (currentTime - lastUpdated >= 1) {
-        lastUpdated = currentTime
-
-        if (mode == 'play') {
-            board = nextState(board, (state, x, y) => {
-                return habitability(state, x, y)
-            })
-        }
+    if (mode == 'play') {
+        board = nextState(board, (state, x, y) => {
+            return habitability(state, x, y)
+        })
     }
 }
 

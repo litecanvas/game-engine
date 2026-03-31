@@ -541,11 +541,12 @@ declare global {
      */
     function canvas(): HTMLCanvasElement
     /**
-     * Prepares a plugin to be loaded
+     * Loads a plugin
      *
      * @param callback
+     * @param config
      */
-    function use(callback: pluginCallback): void
+    function use(callback: pluginCallback, config: object): void
     /**
      * Add a game loop event listener.
      *
@@ -572,8 +573,9 @@ declare global {
      * @param [arg2] any data to be passed over the listeners
      * @param [arg3] any data to be passed over the listeners
      * @param [arg4] any data to be passed over the listeners
+     * @returns always returns the second argument
      */
-    function emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
+    function emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): any
     /**
      * Set new palette colors or restore the default palette.
      *
@@ -596,7 +598,7 @@ declare global {
      * Define or update a instance property.
      *
      * Note: when the `litecanvas()` option "global" is `true` (default),
-     * `def()` with set/update a global property.
+     * `def()` with set/update a window property.
      * E.g: `def('ONE', 1)` also do `window.ONE = 1`.
      *
      * @param key the property name

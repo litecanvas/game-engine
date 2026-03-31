@@ -86,7 +86,7 @@ export default function litecanvas(settings = {}) {
         _colorPaletteState = [],
         /** @type {number[]} */
         _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
-        /** @type {string} list of functions copied from `Math` module*/
+        /** @type {string} list of functions copied from `Math` module */
         _mathFunctions =
             'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp',
         /**
@@ -155,7 +155,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the value in radians
          */
         deg2rad: (degs) => {
-            DEV: assert(isNumber(degs), 'deg2rad: 1st param must be a number')
+            DEV: assert(isNumber(degs), 'deg2rad() 1st param must be a number')
 
             return (math.PI / 180) * degs
         },
@@ -167,7 +167,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the value in degrees
          */
         rad2deg: (rads) => {
-            DEV: assert(isNumber(rads), 'rad2deg: 1st param must be a number')
+            DEV: assert(isNumber(rads), 'rad2deg() 1st param must be a number')
 
             return (180 / math.PI) * rads
         },
@@ -706,9 +706,10 @@ export default function litecanvas(settings = {}) {
          *
          * Default = `1.2`
          *
-         * @param value
+         * @param {number} value
          */
         textgap(value) {
+            DEV: assert(isNumber(value), loggerPrefix + 'textgap() 1st param must be a number')
             _fontLineHeight = value
         },
 
@@ -833,8 +834,9 @@ export default function litecanvas(settings = {}) {
                 loggerPrefix + 'paint() 3rd param must be a function'
             )
             DEV: assert(
-                (options && null == options.scale) || isNumber(options.scale),
-                loggerPrefix + 'paint() 4th param (options.scale) must be a number'
+                (options && null == options.scale) ||
+                    (isNumber(options.scale) && options.scale > 0),
+                loggerPrefix + 'paint() 4th param (options.scale) must be a positive number'
             )
             DEV: assert(
                 (options && null == options.canvas) || options.canvas instanceof OffscreenCanvas,
@@ -867,6 +869,13 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
          */
         ctx(context) {
+            DEV: assert(
+                null == context ||
+                    context instanceof CanvasRenderingContext2D ||
+                    context instanceof OffscreenCanvasRenderingContext2D,
+                loggerPrefix + 'ctx() 1st param must be an [Offscreen]CanvasRenderingContext2D'
+            )
+
             if (context) {
                 _ctx = context
             }
@@ -910,14 +919,11 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} [y]
          */
-        scale(x, y) {
+        scale(x, y = x) {
             DEV: assert(isNumber(x), loggerPrefix + 'scale() 1st param must be a number')
-            DEV: assert(
-                null == y || isNumber(y),
-                loggerPrefix + 'scale() 2nd param must be a number'
-            )
+            DEV: assert(isNumber(y), loggerPrefix + 'scale() 2nd param must be a number')
 
-            _ctx.scale(x, y || x)
+            _ctx.scale(x, y)
         },
 
         /**
@@ -982,7 +988,7 @@ export default function litecanvas(settings = {}) {
         clip(callback) {
             DEV: assert(
                 'function' === typeof callback,
-                loggerPrefix + 'clip() 1st param must be a function'
+                loggerPrefix + 'clip() 1st param must be a function (ctx) => void'
             )
 
             beginPath(_ctx)
@@ -1055,14 +1061,15 @@ export default function litecanvas(settings = {}) {
         canvas: () => _canvas,
 
         /**
-         * Prepares a plugin to be loaded
+         * Loads a Litecanvas plugin
          *
          * @param {pluginCallback} callback
+         * @param {object} [config]
          */
         use(callback, config = {}) {
             DEV: assert(
                 'function' === typeof callback,
-                loggerPrefix + 'use() 1st param must be a function'
+                loggerPrefix + 'use() 1st param must be a function (instance, config) => any'
             )
             DEV: assert(
                 'object' === typeof config,
@@ -1129,6 +1136,7 @@ export default function litecanvas(settings = {}) {
          * @param {any} [arg2] any data to be passed over the listeners
          * @param {any} [arg3] any data to be passed over the listeners
          * @param {any} [arg4] any data to be passed over the listeners
+         * @returns {any} always returns the second argument
          */
         emit(eventName, arg1, arg2, arg3, arg4) {
             DEV: assert(
@@ -1148,6 +1156,8 @@ export default function litecanvas(settings = {}) {
 
                 triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
             }
+
+            return arg1
         },
 
         /**
@@ -1202,7 +1212,7 @@ export default function litecanvas(settings = {}) {
          * Define or update a instance property.
          *
          * Note: when the `litecanvas()` option "global" is `true` (default),
-         * `def()` with set/update a global property.
+         * `def()` with set/update a window property.
          *
          * E.g: `def('ONE', 1)` do `window.ONE = 1`.
          *
@@ -1266,30 +1276,43 @@ export default function litecanvas(settings = {}) {
             const internals = [
                 // 0
                 settings,
+
                 // 1
                 _initialized,
+
                 // 2
                 _fpsInterval / 1000,
+
                 // 3
                 _canvasScale,
+
                 // 4
                 _eventListeners,
+
                 // 5
                 _colorPalette,
+
                 // 6
                 _defaultSound,
+
                 // 7
                 _timeScale,
+
                 // 8
                 root.zzfxV,
+
                 // 9
                 _rngSeed,
+
                 // 10
                 _fontSize,
+
                 // 11
                 _fontFamily,
+
                 // 12
                 _colorPaletteState,
+
                 // 13
                 _fontLineHeight,
             ]
@@ -1342,8 +1365,8 @@ export default function litecanvas(settings = {}) {
          * Shutdown the litecanvas instance and remove all event listeners.
          */
         quit() {
-            // emit "quit" event to manual clean ups
-            instance.emit('quit')
+            // emit "shutdown" event to manual clean ups
+            instance.emit('shutdown')
 
             // stop the game loop (update & draw)
             instance.pause()
@@ -1826,11 +1849,7 @@ export default function litecanvas(settings = {}) {
     }
 
     // init the engine (async)
-    if ('loading' === document.readyState) {
-        on(root, 'DOMContentLoaded', () => raf(init))
-    } else {
-        _rafid = raf(init)
-    }
+    _rafid = raf(init)
 
     return instance
 }
