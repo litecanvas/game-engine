@@ -525,11 +525,12 @@ type LitecanvasInstance = {
      */
     canvas(): HTMLCanvasElement
     /**
-     * Prepares a plugin to be loaded
+     * Loads a plugin
      *
      * @param callback
+     * @param config
      */
-    use(callback: pluginCallback): void
+    use(callback: pluginCallback, config: object): void
     /**
      * Add a game loop event listener.
      *
@@ -556,13 +557,14 @@ type LitecanvasInstance = {
      * @param [arg2] any data to be passed over the listeners
      * @param [arg3] any data to be passed over the listeners
      * @param [arg4] any data to be passed over the listeners
+     * @returns always returns the second argument
      */
-    emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): void
+    emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): any
     /**
      * Define or update a instance property.
      *
      * Note: when the `litecanvas()` option "global" is `true` (default),
-     * `def()` with set/update a global property.
+     * `def()` with set/update a window property.
      * E.g: `def('ONE', 1)` also do `window.ONE = 1`.
      *
      * @param key the property name
@@ -703,7 +705,7 @@ type LitecanvasGameLoop = {
 
 type drawCallback = (context: OffscreenCanvasRenderingContext2D) => void
 
-type pluginCallback = (instance: LitecanvasInstance, config?: any) => any
+type pluginCallback = (instance: LitecanvasInstance, config?: object) => any
 
 type clipCallback = (ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void
 
