@@ -651,7 +651,7 @@ declare global {
     /**
      * Returns `true` if the engine loop is paused.
      */
-    function paused(): boolean
+    function ispaused(): boolean
     /**
      * Shutdown the litecanvas instance and remove all event listeners.
      */

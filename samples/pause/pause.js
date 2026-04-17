@@ -9,7 +9,7 @@ function init() {
 
 // tap to pause or resume
 function tapped() {
-    paused() ? resume() : pause()
+    ispaused() ? resume() : pause()
 }
 
 function update(dt) {

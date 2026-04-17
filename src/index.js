@@ -1331,8 +1331,11 @@ export default function litecanvas(settings = {}) {
          * Pauses the engine loop (update & draw).
          */
         pause() {
-            _paused = true
-            cancelAnimationFrame(_rafid)
+            if (!_paused) {
+                _paused = true
+                cancelAnimationFrame(_rafid)
+                instance.emit('paused')
+            }
         },
 
         /**
@@ -1349,6 +1352,7 @@ export default function litecanvas(settings = {}) {
                 _accumulated = _fpsInterval
                 _lastFrameTime = perf.now()
                 _rafid = raf(drawFrame)
+                instance.emit('resumed')
             }
         },
 
@@ -1357,7 +1361,7 @@ export default function litecanvas(settings = {}) {
          *
          * @returns {boolean}
          */
-        paused() {
+        ispaused() {
             return _paused
         },
 
