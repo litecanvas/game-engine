@@ -635,7 +635,7 @@ type LitecanvasInstance = {
     /**
      * Returns `true` if the engine loop is paused.
      */
-    paused(): boolean
+    ispaused(): boolean
     /**
      * Shutdown the litecanvas instance and remove all event listeners.
      */
