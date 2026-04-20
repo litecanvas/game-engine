@@ -1155,7 +1155,7 @@ export default function litecanvas(settings = {}) {
                 if (
                     !settings.loop &&
                     root[eventName] !== instance[eventName] &&
-                    'call' in root[eventName] /* if is a function */
+                    'function' === typeof root[eventName] /* if is a function */
                 ) {
                     root[eventName](arg1, arg2, arg3, arg4)
                 }
