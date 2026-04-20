@@ -2,6 +2,10 @@ litecanvas({
     width: 5,
 })
 
+listen('pal', (palette) => {
+    console.log(`pallete changed to a ${palette.length}-color pallete`)
+})
+
 function init() {
     // update the color palette to PICO-8 colors
     pal([
