@@ -65,3 +65,7 @@ function tapped(x, y) {
         emit('player-moved', x, y)
     }
 }
+
+window['player-moved'] = () => {
+    console.log("it's me, a global function!")
+}

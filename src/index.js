@@ -1149,9 +1149,17 @@ export default function litecanvas(settings = {}) {
 
                 triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
 
-                if (!settings.loop && 'function' === typeof root[eventName]) {
+                // if the "loop" option not exists,
+                // calls a global function with the same name as the event,
+                // as long as it's not a global litecanvas function (to avoid infinite loops)
+                if (
+                    !settings.loop &&
+                    root[eventName] !== instance[eventName] &&
+                    'function' === typeof root[eventName] /* if is a function */
+                ) {
                     root[eventName](arg1, arg2, arg3, arg4)
                 }
+
                 triggerEvent(eventName, arg1, arg2, arg3, arg4)
 
                 triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
@@ -1179,6 +1187,8 @@ export default function litecanvas(settings = {}) {
             _colorPalette = colors || defaultPalette
             _colorPaletteState = []
             _defaultTextColor = textColor
+
+            instance.emit('pal', _colorPalette, _defaultTextColor)
         },
 
         /**
@@ -1369,8 +1379,8 @@ export default function litecanvas(settings = {}) {
          * Shutdown the litecanvas instance and remove all event listeners.
          */
         quit() {
-            // emit "shutdown" event to manual clean ups
-            instance.emit('shutdown')
+            // emit "quit" event to manual clean ups
+            instance.emit('quit')
 
             // stop the game loop (update & draw)
             instance.pause()

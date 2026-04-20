@@ -1,14 +1,14 @@
-const e = litecanvas()
+litecanvas()
 
 function init() {
     x = 0
     y = H / 2
     vel = 2000
 
-    listen('shutdown', () => {
+    listen('quit', () => {
         cls()
-        text(10, 10, 'Refresh the page to restart', 1)
-        text(10, 40, 'Note: quit() do not remove the canvas', 1)
+        text(10, 10, 'Refresh the page to restart', 3)
+        text(10, 40, 'Note: quit() do not remove the canvas', 2)
     })
 }
 
