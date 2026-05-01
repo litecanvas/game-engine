@@ -51,7 +51,7 @@ export default function litecanvas(settings = {}) {
     let /** @type {boolean} */
         _initialized = false,
         /** @type {boolean} */
-        _paused = true,
+        _paused,
         /** @type {HTMLCanvasElement} _canvas */
         _canvas,
         /** @type {number} */
@@ -68,8 +68,8 @@ export default function litecanvas(settings = {}) {
         _fpsInterval = 1000 / 60,
         /** @type {number} */
         _accumulated,
-        /** @type {number?} */
-        _rafid,
+        /** @type {number} */
+        _rafid = 0,
         /** @type {number} */
         _defaultTextColor = 3,
         /** @type {string} */
@@ -86,9 +86,6 @@ export default function litecanvas(settings = {}) {
         _colorPaletteState = [],
         /** @type {number[]} */
         _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
-        /** @type {string} list of functions copied from `Math` module */
-        _mathFunctions =
-            'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp',
         /**
          * @type {Object<string,Set<Function>>} game event listeners
          */
@@ -1343,7 +1340,7 @@ export default function litecanvas(settings = {}) {
         pause() {
             if (!_paused) {
                 _paused = true
-                cancelAnimationFrame(_rafid)
+                _rafid = ~~cancelAnimationFrame(_rafid)
                 instance.emit('paused')
             }
         },
@@ -1358,10 +1355,8 @@ export default function litecanvas(settings = {}) {
                     'resume() cannot be called before the "init" event and neither after the quit() function'
             )
             if (_initialized && _paused) {
+                startGameLoop()
                 _paused = false
-                _accumulated = _fpsInterval
-                _lastFrameTime = perf.now()
-                _rafid = raf(drawFrame)
                 instance.emit('resumed')
             }
         },
@@ -1409,9 +1404,18 @@ export default function litecanvas(settings = {}) {
     }
 
     // prettier-ignore
-    for (const k of _mathFunctions.split(',')) {
+    const mathProps = 'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp'
+    for (const k of mathProps.split(',')) {
         // import native Math functions
         instance[k] = math[k]
+    }
+
+    function startGameLoop() {
+        if (!_rafid) {
+            _accumulated = 0
+            _lastFrameTime = perf.now()
+            _rafid = raf(drawFrame)
+        }
     }
 
     function init() {
@@ -1600,6 +1604,7 @@ export default function litecanvas(settings = {}) {
             })
         }
 
+        // default keyboard handler
         if (settings.keyboardEvents) {
             /** @type {Set<string>} */
             const _keysDown = new Set()
@@ -1677,8 +1682,10 @@ export default function litecanvas(settings = {}) {
 
         // start the engine
         _initialized = true
-        instance.resume()
         instance.emit('init', instance)
+        if (!_paused) {
+            startGameLoop()
+        }
     }
 
     function drawFrame() {
@@ -1703,22 +1710,24 @@ export default function litecanvas(settings = {}) {
         }
 
         if (updated) {
+            // draws only when an update happens.
             instance.emit('draw', _ctx)
+
+            // sometimes the FPS locks at a value below 60
+            // and does not go back up, even with a very simple logic.
+            // One solution I found was to reset the variable that
+            // accumulates time between frames, when multiple updates occur.
             if (updated > 1) {
                 _accumulated = 0
-                DEV: console.warn(
-                    loggerPrefix +
-                        'the last frame updated ' +
-                        updated +
-                        ' times. This can drop the FPS if it keeps happening.'
-                )
             }
         }
     }
 
     function setupCanvas() {
+        const d = document
+
         if ('string' === typeof settings.canvas) {
-            _canvas = document.querySelector(settings.canvas)
+            _canvas = d.querySelector(settings.canvas)
             DEV: assert(
                 null != _canvas,
                 loggerPrefix + 'litecanvas() option "canvas" is an invalid CSS selector'
@@ -1727,7 +1736,7 @@ export default function litecanvas(settings = {}) {
             _canvas = settings.canvas
         }
 
-        _canvas = _canvas || document.createElement('canvas')
+        _canvas = _canvas || d.createElement('canvas')
 
         DEV: assert(
             _canvas instanceof HTMLElement && 'CANVAS' === _canvas.tagName,
@@ -1742,7 +1751,7 @@ export default function litecanvas(settings = {}) {
         resizeCanvas()
 
         if (!_canvas.parentNode) {
-            document.body.appendChild(_canvas)
+            d.body.appendChild(_canvas)
         }
 
         _canvas.style.imageRendering = 'pixelated'
@@ -1863,7 +1872,7 @@ export default function litecanvas(settings = {}) {
     }
 
     // init the engine (async)
-    _rafid = raf(init)
+    raf(init)
 
     return instance
 }
