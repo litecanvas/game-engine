@@ -1005,13 +1005,19 @@ export default function litecanvas(settings = {}) {
          *
          * @see https://github.com/KilledByAPixel/ZzFX
          */
-        sfx(zzfxParams, pitchSlide = 0, volumeFactor = 1) {
+        sfx(zzfxParams, pitchSlide, volumeFactor) {
             DEV: assert(
                 null == zzfxParams || Array.isArray(zzfxParams),
                 loggerPrefix + 'sfx() 1st param must be an array'
             )
-            DEV: assert(isNumber(pitchSlide), loggerPrefix + 'sfx() 2nd param must be a number')
-            DEV: assert(isNumber(volumeFactor), loggerPrefix + 'sfx() 3rd param must be a number')
+            DEV: assert(
+                null == pitchSlide || isNumber(pitchSlide),
+                loggerPrefix + 'sfx() 2nd param must be a number'
+            )
+            DEV: assert(
+                null == volumeFactor || isNumber(volumeFactor),
+                loggerPrefix + 'sfx() 3rd param must be a number'
+            )
 
             if (
                 !root.zzfxV ||
@@ -1020,12 +1026,12 @@ export default function litecanvas(settings = {}) {
                 return false
             }
 
-            zzfxParams = zzfxParams || _defaultSound
+            zzfxParams ||= _defaultSound
 
             // if has other arguments, copy the sound to not change the original
-            if (pitchSlide !== 0 || volumeFactor !== 1) {
+            if (pitchSlide || volumeFactor) {
                 zzfxParams = zzfxParams.slice()
-                zzfxParams[0] = volumeFactor * (zzfxParams[0] || 1)
+                zzfxParams[0] = (volumeFactor || 1) * (zzfxParams[0] || 1)
                 zzfxParams[10] = ~~zzfxParams[10] + pitchSlide
             }
 
