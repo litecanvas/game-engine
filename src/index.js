@@ -11,8 +11,7 @@ import { version } from './version.js'
  * @returns {LitecanvasInstance}
  */
 export default function litecanvas(settings = {}) {
-    const /** @type {Window} */
-        root = window,
+    const root = window,
         math = Math,
         perf = performance,
         TWO_PI = math.PI * 2,
@@ -48,7 +47,8 @@ export default function litecanvas(settings = {}) {
     // setup the settings default values
     settings = Object.assign(defaults, settings)
 
-    let /** @type {boolean} */
+    let _loop = settings.loop,
+        /** @type {boolean} */
         _initialized = false,
         /** @type {boolean} */
         _paused,
@@ -1150,7 +1150,7 @@ export default function litecanvas(settings = {}) {
                 // calls a global function with the same name as the event,
                 // as long as it's not a global litecanvas function (to avoid infinite loops)
                 if (
-                    !settings.loop &&
+                    !_loop &&
                     root[eventName] !== instance[eventName] &&
                     'function' === typeof root[eventName] /* if is a function */
                 ) {
@@ -1865,9 +1865,9 @@ export default function litecanvas(settings = {}) {
     setupCanvas()
 
     // setup default event listeners
-    if (settings.loop) {
-        for (const eventName in settings.loop) {
-            if (settings.loop[eventName]) instance.listen(eventName, settings.loop[eventName])
+    if (_loop) {
+        for (const eventName in _loop) {
+            if (_loop[eventName]) instance.listen(eventName, _loop[eventName])
         }
     }
 

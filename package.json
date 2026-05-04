@@ -34,9 +34,9 @@
     "devDependencies": {
         "@happy-dom/global-registrator": "^20.9.0",
         "@size-limit/preset-small-lib": "^12.1.0",
-        "@swc/core": "^1.15.32",
-        "ava": "^7.0.0",
-        "esbuild": "^0.27.7",
+        "@swc/core": "^1.15.33",
+        "ava": "^8.0.0",
+        "esbuild": "^0.28.0",
         "genversion": "^3.2.0",
         "gzip-size": "^7.0.0",
         "prettier": "^3.8.3",
