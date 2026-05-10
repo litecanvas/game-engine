@@ -460,56 +460,6 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Draw a circle outline
-         *
-         * @param {number} x
-         * @param {number} y
-         * @param {number} radius
-         * @param {number} [color=0] the color index
-         */
-        circ(x, y, radius, color) {
-            DEV: assert(isNumber(x), loggerPrefix + 'circ() 1st param must be a number')
-            DEV: assert(isNumber(y), loggerPrefix + 'circ() 2nd param must be a number')
-            DEV: assert(
-                isNumber(radius) && radius >= 0,
-                loggerPrefix + 'circ() 3rd param must be a positive number or zero'
-            )
-            DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                loggerPrefix + 'circ() 4th param must be a positive number or zero'
-            )
-
-            beginPath(_ctx)
-            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
-            instance.stroke(color)
-        },
-
-        /**
-         * Draw a color-filled circle
-         *
-         * @param {number} x
-         * @param {number} y
-         * @param {number} radius
-         * @param {number} [color=0] the color index
-         */
-        circfill(x, y, radius, color) {
-            DEV: assert(isNumber(x), loggerPrefix + 'circfill() 1st param must be a number')
-            DEV: assert(isNumber(y), loggerPrefix + 'circfill() 2nd param must be a number')
-            DEV: assert(
-                isNumber(radius) && radius >= 0,
-                loggerPrefix + 'circfill() 3rd param must be a positive number or zero'
-            )
-            DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                loggerPrefix + 'circfill() 4th param must be a positive number or zero'
-            )
-
-            beginPath(_ctx)
-            _ctx.arc(~~x, ~~y, ~~radius, 0, TWO_PI)
-            instance.fill(color)
-        },
-
-        /**
          * Draw a ellipse outline
          *
          * @param {number} x
@@ -567,6 +517,52 @@ export default function litecanvas(settings = {}) {
             beginPath(_ctx)
             _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TWO_PI)
             instance.fill(color)
+        },
+
+        /**
+         * Draw a circle outline
+         *
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radius
+         * @param {number} [color=0] the color index
+         */
+        circ(x, y, radius, color) {
+            DEV: assert(isNumber(x), loggerPrefix + 'circ() 1st param must be a number')
+            DEV: assert(isNumber(y), loggerPrefix + 'circ() 2nd param must be a number')
+            DEV: assert(
+                isNumber(radius) && radius >= 0,
+                loggerPrefix + 'circ() 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isNumber(color) && color >= 0),
+                loggerPrefix + 'circ() 4th param must be a positive number or zero'
+            )
+
+            instance.oval(x, y, radius, radius, color)
+        },
+
+        /**
+         * Draw a color-filled circle
+         *
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radius
+         * @param {number} [color=0] the color index
+         */
+        circfill(x, y, radius, color) {
+            DEV: assert(isNumber(x), loggerPrefix + 'circfill() 1st param must be a number')
+            DEV: assert(isNumber(y), loggerPrefix + 'circfill() 2nd param must be a number')
+            DEV: assert(
+                isNumber(radius) && radius >= 0,
+                loggerPrefix + 'circfill() 3rd param must be a positive number or zero'
+            )
+            DEV: assert(
+                null == color || (isNumber(color) && color >= 0),
+                loggerPrefix + 'circfill() 4th param must be a positive number or zero'
+            )
+
+            instance.ovalfill(x, y, radius, radius, color)
         },
 
         /**
