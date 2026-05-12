@@ -1026,10 +1026,11 @@ export default function litecanvas(settings = {}) {
             zzfxParams ||= _defaultSound
 
             // if has other arguments, copy the sound to not change the original
-            if (pitchSlide || volumeFactor) {
+            if (pitchSlide || volumeFactor >= 0) {
                 zzfxParams = zzfxParams.slice()
-                zzfxParams[0] = (volumeFactor || 1) * (zzfxParams[0] || 1)
+                zzfxParams[0] = volumeFactor * (zzfxParams[0] || 1)
                 zzfxParams[10] = ~~zzfxParams[10] + pitchSlide
+                console.log(zzfxParams)
             }
 
             zzfx.apply(0, zzfxParams)
