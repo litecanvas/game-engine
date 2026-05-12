@@ -17,6 +17,7 @@ export default function litecanvas(settings = {}) {
         TWO_PI = math.PI * 2,
         loggerPrefix = '[Litecanvas] ',
         raf = requestAnimationFrame,
+        isNumber = Number.isFinite,
         /** @type {Function[]} */
         _browserEventListeners = [],
         /** @type {(elem: EventTarget, evt: string, callback: (event: Event) => void) => void} */
@@ -30,7 +31,6 @@ export default function litecanvas(settings = {}) {
         preventDefault = (ev) => ev.preventDefault(),
         /** @type {(c: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void} */
         beginPath = (c) => c.beginPath(),
-        isNumber = Number.isFinite,
         zzfx = setupZzFX(root),
         /** @type {LitecanvasOptions} */
         defaults = {
@@ -52,7 +52,7 @@ export default function litecanvas(settings = {}) {
         _initialized = false,
         /** @type {boolean} */
         _paused,
-        /** @type {HTMLCanvasElement} _canvas */
+        /** @type {HTMLCanvasElement} */
         _canvas,
         /** @type {number} */
         _canvasScale = 1,
@@ -703,6 +703,7 @@ export default function litecanvas(settings = {}) {
          */
         textgap(value) {
             DEV: assert(isNumber(value), loggerPrefix + 'textgap() 1st param must be a number')
+
             _fontLineHeight = value
         },
 
