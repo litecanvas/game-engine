@@ -247,7 +247,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(max), 'wrap() 3rd parameter must be a number')
             DEV: assert(max > min, 'wrap() the 2nd parameter must be less than the 3rd parameter')
 
-            return value - (max - min) * ~~((value - min) / (max - min))
+            return value - (max - min) * math.floor((value - min) / (max - min))
         },
 
         /**
