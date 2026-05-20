@@ -5,7 +5,6 @@ litecanvas({
 function draw() {
     cls(1)
 
-    // -1
     if (MX === -1) {
         return text(20, 20, 'move your mouse', 2)
     }

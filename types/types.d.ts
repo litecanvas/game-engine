@@ -5,9 +5,9 @@ type LitecanvasInstance = {
     H: number
     /** the amount of time (in seconds) since the game started */
     T: number
-    /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
+    /** The current mouse's horizontal (X) position or `-1` (if the mouse was not used or detected) */
     MX: number
-    /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
+    /** The current mouse's vertical (Y) position or `-1` (if the mouse was not used or detected) */
     MY: number
 
     /** MATH API */
@@ -53,6 +53,19 @@ type LitecanvasInstance = {
      * @returns the value in degrees
      */
     rad2deg(rads: number): number
+    /**
+     * Modulus (Euclidean division).
+     *
+     * Note: When `b == 0` returns `0`, rather than `NaN`.
+     *
+     * @param a dividend
+     * @param b divisor
+     * @returns the remainder
+     * @example
+     *      mod(-1, 5) // => 4
+     *      -1 % 5 // => -1
+     */
+    mod(a: number, b: number): number
     /**
      * Returns the rounded value of an number to optional precision (number of digits after the decimal point).
      *
@@ -418,10 +431,23 @@ type LitecanvasInstance = {
         context?: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
     ): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
     /**
-     * saves the current drawing style settings and transformations
+     * Saves the current drawing style settings and, optionally, transforms (translate/rotate/scale) the canvas.
+     *
+     * @param [translateX]
+     * @param [translateY]
+     * @param [rotation] in radians
+     * @param [scaleX]
+     * @param [scaleY]
+     *
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
      */
-    push(): void
+    push(
+        translateX?: number,
+        translateY?: number,
+        rotation?: number,
+        scaleX?: number,
+        scaleY?: number
+    ): void
     /**
      * restores the drawing style settings and transformations
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore

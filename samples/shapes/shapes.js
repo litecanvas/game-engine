@@ -6,7 +6,6 @@ function init() {
     gap = 40
     lineDashPattern = [30, 15]
     lineDashOffset = 0
-    lineWidth = 3
     types = [
         () => rectfill(0, 0, size, size, 2),
         () => rect(0, 0, size, size, 1),
