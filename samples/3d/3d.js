@@ -50,8 +50,7 @@ function update(dt) {
 function draw() {
     cls(0)
 
-    push()
-    translate(W / 2, H / 2)
+    push(W / 2, H / 2)
     for (let i = 0; i < 4; i++) {
         connect(i, (i + 1) % 4, projected)
         connect(i + 4, ((i + 1) % 4) + 4, projected)
