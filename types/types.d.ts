@@ -389,15 +389,32 @@ type LitecanvasInstance = {
      */
     image(x: number, y: number, source: CanvasImageSource): void
     /**
-     * Draw a sprite pixel by pixel represented by a string. Each pixel must be a base 36 number or a dot:
+     * Draw a sprite, using a string of rows and columns representing a bitmask.
+     * - Each colored pixel must be a base 36 number (0-9 or a-z).
+     * - Use "." (dot) for transparent pixels.
+     * - Any other characters (like symbols) are ignored.
+     * - empty lines are ignored
      *
-     * - A base 36 number (`0-9` or `a-z`) represent a pixel color (supporting color palettes with max 36 colors).
-     * - A dot (`.`) represent a transparent pixel.
-     * - Spaces are ignored and can be used to improve the visualization.
-     *
-     * @param x the position X of the first pixel
-     * @param y the position Y of the first pixel
+     * @param x
+     * @param y
      * @param pixels
+     * @see https://litecanvas.js.org/tools/pixel-art-editor.html
+     * @example
+     * function draw() {
+     *   // a little white key 8x8 sprite
+     *   const littleKeySprite = `
+     *     ........
+     *     .3......
+     *     323.....
+     *     3.333333
+     *     3.322323
+     *     232..2.2
+     *     .2......
+     *     ........
+     *   `
+     *   // draw the sprite pixels at position x=10, y=10
+     *   spr(10, 10, littleKeySprite)
+     * }
      */
     spr(x: number, y: number, pixels: string): void
     /**

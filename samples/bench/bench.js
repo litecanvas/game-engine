@@ -38,7 +38,7 @@ function init() {
             `
             ),
         {
-            scale: 3,
+            scale: 4,
         }
     )
     state.size = state.sprite.width
@@ -63,7 +63,7 @@ function init() {
 
 function draw() {
     // Clear the canvas
-    cls(0)
+    cls(3)
 
     // Particle animation
     const particles = state.particles

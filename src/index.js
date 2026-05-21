@@ -776,7 +776,11 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Draw a sprite pixel by pixel represented by a string. Each pixel must be a base 36 number (0-9 or a-z) or a dot.
+         * Draw a sprite, using a string of rows and columns representing a bitmask.
+         * - Each colored pixel must be a base 36 number (0-9 or a-z).
+         * - Use "." (dot) for transparent pixels.
+         * - Any other characters (like symbols) are ignored.
+         * - empty lines are ignored
          *
          * @param {number} x
          * @param {number} y
@@ -787,14 +791,15 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(y), 'spr() 2nd parameter must be a number')
             DEV: assert('string' === typeof pixels, 'spr() 3rd parameter must be a string')
 
-            const rows = pixels.trim().split('\n')
+            const rows = pixels
+                .replace(/[^\w.\n]/g, '')
+                .split('\n')
+                .filter((s) => s)
 
-            for (let row = 0; row < rows.length; row++) {
-                const chars = rows[row].trim()
-                for (let col = 0; col < chars.length; col++) {
-                    const char = chars[col]
-                    if (char !== '.' && char !== ' ') {
-                        instance.rectfill(x + col, y + row, 1, 1, parseInt(char, 36) || 0)
+            for (let i = 0; i < rows.length; i++) {
+                for (let j = 0; j < rows[i].length; j++) {
+                    if (rows[i][j] !== '.') {
+                        instance.rectfill(x + j, y + i, 1, 1, parseInt(rows[i][j], 36) || 0)
                     }
                 }
             }
