@@ -34,13 +34,13 @@
     "devDependencies": {
         "@happy-dom/global-registrator": "^20.9.0",
         "@size-limit/preset-small-lib": "^12.1.0",
-        "@swc/core": "^1.15.33",
-        "ava": "^7.0.0",
+        "@swc/core": "^1.15.40",
+        "ava": "^8.0.1",
         "esbuild": "^0.28.0",
         "genversion": "^3.2.0",
         "gzip-size": "^7.0.0",
         "prettier": "^3.8.3",
-        "sinon": "^21.1.2",
+        "sinon": "^22.0.0",
         "size-limit": "^12.1.0",
         "tap-min": "^3.0.0"
     },
