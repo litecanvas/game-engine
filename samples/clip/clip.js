@@ -46,7 +46,7 @@ function draw() {
 }
 
 function clipcirc(x, y, radius) {
-    clip((_ctx) => _ctx.arc(x, y, radius, 0, TWO_PI))
+    clip((_ctx) => _ctx.arc(x, y, radius, 0, TAU))
 }
 
 function cliprect(x, y, width, height) {

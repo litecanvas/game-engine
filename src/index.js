@@ -14,7 +14,7 @@ export default function litecanvas(settings = {}) {
     const root = window,
         math = Math,
         perf = performance,
-        TWO_PI = math.PI * 2,
+        TAU = math.PI * 2,
         raf = requestAnimationFrame,
         isNumber = Number.isFinite,
         /** @type {Function[]} */
@@ -117,20 +117,9 @@ export default function litecanvas(settings = {}) {
          * Twice the value of the mathematical constant PI (π).
          * Approximately 6.28318
          *
-         * Note: TWO_PI radians equals 360°, PI radians equals 180°,
-         * HALF_PI radians equals 90°, and HALF_PI/2 radians equals 45°.
-         *
          * @type {number}
          */
-        TWO_PI,
-
-        /**
-         * Half the value of the mathematical constant PI (π).
-         * Approximately 1.57079
-         *
-         * @type {number}
-         */
-        HALF_PI: TWO_PI / 4,
+        TAU,
 
         /**
          * Calculates a linear (interpolation) value over t%.
@@ -181,9 +170,6 @@ export default function litecanvas(settings = {}) {
          * @param {number} a dividend
          * @param {number} b divisor
          * @returns {number} the remainder
-         * @example
-         *      mod(-1, 5) // => 4
-         *      -1 % 5 // => -1
          */
         mod(a, b) {
             DEV: assert(isNumber(a), 'mod() 1st parameter must be a number')
@@ -499,7 +485,7 @@ export default function litecanvas(settings = {}) {
 
             beginPath(_ctx)
 
-            _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TWO_PI)
+            _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TAU)
             instance.stroke(color)
         },
 
@@ -530,7 +516,7 @@ export default function litecanvas(settings = {}) {
 
             beginPath(_ctx)
 
-            _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TWO_PI)
+            _ctx.ellipse(~~x, ~~y, ~~radiusX, ~~radiusY, 0, 0, TAU)
             instance.fill(color)
         },
 
@@ -1337,6 +1323,15 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
+         * Returns `true` if the engine loop is paused.
+         *
+         * @returns {boolean}
+         */
+        ispaused() {
+            return _paused
+        },
+
+        /**
          * Pauses the engine loop (update & draw).
          */
         pause() {
@@ -1361,15 +1356,6 @@ export default function litecanvas(settings = {}) {
                 _paused = false
                 instance.emit('resumed')
             }
-        },
-
-        /**
-         * Returns `true` if the engine loop is paused.
-         *
-         * @returns {boolean}
-         */
-        ispaused() {
-            return _paused
         },
 
         /**
@@ -1421,6 +1407,8 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
+        resizeCanvas()
+
         // listen window resize event when "autoscale" is enabled
         if (settings.autoscale) {
             on(root, 'resize', resizeCanvas)
@@ -1748,16 +1736,14 @@ export default function litecanvas(settings = {}) {
 
         on(_canvas, 'click', () => focus())
 
-        resizeCanvas()
-
         if (!_canvas.parentNode) {
             d.body.appendChild(_canvas)
         }
 
-        _canvas.style.imageRendering = 'pixelated'
-
         // disable default browser's right click in canvas
         _canvas.oncontextmenu = () => false
+
+        resizeCanvas()
     }
 
     function resizeCanvas() {
@@ -1774,6 +1760,11 @@ export default function litecanvas(settings = {}) {
 
             'litecanvas() option "width" is required when the option "height" is defined'
         )
+        DEV: assert(
+            'boolean' === typeof settings.autoscale ||
+                (isNumber(settings.autoscale) && settings.autoscale > 1),
+            'litecanvas() option "autoscale" must be boolean or a number > 1'
+        )
 
         const width = settings.width > 0 ? settings.width : innerWidth,
             height = settings.width > 0 ? settings.height || settings.width : innerHeight
@@ -1783,6 +1774,9 @@ export default function litecanvas(settings = {}) {
 
         _canvas.width = width
         _canvas.height = height
+
+        /** @ts-ignore */
+        _canvas.style = 'image-rendering:pixelated'
 
         if (settings.autoscale) {
             let maxScale = +settings.autoscale

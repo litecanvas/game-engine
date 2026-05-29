@@ -26,7 +26,7 @@ function update() {
 
     if (stars.length < numberOfStars) {
         for (let i = 0; i < numberOfStars - stars.length; i += 1) {
-            let angle = rand() * TWO_PI
+            let angle = rand() * TAU
             let radius = Math.sqrt(rand()) * (W / 2)
 
             let x = radius * Math.cos(angle)
@@ -47,7 +47,7 @@ function update() {
         stars[i][3] = size
 
         if (z < 1) {
-            let angle = rand() * TWO_PI
+            let angle = rand() * TAU
             let radius = Math.sqrt(rand()) * (W / 2)
             stars[i][0] = radius * Math.cos(angle)
             stars[i][1] = radius * Math.sin(angle)

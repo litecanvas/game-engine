@@ -28,9 +28,9 @@ function draw() {
     const minutes = date.getMinutes()
     const hour = date.getHours()
 
-    const s = map(seconds, 0, 60, 0, TWO_PI) - HALF_PI
-    const m = map(minutes + norm(seconds, 0, 60), 0, 60, 0, TWO_PI) - HALF_PI
-    const h = map(hour + norm(minutes, 0, 60), 0, 24, 0, TWO_PI * 2) - HALF_PI
+    const s = map(seconds, 0, 60, 0, TAU) - PI / 2
+    const m = map(minutes + norm(seconds, 0, 60), 0, 60, 0, TAU) - PI / 2
+    const h = map(hour + norm(minutes, 0, 60), 0, 24, 0, TAU * 2) - PI / 2
 
     // Draw the hands of the clock
     linewidth(1)

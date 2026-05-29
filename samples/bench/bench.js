@@ -9,7 +9,7 @@ litecanvas({
     width: state.width,
     height: state.height,
     canvas: '#c',
-    autoscale: false,
+    // autoscale: false,
 })
 
 use(pluginFrameRateMeter)

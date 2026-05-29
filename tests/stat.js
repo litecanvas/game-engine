@@ -58,7 +58,6 @@ test('stat(2) returns the current delta time (dt) value', async (t) => {
 
 test('stat(3) returns current canvas element scale factor', async (t) => {
     {
-        const expected = 2
         const scaled = litecanvas({
             global: false,
 
@@ -66,24 +65,31 @@ test('stat(3) returns current canvas element scale factor', async (t) => {
             height: window.innerHeight / 2,
             autoscale: true,
         })
-        const actual = scaled.stat(3)
+        await onLitecanvas(scaled, 'init', () => {
+            const expected = 2
 
-        t.is(actual, expected)
-        scaled.quit()
+            const actual = scaled.stat(3)
+
+            t.is(actual, expected)
+            scaled.quit()
+        })
     }
 
     {
-        const expected = 1
         const notScaled = litecanvas({
             global: false,
 
             width: 320,
             autoscale: false,
         })
-        const actual = notScaled.stat(3)
+        await onLitecanvas(notScaled, 'init', () => {
+            const expected = 1
 
-        t.is(actual, expected)
-        notScaled.quit()
+            const actual = notScaled.stat(3)
+
+            t.is(actual, expected)
+            notScaled.quit()
+        })
     }
 })
 
