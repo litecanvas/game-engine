@@ -25,16 +25,8 @@ declare global {
     /**
      * Twice the value of the mathematical constant PI (π).
      * Approximately 6.28318
-     *
-     * Note: TWO_PI radians equals 360°, PI radians equals 180°,
-     * HALF_PI radians equals 90°, and HALF_PI/2 radians equals 45°.
      */
-    var TWO_PI: number
-    /**
-     * Half the value of the mathematical constant PI (π).
-     * Approximately 1.57079
-     */
-    var HALF_PI: number
+    var TAU: number
     /**
      * Calculates a linear (interpolation) value over t%.
      *
@@ -68,8 +60,8 @@ declare global {
      * @param b divisor
      * @returns the remainder
      * @example
-     *      mod(-1, 5) // => 4
-     *      -1 % 5 // => -1
+     * mod(-1, 5) // => 4
+     * -1 % 5 // => -1
      */
     function mod(a: number, b: number): number
     /**

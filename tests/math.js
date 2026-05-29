@@ -23,12 +23,8 @@ test('PI', async (t) => {
     t.is(local.PI, Math.PI)
 })
 
-test('TWO_PI', async (t) => {
-    t.is(local.TWO_PI, Math.PI * 2)
-})
-
-test('HALF_PI', async (t) => {
-    t.is(local.HALF_PI, Math.PI / 2)
+test('TAU', async (t) => {
+    t.is(local.TAU, Math.PI * 2)
 })
 
 test('lerp', async (t) => {
@@ -40,12 +36,12 @@ test('lerp', async (t) => {
 
 test('deg2rad', async (t) => {
     t.is(local.deg2rad(180), local.PI)
-    t.is(local.deg2rad(360), local.TWO_PI)
+    t.is(local.deg2rad(360), local.TAU)
 })
 
 test('rad2deg', async (t) => {
     t.is(local.rad2deg(local.PI), 180)
-    t.is(local.rad2deg(local.HALF_PI), 90)
+    t.is(local.rad2deg(local.TAU), 360)
 })
 
 test('clamp', async (t) => {
@@ -98,4 +94,12 @@ test('dist', async (t) => {
     const expected = 100
     const actual = local.dist(0, 0, 0, 100)
     t.is(actual, expected)
+})
+
+test('mod', async (t) => {
+    {
+        const expected = 4
+        const actual = local.mod(-1, 5)
+        t.is(actual, expected)
+    }
 })

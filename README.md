@@ -342,8 +342,7 @@ Like `MX` and `MY`, Litecanvas also declares these other variables:
 - `H`: the height of the game canvas
 - `T`: the amount of seconds since the game started
 - `PI`: approximately 3.14 radians (or 180 degrees)
-- `TWO_PI`: approximately 6.28 radians (or 360 degrees)
-- `HALF_PI`: approximately 1.57 radians (or 90 degrees)
+- `TAU`: approximately 6.28 radians (or 360 degrees)
 
 ### And much more!
 

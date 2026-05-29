@@ -10,7 +10,8 @@ litecanvas()
 // const 3 = 3
 // const 2 = 2
 
-const ONE_AND_HALF_PI = (3 * Math.PI) / 2
+const ONE_AND_HALF_PI = (3 * PI) / 2
+const HALF_PI = PI / 2
 
 const MIDPOINT = 600
 
@@ -46,21 +47,21 @@ const player = {
     },
 
     init: function () {
-        this.heading = Math.PI / 2 // player angle
+        this.heading = HALF_PI
         this.position = { x: 100, y: 100 }
         this.velocity = { x: 0, y: 0 }
     },
 }
 
 function rayLength(ax, ay, bx, by) {
-    return Math.sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay))
+    return sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay))
 }
 
 function rayNormalize(angle) {
-    let normalizedAngle = angle % TWO_PI
+    let normalizedAngle = angle % TAU
 
     if (normalizedAngle < 0) {
-        normalizedAngle += TWO_PI
+        normalizedAngle += TAU
     }
 
     return normalizedAngle
@@ -111,30 +112,30 @@ function draw() {
             hx = player.position.x,
             hy = player.position.y
 
-        let rayAngle = player.heading - (Math.PI / 180) * 30
+        let rayAngle = player.heading - (PI / 180) * 30
 
         for (let r = 0; r < 60; r++) {
             // check horizontal lines
 
             let depthOfFieldX = 0
-            const atan = -1 / Math.tan(rayAngle)
+            const atan = -1 / tan(rayAngle)
 
             // looking down
-            if (rayAngle > Math.PI) {
+            if (rayAngle > PI) {
                 rayY = ((player.position.y >> 6) << 6) - 0.0001
                 rayX = (player.position.y - rayY) * atan + player.position.x
                 offsetY = -64
                 offsetX = -offsetY * atan
             }
             // looking up
-            if (rayAngle < Math.PI) {
+            if (rayAngle < PI) {
                 rayY = ((player.position.y >> 6) << 6) + 64
                 rayX = (player.position.y - rayY) * atan + player.position.x
                 offsetY = +64
                 offsetX = -offsetY * atan
             }
             // looking sideways
-            if (rayAngle === 0 || rayAngle === Math.PI) {
+            if (rayAngle === 0 || rayAngle === PI) {
                 rayX = player.position.x
                 rayY = player.position.y
                 depthOfFieldX = 8
@@ -165,7 +166,7 @@ function draw() {
                 vx = player.position.x,
                 vy = player.position.y
             let depthOfFieldV = 0
-            const ntan = -Math.tan(rayAngle)
+            const ntan = -tan(rayAngle)
 
             // looking left
             if (rayAngle > HALF_PI && rayAngle < ONE_AND_HALF_PI) {
@@ -182,7 +183,7 @@ function draw() {
                 offsetY = -offsetX * ntan
             }
             // looking up or down
-            if (rayAngle === 0 || rayAngle === Math.PI) {
+            if (rayAngle === 0 || rayAngle === PI) {
                 rayX = player.position.x
                 rayY = player.position.y
                 depthOfFieldV = 8
@@ -230,7 +231,7 @@ function draw() {
             // ray wall
 
             const fishAngle = rayNormalize(player.heading - rayAngle)
-            const dist = Math.min(distH, distV) * Math.cos(fishAngle)
+            const dist = min(distH, distV) * cos(fishAngle)
 
             let lineHeight = (map.size * 512) / dist
             if (lineHeight > 512) {
@@ -245,7 +246,7 @@ function draw() {
             linewidth(8)
             line(MIDPOINT + r * 8, 0, MIDPOINT + r * 8, lineHeight + lineOffset, wallColor)
 
-            rayAngle = rayNormalize(rayAngle + Math.PI / 180)
+            rayAngle = rayNormalize(rayAngle + PI / 180)
             alpha(1)
         }
     }
@@ -259,12 +260,12 @@ function draw() {
     {
         if (iskeydown('a') || iskeydown('ArrowLeft')) {
             player.heading -= 0.05
-            player.velocity.x = Math.cos(player.heading) * 5
-            player.velocity.y = Math.sin(player.heading) * 5
+            player.velocity.x = cos(player.heading) * 5
+            player.velocity.y = sin(player.heading) * 5
         } else if (iskeydown('d') || iskeydown('ArrowRight')) {
             player.heading += 0.05
-            player.velocity.x = Math.cos(player.heading) * 5
-            player.velocity.y = Math.sin(player.heading) * 5
+            player.velocity.x = cos(player.heading) * 5
+            player.velocity.y = sin(player.heading) * 5
         }
 
         if (iskeydown('w') || iskeydown('ArrowUp')) {
