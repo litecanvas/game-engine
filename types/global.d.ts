@@ -688,6 +688,14 @@ declare global {
      */
     function ispaused(): boolean
     /**
+     * Resizes the canvas
+     *
+     * @param width
+     * @param height
+     * @param autoscale
+     */
+    function resize(width: number, height?: number, autoscale?: boolean | number): void
+    /**
      * Shutdown the litecanvas instance and remove all event listeners.
      */
     function quit(): void

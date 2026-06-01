@@ -45,7 +45,7 @@ export default function litecanvas(settings = {}) {
 
     DEV: assert(
         null == settings || 'object' === typeof settings,
-        'litecanvas() 1st parameter must be a object'
+        'litecanvas() 1st argument must be a object'
     )
 
     // setup the settings default values
@@ -53,7 +53,7 @@ export default function litecanvas(settings = {}) {
 
     let _loop = settings.loop,
         /** @type {boolean} */
-        _initialized = false,
+        _initialized,
         /** @type {boolean} */
         _paused,
         /** @type {HTMLCanvasElement} */
@@ -131,9 +131,9 @@ export default function litecanvas(settings = {}) {
          * @tutorial https://gamedev.net/tutorials/programming/general-and-gameplay-programming/a-brief-introduction-to-lerp-r4954/
          */
         lerp: (start, end, t) => {
-            DEV: assert(isNumber(start), 'lerp() 1st parameter must be a number')
-            DEV: assert(isNumber(end), 'lerp() 2nd parameter must be a number')
-            DEV: assert(isNumber(t), 'lerp() 3rd parameter must be a number')
+            DEV: assert(isNumber(start), 'lerp() 1st argument must be a number')
+            DEV: assert(isNumber(end), 'lerp() 2nd argument must be a number')
+            DEV: assert(isNumber(t), 'lerp() 3rd argument must be a number')
 
             return start + t * (end - start)
         },
@@ -145,7 +145,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the value in radians
          */
         deg2rad: (degs) => {
-            DEV: assert(isNumber(degs), 'deg2rad() 1st parameter must be a number')
+            DEV: assert(isNumber(degs), 'deg2rad() 1st argument must be a number')
 
             return (math.PI / 180) * degs
         },
@@ -157,7 +157,7 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the value in degrees
          */
         rad2deg: (rads) => {
-            DEV: assert(isNumber(rads), 'rad2deg() 1st parameter must be a number')
+            DEV: assert(isNumber(rads), 'rad2deg() 1st argument must be a number')
 
             return (180 / math.PI) * rads
         },
@@ -172,8 +172,8 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the remainder
          */
         mod(a, b) {
-            DEV: assert(isNumber(a), 'mod() 1st parameter must be a number')
-            DEV: assert(isNumber(b) && b >= 0, 'mod() 2nd parameter must be a non-negative number')
+            DEV: assert(isNumber(a), 'mod() 1st argument must be a number')
+            DEV: assert(isNumber(b) && b >= 0, 'mod() 2nd argument must be a non-negative number')
 
             return ((a % b) + b) % b || 0
         },
@@ -188,10 +188,10 @@ export default function litecanvas(settings = {}) {
          * @returns {number} rounded number.
          */
         round: (n, precision = 0) => {
-            DEV: assert(isNumber(n), 'round() 1st parameter must be a number')
+            DEV: assert(isNumber(n), 'round() 1st argument must be a number')
             DEV: assert(
                 isNumber(precision) && precision >= 0,
-                'round() 2nd parameter must be a non-negative number'
+                'round() 2nd argument must be a non-negative number'
             )
 
             if (!precision) {
@@ -210,10 +210,10 @@ export default function litecanvas(settings = {}) {
          * @returns {number}
          */
         clamp: (value, min, max) => {
-            DEV: assert(isNumber(value), 'clamp() 1st parameter must be a number')
-            DEV: assert(isNumber(min), 'clamp() 2nd parameter must be a number')
-            DEV: assert(isNumber(max), 'clamp() 3rd parameter must be a number')
-            DEV: assert(max >= min, 'clamp() the 2nd parameter must be less than the 3rd parameter')
+            DEV: assert(isNumber(value), 'clamp() 1st argument must be a number')
+            DEV: assert(isNumber(min), 'clamp() 2nd argument must be a number')
+            DEV: assert(isNumber(max), 'clamp() 3rd argument must be a number')
+            DEV: assert(max >= min, 'clamp() the 2nd argument must be less than the 3rd argument')
 
             if (value < min) return min
             if (value > max) return max
@@ -230,10 +230,10 @@ export default function litecanvas(settings = {}) {
          * @returns {number}
          */
         dist: (x1, y1, x2, y2) => {
-            DEV: assert(isNumber(x1), 'dist() 1st parameter must be a number')
-            DEV: assert(isNumber(y1), 'dist() 2nd parameter must be a number')
-            DEV: assert(isNumber(x2), 'dist() 3rd parameter must be a number')
-            DEV: assert(isNumber(y2), 'dist() 4th parameter must be a number')
+            DEV: assert(isNumber(x1), 'dist() 1st argument must be a number')
+            DEV: assert(isNumber(y1), 'dist() 2nd argument must be a number')
+            DEV: assert(isNumber(x2), 'dist() 3rd argument must be a number')
+            DEV: assert(isNumber(y2), 'dist() 4th argument must be a number')
 
             return math.hypot(x2 - x1, y2 - y1)
         },
@@ -247,10 +247,10 @@ export default function litecanvas(settings = {}) {
          * @returns {number}
          */
         wrap: (value, min, max) => {
-            DEV: assert(isNumber(value), 'wrap() 1st parameter must be a number')
-            DEV: assert(isNumber(min), 'wrap() 2nd parameter must be a number')
-            DEV: assert(isNumber(max), 'wrap() 3rd parameter must be a number')
-            DEV: assert(max > min, 'wrap() the 2nd parameter must be less than the 3rd parameter')
+            DEV: assert(isNumber(value), 'wrap() 1st argument must be a number')
+            DEV: assert(isNumber(min), 'wrap() 2nd argument must be a number')
+            DEV: assert(isNumber(max), 'wrap() 3rd argument must be a number')
+            DEV: assert(max > min, 'wrap() the 2nd argument must be less than the 3rd argument')
 
             return value - (max - min) * math.floor((value - min) / (max - min))
         },
@@ -267,14 +267,14 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the remapped number
          */
         map(value, start1, stop1, start2, stop2, withinBounds) {
-            DEV: assert(isNumber(value), 'map() 1st parameter must be a number')
-            DEV: assert(isNumber(start1), 'map() 2nd parameter must be a number')
-            DEV: assert(isNumber(stop1), 'map() 3rd parameter must be a number')
-            DEV: assert(isNumber(start2), 'map() 4th parameter must be a number')
-            DEV: assert(isNumber(stop2), 'map() 5th parameter must be a number')
+            DEV: assert(isNumber(value), 'map() 1st argument must be a number')
+            DEV: assert(isNumber(start1), 'map() 2nd argument must be a number')
+            DEV: assert(isNumber(stop1), 'map() 3rd argument must be a number')
+            DEV: assert(isNumber(start2), 'map() 4th argument must be a number')
+            DEV: assert(isNumber(stop2), 'map() 5th argument must be a number')
             DEV: assert(
                 stop1 !== start1,
-                'map() the 2nd parameter must be different than the 3rd parameter'
+                'map() the 2nd argument must be different than the 3rd argument'
             )
 
             // prettier-ignore
@@ -293,12 +293,12 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the normalized number.
          */
         norm: (value, start, stop) => {
-            DEV: assert(isNumber(value), 'norm() 1st parameter must be a number')
-            DEV: assert(isNumber(start), 'norm() 2nd parameter must be a number')
-            DEV: assert(isNumber(stop), 'norm() 3rd parameter must be a number')
+            DEV: assert(isNumber(value), 'norm() 1st argument must be a number')
+            DEV: assert(isNumber(start), 'norm() 2nd argument must be a number')
+            DEV: assert(isNumber(stop), 'norm() 3rd argument must be a number')
             DEV: assert(
                 start !== stop,
-                'norm() the 2nd parameter must be different than the 3rd parameter'
+                'norm() the 2nd argument must be different than the 3rd argument'
             )
 
             return instance.map(value, start, stop, 0, 1)
@@ -314,9 +314,9 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the random number
          */
         rand: (min = 0.0, max = 1.0) => {
-            DEV: assert(isNumber(min), 'rand() 1st parameter must be a number')
-            DEV: assert(isNumber(max), 'rand() 2nd parameter must be a number')
-            DEV: assert(max >= min, 'rand() the 1st parameter must be less than the 2nd parameter')
+            DEV: assert(isNumber(min), 'rand() 1st argument must be a number')
+            DEV: assert(isNumber(max), 'rand() 2nd argument must be a number')
+            DEV: assert(max >= min, 'rand() the 1st argument must be less than the 2nd argument')
 
             const a = 1664525
             const c = 1013904223
@@ -335,9 +335,9 @@ export default function litecanvas(settings = {}) {
          * @returns {number} the random number
          */
         randi: (min = 0, max = 1) => {
-            DEV: assert(isNumber(min), 'randi() 1st parameter must be a number')
-            DEV: assert(isNumber(max), 'randi() 2nd parameter must be a number')
-            DEV: assert(max >= min, 'randi() the 1st parameter must be less than the 2nd parameter')
+            DEV: assert(isNumber(min), 'randi() 1st argument must be a number')
+            DEV: assert(isNumber(max), 'randi() 2nd argument must be a number')
+            DEV: assert(max >= min, 'randi() the 1st argument must be less than the 2nd argument')
 
             return ~~instance.rand(min, max + 1)
         },
@@ -352,7 +352,7 @@ export default function litecanvas(settings = {}) {
         rseed(value) {
             DEV: assert(
                 isNumber(value) && value >= 0,
-                'rseed() 1st parameter must be a non-negative integer'
+                'rseed() 1st argument must be a non-negative integer'
             )
 
             _rngSeed = ~~value
@@ -367,7 +367,7 @@ export default function litecanvas(settings = {}) {
         cls(color) {
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'cls() 1st parameter must be a non-negative number'
+                'cls() 1st argument must be a non-negative number'
             )
 
             if (null == color) {
@@ -390,23 +390,23 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect
          */
         rect(x, y, width, height, color, radii) {
-            DEV: assert(isNumber(x), 'rect() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'rect() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'rect() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'rect() 2nd argument must be a number')
             DEV: assert(
                 isNumber(width) && width > 0,
-                'rect() 3rd parameter must be a positive number'
+                'rect() 3rd argument must be a positive number'
             )
             DEV: assert(
                 isNumber(height) && height >= 0,
-                'rect() 4th parameter must be a non-negative number'
+                'rect() 4th argument must be a non-negative number'
             )
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'rect() 5th parameter must be a non-negative number'
+                'rect() 5th argument must be a non-negative number'
             )
             DEV: assert(
                 null == radii || isNumber(radii) || (Array.isArray(radii) && radii.length >= 1),
-                'rect() 6th parameter must be a number or array of numbers'
+                'rect() 6th argument must be a number or array of numbers'
             )
 
             beginPath(_ctx)
@@ -432,24 +432,24 @@ export default function litecanvas(settings = {}) {
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
         rectfill(x, y, width, height, color, radii) {
-            DEV: assert(isNumber(x), 'rectfill() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'rectfill() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'rectfill() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'rectfill() 2nd argument must be a number')
             DEV: assert(
                 isNumber(width) && width >= 0,
-                'rectfill() 3rd parameter must be a non-negative number'
+                'rectfill() 3rd argument must be a non-negative number'
             )
             DEV: assert(
                 isNumber(height) && height >= 0,
-                'rectfill() 4th parameter must be a non-negative number'
+                'rectfill() 4th argument must be a non-negative number'
             )
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'rectfill() 5th parameter must be a non-negative number'
+                'rectfill() 5th argument must be a non-negative number'
             )
             DEV: assert(
                 null == radii || isNumber(radii) || (Array.isArray(radii) && radii.length >= 1),
 
-                'rectfill() 6th parameter must be a number or array of at least 2 numbers'
+                'rectfill() 6th argument must be a number or array of at least 2 numbers'
             )
 
             beginPath(_ctx)
@@ -468,19 +468,19 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         oval(x, y, radiusX, radiusY, color) {
-            DEV: assert(isNumber(x), 'oval() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'oval() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'oval() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'oval() 2nd argument must be a number')
             DEV: assert(
                 isNumber(radiusX) && radiusX >= 0,
-                'oval() 3rd parameter must be a non-negative number'
+                'oval() 3rd argument must be a non-negative number'
             )
             DEV: assert(
                 isNumber(radiusY) && radiusY >= 0,
-                'oval() 4th parameter must be a non-negative number'
+                'oval() 4th argument must be a non-negative number'
             )
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'oval() 5th parameter must be a non-negative number'
+                'oval() 5th argument must be a non-negative number'
             )
 
             beginPath(_ctx)
@@ -499,19 +499,19 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         ovalfill(x, y, radiusX, radiusY, color) {
-            DEV: assert(isNumber(x), 'ovalfill() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'ovalfill() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'ovalfill() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'ovalfill() 2nd argument must be a number')
             DEV: assert(
                 isNumber(radiusX) && radiusX >= 0,
-                'ovalfill() 3rd parameter must be a non-negative number'
+                'ovalfill() 3rd argument must be a non-negative number'
             )
             DEV: assert(
                 isNumber(radiusY) && radiusY >= 0,
-                'ovalfill() 4th parameter must be a non-negative number'
+                'ovalfill() 4th argument must be a non-negative number'
             )
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'ovalfill() 5th parameter must be a non-negative number'
+                'ovalfill() 5th argument must be a non-negative number'
             )
 
             beginPath(_ctx)
@@ -529,15 +529,15 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         circ(x, y, radius, color) {
-            DEV: assert(isNumber(x), 'circ() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'circ() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'circ() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'circ() 2nd argument must be a number')
             DEV: assert(
                 isNumber(radius) && radius >= 0,
-                'circ() 3rd parameter must be a non-negative number'
+                'circ() 3rd argument must be a non-negative number'
             )
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'circ() 4th parameter must be a non-negative number'
+                'circ() 4th argument must be a non-negative number'
             )
 
             instance.oval(x, y, radius, radius, color)
@@ -552,15 +552,15 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         circfill(x, y, radius, color) {
-            DEV: assert(isNumber(x), 'circfill() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'circfill() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'circfill() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'circfill() 2nd argument must be a number')
             DEV: assert(
                 isNumber(radius) && radius >= 0,
-                'circfill() 3rd parameter must be a non-negative number'
+                'circfill() 3rd argument must be a non-negative number'
             )
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'circfill() 4th parameter must be a non-negative number'
+                'circfill() 4th argument must be a non-negative number'
             )
 
             instance.ovalfill(x, y, radius, radius, color)
@@ -573,10 +573,10 @@ export default function litecanvas(settings = {}) {
          * @param {number[]} points an array of Xs and Ys coordinates
          */
         shape(points) {
-            DEV: assert(Array.isArray(points), 'shape() 1st parameter must be an array of numbers')
+            DEV: assert(Array.isArray(points), 'shape() 1st argument must be an array of numbers')
             DEV: assert(
                 points.length >= 6,
-                'shape() 1st parameter must be an array with at least 6 numbers (3 points)'
+                'shape() 1st argument must be an array with at least 6 numbers (3 points)'
             )
 
             beginPath(_ctx)
@@ -601,13 +601,13 @@ export default function litecanvas(settings = {}) {
          * @param {number} [color=0] the color index
          */
         line(x1, y1, x2, y2, color) {
-            DEV: assert(isNumber(x1), 'line() 1st parameter must be a number')
-            DEV: assert(isNumber(y1), 'line() 2nd parameter must be a number')
-            DEV: assert(isNumber(x2), 'line() 3rd parameter must be a non-negative number')
-            DEV: assert(isNumber(y2), 'line() 4th parameter must be a non-negative number')
+            DEV: assert(isNumber(x1), 'line() 1st argument must be a number')
+            DEV: assert(isNumber(y1), 'line() 2nd argument must be a number')
+            DEV: assert(isNumber(x2), 'line() 3rd argument must be a non-negative number')
+            DEV: assert(isNumber(y2), 'line() 4th argument must be a non-negative number')
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'line() 5th parameter must be a non-negative number'
+                'line() 5th argument must be a non-negative number'
             )
 
             beginPath(_ctx)
@@ -630,7 +630,7 @@ export default function litecanvas(settings = {}) {
         linewidth(value) {
             DEV: assert(
                 isNumber(value) && value >= 0,
-                'linewidth() 1st parameter must be a non-negative integer'
+                'linewidth() 1st argument must be a non-negative integer'
             )
 
             _ctx.lineWidth = ~~value
@@ -648,9 +648,9 @@ export default function litecanvas(settings = {}) {
         linedash(segments, offset = 0) {
             DEV: assert(
                 Array.isArray(segments) && segments.length > 0,
-                'linedash() 1st parameter must be an array of numbers'
+                'linedash() 1st argument must be an array of numbers'
             )
-            DEV: assert(isNumber(offset), 'linedash() 2nd parameter must be a number')
+            DEV: assert(isNumber(offset), 'linedash() 2nd argument must be a number')
 
             _ctx.setLineDash(segments)
             _ctx.lineDashOffset = offset
@@ -667,13 +667,13 @@ export default function litecanvas(settings = {}) {
          * @param {string} [fontStyle] can be "normal" (default), "italic" and/or "bold".
          */
         text(x, y, message, color = _defaultTextColor, fontStyle = 'normal') {
-            DEV: assert(isNumber(x), 'text() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'text() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'text() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'text() 2nd argument must be a number')
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'text() 4th parameter must be a non-negative number'
+                'text() 4th argument must be a non-negative number'
             )
-            DEV: assert('string' === typeof fontStyle, 'text() 5th parameter must be a string')
+            DEV: assert('string' === typeof fontStyle, 'text() 5th argument must be a string')
 
             _ctx.font = `${fontStyle} ${_fontSize}px ${_fontFamily}`
             _ctx.fillStyle = getColor(color)
@@ -692,7 +692,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} value
          */
         textgap(value) {
-            DEV: assert(isNumber(value), 'textgap() 1st parameter must be a number')
+            DEV: assert(isNumber(value), 'textgap() 1st argument must be a number')
 
             _fontLineHeight = value
         },
@@ -703,7 +703,7 @@ export default function litecanvas(settings = {}) {
          * @param {string} family
          */
         textfont(family) {
-            DEV: assert('string' === typeof family, 'textfont() 1st parameter must be a string')
+            DEV: assert('string' === typeof family, 'textfont() 1st argument must be a string')
 
             _fontFamily = family
         },
@@ -714,7 +714,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} size
          */
         textsize(size) {
-            DEV: assert(isNumber(size), 'textsize() 1st parameter must be a number')
+            DEV: assert(isNumber(size), 'textsize() 1st argument must be a number')
 
             _fontSize = size
         },
@@ -731,7 +731,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(
                 null == align || ['left', 'right', 'center', 'start', 'end'].includes(align),
 
-                'textalign() 1st parameter must be null or one of the following strings: center, left, right, start or end.'
+                'textalign() 1st argument must be null or one of the following strings: center, left, right, start or end.'
             )
             DEV: assert(
                 null == baseline ||
@@ -739,7 +739,7 @@ export default function litecanvas(settings = {}) {
                         baseline
                     ),
 
-                'textalign() 2nd parameter must be null or one of the following strings: middle, top, bottom, hanging, alphabetic or ideographic.'
+                'textalign() 2nd argument must be null or one of the following strings: middle, top, bottom, hanging, alphabetic or ideographic.'
             )
 
             if (align) _ctx.textAlign = align
@@ -755,8 +755,8 @@ export default function litecanvas(settings = {}) {
          * @param {CanvasImageSource} source
          */
         image(x, y, source) {
-            DEV: assert(isNumber(x), 'image() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'image() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'image() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'image() 2nd argument must be a number')
 
             _ctx.drawImage(source, ~~x, ~~y)
         },
@@ -773,9 +773,9 @@ export default function litecanvas(settings = {}) {
          * @param {string} pixels
          */
         spr(x, y, pixels) {
-            DEV: assert(isNumber(x), 'spr() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'spr() 2nd parameter must be a number')
-            DEV: assert('string' === typeof pixels, 'spr() 3rd parameter must be a string')
+            DEV: assert(isNumber(x), 'spr() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'spr() 2nd argument must be a number')
+            DEV: assert('string' === typeof pixels, 'spr() 3rd argument must be a string')
 
             const rows = pixels
                 .replace(/[^\w.\n]/g, '')
@@ -804,23 +804,20 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
          */
         paint(width, height, callback, options = {}) {
-            DEV: assert(
-                isNumber(width) && width >= 1,
-                'paint() 1st parameter must be a positive number'
-            )
+            DEV: assert(isNumber(width) && width >= 1, 'paint() 1st argument must be a number >= 1')
             DEV: assert(
                 isNumber(height) && height >= 1,
-                'paint() 2nd parameter must be a positive number'
+                'paint() 2nd argument must be a number >= 1'
             )
-            DEV: assert('function' === typeof callback, 'paint() 3rd parameter must be a function')
+            DEV: assert('function' === typeof callback, 'paint() 3rd argument must be a function')
             DEV: assert(
                 (options && null == options.scale) ||
                     (isNumber(options.scale) && options.scale > 0),
-                'paint() 4th parameter (options.scale) must be a positive number'
+                'paint() 4th argument (options.scale) must be a positive number'
             )
             DEV: assert(
                 (options && null == options.canvas) || options.canvas instanceof OffscreenCanvas,
-                'paint() 4th parameter (options.canvas) must be an OffscreenCanvas'
+                'paint() 4th argument (options.canvas) must be an OffscreenCanvas'
             )
 
             const /** @type {OffscreenCanvas} */
@@ -853,7 +850,7 @@ export default function litecanvas(settings = {}) {
                 null == context ||
                     context instanceof CanvasRenderingContext2D ||
                     context instanceof OffscreenCanvasRenderingContext2D,
-                'ctx() 1st parameter must be an [Offscreen]CanvasRenderingContext2D'
+                'ctx() 1st argument must be an [Offscreen]CanvasRenderingContext2D'
             )
 
             if (context) {
@@ -875,11 +872,11 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
          */
         push(translateX = 0, translateY = translateX, rotation = 0, scaleX = 1, scaleY = scaleX) {
-            DEV: assert(isNumber(translateX), 'push() 1st parameter must be a number')
-            DEV: assert(isNumber(translateY), 'push() 2nd parameter must be a number')
-            DEV: assert(isNumber(rotation), 'push() 3rd parameter must be a number')
-            DEV: assert(isNumber(scaleX), 'push() 4th parameter must be a number')
-            DEV: assert(isNumber(scaleY), 'push() 5th parameter must be a number')
+            DEV: assert(isNumber(translateX), 'push() 1st argument must be a number')
+            DEV: assert(isNumber(translateY), 'push() 2nd argument must be a number')
+            DEV: assert(isNumber(rotation), 'push() 3rd argument must be a number')
+            DEV: assert(isNumber(scaleX), 'push() 4th argument must be a number')
+            DEV: assert(isNumber(scaleY), 'push() 5th argument must be a number')
 
             _ctx.save()
             instance.translate(translateX, translateY)
@@ -903,8 +900,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          */
         translate(x, y) {
-            DEV: assert(isNumber(x), 'translate() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'translate() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'translate() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'translate() 2nd argument must be a number')
 
             _ctx.translate(~~x, ~~y)
         },
@@ -916,8 +913,8 @@ export default function litecanvas(settings = {}) {
          * @param {number} [y]
          */
         scale(x, y = x) {
-            DEV: assert(isNumber(x), 'scale() 1st parameter must be a number')
-            DEV: assert(isNumber(y), 'scale() 2nd parameter must be a number')
+            DEV: assert(isNumber(x), 'scale() 1st argument must be a number')
+            DEV: assert(isNumber(y), 'scale() 2nd argument must be a number')
 
             _ctx.scale(x, y)
         },
@@ -928,7 +925,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} radians
          */
         rotate(radians) {
-            DEV: assert(isNumber(radians), 'rotate() 1st parameter must be a number')
+            DEV: assert(isNumber(radians), 'rotate() 1st argument must be a number')
 
             _ctx.rotate(radians)
         },
@@ -940,7 +937,7 @@ export default function litecanvas(settings = {}) {
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha
          */
         alpha(value) {
-            DEV: assert(isNumber(value), 'alpha() 1st parameter must be a number')
+            DEV: assert(isNumber(value), 'alpha() 1st argument must be a number')
 
             _ctx.globalAlpha = instance.clamp(value, 0, 1)
         },
@@ -953,7 +950,7 @@ export default function litecanvas(settings = {}) {
         fill(color) {
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'fill() 1st parameter must be a non-negative number'
+                'fill() 1st argument must be a non-negative number'
             )
 
             _ctx.fillStyle = getColor(color)
@@ -968,7 +965,7 @@ export default function litecanvas(settings = {}) {
         stroke(color) {
             DEV: assert(
                 null == color || (isNumber(color) && color >= 0),
-                'stroke() 1st parameter must be a non-negative number'
+                'stroke() 1st argument must be a non-negative number'
             )
 
             _ctx.strokeStyle = getColor(color)
@@ -984,7 +981,7 @@ export default function litecanvas(settings = {}) {
         clip(callback) {
             DEV: assert(
                 'function' === typeof callback,
-                'clip() 1st parameter must be a function (ctx) => void'
+                'clip() 1st argument must be a function (ctx) => void'
             )
 
             beginPath(_ctx)
@@ -1007,15 +1004,15 @@ export default function litecanvas(settings = {}) {
         sfx(zzfxParams, pitchSlide, volumeFactor) {
             DEV: assert(
                 null == zzfxParams || Array.isArray(zzfxParams),
-                'sfx() 1st parameter must be an array'
+                'sfx() 1st argument must be an array'
             )
             DEV: assert(
                 null == pitchSlide || isNumber(pitchSlide),
-                'sfx() 2nd parameter must be a number'
+                'sfx() 2nd argument must be a number'
             )
             DEV: assert(
                 null == volumeFactor || isNumber(volumeFactor),
-                'sfx() 3rd parameter must be a number'
+                'sfx() 3rd argument must be a number'
             )
 
             if (
@@ -1048,7 +1045,7 @@ export default function litecanvas(settings = {}) {
         volume(value) {
             DEV: assert(
                 isNumber(value) && value >= 0,
-                'volume() 1st parameter must be a non-negative number'
+                'volume() 1st argument must be a non-negative number'
             )
 
             root.zzfxV = value
@@ -1071,11 +1068,40 @@ export default function litecanvas(settings = {}) {
         use(callback, config = {}) {
             DEV: assert(
                 'function' === typeof callback,
-                'use() 1st parameter must be a function (instance, config) => any'
+                'use() 1st argument must be a function (instance, config) => any'
             )
-            DEV: assert('object' === typeof config, 'use() 2nd parameter must be an object')
+            DEV: assert('object' === typeof config, 'use() 2nd argument must be an object')
 
             loadPlugin(callback, config)
+        },
+
+        /**
+         * Resizes the canvas
+         *
+         * @param {number} width
+         * @param {number} [height]
+         * @param {boolean|number} [autoscale]
+         */
+        resize(width, height = width, autoscale) {
+            DEV: assert(
+                isNumber(width) && width >= 1,
+                'resize() 1st argument must be a number >= 1'
+            )
+            DEV: assert(
+                isNumber(height) && height >= 1,
+                'resize() 2nd argument must be a number >= 1'
+            )
+            DEV: assert(
+                null == autoscale ||
+                    'boolean' === typeof autoscale ||
+                    (isNumber(autoscale) && autoscale > 1),
+                'resize() 3rd argument must be a boolean or a number > 1'
+            )
+
+            settings.height = height
+            settings.autoscale = null == autoscale ? settings.autoscale : autoscale
+
+            resizeCanvas()
         },
 
         /**
@@ -1085,8 +1111,8 @@ export default function litecanvas(settings = {}) {
          * @param {Function} callback the function that is called when the event occurs
          */
         listen: (eventName, callback) => {
-            DEV: assert('string' === typeof eventName, 'listen() 1st parameter must be a string')
-            DEV: assert('function' === typeof callback, 'listen() 2nd parameter must be a function')
+            DEV: assert('string' === typeof eventName, 'listen() 1st argument must be a string')
+            DEV: assert('function' === typeof callback, 'listen() 2nd argument must be a function')
 
             eventName = lowerCase(eventName)
 
@@ -1101,10 +1127,10 @@ export default function litecanvas(settings = {}) {
          * @param {Function} callback the function that is called when the event occurs
          */
         unlisten: (eventName, callback) => {
-            DEV: assert('string' === typeof eventName, 'unlisten() 1st parameter must be a string')
+            DEV: assert('string' === typeof eventName, 'unlisten() 1st argument must be a string')
             DEV: assert(
                 'function' === typeof callback,
-                'unlisten() 2nd parameter must be a function'
+                'unlisten() 2nd argument must be a function'
             )
 
             eventName = lowerCase(eventName)
@@ -1129,7 +1155,7 @@ export default function litecanvas(settings = {}) {
          * @returns {any} always returns the second argument
          */
         emit(eventName, arg1, arg2, arg3, arg4) {
-            DEV: assert('string' === typeof eventName, 'emit() 1st parameter must be a string')
+            DEV: assert('string' === typeof eventName, 'emit() 1st argument must be a string')
 
             if (_initialized) {
                 eventName = lowerCase(eventName)
@@ -1164,11 +1190,11 @@ export default function litecanvas(settings = {}) {
         pal(colors, textColor = 3) {
             DEV: assert(
                 null == colors || (Array.isArray(colors) && colors.length > 0),
-                'pal() 1st parameter must be null or an array of colors'
+                'pal() 1st argument must be null or an array of colors'
             )
             DEV: assert(
                 isNumber(textColor) && textColor >= 0,
-                'pal() 2nd parameter must be a non-negative number'
+                'pal() 2nd argument must be a non-negative number'
             )
 
             _colorPalette = colors || defaultPalette
@@ -1191,11 +1217,11 @@ export default function litecanvas(settings = {}) {
         palc(a, b) {
             DEV: assert(
                 null == a || (isNumber(a) && a >= 0),
-                'palc() 1st parameter must be a positive number'
+                'palc() 1st argument must be a positive number'
             )
             DEV: assert(
                 isNumber(a) ? isNumber(b) && b >= 0 : null == b,
-                'palc() 2nd parameter must be a positive number'
+                'palc() 2nd argument must be a positive number'
             )
 
             if (null == a) {
@@ -1217,7 +1243,7 @@ export default function litecanvas(settings = {}) {
          * @param {any} value the property value
          */
         def(key, value) {
-            DEV: assert('string' === typeof key, 'def() 1st parameter must be a string')
+            DEV: assert('string' === typeof key, 'def() 1st argument must be a string')
             DEV: if (null == value) {
                 console.warn(
                     `[litecanvas] def() changed the key "${key}" to null (previous value was ${instance[key]})`
@@ -1240,7 +1266,7 @@ export default function litecanvas(settings = {}) {
         timescale(value) {
             DEV: assert(
                 isNumber(value) && value >= 0,
-                'timescale() 1st parameter must be a non-negative number'
+                'timescale() 1st argument must be a non-negative number'
             )
 
             _timeScale = value
@@ -1254,7 +1280,7 @@ export default function litecanvas(settings = {}) {
         framerate(value) {
             DEV: assert(
                 isNumber(value) && value >= 1,
-                'framerate() 1st parameter must be a positive number'
+                'framerate() 1st argument must be a number >= 1'
             )
 
             _fpsInterval = 1000 / ~~value
@@ -1267,7 +1293,7 @@ export default function litecanvas(settings = {}) {
          * @returns {any}
          */
         stat(index) {
-            DEV: assert(isNumber(index), 'stat() 1st parameter must be a number')
+            DEV: assert(isNumber(index), 'stat() 1st argument must be a number')
 
             const internals = [
                 // 0
@@ -1316,7 +1342,7 @@ export default function litecanvas(settings = {}) {
             DEV: assert(
                 index >= 0 && index < internals.length,
 
-                'stat() 1st parameter must be a number between 0 and ' + (internals.length - 1)
+                'stat() 1st argument must be a number between 0 and ' + (internals.length - 1)
             )
 
             return internals[index]
@@ -1407,8 +1433,6 @@ export default function litecanvas(settings = {}) {
     }
 
     function init() {
-        resizeCanvas()
-
         // listen window resize event when "autoscale" is enabled
         if (settings.autoscale) {
             on(root, 'resize', resizeCanvas)
@@ -1610,7 +1634,7 @@ export default function litecanvas(settings = {}) {
              */
             const keyCheck = (keySet, key = '') => {
                 key = lowerCase(key)
-                return !key ? keySet.size > 0 : keySet.has('space' === key ? ' ' : key)
+                return key ? keySet.has('space' === key ? ' ' : key) : keySet.size > 0
             }
 
             /** @type {string} */
@@ -1641,7 +1665,7 @@ export default function litecanvas(settings = {}) {
                 (key) => {
                     DEV: assert(
                         null == key || 'string' === typeof key,
-                        'iskeydown() 1st parameter must be a string or undefined'
+                        'iskeydown() 1st argument must be a string'
                     )
                     return keyCheck(_keysDown, key)
                 }
@@ -1656,7 +1680,7 @@ export default function litecanvas(settings = {}) {
                 (key) => {
                     DEV: assert(
                         null == key || 'string' === typeof key,
-                        'iskeypressed() 1st parameter must be a string or undefined'
+                        'iskeypressed() 1st argument must be a string'
                     )
                     return keyCheck(_keysPress, key)
                 }
@@ -1742,8 +1766,6 @@ export default function litecanvas(settings = {}) {
 
         // disable default browser's right click in canvas
         _canvas.oncontextmenu = () => false
-
-        resizeCanvas()
     }
 
     function resizeCanvas() {
@@ -1857,8 +1879,10 @@ export default function litecanvas(settings = {}) {
 
     // setup the canvas
     setupCanvas()
+    resizeCanvas()
 
     // setup default event listeners
+    // they have high priority
     if (_loop) {
         for (const eventName in _loop) {
             if (_loop[eventName]) instance.listen(eventName, _loop[eventName])
