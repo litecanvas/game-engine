@@ -1,5 +1,4 @@
 litecanvas({
-    width: 600,
     autoscale: false,
 })
 
@@ -13,10 +12,11 @@ function init() {
 }
 
 function draw() {
+    cls(0)
     textalign('center', 'middle')
-    text(W / 2, H / 2 - 50, 'Open your browser console', 3)
-    text(W / 2, H / 2, 'FOO = ' + FOO, 3)
-    text(W / 2, H / 2 + 50, sayhello('Everyone'), 3)
+    text(W / 2, H / 2 - 50, 'Open your browser console')
+    text(W / 2, H / 2, 'FOO = ' + FOO)
+    text(W / 2, H / 2 + 50, sayhello('Everyone'))
 }
 
 function pluginTest(engine, config) {
@@ -27,18 +27,7 @@ function pluginTest(engine, config) {
     console.log('plugin config:', config)
 
     // the `listen()` function registers game event listeners
-    // function listen(type: string, callback: Function): Function
-    engine.listen(
-        // the event name
-        'before:draw',
-        // the event callback
-        function () {
-            engine.cls(1)
-            engine.rectfill(0, 0, 100, 100, 3)
-        }
-    )
-
-    // another `listen()` example
+    // function listen(eventName: string, callback: Function): void
     engine.listen('tapped', function (x, y) {
         engine.sfx()
         console.log(`Tap detected in X=${x} Y=${y}`)
@@ -49,12 +38,22 @@ function pluginTest(engine, config) {
         console.log('JUST ONE TIME!')
 
         // the `unlisten()` removes a event listener
+        // you should pass the same event name and callback
         engine.unlisten('update', updateOnce)
     }
 
     // use `def()` to create or update that instance properties
-    // example: create a variable named FOO
+    // example: create the property engine.FOO and window.FOO (if litecanvas#global = true)
     engine.def('FOO', 42)
+
+    // you can access internal variables with stat()
+    // examples
+    const settings = stat(0)
+    const initialized = stat(1)
+    const colorPalette = stat(5)
+
+    // use resize() to change the canvas size
+    resize(800, 600)
 
     // and finally...
     return {
@@ -64,8 +63,9 @@ function pluginTest(engine, config) {
         },
 
         // or override existing functions
-        clamp() {
-            console.error('`clamp` was overwritten')
+        clamp(val, min, max) {
+            // example: disable a built-in function
+            console.error('`clamp` was disabled')
         },
     }
 }

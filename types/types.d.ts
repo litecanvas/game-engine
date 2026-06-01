@@ -672,6 +672,14 @@ type LitecanvasInstance = {
      */
     ispaused(): boolean
     /**
+     * Resizes the canvas
+     *
+     * @param width
+     * @param height
+     * @param autoscale
+     */
+    resize(width: number, height?: number, autoscale?: boolean | number): void
+    /**
      * Shutdown the litecanvas instance and remove all event listeners.
      */
     quit(): void

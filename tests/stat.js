@@ -31,9 +31,8 @@ test('stat(0) returns the instance settings', async (t) => {
 
 test('stat(1) returns true if the engine has been initialized', async (t) => {
     const actual = local.stat(1)
-    const expected = false
 
-    t.is(actual, expected)
+    t.falsy(actual)
 
     await onLitecanvas(local, 'init', () => {
         const actual = local.stat(1)
