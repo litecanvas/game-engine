@@ -1098,6 +1098,7 @@ export default function litecanvas(settings = {}) {
                 'resize() 3rd argument must be a boolean or a number > 1'
             )
 
+            settings.width = width
             settings.height = height
             settings.autoscale = null == autoscale ? settings.autoscale : autoscale
 
