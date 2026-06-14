@@ -32,14 +32,14 @@
         "creative coding"
     ],
     "devDependencies": {
-        "@happy-dom/global-registrator": "^20.9.0",
+        "@happy-dom/global-registrator": "^20.10.3",
         "@size-limit/preset-small-lib": "^12.1.0",
-        "@swc/core": "^1.15.40",
+        "@swc/core": "^1.15.41",
         "ava": "^8.0.1",
-        "esbuild": "^0.28.0",
+        "esbuild": "^0.28.1",
         "genversion": "^3.2.0",
         "gzip-size": "^7.0.0",
-        "prettier": "^3.8.3",
+        "prettier": "^3.8.4",
         "sinon": "^22.0.0",
         "size-limit": "^12.1.0",
         "tap-min": "^3.0.0"

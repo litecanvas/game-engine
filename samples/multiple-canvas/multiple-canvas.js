@@ -5,7 +5,7 @@ const game1 = litecanvas({
     loop: null,
 })
 
-game1._state = { bg: 2 }
+game1._state = { bg: 0 }
 
 game1.listen('tapped', () => {
     game1._state.bg++
@@ -20,6 +20,11 @@ const game2 = litecanvas({
     autoscale: false,
     width: 128,
     loop: {
+        init() {
+            // use a custom pallete in the 2nd canvas
+            game2.pal(['#302387', '#ff3796', '#00faac', '#fffdaf'])
+        },
+
         tapped() {
             game2._state.bg++
         },
@@ -30,4 +35,4 @@ const game2 = litecanvas({
     },
 })
 
-game2._state = { bg: 1 }
+game2._state = { bg: 0 }
