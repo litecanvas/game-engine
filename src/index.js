@@ -85,7 +85,9 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _rngSeed = Date.now(),
         /** @type {string[]} */
-        _colorPalette = defaultPalette,
+        _currentPalette = defaultPalette,
+        /** @type {string[]} */
+        _lastPalette = defaultPalette,
         /** @type {number[]} */
         _colorPaletteState = [],
         /** @type {number[]} */
@@ -1183,7 +1185,7 @@ export default function litecanvas(settings = {}) {
         },
 
         /**
-         * Set new palette colors or restore the default palette.
+         * Set new palette colors or restore previous palette.
          *
          * @param {string[]} [colors] an array of colors
          * @param {number} [textColor] the default text color this palette
@@ -1198,11 +1200,17 @@ export default function litecanvas(settings = {}) {
                 'pal() 2nd argument must be a non-negative number'
             )
 
-            _colorPalette = colors || defaultPalette
+            if (null == colors) {
+                _currentPalette = _lastPalette
+            } else {
+                _lastPalette = _currentPalette
+                _currentPalette = colors
+            }
+
             _colorPaletteState = []
             _defaultTextColor = textColor
 
-            instance.emit('pal', _colorPalette, _defaultTextColor)
+            instance.emit('pal', _currentPalette, _defaultTextColor)
         },
 
         /**
@@ -1313,7 +1321,7 @@ export default function litecanvas(settings = {}) {
                 _eventListeners,
 
                 // 5
-                _colorPalette,
+                _currentPalette,
 
                 // 6
                 _defaultSound,
@@ -1864,7 +1872,7 @@ export default function litecanvas(settings = {}) {
      */
     function getColor(index) {
         const i = _colorPaletteState[index] ?? index
-        return _colorPalette[~~i % _colorPalette.length]
+        return _currentPalette[~~i % _currentPalette.length]
     }
 
     if (settings.global) {
