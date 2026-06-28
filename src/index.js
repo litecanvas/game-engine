@@ -1427,7 +1427,7 @@ export default function litecanvas(settings = {}) {
     }
 
     // prettier-ignore
-    const mathProps = 'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,trunc,min,max,pow,sqrt,sign,exp'
+    const mathProps = 'PI,sin,cos,atan2,hypot,tan,abs,ceil,floor,min,max,pow,sqrt,sign'
     for (const k of mathProps.split(',')) {
         // import native Math functions
         instance[k] = math[k]
