@@ -163,10 +163,6 @@ declare global {
      */
     function floor(n: number): number
     /**
-     * Returns the integer part of a number by removing any fractional digits.
-     */
-    function trunc(n: number): number
-    /**
      * Returns the smallest of the numbers given as input parameters, or `Infinity` if there are no parameters.
      */
     function min(...ns: number[]): number
@@ -187,10 +183,6 @@ declare global {
      * If the input is 0 or -0, it will be returned as-is.
      */
     function sign(n: number): number
-    /**
-     * Returns the Euler's number raised to the power of a number.
-     */
-    function exp(exponent: number): number
 
     /** RNG API */
     /**
