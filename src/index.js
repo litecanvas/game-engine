@@ -1502,128 +1502,70 @@ export default function litecanvas(settings = {}) {
 
             let _pressingMouse = false
 
-            on(
-                _canvas,
-                'mousedown',
-                /**
-                 * @param {MouseEvent} ev
-                 */
-                (ev) => {
-                    if (!ev.button) {
-                        preventDefault(ev)
-                        const [x, y] = _getXY(ev)
-                        instance.emit('tap', x, y, 0)
-                        _registerTap(0, x, y)
-                        _pressingMouse = true
-                    }
+            on(_canvas, 'pointerdown', (ev) => {
+                const [x, y] = _getXY(ev)
+
+                if ('mouse' === ev.pointerType) {
+                    if (ev.button) return
+                    _pressingMouse = true
                 }
-            )
 
-            on(
-                _canvas,
-                'mouseup',
-                /**
-                 * @param {MouseEvent} ev
-                 */
-                (ev) => {
-                    if (!ev.button) {
-                        preventDefault(ev)
-                        const tap = _taps.get(0)
-                        const [x, y] = _getXY(ev)
-                        if (_checkTapped(tap)) {
-                            instance.emit('tapped', tap.xi, tap.yi, 0)
-                        }
-                        instance.emit('untap', x, y, 0)
-                        _taps.delete(0)
-                        _pressingMouse = false
-                    }
-                }
-            )
+                const id = ev.pointerId
+                _registerTap(id, x, y)
+                instance.emit('tap', x, y, id)
 
-            on(
-                root,
-                'mousemove',
-                /**
-                 * @param {MouseEvent} ev
-                 */
-                (ev) => {
-                    preventDefault(ev)
+                _canvas.setPointerCapture(id)
+            })
 
-                    const [x, y] = _getXY(ev)
+            on(_canvas, 'pointermove', (ev) => {
+                const [x, y] = _getXY(ev)
+
+                if ('mouse' === ev.pointerType) {
                     instance.def('MX', x)
                     instance.def('MY', y)
-
                     if (!_pressingMouse) return
-
-                    instance.emit('tapping', x, y, 0)
-                    _updateTap(0, x, y)
-                }
-            )
-
-            on(
-                _canvas,
-                'touchstart',
-                /**
-                 * @param {TouchEvent} ev
-                 */
-                (ev) => {
-                    preventDefault(ev)
-                    /** @type {TouchList} touches */
-                    const touches = ev.changedTouches
-                    for (const touch of touches) {
-                        const [x, y] = _getXY(touch)
-                        instance.emit('tap', x, y, touch.identifier + 1)
-                        _registerTap(touch.identifier + 1, x, y)
-                    }
-                }
-            )
-
-            on(
-                _canvas,
-                'touchmove',
-                /**
-                 * @param {TouchEvent} ev
-                 */
-                (ev) => {
-                    preventDefault(ev)
-                    const touches = ev.changedTouches
-                    for (const touch of touches) {
-                        const [x, y] = _getXY(touch)
-                        instance.emit('tapping', x, y, touch.identifier + 1)
-                        _updateTap(touch.identifier + 1, x, y)
-                    }
-                }
-            )
-
-            /**
-             * @param {TouchEvent} ev
-             */
-            const _touchEndHandler = (ev) => {
-                preventDefault(ev)
-                const existing = []
-
-                for (const touch of ev.targetTouches) {
-                    existing.push(touch.identifier + 1)
                 }
 
-                for (const [id, tap] of _taps) {
-                    if (existing.includes(id)) continue
-                    if (_checkTapped(tap)) {
-                        instance.emit('tapped', tap.xi, tap.yi, id)
-                    }
-                    instance.emit('untap', tap.x, tap.y, id)
-                    _taps.delete(id)
+                const id = ev.pointerId
+                if (_taps.get(id)) {
+                    instance.emit('tapping', x, y, id)
+                    _updateTap(id, x, y)
                 }
+            })
+
+            const _pointerUpHandler = (ev) => {
+                const id = ev.pointerId
+                const tap = _taps.get(id)
+                const [x, y] = _getXY(ev)
+
+                if (!tap) return
+
+                if ('mouse' === ev.pointerType) {
+                    if (ev.button) return
+                    _pressingMouse = false
+                }
+
+                if (_checkTapped(tap)) {
+                    instance.emit('tapped', tap.xi, tap.yi, id)
+                }
+
+                instance.emit('untap', x, y, id)
+
+                _taps.delete(id)
+                _canvas.releasePointerCapture(id)
             }
 
-            on(_canvas, 'touchend', _touchEndHandler)
-            on(_canvas, 'touchcancel', _touchEndHandler)
+            on(_canvas, 'pointerup', _pointerUpHandler)
+            on(_canvas, 'pointercancel', _pointerUpHandler)
 
             on(root, 'blur', () => {
                 _pressingMouse = false
                 for (const [id, tap] of _taps) {
                     instance.emit('untap', tap.x, tap.y, id)
                     _taps.delete(id)
+                    try {
+                        _canvas.releasePointerCapture(id)
+                    } catch (_) {}
                 }
             })
         }
@@ -1806,8 +1748,7 @@ export default function litecanvas(settings = {}) {
         _canvas.width = width
         _canvas.height = height
 
-        /** @ts-ignore */
-        _canvas.style = 'image-rendering:pixelated'
+        _canvas.style = 'image-rendering:pixelated;touch-action:none'
 
         if (settings.autoscale) {
             let maxScale = +settings.autoscale
