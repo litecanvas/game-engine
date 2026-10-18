@@ -22,7 +22,7 @@ test.after(() => {
     local.quit()
 })
 
-test('clear screen with color', async (t) => {
+test('clear screen with color of the palette (integer)', async (t) => {
     await onLitecanvas(local, 'draw', () => {
         const color = 1
 
@@ -31,6 +31,21 @@ test('clear screen with color', async (t) => {
         t.true(contextSpy.beginPath.called)
         t.true(contextSpy.rect.calledWith(0, 0, local.W, local.H, undefined))
         t.is(contextSpy.fillStyle, colors[color])
+        t.true(contextSpy.fill.called)
+
+        sinon.resetHistory(contextSpy)
+    })
+})
+
+test('clear screen with custom color (string)', async (t) => {
+    await onLitecanvas(local, 'draw', () => {
+        const customColor = '#000'
+
+        local.cls(customColor)
+
+        t.true(contextSpy.beginPath.called)
+        t.true(contextSpy.rect.calledWith(0, 0, local.W, local.H, undefined))
+        t.is(contextSpy.fillStyle, customColor)
         t.true(contextSpy.fill.called)
 
         sinon.resetHistory(contextSpy)
