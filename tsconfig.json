@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es2017",
-        "lib": ["ES2017", "DOM", "DOM.Iterable"],
+        "lib": ["ES2017", "DOM", "DOM.Iterable", "ESNext"],
         "allowJs": true,
         "noEmit": true,
         "baseUrl": "src",
