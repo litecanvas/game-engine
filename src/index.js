@@ -364,12 +364,12 @@ export default function litecanvas(settings = {}) {
         /**
          * Clear the game screen with an optional color.
          *
-         * @param {number} [color] The background color (index) or null/undefined (for transparent)
+         * @param {number|string} [color] The background color (index) or null/undefined (for transparent)
          */
         cls(color) {
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'cls() 1st argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'cls() 1st argument must be a non-negative number or string'
             )
 
             if (null == color) {
@@ -386,7 +386,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {number} width
          * @param {number} height
-         * @param {number} [color=0] the color index
+         * @param {number|string} [color=0] the color index
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/roundRect
@@ -403,8 +403,8 @@ export default function litecanvas(settings = {}) {
                 'rect() 4th argument must be a non-negative number'
             )
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'rect() 5th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'rect() 5th argument must be a non-negative number or string'
             )
             DEV: assert(
                 null == radii || isNumber(radii) || (Array.isArray(radii) && radii.length >= 1),
@@ -430,7 +430,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {number} width
          * @param {number} height
-         * @param {number} [color=0] the color index
+         * @param {number|string} [color=0] the color index
          * @param {number|number[]} [radii] A number or list specifying the radii used to draw a rounded-borders rectangle
          */
         rectfill(x, y, width, height, color, radii) {
@@ -445,8 +445,8 @@ export default function litecanvas(settings = {}) {
                 'rectfill() 4th argument must be a non-negative number'
             )
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'rectfill() 5th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'rectfill() 5th argument must be a non-negative number or string'
             )
             DEV: assert(
                 null == radii || isNumber(radii) || (Array.isArray(radii) && radii.length >= 1),
@@ -467,7 +467,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {number} radiusX
          * @param {number} radiusY
-         * @param {number} [color=0] the color index
+         * @param {number|string} [color=0] the color index
          */
         oval(x, y, radiusX, radiusY, color) {
             DEV: assert(isNumber(x), 'oval() 1st argument must be a number')
@@ -481,8 +481,8 @@ export default function litecanvas(settings = {}) {
                 'oval() 4th argument must be a non-negative number'
             )
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'oval() 5th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'oval() 5th argument must be a non-negative number or string'
             )
 
             beginPath(_ctx)
@@ -498,7 +498,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y
          * @param {number} radiusX
          * @param {number} radiusY
-         * @param {number} [color=0] the color index
+         * @param {number|string} [color=0] the color index
          */
         ovalfill(x, y, radiusX, radiusY, color) {
             DEV: assert(isNumber(x), 'ovalfill() 1st argument must be a number')
@@ -512,8 +512,8 @@ export default function litecanvas(settings = {}) {
                 'ovalfill() 4th argument must be a non-negative number'
             )
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'ovalfill() 5th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'ovalfill() 5th argument must be a non-negative number or string'
             )
 
             beginPath(_ctx)
@@ -528,7 +528,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          * @param {number} radius
-         * @param {number} [color=0] the color index
+         * @param {number|string} [color=0] the color index
          */
         circ(x, y, radius, color) {
             DEV: assert(isNumber(x), 'circ() 1st argument must be a number')
@@ -538,8 +538,8 @@ export default function litecanvas(settings = {}) {
                 'circ() 3rd argument must be a non-negative number'
             )
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'circ() 4th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'circ() 4th argument must be a non-negative number or string'
             )
 
             instance.oval(x, y, radius, radius, color)
@@ -551,7 +551,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          * @param {number} radius
-         * @param {number} [color=0] the color index
+         * @param {number|string} [color=0] the color index
          */
         circfill(x, y, radius, color) {
             DEV: assert(isNumber(x), 'circfill() 1st argument must be a number')
@@ -561,8 +561,8 @@ export default function litecanvas(settings = {}) {
                 'circfill() 3rd argument must be a non-negative number'
             )
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'circfill() 4th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'circfill() 4th argument must be a non-negative number or string'
             )
 
             instance.ovalfill(x, y, radius, radius, color)
@@ -600,7 +600,7 @@ export default function litecanvas(settings = {}) {
          * @param {number} y1
          * @param {number} x2
          * @param {number} y2
-         * @param {number} [color=0] the color index
+         * @param {number|string} [color=0] the color index
          */
         line(x1, y1, x2, y2, color) {
             DEV: assert(isNumber(x1), 'line() 1st argument must be a number')
@@ -608,8 +608,8 @@ export default function litecanvas(settings = {}) {
             DEV: assert(isNumber(x2), 'line() 3rd argument must be a non-negative number')
             DEV: assert(isNumber(y2), 'line() 4th argument must be a non-negative number')
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'line() 5th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'line() 5th argument must be a non-negative number or string'
             )
 
             beginPath(_ctx)
@@ -665,15 +665,15 @@ export default function litecanvas(settings = {}) {
          * @param {number} x
          * @param {number} y
          * @param {string} message the text message
-         * @param {number} [color] the color index
+         * @param {number|string} [color] the color index
          * @param {string} [fontStyle] can be "normal" (default), "italic" and/or "bold".
          */
         text(x, y, message, color = _defaultTextColor, fontStyle = 'normal') {
             DEV: assert(isNumber(x), 'text() 1st argument must be a number')
             DEV: assert(isNumber(y), 'text() 2nd argument must be a number')
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'text() 4th argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'text() 4th argument must be a non-negative number or string'
             )
             DEV: assert('string' === typeof fontStyle, 'text() 5th argument must be a string')
 
@@ -947,12 +947,12 @@ export default function litecanvas(settings = {}) {
         /**
          * Fills the current path with a given color.
          *
-         * @param {number} [color=0]
+         * @param {number|string} [color=0]
          */
         fill(color) {
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'fill() 1st argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'fill() 1st argument must be a non-negative number or string'
             )
 
             _ctx.fillStyle = getColor(color)
@@ -962,12 +962,12 @@ export default function litecanvas(settings = {}) {
         /**
          * Outlines the current path with a given color.
          *
-         * @param {number} [color=0]
+         * @param {number|string} [color=0]
          */
         stroke(color) {
             DEV: assert(
-                null == color || (isNumber(color) && color >= 0),
-                'stroke() 1st argument must be a non-negative number'
+                null == color || (isNumber(color) && color >= 0) || 'string' === typeof color,
+                'stroke() 1st argument must be a non-negative number or string'
             )
 
             _ctx.strokeStyle = getColor(color)
@@ -1867,12 +1867,13 @@ export default function litecanvas(settings = {}) {
     }
 
     /**
-     * @param {number} index
+     * @param {number|string} color
      * @returns {string}
      */
-    function getColor(index) {
-        const i = _colorPaletteState[index] ?? index
-        return _currentPalette[~~i % _currentPalette.length]
+    function getColor(color) {
+        return color >= 0
+            ? _currentPalette[~~(_colorPaletteState[color] ?? color) % _currentPalette.length]
+            : color
     }
 
     if (settings.global) {

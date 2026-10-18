@@ -100,15 +100,28 @@ Litecanvas has a default palette with 4 colors:
 
 <img src=".github/_assets/palette.png" src="The litecanvas color palette" style="2px solid #fff">
 
-Each time a Litecanvas' function ask for a color, you should use an of theses colors by its index.
+Each time a Litecanvas' function ask for a color, you can use an of theses colors by its index (from 0 to 3, by default). But, you can customize the color palette using the `pal()` function. [Example](samples/custom-palette/custom-palette.js)
 
 ```js
-// example: draw a white rectangle
+litecanvas()
+
+// example: draw a white (color #3) rectangle
 let color = 3
 rectfill(0, 0, 32, 32, color)
 ```
 
-> Note: You can customize the color palette using the `pal()` function. [Example](samples/custom-palette/custom-palette.js)
+However, you can also use any other color:
+
+```js
+litecanvas()
+
+// example: draw three "orange" rectangles
+rectfill(0, 0, 32, 32, 'orange')
+rectfill(32, 32, 32, 32, '#ffa500')
+rectfill(64, 64, 32, 32, 'rgb(255, 165, 0)')
+```
+
+[Live Demo](https://litecanvas.js.org?c=eJxNytEKgzAMBdD3fkVwD22hYKerD%2Fub6FIVMjdimX6%2BFZkb5IYL9%2FCYqMPpg7OxSpUl0IrPN9MdHoILpEGIoHgJTj0VINSl3Jhmtdc4MhvvIF9dHdEH1fYHvtNJLjFi8P7fNDcHe04jfWuqEBxcm%2Fy81XYDYQwvNQ%3D%3D)
 
 ### Printing messages
 
@@ -120,9 +133,10 @@ function draw() {
     cls(0)
 
     // print a gray (color #1) text at x=0, y=0
-    text(0, 0, 'Hello!!!', 1)
+    const color = 1
+    text(0, 0, 'Hello!!!', color)
 
-    // use \n to break text lines
+    // use \n to break text lines (by default uses the color #3)
     text(0, 30, 'multi\nline\ntext')
 }
 ```

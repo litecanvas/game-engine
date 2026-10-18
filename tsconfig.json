@@ -9,6 +9,7 @@
             "*": ["types/*"]
         },
         "moduleResolution": "nodenext",
-        "module": "nodenext"
+        "module": "nodenext",
+        "ignoreDeprecations": "6.0"
     }
 }

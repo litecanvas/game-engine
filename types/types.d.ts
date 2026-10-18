@@ -210,7 +210,7 @@ type LitecanvasInstance = {
      *
      * @param color The background color index or `null`
      */
-    cls(color: number | null): void
+    cls(color?: number | string): void
 
     /**
      * Draw a rectangle outline
@@ -229,7 +229,7 @@ type LitecanvasInstance = {
         y: number,
         width: number,
         height: number,
-        color?: number,
+        color?: number | string,
         radii?: number | number[]
     ): void
     /**
@@ -247,7 +247,7 @@ type LitecanvasInstance = {
         y: number,
         width: number,
         height: number,
-        color?: number,
+        color?: number | string,
         radii?: number | number[]
     ): void
     /**
@@ -258,7 +258,7 @@ type LitecanvasInstance = {
      * @param radius
      * @param [color=0] the color index
      */
-    circ(x: number, y: number, radius: number, color?: number): void
+    circ(x: number, y: number, radius: number, color?: number | string): void
     /**
      * Draw a color-filled circle
      *
@@ -267,7 +267,7 @@ type LitecanvasInstance = {
      * @param radius
      * @param [color=0] the color index
      */
-    circfill(x: number, y: number, radius: number, color?: number): void
+    circfill(x: number, y: number, radius: number, color?: number | string): void
     /**
      * Draw a ellipse outline
      *
@@ -277,7 +277,7 @@ type LitecanvasInstance = {
      * @param radiusY
      * @param [color=0] the color index
      */
-    oval(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    oval(x: number, y: number, radiusX: number, radiusY: number, color?: number | string): void
     /**
      * Draw a color-filled ellipse
      *
@@ -287,7 +287,7 @@ type LitecanvasInstance = {
      * @param radiusY
      * @param [color=0] the color index
      */
-    ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number | string): void
     /**
      * Make a custom shape in the canvas context.
      * Then, just use `fill` or `stroke` to draw the shape.
@@ -304,7 +304,7 @@ type LitecanvasInstance = {
      * @param y2
      * @param [color=0] the color index
      */
-    line(x1: number, y1: number, x2: number, y2: number, color?: number): void
+    line(x1: number, y1: number, x2: number, y2: number, color?: number | string): void
     /**
      * Sets the thickness of lines
      *
@@ -332,7 +332,7 @@ type LitecanvasInstance = {
      * @param [color=3] the color index
      * @param [fontStyle="normal"] can be "normal" (default), "italic" and/or "bold"
      */
-    text(x: number, y: number, message: string, color?: number, fontStyle?: string): void
+    text(x: number, y: number, message: string, color?: number | string, fontStyle?: string): void
     /**
      * Set the font family
      *
@@ -486,13 +486,13 @@ type LitecanvasInstance = {
      *
      * @param color
      */
-    fill(color: number): void
+    fill(color?: number | string): void
     /**
      * Outlines the current path with a given color.
      *
      * @param color
      */
-    stroke(color: number): void
+    stroke(color?: number | string): void
     /**
      * Turns a path (in the callback) into the current clipping region.
      *

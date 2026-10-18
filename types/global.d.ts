@@ -1,4 +1,4 @@
-import './types'
+import './types.d.ts'
 
 export default function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
 
@@ -216,7 +216,7 @@ declare global {
      *
      * @param color The background color index or `null`
      */
-    function cls(color: number | null): void
+    function cls(color?: number | string): void
 
     /**
      * Draw a rectangle outline
@@ -235,7 +235,7 @@ declare global {
         y: number,
         width: number,
         height: number,
-        color?: number,
+        color?: number | string,
         radii?: number | number[]
     ): void
     /**
@@ -253,7 +253,7 @@ declare global {
         y: number,
         width: number,
         height: number,
-        color?: number,
+        color?: number | string,
         radii?: number | number[]
     ): void
     /**
@@ -264,7 +264,7 @@ declare global {
      * @param radius
      * @param [color=0] the color index
      */
-    function circ(x: number, y: number, radius: number, color?: number): void
+    function circ(x: number, y: number, radius: number, color?: number | string): void
     /**
      * Draw a color-filled circle
      *
@@ -273,7 +273,7 @@ declare global {
      * @param radius
      * @param [color=0] the color index
      */
-    function circfill(x: number, y: number, radius: number, color?: number): void
+    function circfill(x: number, y: number, radius: number, color?: number | string): void
     /**
      * Draw a ellipse outline
      *
@@ -283,7 +283,13 @@ declare global {
      * @param radiusY
      * @param [color=0] the color index
      */
-    function oval(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    function oval(
+        x: number,
+        y: number,
+        radiusX: number,
+        radiusY: number,
+        color?: number | string
+    ): void
     /**
      * Draw a color-filled ellipse
      *
@@ -293,7 +299,13 @@ declare global {
      * @param radiusY
      * @param [color=0] the color index
      */
-    function ovalfill(x: number, y: number, radiusX: number, radiusY: number, color?: number): void
+    function ovalfill(
+        x: number,
+        y: number,
+        radiusX: number,
+        radiusY: number,
+        color?: number | string
+    ): void
     /**
      * Make a custom shape in the canvas context.
      * Then, just use `fill` or `stroke` to draw the shape.
@@ -316,7 +328,7 @@ declare global {
      * @param y2
      * @param [color=0] the color index
      */
-    function line(x1: number, y1: number, x2: number, y2: number, color?: number): void
+    function line(x1: number, y1: number, x2: number, y2: number, color?: number | string): void
     /**
      * Sets the thickness of lines
      *
@@ -344,7 +356,13 @@ declare global {
      * @param [color=3] the color index
      * @param [fontStyle="normal"] can be "normal" (default), "italic" and/or "bold"
      */
-    function text(x: number, y: number, message: string, color?: number, fontStyle?: string): void
+    function text(
+        x: number,
+        y: number,
+        message: string,
+        color?: number | string,
+        fontStyle?: string
+    ): void
     /**
      * Set the font family
      *
@@ -498,13 +516,13 @@ declare global {
      *
      * @param color
      */
-    function fill(color: number): void
+    function fill(color?: number | string): void
     /**
      * Outlines the current path with a given color.
      *
      * @param color
      */
-    function stroke(color: number): void
+    function stroke(color?: number | string): void
     /**
      * Turns a path (in the callback) into the current clipping region.
      *
