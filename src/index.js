@@ -1504,9 +1504,8 @@ export default function litecanvas(settings = {}) {
 
             on(_canvas, 'pointerdown', (ev) => {
                 const [x, y] = _getXY(ev)
-                const isMouse = 'mouse' === ev.pointerType
 
-                if (isMouse) {
+                if ('mouse' === ev.pointerType) {
                     if (ev.button) return
                     _pressingMouse = true
                 }
@@ -1520,9 +1519,8 @@ export default function litecanvas(settings = {}) {
 
             on(_canvas, 'pointermove', (ev) => {
                 const [x, y] = _getXY(ev)
-                const isMouse = 'mouse' === ev.pointerType
 
-                if (isMouse) {
+                if ('mouse' === ev.pointerType) {
                     instance.def('MX', x)
                     instance.def('MY', y)
                     if (!_pressingMouse) return
@@ -1536,14 +1534,13 @@ export default function litecanvas(settings = {}) {
             })
 
             const _pointerUpHandler = (ev) => {
-                const isMouse = 'mouse' === ev.pointerType
                 const id = ev.pointerId
                 const tap = _taps.get(id)
                 const [x, y] = _getXY(ev)
 
                 if (!tap) return
 
-                if (isMouse) {
+                if ('mouse' === ev.pointerType) {
                     if (ev.button) return
                     _pressingMouse = false
                 }
