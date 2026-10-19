@@ -180,7 +180,8 @@ type LitecanvasInstance = {
 
     /** RNG API */
     /**
-     * Generates a pseudorandom float between min (inclusive) and max (exclusive)
+     * Generates a pseudo random float between min (inclusive) and max (exclusive)
+     * using the Mulberry32 algorithm.
      *
      * @param [min=0.0]
      * @param [max=1.0]
@@ -188,7 +189,7 @@ type LitecanvasInstance = {
      */
     rand(min?: number, max?: number): number
     /**
-     * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
+     * Generates a pseudo random integer between min (inclusive) and max (inclusive)
      *
      * @param [min=0]
      * @param [max=1]
@@ -196,11 +197,11 @@ type LitecanvasInstance = {
      */
     randi(min?: number, max?: number): number
     /**
-     * Initializes the random number generator with an explicit seed value.
+     * Generates a pseudo random integer between min (inclusive) and max (inclusive).
      *
-     * Note: The seed should be a integer number greater than or equal to zero.
-     *
-     * @param value
+     * @param [min=0]
+     * @param [max=1]
+     * @returns the random number
      */
     rseed(value: number): void
 
