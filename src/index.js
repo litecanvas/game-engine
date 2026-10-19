@@ -84,7 +84,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _fontLineHeight = 1.2,
         /** @type {number} */
-        _rngSeed = Date.now() * Math.random(),
+        _rngSeed = Date.now(),
         /** @type {() => number} */
         _rngNext = mulberry32(_rngSeed >>> 0),
         /** @type {string[]} */
