@@ -186,7 +186,8 @@ declare global {
 
     /** RNG API */
     /**
-     * Generates a pseudorandom float between min (inclusive) and max (exclusive)
+     * Generates a pseudo random float between min (inclusive) and max (exclusive)
+     * using the Mulberry32 algorithm.
      *
      * @param [min=0.0]
      * @param [max=1.0]
@@ -194,7 +195,7 @@ declare global {
      */
     function rand(min?: number, max?: number): number
     /**
-     * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
+     * Generates a pseudo random integer between min (inclusive) and max (inclusive).
      *
      * @param [min=0]
      * @param [max=1]
@@ -204,9 +205,7 @@ declare global {
     /**
      * Initializes the random number generator with an explicit seed value.
      *
-     * Note: The seed should be a integer number greater than or equal to zero.
-     *
-     * @param value
+     * @param value the PRNG seed. Must be an non-negative number.
      */
     function rseed(value: number): void
 

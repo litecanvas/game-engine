@@ -3,6 +3,7 @@ import { setupZzFX } from './zzfx.js'
 import { defaultPalette } from './palette.js'
 import { assert } from './dev.js'
 import { version } from './version.js'
+import { mulberry32 } from './mulberry32.js'
 
 /**
  * The litecanvas constructor
@@ -84,13 +85,15 @@ export default function litecanvas(settings = {}) {
         _fontLineHeight = 1.2,
         /** @type {number} */
         _rngSeed = Date.now(),
+        /** @type {() => number} */
+        _rngNext = mulberry32(_rngSeed >>> 0),
         /** @type {string[]} */
         _currentPalette = defaultPalette,
         /** @type {string[]} */
         _lastPalette = defaultPalette,
         /** @type {number[]} */
         _colorPaletteState = [],
-        /** @type {number[]} */
+        /** @type {(number|undefined)[]} */
         _defaultSound = [0.5, 0, 1750, , , 0.3, 1, , , , 600, 0.1],
         /**
          * @type {Object<string,Set<Function>>} game event listeners
@@ -113,6 +116,54 @@ export default function litecanvas(settings = {}) {
 
         /** @type {number} */
         MY: -1,
+
+        /** RNG API */
+        /**
+         * Generates a pseudo random float between min (inclusive) and max (exclusive)
+         * using the Mulberry32 algorithm.
+         *
+         * @param {number} [min=0.0]
+         * @param {number} [max=1.0]
+         * @returns {number} the random number
+         */
+        rand: (min = 0.0, max = 1.0) => {
+            DEV: assert(isNumber(min), 'rand() 1st argument must be a number')
+            DEV: assert(isNumber(max), 'rand() 2nd argument must be a number')
+            DEV: assert(max >= min, 'rand() the 1st argument must be less than the 2nd argument')
+
+            return min + _rngNext() * (max - min)
+        },
+
+        /**
+         * Generates a pseudo random integer between min (inclusive) and max (inclusive).
+         *
+         * @param {number} [min=0]
+         * @param {number} [max=1]
+         * @returns {number} the random number
+         */
+        randi: (min = 0, max = 1) => {
+            DEV: assert(isNumber(min), 'randi() 1st argument must be a number')
+            DEV: assert(isNumber(max), 'randi() 2nd argument must be a number')
+            DEV: assert(max >= min, 'randi() the 1st argument must be less than the 2nd argument')
+
+            return ~~instance.rand(min, max + 1)
+        },
+
+        /**
+         * Initializes the random number generator with an explicit seed value.
+         *
+         * Note: The seed should be a integer number greater than or equal to zero.
+         *
+         * @param {number} value
+         */
+        rseed(value) {
+            DEV: assert(
+                isNumber(value) && value >= 0,
+                'rseed() 1st argument must be a non-negative integer'
+            )
+            _rngSeed = value
+            _rngNext = mulberry32(_rngSeed >>> 0)
+        },
 
         /** MATH API */
         /**
@@ -304,60 +355,6 @@ export default function litecanvas(settings = {}) {
             )
 
             return instance.map(value, start, stop, 0, 1)
-        },
-
-        /** RNG API */
-        /**
-         * Generates a pseudorandom float between min (inclusive) and max (exclusive)
-         * using the Linear Congruential Generator (LCG) algorithm.
-         *
-         * @param {number} [min=0.0]
-         * @param {number} [max=1.0]
-         * @returns {number} the random number
-         */
-        rand: (min = 0.0, max = 1.0) => {
-            DEV: assert(isNumber(min), 'rand() 1st argument must be a number')
-            DEV: assert(isNumber(max), 'rand() 2nd argument must be a number')
-            DEV: assert(max >= min, 'rand() the 1st argument must be less than the 2nd argument')
-
-            const a = 1664525
-            const c = 1013904223
-            const m = 4294967296
-
-            _rngSeed = (a * _rngSeed + c) % m
-
-            return (_rngSeed / m) * (max - min) + min
-        },
-
-        /**
-         * Generates a pseudorandom integer between min (inclusive) and max (inclusive)
-         *
-         * @param {number} [min=0]
-         * @param {number} [max=1]
-         * @returns {number} the random number
-         */
-        randi: (min = 0, max = 1) => {
-            DEV: assert(isNumber(min), 'randi() 1st argument must be a number')
-            DEV: assert(isNumber(max), 'randi() 2nd argument must be a number')
-            DEV: assert(max >= min, 'randi() the 1st argument must be less than the 2nd argument')
-
-            return ~~instance.rand(min, max + 1)
-        },
-
-        /**
-         * Initializes the random number generator with an explicit seed value.
-         *
-         * Note: The seed should be a integer number greater than or equal to zero.
-         *
-         * @param {number} value
-         */
-        rseed(value) {
-            DEV: assert(
-                isNumber(value) && value >= 0,
-                'rseed() 1st argument must be a non-negative integer'
-            )
-
-            _rngSeed = ~~value
         },
 
         /** BASIC GRAPHICS API */
