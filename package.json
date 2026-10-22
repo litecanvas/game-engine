@@ -32,9 +32,9 @@
         "creative coding"
     ],
     "devDependencies": {
-        "@happy-dom/global-registrator": "^21.0.3",
+        "@happy-dom/global-registrator": "^21.0.4",
         "@size-limit/preset-small-lib": "^14.2.0",
-        "@swc/core": "^1.16.18",
+        "@swc/core": "^1.16.20",
         "ava": "^8.1.0",
         "esbuild": "^0.28.2",
         "genversion": "^3.2.0",
