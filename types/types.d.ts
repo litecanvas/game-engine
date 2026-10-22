@@ -564,8 +564,9 @@ type LitecanvasInstance = {
      *
      * @param event The game event type
      * @param callback the function that is called when the event occurs
+     * @returns A function that removes this listener
      */
-    listen(event: string, callback: Function): void
+    listen(event: string, callback: Function): () => boolean
     /**
      * Remove a game loop event listener.
      *
@@ -581,13 +582,13 @@ type LitecanvasInstance = {
      * E.g: `emit("boom", 10)` calls `window.boom(10)`.
      *
      * @param event The game event type
-     * @param [arg1] any data to be passed over the listeners
-     * @param [arg2] any data to be passed over the listeners
-     * @param [arg3] any data to be passed over the listeners
-     * @param [arg4] any data to be passed over the listeners
-     * @returns always returns the second argument
+     * @param [data1] any data to be passed over the listeners
+     * @param [data2] any data to be passed over the listeners
+     * @param [data3] any data to be passed over the listeners
+     * @param [data4] any data to be passed over the listeners
+     * @returns always returns the second argument (data1)
      */
-    emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): any
+    emit(event: string, data1?: any, data2?: any, data3?: any, data4?: any): any
     /**
      * Define or update a instance property.
      *

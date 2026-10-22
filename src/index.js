@@ -1109,6 +1109,7 @@ export default function litecanvas(settings = {}) {
          *
          * @param {string} eventName the event type name
          * @param {Function} callback the function that is called when the event occurs
+         * @returns {() => boolean} A function that removes this listener
          */
         listen: (eventName, callback) => {
             DEV: assert('string' === typeof eventName, 'listen() 1st argument must be a string')
@@ -1118,6 +1119,8 @@ export default function litecanvas(settings = {}) {
 
             _eventListeners[eventName] = _eventListeners[eventName] || new Set()
             _eventListeners[eventName].add(callback)
+
+            return () => _eventListeners[eventName].delete(callback)
         },
 
         /**
@@ -1148,19 +1151,19 @@ export default function litecanvas(settings = {}) {
          * E.g: `emit("boom")` calls `window.boom()`.
          *
          * @param {string} eventName The event type name
-         * @param {any} [arg1] any data to be passed over the listeners
-         * @param {any} [arg2] any data to be passed over the listeners
-         * @param {any} [arg3] any data to be passed over the listeners
-         * @param {any} [arg4] any data to be passed over the listeners
-         * @returns {any} always returns the second argument
+         * @param {any} [data1] any data to be passed over the listeners
+         * @param {any} [data2] any data to be passed over the listeners
+         * @param {any} [data3] any data to be passed over the listeners
+         * @param {any} [data4] any data to be passed over the listeners
+         * @returns {any} always returns the second argument (data1)
          */
-        emit(eventName, arg1, arg2, arg3, arg4) {
+        emit(eventName, data1, data2, data3, data4) {
             DEV: assert('string' === typeof eventName, 'emit() 1st argument must be a string')
 
             if (_initialized) {
                 eventName = lowerCase(eventName)
 
-                triggerEvent('before:' + eventName, arg1, arg2, arg3, arg4)
+                triggerEvent('before:' + eventName, data1, data2, data3, data4)
 
                 // if the "loop" option not exists,
                 // calls a global function with the same name as the event,
@@ -1170,15 +1173,15 @@ export default function litecanvas(settings = {}) {
                     root[eventName] !== instance[eventName] &&
                     'function' === typeof root[eventName] /* if is a function */
                 ) {
-                    root[eventName](arg1, arg2, arg3, arg4)
+                    root[eventName](data1, data2, data3, data4)
                 }
 
-                triggerEvent(eventName, arg1, arg2, arg3, arg4)
+                triggerEvent(eventName, data1, data2, data3, data4)
 
-                triggerEvent('after:' + eventName, arg1, arg2, arg3, arg4)
+                triggerEvent('after:' + eventName, data1, data2, data3, data4)
             }
 
-            return arg1
+            return data1
         },
 
         /**
@@ -1773,16 +1776,17 @@ export default function litecanvas(settings = {}) {
     }
 
     /**
-     * @param {string} eventName
-     * @param {any} [arg1]
-     * @param {any} [arg2]
-     * @param {any} [arg3]
-     * @param {any} [arg4]
+     * @param {string} eventName The event type name
+     * @param {any} [data1] any data to be passed over the listeners
+     * @param {any} [data2] any data to be passed over the listeners
+     * @param {any} [data3] any data to be passed over the listeners
+     * @param {any} [data4] any data to be passed over the listeners
+     * @returns {any} always returns the second argument (data1)
      */
-    function triggerEvent(eventName, arg1, arg2, arg3, arg4) {
+    function triggerEvent(eventName, data1, data2, data3, data4) {
         if (_eventListeners[eventName]) {
             for (const callback of _eventListeners[eventName]) {
-                callback(arg1, arg2, arg3, arg4)
+                callback(data1, data2, data3, data4)
             }
         }
     }

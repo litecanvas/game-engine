@@ -596,8 +596,9 @@ declare global {
      *
      * @param event The game event type
      * @param callback the function that is called when the event occurs
+     * @returns A function that removes this listener
      */
-    function listen(event: string, callback: Function): void
+    function listen(event: string, callback: Function): () => boolean
     /**
      * Remove a game loop event listener.
      *
@@ -613,13 +614,13 @@ declare global {
      * E.g: `emit("boom", 10)` calls `window.boom(10)`.
      *
      * @param event The game event type
-     * @param [arg1] any data to be passed over the listeners
-     * @param [arg2] any data to be passed over the listeners
-     * @param [arg3] any data to be passed over the listeners
-     * @param [arg4] any data to be passed over the listeners
-     * @returns always returns the second argument
+     * @param [data1] any data to be passed over the listeners
+     * @param [data2] any data to be passed over the listeners
+     * @param [data3] any data to be passed over the listeners
+     * @param [data4] any data to be passed over the listeners
+     * @returns always returns the second argument (data1)
      */
-    function emit(event: string, arg1?: any, arg2?: any, arg3?: any, arg4?: any): any
+    function emit(event: string, data1?: any, data2?: any, data3?: any, data4?: any): any
     /**
      * Set new palette colors or restore the default palette.
      *

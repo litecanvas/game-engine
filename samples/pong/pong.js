@@ -5,11 +5,11 @@ litecanvas({
 
 // The ZzFX sounds for this game
 // prettier-ignore
-const BOUNCE = [, , 1e3, , .03, .02, 1, 2, , , 940, .03, , , , , .2, .6, , .06];
+const BOUNCE = [, , 1e3, , .03, .02, 1, 2, , , 940, .03, , , , , .2, .6, , .06]
 // prettier-ignore
-const START = [0.5, 0, 500, , .04, .3, 1, 2, , , 570, .02, .02, , , , .04];
+const START = [0.5, 0, 500, , .04, .3, 1, 2, , , 570, .02, .02, , , , .04]
 // prettier-ignore
-const BALL_OFFSCREEN = [1.31, , 154, 0.05, 0.3, 0.37, 1, 0.3, -9.9, -6.9, , , 0.11, , , 0.2, 0.02, 0.42, 0.16];
+const BALL_OFFSCREEN = [1.31, , 154, 0.05, 0.3, 0.37, 1, 0.3, -9.9, -6.9, , , 0.11, , , 0.2, 0.02, 0.42, 0.16]
 
 let padW = 120,
     padH = 15,
