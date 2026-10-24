@@ -49,8 +49,8 @@ function init() {
     state.entites = new Array(state.count)
     const dir = [1, -1]
     for (let i = 0; i < state.count; i++) {
-        const x = rand() * state.width - state.size
-        const y = rand() * state.height - state.size
+        const x = rand() * W - state.size
+        const y = rand() * H - state.size
         const [dx, dy] = [rand(1, 5) * dir[randi(0, 1)], rand(1, 5) * dir[randi(0, 1)]]
         state.entites[i] = { x, y, dx, dy, s: rand(0.75, 1.5), r: rand(0, TAU) }
     }
@@ -76,11 +76,11 @@ function update() {
             e.dy *= -1
         }
 
-        if (e.x + state.size > state.width) {
-            e.x = state.width - state.size
+        if (e.x + state.size > W) {
+            e.x = W - state.size
             e.dx *= -1
-        } else if (e.y + state.size > state.height) {
-            e.y = state.height - state.size
+        } else if (e.y + state.size > H) {
+            e.y = H - state.size
             e.dy *= -1
         }
 
@@ -98,7 +98,9 @@ function draw() {
         const rotation = state.animate ? e.r : 0
         const scale = state.animate ? e.s + sin(T * 5) * 0.5 : 1
         push(e.x, e.y, rotation, scale)
-        image(-half, -half, state.sprite)
+        image(state.animate ? -half : 0, state.animate ? -half : 0, state.sprite)
         pop()
     }
+
+    rectfill(W - 2, H - 2, 1, 1, 0)
 }

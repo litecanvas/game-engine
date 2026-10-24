@@ -33,15 +33,15 @@
     ],
     "devDependencies": {
         "@happy-dom/global-registrator": "^21.0.4",
-        "@size-limit/preset-small-lib": "^14.2.0",
+        "@size-limit/preset-small-lib": "^14.3.0",
         "@swc/core": "^1.16.20",
-        "ava": "^8.1.0",
+        "ava": "^8.1.2",
         "esbuild": "^0.28.2",
         "genversion": "^3.2.0",
         "gzip-size": "^7.0.0",
         "prettier": "^3.9.10",
         "sinon": "^22.1.0",
-        "size-limit": "^14.2.0",
+        "size-limit": "^14.3.0",
         "tap-min": "^3.0.0"
     },
     "trustedDependencies": [
