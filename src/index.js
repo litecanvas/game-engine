@@ -1383,7 +1383,6 @@ export default function litecanvas(settings = {}) {
         resume() {
             DEV: assert(
                 _initialized,
-
                 'resume() cannot be called before the "init" event and neither after the quit() function'
             )
             if (_initialized && _paused) {
@@ -1663,7 +1662,7 @@ export default function litecanvas(settings = {}) {
         let frameTime = now - _lastFrameTime
 
         _lastFrameTime = now
-        _accumulated += frameTime < 100 ? frameTime : _fpsInterval
+        _accumulated += frameTime < 250 ? frameTime : _fpsInterval
 
         while (_accumulated >= _fpsInterval) {
             updated++
@@ -1679,13 +1678,12 @@ export default function litecanvas(settings = {}) {
             // draws only when an update happens.
             instance.emit('draw', _ctx)
 
-            // sometimes the FPS locks at a value below 60
+            // sometimes the FPS drops below 60 for no reason
             // and does not go back up, even with a very simple logic.
             // One solution I found was to reset the variable that
-            // accumulates time between frames, when multiple updates occur.
-            if (updated > 1) {
-                _accumulated = 0
-            }
+            // accumulates time between frames, but I don't why it's works.
+            // Anyway, don't touch here.
+            if (updated > 1) _accumulated = 0
         }
     }
 
