@@ -1298,12 +1298,10 @@ export default function litecanvas(settings = {}) {
         /**
          * Returns information about the engine instance.
          *
-         * @param {number} index
+         * @param {number} [index]
          * @returns {any}
          */
         stat(index) {
-            DEV: assert(isNumber(index), 'stat() 1st argument must be a number')
-
             const internals = [
                 // 0
                 settings,
@@ -1349,12 +1347,11 @@ export default function litecanvas(settings = {}) {
             ]
 
             DEV: assert(
-                index >= 0 && index < internals.length,
-
-                'stat() 1st argument must be a number between 0 and ' + (internals.length - 1)
+                null == index || (index >= 0 && index < internals.length),
+                `stat() 1st argument must be null or a number between 0 and ${internals.length - 1}`
             )
 
-            return internals[index]
+            return null == index ? internals : internals[index]
         },
 
         /**

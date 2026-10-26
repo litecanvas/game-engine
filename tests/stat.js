@@ -258,3 +258,14 @@ test('stat with invalid indexes must throw error in dev mode', (t) => {
         local.stat(-1)
     })
 })
+
+test('stat() without arguments returns all internals', async (t) => {
+    const _stats = local.stat()
+
+    t.true(Array.isArray(_stats))
+
+    const expected = local.stat(0)
+    const actual = _stats[0]
+
+    t.is(actual, expected)
+})
