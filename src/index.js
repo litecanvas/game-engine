@@ -1811,14 +1811,14 @@ export default function litecanvas(settings = {}) {
      * @param {number|string} color
      * @returns {string}
      */
-    function getColor(color) {
+    function getColor(color = 0) {
         return color >= 0
             ? _currentPalette[~~(_colorPaletteState[color] ?? color) % _currentPalette.length]
-            : color
+            : '' + color
     }
 
     if (settings.global) {
-        if (root.ENGINE) {
+        DEV: if (root.ENGINE) {
             throw new Error('only one global litecanvas is allowed')
         }
         Object.assign(root, instance)
@@ -1826,7 +1826,7 @@ export default function litecanvas(settings = {}) {
     }
 
     DEV: console.info(`[litecanvas] version ${version} started`)
-    DEV: console.debug(`[litecanvas] litecanvas() options =`, settings)
+    DEV: console.info(`[litecanvas] litecanvas() options =`, settings)
 
     // setup the canvas
     setupCanvas()
