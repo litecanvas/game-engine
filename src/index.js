@@ -27,8 +27,6 @@ export default function litecanvas(settings = {}) {
         },
         /** @type {(str: string) => string} */
         lowerCase = (str) => str.toLowerCase(),
-        /** @type {(ev: Event) => void} */
-        preventDefault = (ev) => ev.preventDefault(),
         /** @type {(c: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void} */
         beginPath = (c) => c.beginPath(),
         zzfx = setupZzFX(root),
@@ -1747,7 +1745,8 @@ export default function litecanvas(settings = {}) {
         _canvas.width = width
         _canvas.height = height
 
-        _canvas.style = 'image-rendering:pixelated;touch-action:none'
+        _canvas.style = 'image-rendering:pixelated'
+        _canvas.style.touchAction = 'none'
 
         if (settings.autoscale) {
             let maxScale = +settings.autoscale
