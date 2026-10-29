@@ -27,8 +27,6 @@ export default function litecanvas(settings = {}) {
         },
         /** @type {(str: string) => string} */
         lowerCase = (str) => str.toLowerCase(),
-        /** @type {(ev: Event) => void} */
-        preventDefault = (ev) => ev.preventDefault(),
         /** @type {(c: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void} */
         beginPath = (c) => c.beginPath(),
         zzfx = setupZzFX(root),
@@ -102,19 +100,22 @@ export default function litecanvas(settings = {}) {
 
     /** @type {LitecanvasInstance} */
     const instance = {
-        /** @type {number} */
-        W: 0,
-
-        /** @type {number} */
-        H: 0,
-
-        /** @type {number} */
+        /** @type {number} elapsed time*/
         T: 0,
 
-        /** @type {number} */
+        /** @type {number} frame count*/
+        F: 0,
+
+        /** @type {number} game screen width*/
+        W: 0,
+
+        /** @type {number} game screen height*/
+        H: 0,
+
+        /** @type {number} mouse/touch X*/
         MX: -1,
 
-        /** @type {number} */
+        /** @type {number} mouse/touch Y*/
         MY: -1,
 
         /** RNG API */
@@ -1674,6 +1675,7 @@ export default function litecanvas(settings = {}) {
         if (updated) {
             // draws only when an update happens.
             instance.emit('draw', _ctx)
+            instance.def('F', instance.F + 1)
 
             // sometimes the FPS drops below 60 for no reason
             // and does not go back up, even with a very simple logic.
@@ -1743,7 +1745,8 @@ export default function litecanvas(settings = {}) {
         _canvas.width = width
         _canvas.height = height
 
-        _canvas.style = 'image-rendering:pixelated;touch-action:none'
+        _canvas.style = 'image-rendering:pixelated'
+        _canvas.style.touchAction = 'none'
 
         if (settings.autoscale) {
             let maxScale = +settings.autoscale
@@ -1807,14 +1810,14 @@ export default function litecanvas(settings = {}) {
      * @param {number|string} color
      * @returns {string}
      */
-    function getColor(color) {
+    function getColor(color = 0) {
         return color >= 0
             ? _currentPalette[~~(_colorPaletteState[color] ?? color) % _currentPalette.length]
-            : color
+            : '' + color
     }
 
     if (settings.global) {
-        if (root.ENGINE) {
+        DEV: if (root.ENGINE) {
             throw new Error('only one global litecanvas is allowed')
         }
         Object.assign(root, instance)
@@ -1822,7 +1825,7 @@ export default function litecanvas(settings = {}) {
     }
 
     DEV: console.info(`[litecanvas] version ${version} started`)
-    DEV: console.debug(`[litecanvas] litecanvas() options =`, settings)
+    DEV: console.info(`[litecanvas] litecanvas() options =`, settings)
 
     // setup the canvas
     setupCanvas()
