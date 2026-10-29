@@ -102,19 +102,22 @@ export default function litecanvas(settings = {}) {
 
     /** @type {LitecanvasInstance} */
     const instance = {
-        /** @type {number} */
-        W: 0,
-
-        /** @type {number} */
-        H: 0,
-
-        /** @type {number} */
+        /** @type {number} elapsed time*/
         T: 0,
 
-        /** @type {number} */
+        /** @type {number} frame count*/
+        F: 0,
+
+        /** @type {number} game screen width*/
+        W: 0,
+
+        /** @type {number} game screen height*/
+        H: 0,
+
+        /** @type {number} mouse/touch X*/
         MX: -1,
 
-        /** @type {number} */
+        /** @type {number} mouse/touch Y*/
         MY: -1,
 
         /** RNG API */
@@ -1674,6 +1677,7 @@ export default function litecanvas(settings = {}) {
         if (updated) {
             // draws only when an update happens.
             instance.emit('draw', _ctx)
+            instance.def('F', instance.F + 1)
 
             // sometimes the FPS drops below 60 for no reason
             // and does not go back up, even with a very simple logic.

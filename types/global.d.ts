@@ -5,12 +5,14 @@ export default function litecanvas(settings?: LitecanvasOptions): LitecanvasInst
 declare global {
     function litecanvas(settings?: LitecanvasOptions): LitecanvasInstance
 
+    /** the amount of time (in seconds) since the game started */
+    var T: number
+    /** the amount of frames since the game started */
+    var F: number
     /** The game screen width */
     var W: number
     /** The game screen height */
     var H: number
-    /** the amount of time (in seconds) since the game started */
-    var T: number
     /** The current mouse's horizontal (X) position or -1 (if the mouse was not used or detected) */
     var MX: number
     /** The current mouse's vertical (Y) position or -1 (if the mouse was not used or detected) */
