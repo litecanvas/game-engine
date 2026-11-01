@@ -4,5 +4,6 @@ pre-commit:
           stage_fixed: true
 
         - run: bun run build
+          stage_fixed: true
 
         - run: bun run test
