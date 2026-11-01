@@ -19,6 +19,40 @@
     "types": "./types/index.d.ts",
     "unpkg": "./dist/dist.dev.js",
     "jsdelivr": "./dist/dist.dev.js",
+    "scripts": {
+        "prepare": "npm run build",
+        "postinstall": "lefthook install",
+        "prepublishOnly": "npm test",
+        "test": "ava --tap | tap-min",
+        "test:watch": "ava --watch",
+        "dev": "esbuild src/web.js --bundle --watch --outfile=samples/dist.js --servedir=samples",
+        "build": "npm run genversion && node script/build.js && size-limit",
+        "format": "prettier -w src/* samples/* types/* script/* tests/*",
+        "check-types": "npx tsc ./types/*",
+        "genversion": "genversion --es6 src/version.js"
+    },
+    "devDependencies": {
+        "@happy-dom/global-registrator": "^21.0.4",
+        "@size-limit/preset-small-lib": "^14.3.0",
+        "@swc/core": "^1.16.21",
+        "ava": "^8.3.0",
+        "esbuild": "^0.28.2",
+        "genversion": "^3.2.0",
+        "gzip-size": "^7.0.0",
+        "lefthook": "^2.2.2",
+        "prettier": "^3.9.10",
+        "sinon": "^22.1.0",
+        "size-limit": "^14.3.0",
+        "tap-min": "^3.0.0"
+    },
+    "trustedDependencies": [
+        "@swc/core"
+    ],
+    "files": [
+        "dist",
+        "src",
+        "types"
+    ],
     "keywords": [
         "tiny",
         "micro",
@@ -30,38 +64,6 @@
         "gamedev",
         "js13k",
         "creative coding"
-    ],
-    "devDependencies": {
-        "@happy-dom/global-registrator": "^21.0.4",
-        "@size-limit/preset-small-lib": "^14.3.0",
-        "@swc/core": "^1.16.20",
-        "ava": "^8.2.0",
-        "esbuild": "^0.28.2",
-        "genversion": "^3.2.0",
-        "gzip-size": "^7.0.0",
-        "prettier": "^3.9.10",
-        "sinon": "^22.1.0",
-        "size-limit": "^14.3.0",
-        "tap-min": "^3.0.0"
-    },
-    "trustedDependencies": [
-        "@swc/core"
-    ],
-    "scripts": {
-        "prepare": "npm run build",
-        "prepublishOnly": "npm test",
-        "test": "ava --tap | tap-min",
-        "test:watch": "ava --watch",
-        "dev": "esbuild src/web.js --bundle --watch --outfile=samples/dist.js --servedir=samples",
-        "build": "npm run genversion && node script/build.js && size-limit",
-        "format": "prettier -w src/* samples/* types/* script/* tests/*",
-        "check-types": "npx tsc ./types/*",
-        "genversion": "genversion --es6 src/version.js"
-    },
-    "files": [
-        "dist",
-        "src",
-        "types"
     ],
     "ava": {
         "files": [
