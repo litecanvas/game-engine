@@ -448,7 +448,6 @@ export default function litecanvas(settings = {}) {
             )
             DEV: assert(
                 null == radii || isNumber(radii) || (Array.isArray(radii) && radii.length >= 1),
-
                 'rectfill() 6th argument must be a number or array of at least 2 numbers'
             )
 
@@ -730,7 +729,6 @@ export default function litecanvas(settings = {}) {
         textalign(align, baseline) {
             DEV: assert(
                 null == align || ['left', 'right', 'center', 'start', 'end'].includes(align),
-
                 'textalign() 1st argument must be null or one of the following strings: center, left, right, start or end.'
             )
             DEV: assert(
@@ -738,7 +736,6 @@ export default function litecanvas(settings = {}) {
                     ['top', 'bottom', 'middle', 'hanging', 'alphabetic', 'ideographic'].includes(
                         baseline
                     ),
-
                 'textalign() 2nd argument must be null or one of the following strings: middle, top, bottom, hanging, alphabetic or ideographic.'
             )
 
@@ -1700,7 +1697,6 @@ export default function litecanvas(settings = {}) {
 
         DEV: assert(
             _canvas instanceof HTMLElement && 'CANVAS' === _canvas.tagName,
-
             'litecanvas() option "canvas" should be a canvas element or string (CSS selector of a canvas)'
         )
 
@@ -1727,7 +1723,6 @@ export default function litecanvas(settings = {}) {
         )
         DEV: assert(
             null == settings.height || (settings.width > 0 && settings.height > 0),
-
             'litecanvas() option "width" is required when the option "height" is defined'
         )
         DEV: assert(
