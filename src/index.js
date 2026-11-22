@@ -1656,7 +1656,7 @@ export default function litecanvas(settings = {}) {
         _rafid = raf(drawFrame)
 
         let updated = 0
-        let frameTime = Math.max(0, timestamp - _lastFrameTime)
+        let frameTime = timestamp - _lastFrameTime
 
         if (frameTime > 0) {
             _lastFrameTime = timestamp
