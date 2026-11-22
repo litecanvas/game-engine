@@ -14,7 +14,6 @@ import { mulberry32 } from './mulberry32.js'
 export default function litecanvas(settings = {}) {
     const root = window,
         math = Math,
-        perf = performance,
         TAU = math.PI * 2,
         raf = requestAnimationFrame,
         isNumber = Number.isFinite,
@@ -29,6 +28,7 @@ export default function litecanvas(settings = {}) {
         lowerCase = (str) => str.toLowerCase(),
         /** @type {(c: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void} */
         beginPath = (c) => c.beginPath(),
+        now = () => performance.now(),
         zzfx = setupZzFX(root),
         /** @type {LitecanvasOptions} */
         defaults = {
@@ -237,9 +237,9 @@ export default function litecanvas(settings = {}) {
          *
          * Note: precision is optional but must be >= 0
          *
-         * @param {number} n number to round.
-         * @param {number} [precision] number of decimal digits to round to, default is 0.
-         * @returns {number} rounded number.
+         * @param {number} n number to round
+         * @param {number} [precision] number of decimal digits to round to, default is 0
+         * @returns {number} rounded number
          */
         round: (n, precision = 0) => {
             DEV: assert(isNumber(n), 'round() 1st argument must be a number')
@@ -312,11 +312,11 @@ export default function litecanvas(settings = {}) {
         /**
          * Re-maps a number from one range to another.
          *
-         * @param {number} value  the value to be remapped.
-         * @param {number} start1 lower bound of the value's current range.
-         * @param {number} stop1  upper bound of the value's current range.
-         * @param {number} start2 lower bound of the value's target range.
-         * @param {number} stop2  upper bound of the value's target range.
+         * @param {number} value  the value to be remapped
+         * @param {number} start1 lower bound of the value's current range
+         * @param {number} stop1  upper bound of the value's current range
+         * @param {number} start2 lower bound of the value's target range
+         * @param {number} stop2  upper bound of the value's target range
          * @param {boolean} [withinBounds=false] constrain the value to the newly mapped range
          * @returns {number} the remapped number
          */
@@ -729,14 +729,14 @@ export default function litecanvas(settings = {}) {
         textalign(align, baseline) {
             DEV: assert(
                 null == align || ['left', 'right', 'center', 'start', 'end'].includes(align),
-                'textalign() 1st argument must be null or one of the following strings: center, left, right, start or end.'
+                'textalign() 1st argument must be null or one of the following strings: center, left, right, start or end'
             )
             DEV: assert(
                 null == baseline ||
                     ['top', 'bottom', 'middle', 'hanging', 'alphabetic', 'ideographic'].includes(
                         baseline
                     ),
-                'textalign() 2nd argument must be null or one of the following strings: middle, top, bottom, hanging, alphabetic or ideographic.'
+                'textalign() 2nd argument must be null or one of the following strings: middle, top, bottom, hanging, alphabetic or ideographic'
             )
 
             if (align) _ctx.textAlign = align
@@ -1416,7 +1416,7 @@ export default function litecanvas(settings = {}) {
                 delete root.ENGINE
             }
 
-            DEV: console.warn('[litecanvas] quit() terminated a Litecanvas instance.')
+            DEV: console.warn('[litecanvas] quit() terminated a Litecanvas instance')
         },
     }
 
@@ -1430,7 +1430,7 @@ export default function litecanvas(settings = {}) {
     function startGameLoop() {
         if (!_rafid) {
             _accumulated = 0
-            _lastFrameTime = perf.now()
+            _lastFrameTime = now()
             _rafid = raf(drawFrame)
         }
     }
@@ -1472,7 +1472,7 @@ export default function litecanvas(settings = {}) {
                             // initial y
                             yi: y,
                             // timestamp
-                            t: perf.now(),
+                            t: now(),
                         }
                         _taps.set(id, tap)
                         return tap
@@ -1492,7 +1492,7 @@ export default function litecanvas(settings = {}) {
                     /**
                      * @param {{t: number}} tap
                      */
-                    (tap) => tap && perf.now() - tap.t <= 300
+                    (tap) => tap && now() - tap.t <= 300
 
             let _pressingMouse = false
 
@@ -1648,52 +1648,48 @@ export default function litecanvas(settings = {}) {
         }
     }
 
-    function drawFrame() {
+    /**
+     * @param {DOMHighResTimeStamp} timestamp
+     */
+    function drawFrame(timestamp) {
         // request the next frame
         _rafid = raf(drawFrame)
 
-        let now = perf.now()
         let updated = 0
-        let frameTime = now - _lastFrameTime
+        let frameTime = Math.max(0, timestamp - _lastFrameTime)
 
-        _lastFrameTime = now
-        _accumulated += frameTime < 250 ? frameTime : _fpsInterval
+        if (frameTime > 0) {
+            _lastFrameTime = timestamp
 
-        while (_accumulated >= _fpsInterval) {
-            updated++
-            _accumulated -= _fpsInterval
+            _accumulated += frameTime < 250 ? frameTime : _fpsInterval
 
-            let dt = (_fpsInterval / 1000) * _timeScale
+            while (_accumulated >= _fpsInterval) {
+                updated++
+                _accumulated -= _fpsInterval
 
-            instance.emit('update', dt, updated)
-            instance.def('T', instance.T + dt)
-        }
+                let dt = (_fpsInterval / 1000) * _timeScale
 
-        if (updated) {
-            // draws only when an update happens.
-            instance.emit('draw', _ctx)
-            instance.def('F', instance.F + 1)
+                instance.emit('update', dt, updated)
+                instance.def('T', instance.T + dt)
+            }
 
-            // sometimes the FPS drops below 60 for no reason
-            // and does not go back up, even with a very simple logic.
-            // One solution I found was to reset the variable that
-            // accumulates time between frames, but I don't why it's works.
-            // Anyway, don't touch here.
-            if (updated > 1) _accumulated = 0
+            if (updated) {
+                // draws only when an update happens.
+                instance.emit('draw', _ctx)
+                instance.def('F', instance.F + 1)
+            }
         }
     }
 
     function setupCanvas() {
-        const d = document
-
         if ('string' === typeof settings.canvas) {
-            _canvas = d.querySelector(settings.canvas)
+            _canvas = document.querySelector(settings.canvas)
             DEV: assert(null != _canvas, 'litecanvas() option "canvas" is an invalid CSS selector')
         } else {
             _canvas = settings.canvas
         }
 
-        _canvas = _canvas || d.createElement('canvas')
+        _canvas = _canvas || document.createElement('canvas')
 
         DEV: assert(
             _canvas instanceof HTMLElement && 'CANVAS' === _canvas.tagName,
@@ -1705,7 +1701,7 @@ export default function litecanvas(settings = {}) {
         on(_canvas, 'click', () => focus())
 
         if (!_canvas.parentNode) {
-            d.body.appendChild(_canvas)
+            document.body.appendChild(_canvas)
         }
 
         // disable default browser's right click in canvas
@@ -1825,6 +1821,14 @@ export default function litecanvas(settings = {}) {
     // setup the canvas
     setupCanvas()
     resizeCanvas()
+
+    // Reset frame time accumulator when the tab is focused
+    on(document, 'visibilitychange', () => {
+        if (!document.hidden) {
+            _lastFrameTime = now()
+            _accumulated = 0
+        }
+    })
 
     // setup default event listeners
     // they have high priority
