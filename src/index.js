@@ -3,7 +3,7 @@ import { setupZzFX } from './zzfx.js'
 import { defaultPalette } from './palette.js'
 import { assert } from './dev.js'
 import { version } from './version.js'
-import { mulberry32 } from './mulberry32.js'
+import { randomNumberGenerator } from './rng.js'
 
 /**
  * The litecanvas constructor
@@ -84,7 +84,7 @@ export default function litecanvas(settings = {}) {
         /** @type {number} */
         _rngSeed = Date.now(),
         /** @type {() => number} */
-        _rngNext = mulberry32(_rngSeed >>> 0),
+        _rngNext = randomNumberGenerator(_rngSeed >>> 0),
         /** @type {string[]} */
         _currentPalette = defaultPalette,
         /** @type {string[]} */
@@ -121,7 +121,6 @@ export default function litecanvas(settings = {}) {
         /** RNG API */
         /**
          * Generates a pseudo random float between min (inclusive) and max (exclusive)
-         * using the Mulberry32 algorithm.
          *
          * @param {number} [min=0.0]
          * @param {number} [max=1.0]
@@ -163,7 +162,7 @@ export default function litecanvas(settings = {}) {
                 'rseed() 1st argument must be a non-negative integer'
             )
             _rngSeed = value
-            _rngNext = mulberry32(_rngSeed >>> 0)
+            _rngNext = randomNumberGenerator(_rngSeed >>> 0)
         },
 
         /** MATH API */

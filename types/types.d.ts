@@ -182,8 +182,7 @@ type LitecanvasInstance = {
 
     /** RNG API */
     /**
-     * Generates a pseudo random float between min (inclusive) and max (exclusive)
-     * using the Mulberry32 algorithm.
+     * Generates a pseudo random float between min (inclusive) and max (exclusive).
      *
      * @param [min=0.0]
      * @param [max=1.0]
